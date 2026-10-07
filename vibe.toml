@@ -1,0 +1,2 @@
+[workspace]
+members = ["vibevm/vibepacks/org.jresearch.governance/proportional-controls/v0.1.0"]
