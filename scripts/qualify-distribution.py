@@ -13,10 +13,9 @@ import tempfile
 import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = "aa1e18085dee2aa59e19c5939e882cd8084eea00"
-COORDINATE = "org.jresearch.governance/proportional-controls"
-SLOT = "vibevm/vibedeps/org.jresearch.governance.proportional-controls/0.1.0"
-SKILL = "vibevm/vibespecs/skills/proportional-controls"
+ACCEPTED_BASELINE = "aa1e18085dee2aa59e19c5939e882cd8084eea00"
+COORDINATE = "org.jresearch.ai/development-governance"
+SLOT = "vibevm/vibedeps/org.jresearch.ai.development-governance/0.1.0"
 
 
 def module(name, filename):
@@ -34,7 +33,7 @@ def require(condition, message):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--vibe", type=Path, required=True, help="exact pinned Linux x86_64 musl binary")
-    parser.add_argument("--source-ref", default=SOURCE, help="full canonical package source commit")
+    parser.add_argument("--source-ref", required=True, help="full canonical package source commit")
     args = parser.parse_args()
     vibe = args.vibe.resolve()
     pin = json.loads((ROOT / "toolchain/vibevm.json").read_text())
@@ -77,6 +76,7 @@ def main():
 
         distribution = fixture / "distribution"
         receipt = preparation.prepare(args.source_ref, distribution)
+        skills = tomllib.loads((distribution / "vibe.toml").read_text())["skill"]
         remote = fixture / "distribution.git"
         git(fixture, "init", "--bare", "-b", "main", str(remote))
         preparation.verify(args.source_ref, distribution)
@@ -105,16 +105,27 @@ def main():
         require(lock["package"][0]["content_hash"] == expected_hash, "lock hash differs from canonical package")
         run(first, "install", "--no-default-registry", "--assume-yes")
         preparation.verify(args.source_ref, first / SLOT, installed=True)
-        run(first, "skill", "install", "--agent", "codex", "--scope", "project",
-            "--skill", "proportional-controls", "--yes")
-        baseline = fixture / "native-skill"
-        vendor.export(args.source_ref, baseline)
-        projected = first / ".agents/skills/proportional-controls"
-        expected = {p.relative_to(distribution / SKILL).as_posix() for p in (distribution / SKILL).rglob("*") if p.is_file()}
-        actual = {p.relative_to(projected).as_posix() for p in projected.rglob("*") if p.is_file()}
-        require(expected == actual, "native VibeVM file set differs")
-        for relative in expected:
-            require((projected / relative).read_bytes() == (baseline / relative).read_bytes(), "native skill bytes differ")
+        baselines = {}
+        for skill in skills:
+            run(first, "skill", "install", "--agent", "codex", "--scope", "project",
+                "--skill", skill["name"], "--yes")
+            baseline = fixture / "native-skills" / skill["name"]
+            vendor.export(args.source_ref, baseline, skill["name"])
+            baselines[skill["name"]] = baseline
+            projected = first / ".agents/skills" / skill["name"]
+            expected = {p.relative_to(distribution / skill["path"]).as_posix()
+                        for p in (distribution / skill["path"]).rglob("*") if p.is_file()}
+            actual = {p.relative_to(projected).as_posix() for p in projected.rglob("*") if p.is_file()}
+            require(expected == actual, "native VibeVM file set differs")
+            for relative in expected:
+                require((projected / relative).read_bytes() == (baseline / relative).read_bytes(), "native skill bytes differ")
+        accepted = fixture / "accepted-proportional-controls"
+        vendor.export(ACCEPTED_BASELINE, accepted)
+        original = {p.relative_to(accepted).as_posix(): p.read_bytes() for p in accepted.rglob("*")
+                    if p.is_file() and p.name != "SOURCE.json"}
+        current = {p.relative_to(baselines["proportional-controls"]).as_posix(): p.read_bytes()
+                   for p in baselines["proportional-controls"].rglob("*") if p.is_file() and p.name != "SOURCE.json"}
+        require(current == original, "proportional-controls bytes differ from accepted bootstrap")
         agents = (first / "AGENTS.md").read_bytes()
         require(len(re.findall(rb"<vibevm>.*?</vibevm>", agents, flags=re.S)) == 1,
                 "expected one managed AGENTS block")
@@ -129,8 +140,9 @@ def main():
         second = consumer("independent-consumer")
         cold_settings = fixture / "independent-settings"
         run(second, "install", "--no-default-registry", "--assume-yes", settings=cold_settings)
-        run(second, "skill", "install", "--agent", "codex", "--scope", "project",
-            "--skill", "proportional-controls", "--yes", settings=cold_settings)
+        for skill in skills:
+            run(second, "skill", "install", "--agent", "codex", "--scope", "project",
+                "--skill", skill["name"], "--yes", settings=cold_settings)
         preparation.verify_consumer(args.source_ref, second)
 
         # Default file:// Git archive does not serve arbitrary commit IDs.
@@ -205,11 +217,15 @@ def main():
         require(upgraded.is_dir() and not (first / SLOT).exists(), "synthetic update/pruning failed")
         require(tomllib.loads((upgraded / "vibe.toml").read_text())["package"]["version"] == "0.1.1",
                 "synthetic update installed wrong version")
-        for relative in expected:
-            require((upgraded / SKILL / relative).read_bytes() == (baseline / relative).read_bytes(),
-                    "version-only update changed canonical skill bytes")
-        run(first, "skill", "install", "--agent", "codex", "--scope", "project",
-            "--skill", "proportional-controls", "--yes")
+        for skill in skills:
+            for source in (distribution / skill["path"]).rglob("*"):
+                if source.is_file():
+                    relative = source.relative_to(distribution / skill["path"])
+                    require((upgraded / skill["path"] / relative).read_bytes()
+                            == (baselines[skill["name"]] / relative).read_bytes(),
+                            "version-only update changed canonical skill bytes")
+            run(first, "skill", "install", "--agent", "codex", "--scope", "project",
+                "--skill", skill["name"], "--yes")
         # Rollback restores the entire reviewed/materialized consumer state.
         git(first, "restore", "--source=" + baseline_revision, "--staged", "--worktree", "--", ".")
         shutil.rmtree(upgraded)
@@ -223,6 +239,7 @@ def main():
                           "payload_sha256": receipt["payload_sha256"], "distribution_revision": revision,
                           "vibevm_content_hash": expected_hash,
                           "commands": len(commands), "native_skill_bytes": "identical",
+                          "accepted_proportional_controls_bytes": "identical",
                           "local_publish_and_idempotence": "PASS", "independent_cold_consumer": "PASS",
                           "tag_drift": "upstream lock/slot split reproduced; canonical verifier rejects",
                           "offline": "existing slots and complete Git rollback PASS; cache-only recovery FAIL",

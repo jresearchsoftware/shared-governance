@@ -1,18 +1,26 @@
 # Authoring and the bounded experiment
 
 The root `vibe.toml` is a virtual authoring workspace with one independently
-versioned member. The root boot file is an authoring-local pointer; it is not
-part of the exported shared package. The member is `kind="flow"`,
+versioned member, `org.jresearch.ai/development-governance` v0.1.0. The root boot
+file is an authoring-local pointer outside the exported shared package. The
+member is `kind="flow"`,
 `format="simple"`, `epoch=1`, and explicitly `publish=false`. It has no
 dependencies or executable capability declarations. Repository scripts are
 authoring/qualification utilities outside the package.
 
-There is one source for detailed guidance:
-`vibevm/vibepacks/org.jresearch.governance/proportional-controls/v0.1.0/vibevm/vibespecs/skills/proportional-controls/references/protocol.md`.
-The skill's relative references stay inside its directory so either export is
-self-contained. The boot pointer stays short. Native skill discovery and JIT
-reading are separate from VibeVM boot linkage; no context or time saving is
-claimed.
+The package supports distinct passive native Skills declared in `vibe.toml`;
+initially only `proportional-controls` is included. Its accepted instruction and
+procedure bytes remain unchanged. There is one source for that detailed guidance:
+`vibevm/vibepacks/org.jresearch.ai/development-governance/v0.1.0/vibevm/vibespecs/skills/proportional-controls/references/protocol.md`.
+Each declared Skill has its own directory and references, with the strict
+`include = ["SKILL.md", "references/*.md"]` projection. Relative references stay
+inside that directory so either export is self-contained. The one compact package
+boot source, `vibevm/vibespecs/boot/development-governance.md`, routes to Skills;
+it does not duplicate detailed policy. One package version covers the entire
+declared Skill set. Later additions or changes require a new accepted package
+version and explicit reviewed consumer maintenance, without adding a separate
+VibeVM dependency for each rule group. Native skill discovery and JIT reading
+are separate from VibeVM boot linkage; no context or time saving is claimed.
 
 ## Git/native-Skill baseline
 
@@ -26,7 +34,7 @@ source_sha="$(git rev-parse HEAD)"
 git diff --check
 python3 scripts/qualify.py --export-ref "$source_sha"
 destination="$(mktemp -d)/proportional-controls"
-python3 scripts/vendor-skill.py --ref "$source_sha" --destination "$destination"
+python3 scripts/vendor-skill.py --ref "$source_sha" --skill proportional-controls --destination "$destination"
 ```
 
 The bootstrap was independently accepted and squash-merged as
@@ -39,6 +47,12 @@ ordinary skill files plus MIT LICENSE, and writes `SOURCE.json` with source SHA,
 path and per-file hashes. It refuses to overwrite a nonempty destination. It
 uses no network or credentials. The receipt is generated metadata, not another
 editable policy source.
+
+`--skill` selects one declared passive Skill and defaults to
+`proportional-controls`. The exporter also supports accepted historical
+old-coordinate source commits for this unchanged baseline; the current
+distribution preparer requires the new package coordinate at the selected full
+SHA. Historical export does not authorize publication under the old coordinate.
 
 No real consumer is modified by this example. A later consumer may export into
 its project-local `.agents/skills/proportional-controls` under its own approved
@@ -71,11 +85,12 @@ directory. It relocates VibeVM settings/cache through `VIBE_SETTINGS` and
 It verifies the downloaded binary digest before execution, then:
 
 1. Validates the virtual workspace and checks both root and member.
-2. Projects the member skill for `codex` with `scope=project`, only inside the
-   disposable member; compares the entire file set and each file's bytes.
+2. Projects every declared member Skill for `codex` with `scope=project`, only
+   inside the disposable member; compares each complete file set and file's bytes.
 3. Checks that member projection preserves root human-owned AGENTS.md.
 4. For `--materialize`, adds a temporary project and an exact `"=0.1.0"`
-   requirement, then installs from the explicit local source-tree registry,
+   requirement, then installs from a clean tracked-byte copy in the explicit
+   local source-tree registry (excluding generated native projections/receipts),
    offline with default registry disabled. No registry index is created.
 5. Confirms installation preserves human-owned AGENTS.md outside VibeVM's
    single managed block. The source checkout itself is never materialized.
@@ -91,8 +106,9 @@ path and lock/content identity independently.
 
 ## Observed evidence and limitations
 
-Bootstrap probes on 2026-10-07 used Debian WSL on its native temporary filesystem,
-ordinary UID 1000, Python 3.11 and the hash-verified musl VibeVM `1.0.7` binary.
+Historical bootstrap probes on 2026-10-07 used the old-coordinate package,
+Debian WSL on its native temporary filesystem, ordinary UID 1000, Python 3.11
+and the hash-verified musl VibeVM `1.0.7` binary.
 Workspace `validate`, root/member `check`, actual project-scope skill projection,
 byte/file-set comparison and local-registry dependency installation succeeded.
 Inspected VibeVM check JSON contained zero errors and warnings. The comparison
@@ -147,7 +163,9 @@ there. The first consumer migration belongs to that consumer's own Task and
 must remove the former canonical duplicate in the same reviewed transition.
 The Git/native-Skill baseline already provides a simpler viable alternative.
 
-[Task 2 distribution preparation](distribution.md) extends this evidence with
+[Task 2 distribution preparation](distribution.md) records accepted Step 1
 disposable direct-Git publishing/consumer probes, integrity rejection and
-bounded update/offline/rollback results. Actual remote publication remains
-unqualified and requires separate admission after source acceptance.
+bounded update/offline/rollback results. Step 2 adapts the source identity and
+declared Skill set before publication; those historical results are not fresh
+proof for a new head. Actual remote publication remains unqualified and requires
+separate admission after source acceptance.

@@ -4,14 +4,17 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import posixpath
 import re
 import subprocess
 import tomllib
+from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGE = "vibevm/vibepacks/org.jresearch.governance/proportional-controls/v0.1.0"
+PACKAGE = "vibevm/vibepacks/org.jresearch.ai/development-governance/v0.1.0"
 REPOSITORY = "https://github.com/jresearchsoftware/shared-governance"
-COORDINATE = "org.jresearch.governance/proportional-controls"
+COORDINATE = "org.jresearch.ai/development-governance"
+SLOT = "vibevm/vibedeps/org.jresearch.ai.development-governance/0.1.0"
 RECEIPT = "DISTRIBUTION.json"
 
 
@@ -25,6 +28,78 @@ def vibe_hash(files):
 
 def git(*args):
     return subprocess.check_output(["git", *args], cwd=ROOT)
+
+
+def validate_skill_links(files, prefix):
+    """A selected native Skill must keep local references within its own export."""
+    for name, data in files.items():
+        if not name.startswith(prefix + "/"):
+            continue
+        prose = re.sub(r"^```[^\n]*\n.*?^```\s*$", "", data.decode(), flags=re.M | re.S)
+        targets = re.findall(r"\[[^\]\n]*\]\(\s*(<[^>\n]*>|[^)\s]+)", prose)
+        targets += re.findall(r"^ {0,3}\[[^\]\n]+\]:\s*(<[^>\n]*>|[^\s]+)", prose, flags=re.M)
+        for target in targets:
+            url = urlsplit(target.strip("<>"))
+            if url.scheme or url.netloc:
+                continue
+            resolved = posixpath.normpath(posixpath.join(posixpath.dirname(name), unquote(url.path))) if url.path else name
+            if not resolved.startswith(prefix + "/") or resolved not in files:
+                raise ValueError("native Skill has an escaping or missing local reference: " + name)
+
+
+def validate_payload(files, license_bytes):
+    """Allow only declared passive Skills and their bounded reference files."""
+    for data in files.values():
+        data.decode("utf-8")
+    if "vibe.toml" not in files or "LICENSE" not in files:
+        raise ValueError("source commit has no complete package")
+    manifest = tomllib.loads(files["vibe.toml"].decode())
+    package = manifest.get("package", {})
+    if not isinstance(package, dict):
+        raise ValueError("source package metadata must be a table")
+    expected = {"group": "org.jresearch.ai", "name": "development-governance",
+                "version": "0.1.0", "kind": "flow", "format": "simple", "epoch": 1,
+                "publish": False, "license": "MIT"}
+    if any(type(package.get(key)) is not type(value) or package.get(key) != value
+           for key, value in expected.items()):
+        raise ValueError("source package identity/passivity/publication boundary differs")
+    if set(manifest) != {"package", "boot_snippet", "skill"}:
+        raise ValueError("unexpected package capability or dependency")
+    if set(package) - (set(expected) | {"description"}):
+        raise ValueError("unexpected package metadata")
+    boot = {"source": "vibevm/vibespecs/boot/development-governance.md",
+            "category": "flow", "link": "dynamic"}
+    skills = manifest["skill"]
+    if manifest["boot_snippet"] != boot or not isinstance(skills, list) or not skills:
+        raise ValueError("package boot/skill declarations differ")
+    names = set()
+    allowed = {"vibe.toml", "LICENSE", "README.md", boot["source"]}
+    for skill in skills:
+        name = skill.get("name") if isinstance(skill, dict) else None
+        if (not isinstance(name, str) or len(name) > 64
+                or not re.fullmatch(r"[a-z][a-z0-9]*(?:-[a-z0-9]+)*", name) or name in names):
+            raise ValueError("native Skill names must be safe and unique")
+        names.add(name)
+        path = "vibevm/vibespecs/skills/" + name
+        if skill != {"name": name, "path": path, "include": ["SKILL.md", "references/*.md"]}:
+            raise ValueError("native Skill declaration must select only its passive instructions/references")
+        discovery = path + "/SKILL.md"
+        text = files.get(discovery, b"").decode()
+        if not re.match(r"---\nname: " + re.escape(name) + r"\ndescription: [^\n]*\S[^\n]*\n---\n", text):
+            raise ValueError("native Skill discovery frontmatter is missing or mismatched: " + name)
+        references = {item for item in files
+                      if re.fullmatch(re.escape(path) + r"/references/[^/\\]+\.md", item)}
+        if not references:
+            raise ValueError("native Skill requires passive reference text: " + name)
+        allowed.update({discovery, *references})
+        validate_skill_links(files, path)
+    if "proportional-controls" not in names:
+        raise ValueError("the accepted proportional-controls Skill must be retained")
+    if set(files) != allowed:
+        raise ValueError("source package file set differs from declared passive payload")
+    if files["LICENSE"] != license_bytes:
+        raise ValueError("source/package license notices differ")
+    return skills
 
 
 def snapshot(revision):
@@ -43,38 +118,8 @@ def snapshot(revision):
         relative = Path(name.decode()).relative_to(PACKAGE).as_posix()
         if mode != "100644" or kind != "blob":
             raise ValueError("package contains a non-ordinary file: " + relative)
-        if not (relative.endswith(".md") or relative in {"vibe.toml", "LICENSE"}):
-            raise ValueError("unexpected passive package file: " + relative)
         files[relative] = git("cat-file", "blob", oid)
-    if "vibe.toml" not in files or "LICENSE" not in files:
-        raise ValueError("source commit has no complete package")
-    manifest = tomllib.loads(files["vibe.toml"].decode())
-    package = manifest.get("package", {})
-    if not isinstance(package, dict):
-        raise ValueError("source package metadata must be a table")
-    expected = {"group": "org.jresearch.governance", "name": "proportional-controls",
-                "version": "0.1.0", "kind": "flow", "format": "simple", "epoch": 1,
-                "publish": False, "license": "MIT"}
-    if any(type(package.get(key)) is not type(value) or package.get(key) != value
-           for key, value in expected.items()):
-        raise ValueError("source package identity/passivity/publication boundary differs")
-    if set(manifest) != {"package", "boot_snippet", "skill"}:
-        raise ValueError("unexpected package capability or dependency")
-    if set(package) - (set(expected) | {"description"}):
-        raise ValueError("unexpected package metadata")
-    boot = {"source": "vibevm/vibespecs/boot/proportional-controls.md",
-            "category": "flow", "link": "dynamic"}
-    skill = {"name": "proportional-controls",
-             "path": "vibevm/vibespecs/skills/proportional-controls",
-             "include": ["SKILL.md", "references/*.md"]}
-    if manifest["boot_snippet"] != boot or manifest["skill"] != [skill]:
-        raise ValueError("package boot/skill projection differs")
-    required = {boot["source"], skill["path"] + "/SKILL.md",
-                skill["path"] + "/references/protocol.md", "README.md"}
-    if not required <= set(files):
-        raise ValueError("source package payload is incomplete")
-    if files["LICENSE"] != git("show", revision + ":LICENSE"):
-        raise ValueError("source/package license notices differ")
+    validate_payload(files, git("show", revision + ":LICENSE"))
     hashes = {name: hashlib.sha256(data).hexdigest() for name, data in sorted(files.items())}
     # Hash the sorted path/hash map, binding both file names and file bytes.
     content = hashlib.sha256(json.dumps(hashes, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
@@ -138,7 +183,7 @@ def verify(revision, directory, installed=False):
 def verify_consumer(revision, directory):
     directory = Path(directory)
     files, receipt = snapshot(revision)
-    slot = directory / "vibevm/vibedeps/org.jresearch.governance.proportional-controls/0.1.0"
+    slot = directory / SLOT
     verify(revision, slot, installed=True)
     manifest = tomllib.loads((directory / "vibe.toml").read_text())
     requires = manifest.get("requires", {})
@@ -160,7 +205,7 @@ def verify_consumer(revision, directory):
     if not isinstance(locked, list) or any(not isinstance(entry, dict) for entry in locked):
         raise ValueError("consumer lock packages must be tables")
     packages = [entry for entry in locked if
-                entry.get("group") == "org.jresearch.governance" and entry.get("name") == "proportional-controls"]
+                entry.get("group") == "org.jresearch.ai" and entry.get("name") == "development-governance"]
     if len(packages) != 1:
         raise ValueError("consumer lock has no unique package identity")
     entry = packages[0]
@@ -168,17 +213,18 @@ def verify_consumer(revision, directory):
             "version": "0.1.0", "source_kind": "git", "source_url": requirement["git"],
             "source_ref": requirement.get("rev") or requirement["tag"], "content_hash": vibe_hash(files)}.items()):
         raise ValueError("consumer lock differs from canonical content/source declaration")
-    projected = directory / ".agents/skills/proportional-controls"
-    prefix = "vibevm/vibespecs/skills/proportional-controls/"
-    expected = {name.removeprefix(prefix): data for name, data in files.items() if name.startswith(prefix)}
-    if not projected.is_dir() or projected.is_symlink():
-        raise ValueError("consumer native skill projection is missing")
-    paths = list(projected.rglob("*"))
-    if any(path.is_symlink() for path in paths):
-        raise ValueError("consumer native skill projection contains symlinks")
-    actual = {path.relative_to(projected).as_posix(): path.read_bytes() for path in paths if path.is_file()}
-    if actual != expected:
-        raise ValueError("consumer native skill projection differs from canonical source")
+    for skill in tomllib.loads(files["vibe.toml"].decode())["skill"]:
+        projected = directory / ".agents/skills" / skill["name"]
+        prefix = skill["path"] + "/"
+        expected = {name.removeprefix(prefix): data for name, data in files.items() if name.startswith(prefix)}
+        if not projected.is_dir() or projected.is_symlink():
+            raise ValueError("consumer native skill projection is missing: " + skill["name"])
+        paths = list(projected.rglob("*"))
+        if any(path.is_symlink() or (not path.is_file() and not path.is_dir()) for path in paths):
+            raise ValueError("consumer native skill projection contains non-ordinary files")
+        actual = {path.relative_to(projected).as_posix(): path.read_bytes() for path in paths if path.is_file()}
+        if actual != expected:
+            raise ValueError("consumer native skill projection differs from canonical source: " + skill["name"])
     return receipt
 
 

@@ -50,27 +50,19 @@ def check(export_ref=None):
     workspace = tomllib.loads((ROOT / "vibe.toml").read_text(encoding="utf-8"))
     require(set(workspace) == {"workspace"}, "root must remain an authoring-only workspace")
     members = workspace["workspace"]["members"]
-    require(len(members) == 1, "bootstrap has one bounded package")
+    require(len(members) == 1, "authoring has one bounded governance package")
     member = ROOT / members[0]
     require(member.resolve().is_relative_to(ROOT), "member must remain inside the source")
-    manifest = tomllib.loads((member / "vibe.toml").read_text(encoding="utf-8"))
-    require(set(manifest) <= {"package", "boot_snippet", "skill"}, "unexpected package capability/dependency")
-    package = manifest["package"]
-    require((package["group"], package["name"], package["version"], package["kind"], package["format"], package["epoch"])
-            == ("org.jresearch.governance", "proportional-controls", "0.1.0", "flow", "simple", 1), "package identity/format changed")
-    require(package.get("publish") is False and package.get("license") == "MIT", "bootstrap publication/license boundary")
-    boot = member / manifest["boot_snippet"]["source"]
-    require(boot.resolve().is_relative_to(member.resolve()) and boot.is_file(), "boot pointer must exist inside package")
-    require((member / "LICENSE").read_bytes() == (ROOT / "LICENSE").read_bytes(), "package must carry the source MIT notice")
-    skills = manifest["skill"]
-    require(len(skills) == 1 and skills[0]["name"] == "proportional-controls", "one native skill expected")
-    skill_path = member / skills[0]["path"]
-    require(skill_path.resolve().is_relative_to(member.resolve()), "skill path escapes package")
-    skill = (skill_path / "SKILL.md").read_text(encoding="utf-8")
-    require(skill.startswith("---\nname: proportional-controls\ndescription: ") and "\n---\n" in skill, "skill discovery frontmatter")
+    spec = importlib.util.spec_from_file_location("preparation", ROOT / "scripts/prepare-distribution.py")
+    preparation = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(preparation)
+    require(members == [preparation.PACKAGE], "authoring member differs from the current package coordinate")
+    payload = {}
     for path in member.rglob("*"):
+        require(not path.is_symlink(), "package must contain ordinary passive text only")
         if path.is_file():
-            require(path.suffix in {".md", ".toml"} or path.name == "LICENSE", "package must contain passive text only")
+            payload[path.relative_to(member).as_posix()] = path.read_bytes()
+    skills = preparation.validate_payload(payload, (ROOT / "LICENSE").read_bytes())
     pin = json.loads((ROOT / "toolchain/vibevm.json").read_text(encoding="utf-8"))
     require(pin["version"] == "1.0.7" and pin["source_revision"] == "b6659978453f50e6d1d4d99626d70b980a2c5847", "qualified VibeVM pin changed")
     if export_ref:
@@ -78,16 +70,18 @@ def check(export_ref=None):
         vendor = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(vendor)
         with tempfile.TemporaryDirectory(prefix="shared-governance-native-") as temporary:
-            target = Path(temporary) / "proportional-controls"
-            provenance = vendor.export(export_ref, target)
-            expected = {path.relative_to(skill_path).as_posix() for path in skill_path.rglob("*") if path.is_file()}
-            actual = {path.relative_to(target).as_posix() for path in target.rglob("*") if path.is_file()}
-            require(actual == expected | {"LICENSE", "SOURCE.json"}, "native export file set differs from candidate")
-            for relative, digest in provenance["sha256"].items():
-                require(hashlib.sha256((target / relative).read_bytes()).hexdigest() == digest, "native export digest mismatch")
-            for path in skill_path.rglob("*"):
-                if path.is_file():
-                    require((target / path.relative_to(skill_path)).read_bytes() == path.read_bytes(), "native export differs from candidate bytes")
+            for skill in skills:
+                skill_path = member / skill["path"]
+                target = Path(temporary) / skill["name"]
+                provenance = vendor.export(export_ref, target, skill["name"])
+                expected = {path.relative_to(skill_path).as_posix() for path in skill_path.rglob("*") if path.is_file()}
+                actual = {path.relative_to(target).as_posix() for path in target.rglob("*") if path.is_file()}
+                require(actual == expected | {"LICENSE", "SOURCE.json"}, "native export file set differs from candidate")
+                for relative, digest in provenance["sha256"].items():
+                    require(hashlib.sha256((target / relative).read_bytes()).hexdigest() == digest, "native export digest mismatch")
+                for path in skill_path.rglob("*"):
+                    if path.is_file():
+                        require((target / path.relative_to(skill_path)).read_bytes() == path.read_bytes(), "native export differs from candidate bytes")
     return {"qualification": "PASS", "tracked_files": len(tracked), "local_links": links,
             "secret_scan": "bounded markers PASS", "native_export": "PASS" if export_ref else "not requested"}
 
