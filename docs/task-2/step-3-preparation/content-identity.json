@@ -1,0 +1,26 @@
+{
+  "all_distribution_sha256": {
+    "DISTRIBUTION.json": "ce072ea1b991f2a1c22ff65cf62b057ecd07817b7f06a8a739cc09281f660b24",
+    "LICENSE": "89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853",
+    "README.md": "179ab8bd8621f5cd0a524f861f2b90f04907abd4ce250f657c2c1d8103242e84",
+    "vibe.toml": "28b403aa50cbf418b3eae5e163afb361486bf66ec3bc04e4622e25637dffcd63",
+    "vibevm/vibespecs/boot/development-governance.md": "ad07643a87c6466ab124418e64d5923157afb8e4b65a29f5a9cc3df9ac886c11",
+    "vibevm/vibespecs/skills/proportional-controls/SKILL.md": "9889a1c2d70772b61c5b1f247e8ea228e2c91ac72a15d899d3025cad39efdf54",
+    "vibevm/vibespecs/skills/proportional-controls/references/protocol.md": "cfa62afee0aa267aa58bb966faece0225cb717a82fbb93d3d3b4bf7b29704c6c"
+  },
+  "canonical_repository": "https://github.com/jresearchsoftware/shared-governance",
+  "distribution_commit": null,
+  "distribution_files_including_receipt": 7,
+  "intended_destination": "https://github.com/jrs-vibevm/org.jresearch.ai.development-governance.git",
+  "package": "org.jresearch.ai/development-governance",
+  "payload_files": 6,
+  "payload_sha256": "4b611bc0a6dc9500dd9e7b6cc11c23092ecf81d25d329ea2066ac9bca9471609",
+  "proposed_tag": "v0.1.0",
+  "publication_admitted": false,
+  "receipt_sha256": "ce072ea1b991f2a1c22ff65cf62b057ecd07817b7f06a8a739cc09281f660b24",
+  "remote_acquisition_qualified": false,
+  "source_git_tree": "c1120f55d18efc9dfabcbe15ea4636cb3f2f7c38",
+  "source_revision": "60704ce3e0f0243d157646989429c6e621fc8f04",
+  "version": "0.1.0",
+  "vibevm_1_0_7_tree_hash_including_receipt": "sha256:9ee1caef5a62d56dc5bcc1890633e8395314f6a93ae9c85dfb8f47cf3d7a1af7"
+}

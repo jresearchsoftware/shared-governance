@@ -165,7 +165,11 @@ The Git/native-Skill baseline already provides a simpler viable alternative.
 
 [Task 2 distribution preparation](distribution.md) records accepted Step 1
 disposable direct-Git publishing/consumer probes, integrity rejection and
-bounded update/offline/rollback results. Step 2 adapts the source identity and
-declared Skill set before publication; those historical results are not fresh
-proof for a new head. Actual remote publication remains unqualified and requires
-separate admission after source acceptance.
+bounded update/offline/rollback results. Step 2's source identity and declared
+Skill set were independently accepted through
+[PR 4](https://github.com/jresearchsoftware/shared-governance/pull/4) and
+squash-merged as `60704ce3e0f0243d157646989429c6e621fc8f04`.
+The [Step 3 preparation packet](task-2/step-3-preparation/README.md) provides
+fresh local evidence for that accepted SHA and the proposed `jrs-vibevm`
+publication boundary. Actual remote publication remains unqualified and
+requires separate explicit admission in the live Issue.
