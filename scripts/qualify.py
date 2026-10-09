@@ -65,10 +65,28 @@ def check(export_ref=None):
     skills = preparation.validate_payload(payload, (ROOT / "LICENSE").read_bytes())
     pin = json.loads((ROOT / "toolchain/vibevm.json").read_text(encoding="utf-8"))
     require(pin["version"] == "1.0.7" and pin["source_revision"] == "b6659978453f50e6d1d4d99626d70b980a2c5847", "qualified VibeVM pin changed")
+    spec = importlib.util.spec_from_file_location("vendor", ROOT / "scripts/vendor-skill.py")
+    vendor = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(vendor)
+    # Active guidance follows its reviewed source receipt, not editable authoring bytes.
+    active = ROOT / ".agents/skills/proportional-controls"
+    receipt = json.loads((ROOT / ".agents/proportional-controls-source.json").read_text(encoding="utf-8"))
+    require(re.fullmatch(r"[0-9a-f]{40}", receipt["revision"]), "active Skill needs a full accepted source SHA")
+    with tempfile.TemporaryDirectory(prefix="shared-governance-active-") as temporary:
+        target = Path(temporary) / "proportional-controls"
+        expected = vendor.export(receipt["revision"], target)
+        require(receipt == expected, "active Skill source receipt differs from exact-commit export")
+        files = {name: digest for name, digest in expected["sha256"].items() if name != "LICENSE"}
+        actual = {path.relative_to(active).as_posix() for path in active.rglob("*") if path.is_file()}
+        require(actual == set(files), "active Skill file set differs from accepted source")
+        for name in files:
+            require((active / name).read_bytes() == (target / name).read_bytes(), "active Skill differs from accepted source: " + name)
+        require((ROOT / "LICENSE").read_bytes() == (target / "LICENSE").read_bytes(), "active Skill license differs from accepted source")
+        native_receipt = tomllib.loads((active.parent / ".proportional-controls.vibe-skill-receipt.toml").read_text(encoding="utf-8"))
+        require(native_receipt == {"schema": 1, "skill": "proportional-controls",
+                                  "file": [{"path": name, "sha256": digest} for name, digest in files.items()]},
+                "VibeVM projection receipt differs from accepted source")
     if export_ref:
-        spec = importlib.util.spec_from_file_location("vendor", ROOT / "scripts/vendor-skill.py")
-        vendor = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(vendor)
         with tempfile.TemporaryDirectory(prefix="shared-governance-native-") as temporary:
             for skill in skills:
                 skill_path = member / skill["path"]
@@ -83,7 +101,8 @@ def check(export_ref=None):
                     if path.is_file():
                         require((target / path.relative_to(skill_path)).read_bytes() == path.read_bytes(), "native export differs from candidate bytes")
     return {"qualification": "PASS", "tracked_files": len(tracked), "local_links": links,
-            "secret_scan": "bounded markers PASS", "native_export": "PASS" if export_ref else "not requested"}
+            "secret_scan": "bounded markers PASS", "active_skill": "PASS", "active_source": receipt["revision"],
+            "native_export": "PASS" if export_ref else "not requested"}
 
 
 def main():

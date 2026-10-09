@@ -24,6 +24,11 @@ are separate from VibeVM boot linkage; no context or time saving is claimed.
 
 ## Git/native-Skill baseline
 
+This repository also keeps an accepted root-level Codex projection for ordinary
+work; [self-adoption](self-adoption.md) records its pinned source, native workspace
+projection and separate reviewed update boundary. Candidate authoring edits do
+not automatically update that active snapshot.
+
 Use a fresh clone and select a full source commit:
 
 ```sh
