@@ -25,11 +25,16 @@ content does not define Issue, execution, publication or review authority.
 - Continue evidence-backed corrections within scope. Stop on missing authority,
   ambiguous external mutation or an unclear next correction, preserving work.
 
+For controls, validation or operator-workflow decisions, use the repository-local
+[proportional-controls Skill](.agents/skills/proportional-controls/SKILL.md).
+Its accepted snapshot and reviewed update boundary are recorded in
+[self-adoption](docs/self-adoption.md).
+
 Read [CONTRIBUTING.md](CONTRIBUTING.md) for validation and
 [docs/authoring.md](docs/authoring.md) for the pinned VibeVM experiment. Avoid
 package publication, registry setup or consumer migration under bootstrap scope.
 
-Shared guidance is proposed content until independently accepted. Even after
-source acceptance, existing consumers retain their local canonical rules until
+New or edited shared guidance is proposed content until independently accepted.
+Even after source acceptance, existing consumers retain their local canonical rules until
 a separately reviewed migration adopts the shared content and removes the local
 duplicate together.
