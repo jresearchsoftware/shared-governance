@@ -54,6 +54,10 @@ def main():
             print(result.stdout.strip())
             if result.stderr.strip():
                 print(result.stderr.strip())
+            if "check" in arguments:
+                report = json.loads(result.stdout)
+                if report["summary"]["error"] or report["summary"]["warning"] or report["findings"]:
+                    raise RuntimeError("VibeVM check reported findings")
             return result.stdout
 
         run("--version")
@@ -61,19 +65,32 @@ def main():
         run("--json", "check", "--path", str(workspace))
         member_relative = tomllib.loads((workspace / "vibe.toml").read_text(encoding="utf-8"))["workspace"]["members"][0]
         member = workspace / member_relative
+        skills = tomllib.loads((member / "vibe.toml").read_text(encoding="utf-8"))["skill"]
+        # Validate/projection may already have written state; only source-tracked bytes are payload.
+        prefix = member_relative + "/"
+        payload = {name.removeprefix(prefix): (workspace / name).read_bytes()
+                   for name in tracked if name.startswith(prefix)}
+        # Keep native projection receipts out of the source-tree registry transport.
+        registry = fixture_root / "registry"
+        registry_member = registry / Path(member_relative).relative_to("vibevm/vibepacks")
+        for relative, data in payload.items():
+            target = registry_member / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data)
         run("--json", "check", "--path", str(member))
         agents_before = (workspace / "AGENTS.md").read_bytes()
-        run("--offline", "--json", "skill", "install", "--path", str(member),
-            "--agent", "codex", "--scope", "project", "--skill", "proportional-controls", "--yes")
-        skill = member / "vibevm/vibespecs/skills/proportional-controls"
-        projected = member / ".agents/skills/proportional-controls"
-        expected = {path.relative_to(skill).as_posix() for path in skill.rglob("*") if path.is_file()}
-        actual = {path.relative_to(projected).as_posix() for path in projected.rglob("*") if path.is_file()}
-        if actual != expected:
-            raise RuntimeError("VibeVM skill projection file set differs from canonical skill")
-        for source in skill.rglob("*"):
-            if source.is_file() and (projected / source.relative_to(skill)).read_bytes() != source.read_bytes():
-                raise RuntimeError("VibeVM projection differs from canonical skill bytes")
+        for declaration in skills:
+            run("--offline", "--json", "skill", "install", "--path", str(member),
+                "--agent", "codex", "--scope", "project", "--skill", declaration["name"], "--yes")
+            skill = member / declaration["path"]
+            projected = member / ".agents/skills" / declaration["name"]
+            expected = {path.relative_to(skill).as_posix() for path in skill.rglob("*") if path.is_file()}
+            actual = {path.relative_to(projected).as_posix() for path in projected.rglob("*") if path.is_file()}
+            if actual != expected:
+                raise RuntimeError("VibeVM skill projection file set differs from canonical skill")
+            for source in skill.rglob("*"):
+                if source.is_file() and (projected / source.relative_to(skill)).read_bytes() != source.read_bytes():
+                    raise RuntimeError("VibeVM projection differs from canonical skill bytes")
         if (workspace / "AGENTS.md").read_bytes() != agents_before:
             raise RuntimeError("member skill projection changed root AGENTS.md")
         run("--json", "check", "--path", str(workspace))
@@ -83,15 +100,18 @@ def main():
                            if args.path_source else '"=0.1.0"')
             with (workspace / "vibe.toml").open("a", encoding="utf-8") as manifest:
                 manifest.write('\n[project]\nname = "authoring-fixture"\nversion = "0.0.0"\nspec_format = "mixed"\n'
-                               '\n[requires.packages]\n"org.jresearch.governance/proportional-controls" = '
+                               '\n[requires.packages]\n"org.jresearch.ai/development-governance" = '
                                + requirement + '\n')
             run("--offline", "--json", "install", "--path", str(workspace), "--registry",
-                str(workspace / "vibevm/vibepacks"), "--no-default-registry", "--assume-yes")
-            installed = workspace / "vibevm/vibedeps/org.jresearch.governance.proportional-controls/0.1.0"
-            for relative in ["vibevm/vibespecs/boot/proportional-controls.md",
-                             "vibevm/vibespecs/skills/proportional-controls/SKILL.md",
-                             "vibevm/vibespecs/skills/proportional-controls/references/protocol.md", "LICENSE"]:
-                if (installed / relative).read_bytes() != (member / relative).read_bytes():
+                str(registry), "--no-default-registry", "--assume-yes")
+            installed = workspace / "vibevm/vibedeps/org.jresearch.ai.development-governance/0.1.0"
+            actual = {path.relative_to(installed).as_posix() for path in installed.rglob("*") if path.is_file()}
+            if actual != set(payload) | {".vibe-slot.toml"}:
+                raise RuntimeError("materialized payload file set differs from authored source; missing="
+                                   + repr(sorted(set(payload) - actual)) + "; extra="
+                                   + repr(sorted(actual - set(payload) - {".vibe-slot.toml"})))
+            for relative, data in payload.items():
+                if (installed / relative).read_bytes() != data:
                     raise RuntimeError("materialized payload differs from authored source bytes")
             agents_after = (workspace / "AGENTS.md").read_bytes()
             blocks = re.findall(rb"<vibevm>.*?</vibevm>", agents_after, flags=re.S)

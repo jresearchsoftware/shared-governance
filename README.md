@@ -5,12 +5,24 @@ Public authoring source for reusable AI-development governance owned by
 [Relay Task 83](https://github.com/jresearchsoftware/codex-relay/issues/83),
 following the accepted [Task 59 analysis](https://github.com/jresearchsoftware/codex-relay/pull/81).
 
-The accepted first experiment contains one package source:
-[`org.jresearch.governance/proportional-controls` v0.1.0](vibevm/vibepacks/org.jresearch.governance/proportional-controls/v0.1.0/README.md).
-It is a passive VibeVM flow with a small boot pointer, one native skill and one
-control procedure. No distribution repository, package tag or registry index is
-published. Initial source acceptance was recorded by [PR 1](https://github.com/jresearchsoftware/shared-governance/pull/1)
-at `aa1e18085dee2aa59e19c5939e882cd8084eea00`.
+The current source candidate contains one extensible package:
+[`org.jresearch.ai/development-governance` v0.1.0](vibevm/vibepacks/org.jresearch.ai/development-governance/v0.1.0/README.md).
+It is a passive VibeVM flow with one compact boot pointer and distinct native
+Skills for guidance loaded when needed. Initially it contains only the accepted
+`proportional-controls` Skill and control procedure, with unchanged bytes and
+attribution. One package version identifies the entire included Skill set;
+adding or changing a Skill requires a new independently accepted package version
+and separately reviewed consumer update. No distribution repository, package tag
+or registry index is published.
+
+The initial `org.jresearch.governance/proportional-controls` source was accepted
+through [PR 1](https://github.com/jresearchsoftware/shared-governance/pull/1)
+at `aa1e18085dee2aa59e19c5939e882cd8084eea00`. Its distribution preparation was
+accepted through [PR 3](https://github.com/jresearchsoftware/shared-governance/pull/3)
+at `7cb702164b3e26c6f86e85b2d5596bbb9cb441ba`. These are historical source
+identities, not published dependencies. [Task 2](https://github.com/jresearchsoftware/shared-governance/issues/2)
+Step 2 authorizes the current source identity and multi-Skill adaptation before
+publication, pending independent exact-head review.
 
 Existing consumers retain their local canonical rules until a separately
 authorized consumer migration is independently accepted. Source acceptance does

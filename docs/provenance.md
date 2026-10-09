@@ -28,6 +28,20 @@ package LICENSE files. There is one canonical procedure, inside the skill's
 metadata and a Git export receipt identify source content; neither is a competing
 policy or live execution record.
 
+[Task 2](https://github.com/jresearchsoftware/shared-governance/issues/2) Step 1
+was independently accepted through
+[PR 3](https://github.com/jresearchsoftware/shared-governance/pull/3), reviewed at
+`2f375e8c865896676a22171ab91e773f016248a3` and squash-merged as
+`7cb702164b3e26c6f86e85b2d5596bbb9cb441ba`. Its
+`org.jresearch.governance/proportional-controls` coordinate and proposed
+distribution repository are historical evidence only; no package was published.
+The admitted Step 2 source candidate uses
+`org.jresearch.ai/development-governance` v0.1.0, initially retaining the accepted
+`proportional-controls` Skill/procedure bytes and MIT/derived attribution.
+One version covers all declared passive Skills. This layout/identity change
+requires independent exact-head source acceptance and grants no publication or
+consumer adoption authority.
+
 VibeVM is pinned to `v1.0.7`, source
 `b6659978453f50e6d1d4d99626d70b980a2c5847`, and
 [release 403150895](https://github.com/vibevm/vibevm/releases/tag/v1.0.7).
