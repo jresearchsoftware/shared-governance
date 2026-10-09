@@ -5,7 +5,7 @@ Public authoring source for reusable AI-development governance owned by
 [Relay Task 83](https://github.com/jresearchsoftware/codex-relay/issues/83),
 following the accepted [Task 59 analysis](https://github.com/jresearchsoftware/codex-relay/pull/81).
 
-The current source candidate contains one extensible package:
+The accepted source contains one extensible package:
 [`org.jresearch.ai/development-governance` v0.1.0](vibevm/vibepacks/org.jresearch.ai/development-governance/v0.1.0/README.md).
 It is a passive VibeVM flow with one compact boot pointer and distinct native
 Skills for guidance loaded when needed. Initially it contains only the accepted
@@ -21,8 +21,13 @@ at `aa1e18085dee2aa59e19c5939e882cd8084eea00`. Its distribution preparation was
 accepted through [PR 3](https://github.com/jresearchsoftware/shared-governance/pull/3)
 at `7cb702164b3e26c6f86e85b2d5596bbb9cb441ba`. These are historical source
 identities, not published dependencies. [Task 2](https://github.com/jresearchsoftware/shared-governance/issues/2)
-Step 2 authorizes the current source identity and multi-Skill adaptation before
-publication, pending independent exact-head review.
+Step 2's current identity and multi-Skill adaptation were independently accepted
+through [PR 4](https://github.com/jresearchsoftware/shared-governance/pull/4)
+and squash-merged as `60704ce3e0f0243d157646989429c6e621fc8f04`.
+The [Step 3 preparation packet](docs/task-2/step-3-preparation/README.md) records
+that accepted payload's identities, local qualification and a proposed owner
+admission for the intended `jrs-vibevm` destination. External execution and
+publication still require explicit admission in the live Issue.
 
 Existing consumers retain their local canonical rules until a separately
 authorized consumer migration is independently accepted. Source acceptance does

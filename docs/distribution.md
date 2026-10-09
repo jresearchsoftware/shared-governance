@@ -1,13 +1,18 @@
 # One-package distribution preparation
 
 [Task 2](https://github.com/jresearchsoftware/shared-governance/issues/2) Step 2
-adapts the source package identity and declared passive Skill set before first
-publication, using source changes and disposable local Git fixtures. The
-completed Step 1 was independently accepted through
+adapted the source package identity and declared passive Skill set before first
+publication. It was independently accepted through
+[PR 4](https://github.com/jresearchsoftware/shared-governance/pull/4) and
+squash-merged as `60704ce3e0f0243d157646989429c6e621fc8f04`. The
+[Step 3 preparation packet](task-2/step-3-preparation/README.md) records fresh
+local qualification from that accepted SHA, content identities and a proposed
+owner admission. No external execution or publication is admitted by this packet.
+The completed Step 1 was independently accepted through
 [PR 3](https://github.com/jresearchsoftware/shared-governance/pull/3), reviewed at
 `2f375e8c865896676a22171ab91e773f016248a3` and squash-merged as
 `7cb702164b3e26c6f86e85b2d5596bbb9cb441ba`. Its local qualification remains
-historical evidence for the old coordinate, not fresh proof for this candidate
+historical evidence for the old coordinate, not fresh proof for the renamed package
 or a real remote distribution. Actual GitHub repository creation, package tags,
 releases, registry entries, credentials and real consumer migration require
 separate owner authority after independent source acceptance and merge. The
@@ -32,16 +37,19 @@ Proposed, **unallocated** destination:
 
 | Item | Proposed value |
 | --- | --- |
-| Repository | `https://github.com/jresearchsoftware/org.jresearch.ai.development-governance.git` |
+| Repository | `https://github.com/jrs-vibevm/org.jresearch.ai.development-governance.git` |
 | Package | `org.jresearch.ai/development-governance` |
 | Version tag | `v0.1.0` |
 | Transport | `vibe registry publish --repo-url` to a separately prepared repository; direct Git-source consumer |
 | Consumer identity | Exact `=0.1.0`, full distribution commit where supported, canonical source SHA and verified content hashes |
 
 This is the pinned tool's `<group>.<name>` naming convention, without an index
-or new registry service. The Step 1 proposed
-`jresearchsoftware/org.jresearch.governance.proportional-controls` destination
-is historical only and is not the owner's intended publication destination.
+or new registry service. The owner's destination decision in the live Issue
+selects the separate `jrs-vibevm` organization. The former proposed-only
+`jresearchsoftware/org.jresearch.ai.development-governance` location and the
+Step 1 proposed `jresearchsoftware/org.jresearch.governance.proportional-controls`
+destination are historical only; the intended location is the `jrs-vibevm` target
+above, which still needs explicit publication admission.
 Direct publishing bypasses registry token loading and
 host APIs, and uses ordinary local Git authentication. It requires the
 destination to exist. `publish=false` is **not** an enforcement gate for direct
@@ -166,7 +174,7 @@ Do not acquire credentials or change repository settings in this Step.
 3. Under that specific publication authority, the supported commands are:
 
    ```sh
-   target_url=https://github.com/jresearchsoftware/org.jresearch.ai.development-governance.git
+   target_url=https://github.com/jrs-vibevm/org.jresearch.ai.development-governance.git
    "$tool_tmp/vibe" --json registry publish "$prepared" --path "$prepared" --repo-url "$target_url" --dry-run
    # Actual push only under the separate owner publication admission:
    "$tool_tmp/vibe" --json registry publish "$prepared" --path "$prepared" --repo-url "$target_url"
@@ -188,7 +196,7 @@ Do not acquire credentials or change repository settings in this Step.
    spec_format = "mixed"
 
    [requires.packages]
-   "org.jresearch.ai/development-governance" = { version = "=0.1.0", git = "https://github.com/jresearchsoftware/org.jresearch.ai.development-governance.git", rev = "FULL_RECORDED_DISTRIBUTION_SHA", auth = "none" }
+   "org.jresearch.ai/development-governance" = { version = "=0.1.0", git = "https://github.com/jrs-vibevm/org.jresearch.ai.development-governance.git", rev = "FULL_RECORDED_DISTRIBUTION_SHA", auth = "none" }
    ```
 
    Run pinned `install --path CONSUMER --no-default-registry --assume-yes`, then

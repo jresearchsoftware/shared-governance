@@ -1,0 +1,76 @@
+{
+  "evidence_scope": "Initial local preparation snapshot at the accepted source, before the owner-requested source-only Git/PR handoff; destination observations must be rechecked before any admitted execution",
+  "snapshot_utc": "2026-10-09 17:54:51 UTC",
+  "issue": {
+    "url": "https://github.com/jresearchsoftware/shared-governance/issues/2",
+    "state": "open",
+    "updated_at": "2026-10-09T17:47:41Z",
+    "comments": 2,
+    "publication_admitted": false,
+    "step3_execution_admitted": false
+  },
+  "accepted_source_revision": "60704ce3e0f0243d157646989429c6e621fc8f04",
+  "reviewed_head": "47bf594cbff65dfc39a913a5dfd22fee6cc3aa2a",
+  "shared_source_tree": "c1120f55d18efc9dfabcbe15ea4636cb3f2f7c38",
+  "github_identity": {
+    "login": "foal",
+    "id": 458209
+  },
+  "organization": {
+    "login": "jrs-vibevm",
+    "id": 340262266,
+    "public_repos": 0,
+    "membership_state": "active",
+    "membership_role": "admin",
+    "repos_list": []
+  },
+  "intended_destination": {
+    "full_name": "jrs-vibevm/org.jresearch.ai.development-governance",
+    "api_status": 404,
+    "existence": "not observed under current API access; universal absence not proven",
+    "visibility": null,
+    "push_permission": null,
+    "remote_refs": null
+  },
+  "accepted_source_ci": {
+    "run_id": 37967738820,
+    "job_id": 113946240930,
+    "head_sha": "60704ce3e0f0243d157646989429c6e621fc8f04",
+    "conclusion": "success",
+    "api_annotations_count": 0,
+    "ui_warnings": "unavailable"
+  },
+  "local_validation": {
+    "whitespace": "PASS",
+    "source_export": "PASS",
+    "tracked_files": 25,
+    "local_links": 18,
+    "behavioral_tests": 42,
+    "materialization_commands": 7,
+    "distribution_fixture_commands": 23,
+    "canonical_preparation_and_retained_verification": "PASS",
+    "reproducible_full_file_set": "PASS"
+  },
+  "external_mutations": [],
+  "source_mutations": [],
+  "original_checkout": {
+    "branch": "codex/task-2-development-governance",
+    "head": "47bf594cbff65dfc39a913a5dfd22fee6cc3aa2a",
+    "preserved_untracked": [
+      ".serena/"
+    ]
+  },
+  "limits": [
+    "authenticated Git push unproven",
+    "real public distribution commit unavailable",
+    "real GitHub full-SHA acquisition unqualified",
+    "cold anonymous remote consumer unqualified",
+    "remote idempotence unqualified",
+    "mutable tags and tool release",
+    "local tag drift lock-slot split canonically rejected",
+    "cache-only offline recovery fails",
+    "default local Git full-SHA archive acquisition fails",
+    "GNU GLIBC_2.39 and path-only empty-world/ORDER-LAW limitations retained",
+    "alpha compatibility and no measured savings"
+  ]
+}
