@@ -48,6 +48,9 @@ class DistributionTests(unittest.TestCase):
         self.git("config", "core.filemode", "true")
         self.git("config", "commit.gpgsign", "false")
         self.git("config", "core.hooksPath", str(self.directory / "no-hooks"))
+        # Short-lived fixtures must not leave Git writers racing directory cleanup.
+        self.git("config", "maintenance.auto", "false")
+        self.git("config", "gc.auto", "0")
         self.revision = self.commit()
         self.old_root = DISTRIBUTION.ROOT
         DISTRIBUTION.ROOT = self.source

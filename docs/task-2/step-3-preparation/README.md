@@ -188,6 +188,14 @@ The initial local preparation snapshot made no source/remote mutation;
 The subsequent owner-requested handoff adds this evidence packet and affected
 documentation on an ordinary source branch/PR. The passive package, its canonical
 Skills, exporter/qualifier implementation, toolchain pins and AGENTS.md are unchanged.
+The first documentation candidate's [CI run](https://github.com/jresearchsoftware/shared-governance/actions/runs/37974484916)
+failed during temporary Git repository cleanup with `Directory not empty: objects`,
+after its behavioral assertions completed. The test harness now disables automatic
+Git maintenance/GC in each disposable fixture to prevent background Git writers
+outliving commands and racing cleanup; cleanup errors remain fatal. This is
+fixture-local configuration only. The recorded accepted-source logs remain unchanged.
+Git documents these controls in [maintenance.auto](https://git-scm.com/docs/git-maintenance#Documentation/git-maintenance.txt-maintenanceauto)
+and [gc.auto](https://git-scm.com/docs/git-gc#Documentation/git-gc.txt-gcauto).
 Unrelated untracked `.serena/` is preserved. No external distribution repository,
 package ref/Release/registry mutation, permission/credential/settings change,
 consumer migration, self-approval, merge or closure is part of this candidate.
