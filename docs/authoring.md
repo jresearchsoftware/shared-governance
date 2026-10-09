@@ -29,8 +29,11 @@ destination="$(mktemp -d)/proportional-controls"
 python3 scripts/vendor-skill.py --ref "$source_sha" --destination "$destination"
 ```
 
-While bootstrap is under review, check out the candidate PR head explicitly;
-`main` contains only the seed until independent acceptance and a later merge.
+The bootstrap was independently accepted and squash-merged as
+`aa1e18085dee2aa59e19c5939e882cd8084eea00` through
+[PR 1](https://github.com/jresearchsoftware/shared-governance/pull/1).
+For a new candidate check, select its exact PR head explicitly; this does not
+make that candidate an accepted consumer source.
 The exporter resolves the supplied local Git ref to a full commit, copies only
 ordinary skill files plus MIT LICENSE, and writes `SOURCE.json` with source SHA,
 path and per-file hashes. It refuses to overwrite a nonempty destination. It
@@ -143,3 +146,8 @@ distribution path justify it; qualify immutable content and alpha recovery
 there. The first consumer migration belongs to that consumer's own Task and
 must remove the former canonical duplicate in the same reviewed transition.
 The Git/native-Skill baseline already provides a simpler viable alternative.
+
+[Task 2 distribution preparation](distribution.md) extends this evidence with
+disposable direct-Git publishing/consumer probes, integrity rejection and
+bounded update/offline/rollback results. Actual remote publication remains
+unqualified and requires separate admission after source acceptance.
