@@ -1,0 +1,107 @@
+vibe 1.0.7
+{
+  "chain": [
+    "validate"
+  ],
+  "command": "lifecycle:plan",
+  "contributions": [],
+  "notices": [],
+  "requested": "validate"
+}
+{
+  "chain": [
+    "validate"
+  ],
+  "command": "lifecycle",
+  "contributions": [],
+  "notices": [],
+  "ok": true,
+  "requested": "validate",
+  "steps": [
+    {
+      "phase": "validate",
+      "status": "ok"
+    }
+  ]
+}
+{
+  "ok": true,
+  "command": "check",
+  "project": "<authoring-fixture>/workspace",
+  "summary": {
+    "error": 0,
+    "warning": 0,
+    "info": 0
+  },
+  "findings": []
+}
+{
+  "ok": true,
+  "command": "check",
+  "project": "<authoring-fixture>/workspace/vibevm/vibepacks/org.jresearch.ai/development-governance/v0.1.0",
+  "summary": {
+    "error": 0,
+    "warning": 0,
+    "info": 0
+  },
+  "findings": []
+}
+{
+  "ok": true,
+  "command": "skill:list",
+  "project": "<authoring-fixture>/workspace/vibevm/vibepacks/org.jresearch.ai/development-governance/v0.1.0",
+  "count": 0,
+  "skills": []
+}
+{
+  "ok": true,
+  "command": "check",
+  "project": "<authoring-fixture>/workspace",
+  "summary": {
+    "error": 0,
+    "warning": 0,
+    "info": 0
+  },
+  "findings": []
+}
+{
+  "command": "install:plan",
+  "packages": [
+    {
+      "package": "org.jresearch.ai/development-governance",
+      "version": "0.1.0"
+    }
+  ]
+}
+{
+  "command": "install:closure-diff",
+  "added": [
+    "org.jresearch.ai/development-governance@0.1.0 (root-edge)"
+  ],
+  "removed": [],
+  "changed": [],
+  "lanes": [
+    {
+      "lane": "vibevm/vibespecs/boot/INDEX.md",
+      "before": null,
+      "after": 819
+    }
+  ]
+}
+{
+  "command": "install",
+  "complete": true,
+  "materialised": [
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/0.1.0"
+  ],
+  "nodes_regenerated": [
+    ".",
+    "vibevm/vibepacks/org.jresearch.ai/development-governance/v0.1.0"
+  ],
+  "ok": true,
+  "project": "<authoring-fixture>/workspace",
+  "pruned": [],
+  "skipped": [],
+  "unchanged": false
+}
+{"vibevm_qualification": "PASS", "version": "1.0.7", "commands": 7, "native_skills": "none declared/projected", "dependency_install": "PASS", "fixture": "disposable local paths; no package publication or consumer writes"}
