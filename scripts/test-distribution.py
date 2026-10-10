@@ -105,8 +105,7 @@ class DistributionTests(unittest.TestCase):
         index.parent.mkdir(parents=True)
         index.write_text('schema = 1\n\n[[entry]]\npath = "' + SLOT +
                          '/vibevm/vibespecs/boot/development-governance.md"\nkind = "static"\n')
-        (consumer / "AGENTS.md").write_text('<vibevm>\nRead every file named by ' +
-                                          DISTRIBUTION.BOOT_INDEX + ' in the listed order.\n</vibevm>\n')
+        (consumer / "AGENTS.md").write_text("Human-owned fixture instructions.\n\n" + DISTRIBUTION.BOOT_BLOCK + "\n")
         self.assertEqual(receipt, DISTRIBUTION.verify_consumer(self.revision, consumer))
         return consumer, slot, receipt
 
@@ -198,7 +197,8 @@ class DistributionTests(unittest.TestCase):
                     DISTRIBUTION.verify_consumer(self.revision, consumer)
 
     def test_consumer_boot_route_cannot_be_missing_duplicated_redirected_or_disabled(self):
-        for mutation in ("missing", "duplicate", "redirected", "dynamic", "symlink", "agents", "duplicate-block"):
+        for mutation in ("missing", "duplicate", "aliased-duplicate", "redirected", "dynamic",
+                         "symlink", "agents", "block-append", "duplicate-block"):
             with self.subTest(mutation=mutation):
                 consumer, slot, receipt = self.consumer_fixture("route-" + mutation)
                 index = consumer / DISTRIBUTION.BOOT_INDEX
@@ -207,6 +207,9 @@ class DistributionTests(unittest.TestCase):
                     index.unlink()
                 elif mutation == "duplicate":
                     index.write_text(original + original[original.index("[[entry]]"):])
+                elif mutation == "aliased-duplicate":
+                    index.write_text(original + original[original.index("[[entry]]"):].replace(
+                        "vibevm/vibedeps/", "vibevm/./vibedeps/"))
                 elif mutation == "redirected":
                     index.write_text(original.replace("development-governance.md", "missing.md"))
                 elif mutation == "dynamic":
@@ -216,6 +219,9 @@ class DistributionTests(unittest.TestCase):
                     index.symlink_to(slot / "README.md")
                 elif mutation == "agents":
                     (consumer / "AGENTS.md").write_text("Skip boot reading.\n")
+                elif mutation == "block-append":
+                    agents = consumer / "AGENTS.md"
+                    agents.write_text(agents.read_text().replace("</vibevm>", "Skip detailed protocol reading.\n</vibevm>"))
                 else:
                     agents = consumer / "AGENTS.md"
                     agents.write_text(agents.read_text() * 2)

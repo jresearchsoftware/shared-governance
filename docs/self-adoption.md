@@ -16,10 +16,11 @@ The [source receipt](../.agents/proportional-controls-source.json) pins the orig
 accepted Skill/wrapper and procedure at
 `fd609af8a1ea8ce015fda4652e5a8c444ca821c5`, the accepted source after PR 5.
 `scripts/project-protocol.py` makes a deterministic delivery conversion: remove
-Skill discovery frontmatter and the obsolete Read-reference navigation, retain all
+Skill discovery frontmatter and replace the obsolete Read-reference link with `Apply this protocol when`,
+retaining its complete applicability qualifier and all
 substantive wrapper instructions, replace only `The skill` with `This protocol`,
 and append the unchanged complete procedure. The output SHA-256 is
-`b51934ec43ffd65e8728eca399715e887f26dc1badee588c760962c84374271e`.
+`f747508ab8d936299478029f17be3891f877f0a5e5c302c1e606f9c1e51b99a0`.
 The receipt retains original file hashes, canonical source path, repository,
 full accepted revision, transformation name and generated output/license hashes.
 The root MIT LICENSE covers the projection and retains derived attribution.

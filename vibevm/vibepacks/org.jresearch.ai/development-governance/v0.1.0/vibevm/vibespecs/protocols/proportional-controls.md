@@ -1,5 +1,7 @@
 # Proportional controls
 
+Apply this protocol when a proposed control
+changes operator work, supported environments, validation, trust or recovery.
 Apply it within the owning project's current task scope and authority.
 
 Explain the concrete path to harm and impact, existing protection, proposed

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Check the frozen flow and pinned active protocol without VibeVM or network access."""
 import argparse
-import hashlib
 import importlib.util
 import json
 from pathlib import Path

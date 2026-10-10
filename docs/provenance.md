@@ -29,7 +29,7 @@ package LICENSE files. The first frozen flow's canonical protocol is
 the complete original procedure bytes (SHA-256
 `cfa62afee0aa267aa58bb966faece0225cb717a82fbb93d3d3b4bf7b29704c6c`),
 preceded by the accepted wrapper body. Only discovery frontmatter, its obsolete
-navigation paragraph and the delivery noun `skill` are removed or adapted.
+navigation link and the delivery noun `skill` are removed or adapted.
 `scripts/project-protocol.py` reproduces that conversion from accepted
 `fd609af8a1ea8ce015fda4652e5a8c444ca821c5`; source qualification compares the
 result exactly, including all exceptions and attribution. Package

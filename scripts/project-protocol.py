@@ -20,11 +20,11 @@ def snapshot():
         target = Path(temporary) / "skill"
         source = vendor.export(ACCEPTED_SKILL_REVISION, target)
         wrapper = (target / "SKILL.md").read_bytes().split(b"\n---\n\n", 1)[1]
-        navigation = (b"Read [references/protocol.md](references/protocol.md) when a proposed control\n"
-                      b"changes operator work, supported environments, validation, trust or recovery.\n")
+        navigation = b"Read [references/protocol.md](references/protocol.md) when a proposed control\n"
         if wrapper.count(navigation) != 1 or wrapper.count(b"The skill does not require") != 1:
             raise ValueError("accepted wrapper differs from the reviewed conversion")
-        wrapper = wrapper.replace(navigation, b"").replace(b"The skill does not require", b"This protocol does not require")
+        wrapper = wrapper.replace(navigation, b"Apply this protocol when a proposed control\n")
+        wrapper = wrapper.replace(b"The skill does not require", b"This protocol does not require")
         protocol = wrapper.rstrip() + b"\n\n" + (target / "references/protocol.md").read_bytes()
         license_bytes = (target / "LICENSE").read_bytes()
     receipt = {"schema": 1, "transformation": "skill-to-protocol-v1", "source": source,
