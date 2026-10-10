@@ -125,6 +125,49 @@ Local output is saved in this directory's logs; the canonical Issue Outcome
 identifies final exact head, checks, CI and material warning disposition without
 embedding a self-referential source SHA in this report.
 
+### Observed results and material warning disposition
+
+- [Source preservation](logs/source-preservation.json): all 4,494 original
+  protocol bytes remain an exact prefix. Active snapshot/receipt, AGENTS route,
+  package-versioning and frozen historical source are unchanged. Read-only remote
+  observations retain the same v0.1.0 and v1.0.0 annotated tag objects.
+- [Distribution regressions](logs/distribution.txt): 34 tests passed, including
+  old one/two-protocol exports, new three-protocol shape, missing/empty/invalid
+  protocol failures and candidate/active separation. Temporary Git CRLF warnings
+  came from the editor's test-file newline conversion; the committed script was
+  normalized to LF, with no behavioral change.
+- [Release regressions](logs/release-summary.txt): 10 ordinary tests passed;
+  6 unchanged optional native publisher/resolver tests skipped, explicitly unclaimed.
+- [Materialization](logs/materialization.txt): 7 pinned-tool commands passed.
+  [Local Git acquisition](logs/git-acquisition.txt): 21 commands passed, including
+  cold/repeat install, canonical lock/slot/route verification, synthetic patch
+  update and rollback. All five VibeVM check reports across these two fixtures
+  reported zero errors/warnings. Their content was tested at the implementation
+  commit identified in the acquisition log; subsequent evidence-only commits
+  do not change package or executable bytes. Final export/checks identify the
+  handoff head separately in the Outcome.
+- Existing diagnostic limitations are retained, not new policy regressions:
+  authored dynamic linkage produces a static INDEX entry; deliberate mutable-tag
+  drift produces a lock/retained-slot split that the canonical verifier rejects;
+  cache-only offline recovery fails while retained slots and full Git rollback
+  pass. Expected native errors are included in the diagnostic log and do not
+  establish a passing recovery path or a new mandatory transport ritual.
+- Fresh CLI probes requested **gpt-6.1-sol / xhigh**, without model substitution.
+  The [initial JSONL](logs/model-probe.jsonl) and [stderr](logs/model-probe-stderr.txt)
+  show read commands rejected by policy. The repository-documented read-only
+  Windows sandbox configuration was then used; its [JSONL](logs/model-probe-configured.jsonl)
+  and [stderr](logs/model-probe-configured-stderr.txt) show sandbox setup refresh
+  errors. Both final responses explicitly report **no files read**; exit 0 is
+  not source/model qualification. PowerShell shell snapshots are also unsupported.
+  No sandbox bypass, alternate model or host repair was attempted. Fresh installed
+  model traversal/application remains **UNQUALIFIED**; the source walkthroughs
+  and actual CLI install/integrity evidence above remain distinct. The exact
+  [probe input](probe-prompt.txt) is retained for later reproduction. Runtime
+  events do not separately verify the server-resolved model identity/effort.
+
+One read-only helper supplied bounded scope/compatibility/scenario analysis.
+That authoring assistance is not the independent review requested for this PR.
+
 Keep Issue 19 open for independent source acceptance, owner merge, verification
 of the new immutable automatic release and the recorded G1 handoff. CI is not
 acceptance or proof of publication. No self-approval, merge, consumer adoption,
