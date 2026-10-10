@@ -24,6 +24,20 @@ jobs:
         run: python3 scripts/qualify.py --export-ref HEAD
       - name: Check passive distribution preparation and integrity failures
         run: python3 scripts/test-distribution.py
+      - name: Check release boundary and retry regressions
+        run: python3 scripts/test-release.py
+      - name: Check whole-package bump against current accepted main
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PUSH_BEFORE: ${{ github.event.before }}
+        run: |
+          if [ -n "$PR_BASE" ]; then
+            printf '%s' "$PR_BODY" > "$RUNNER_TEMP/pr-body"
+            python3 scripts/package-release.py --source-ref HEAD --base origin/main --pr-body-file "$RUNNER_TEMP/pr-body"
+          elif [ -n "$PUSH_BEFORE" ] && [ "$PUSH_BEFORE" != 0000000000000000000000000000000000000000 ]; then
+            python3 scripts/package-release.py --source-ref HEAD --base "$PUSH_BEFORE"
+          fi
       - name: Check candidate whitespace
         env:
           PR_BASE: ${{ github.event.pull_request.base.sha }}

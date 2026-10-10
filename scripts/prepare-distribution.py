@@ -11,12 +11,13 @@ import tomllib
 from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGE = "vibevm/vibepacks/org.jresearch.ai/development-governance/v0.1.0"
+PACKAGE = "packages/development-governance"
+HISTORICAL_PACKAGE = "vibevm/vibepacks/org.jresearch.ai/development-governance/v0.1.0"
 REPOSITORY = "https://github.com/jresearchsoftware/shared-governance"
 COORDINATE = "org.jresearch.ai/development-governance"
-SLOT = "vibevm/vibedeps/org.jresearch.ai.development-governance/0.1.0"
 RECEIPT = "DISTRIBUTION.json"
 PROTOCOL = "vibevm/vibespecs/protocols/proportional-controls.md"
+VERSIONING = "vibevm/vibespecs/protocols/package-versioning.md"
 BOOT_INDEX = "vibevm/vibespecs/boot/INDEX.md"
 # Exact ordinary AGENTS contribution emitted by the pinned VibeVM 1.0.7 probe.
 BOOT_BLOCK = '''<vibevm>
@@ -68,8 +69,19 @@ def validate_skill_links(files, prefix):
                 raise ValueError("passive payload has an escaping or missing local reference: " + name)
 
 
-def validate_payload(files, license_bytes):
-    """Allow only the first frozen flow's boot and one ordinary canonical protocol."""
+def slot(version):
+    return "vibevm/vibedeps/org.jresearch.ai.development-governance/" + version
+
+
+def package_path(revision):
+    members = tomllib.loads(git("show", revision + ":vibe.toml").decode())["workspace"]["members"]
+    if members not in ([PACKAGE], [HISTORICAL_PACKAGE]):
+        raise ValueError("source has no supported single package authoring path")
+    return members[0]
+
+
+def validate_payload(files, license_bytes, historical=False):
+    """Bound this repository's passive flow; historical exports retain their old shape."""
     for data in files.values():
         data.decode("utf-8")
     if "vibe.toml" not in files or "LICENSE" not in files:
@@ -79,26 +91,34 @@ def validate_payload(files, license_bytes):
     if not isinstance(package, dict):
         raise ValueError("source package metadata must be a table")
     expected = {"group": "org.jresearch.ai", "name": "development-governance",
-                "version": "0.1.0", "kind": "flow", "format": "simple", "epoch": 1,
+                "kind": "flow", "format": "simple", "epoch": 1,
                 "publish": False, "frozen": True, "license": "MIT"}
     if any(type(package.get(key)) is not type(value) or package.get(key) != value
            for key, value in expected.items()):
         raise ValueError("source package identity/passivity/publication boundary differs")
     if set(manifest) != {"package", "boot_snippet"}:
         raise ValueError("unexpected package capability or dependency")
-    if set(package) - (set(expected) | {"description"}):
+    version = package.get("version")
+    if not isinstance(version, str) or not re.fullmatch(r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)", version):
+        raise ValueError("package must have a release SemVer version")
+    if historical and version != "0.1.0":
+        raise ValueError("historical frozen package version differs")
+    if set(package) - (set(expected) | {"description", "version"}):
         raise ValueError("unexpected package metadata")
     boot = {"source": "vibevm/vibespecs/boot/development-governance.md",
             "category": "flow", "link": "dynamic"}
     if manifest["boot_snippet"] != boot:
         raise ValueError("package boot declaration differs")
     allowed = {"vibe.toml", "LICENSE", "README.md", boot["source"], PROTOCOL}
+    if not historical:
+        allowed.add(VERSIONING)
     if set(files) != allowed:
         raise ValueError("source package file set differs from declared passive payload")
     if files["LICENSE"] != license_bytes:
         raise ValueError("source/package license notices differ")
     validate_skill_links(files, "vibevm/vibespecs")
-    if not files[PROTOCOL].strip():
+    protocols = (PROTOCOL,) if historical else (PROTOCOL, VERSIONING)
+    if any(not files[name].strip() for name in protocols):
         raise ValueError("canonical protocol is empty")
     return manifest
 
@@ -110,22 +130,23 @@ def snapshot(revision):
     resolved = git("rev-parse", "--verify", revision + "^{commit}").decode().strip()
     if resolved != revision:
         raise ValueError("source commit identity differs")
+    package_root = package_path(revision)
     files = {}
-    for entry in git("ls-tree", "-rz", revision, "--", PACKAGE).split(b"\0"):
+    for entry in git("ls-tree", "-rz", revision, "--", package_root).split(b"\0"):
         if not entry:
             continue
         metadata, name = entry.split(b"\t", 1)
         mode, kind, oid = metadata.decode().split()
-        relative = Path(name.decode()).relative_to(PACKAGE).as_posix()
+        relative = Path(name.decode()).relative_to(package_root).as_posix()
         if mode != "100644" or kind != "blob":
             raise ValueError("package contains a non-ordinary file: " + relative)
         files[relative] = git("cat-file", "blob", oid)
-    validate_payload(files, git("show", revision + ":LICENSE"))
+    manifest = validate_payload(files, git("show", revision + ":LICENSE"), package_root == HISTORICAL_PACKAGE)
     hashes = {name: hashlib.sha256(data).hexdigest() for name, data in sorted(files.items())}
     # Hash the sorted path/hash map, binding both file names and file bytes.
     content = hashlib.sha256(json.dumps(hashes, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     receipt = {"schema": 1, "source_repository": REPOSITORY, "source_revision": revision,
-               "source_path": PACKAGE, "package": COORDINATE, "version": "0.1.0",
+               "source_path": package_root, "package": COORDINATE, "version": manifest["package"]["version"],
                "payload_sha256": content, "sha256": hashes}
     files[RECEIPT] = (json.dumps(receipt, indent=2, sort_keys=True) + "\n").encode()
     return files, receipt
@@ -184,13 +205,14 @@ def verify(revision, directory, installed=False):
 def verify_consumer(revision, directory):
     directory = Path(directory)
     files, receipt = snapshot(revision)
-    slot = directory / SLOT
-    verify(revision, slot, installed=True)
+    version = receipt["version"]
+    slot_path = slot(version)
+    verify(revision, directory / slot_path, installed=True)
     manifest = tomllib.loads((directory / "vibe.toml").read_text())
     requires = manifest.get("requires", {})
     packages = requires.get("packages", {}) if isinstance(requires, dict) else None
     requirement = packages.get(COORDINATE) if isinstance(packages, dict) else None
-    if (not isinstance(requirement, dict) or requirement.get("version") != "=0.1.0"
+    if (not isinstance(requirement, dict) or requirement.get("version") != "=" + version
             or not isinstance(requirement.get("git"), str) or not requirement["git"]
             or bool(requirement.get("tag")) == bool(requirement.get("rev"))
             or requirement.get("branch")):
@@ -211,7 +233,7 @@ def verify_consumer(revision, directory):
         raise ValueError("consumer lock has no unique package identity")
     entry = packages[0]
     if any(entry.get(key) != value for key, value in {
-            "version": "0.1.0", "source_kind": "git", "source_url": requirement["git"],
+            "version": version, "source_kind": "git", "source_url": requirement["git"],
             "source_ref": requirement.get("rev") or requirement["tag"], "content_hash": vibe_hash(files)}.items()):
         raise ValueError("consumer lock differs from canonical content/source declaration")
     # The removed package Skill and its native receipt must not remain active.
@@ -224,12 +246,12 @@ def verify_consumer(revision, directory):
     if any(path.is_symlink() or not path.is_file() for path in (index, agents)):
         raise ValueError("consumer generated boot route must use ordinary files")
     boot = tomllib.loads(index.read_text(encoding="utf-8"))
-    package_boot = SLOT + "/vibevm/vibespecs/boot/development-governance.md"
+    package_boot = slot_path + "/vibevm/vibespecs/boot/development-governance.md"
     entries = boot.get("entry", [])
     if (type(boot.get("schema")) is not int or boot["schema"] != 1 or not isinstance(entries, list)
             or any(not isinstance(e, dict) or not isinstance(e.get("path"), str) for e in entries)):
         raise ValueError("consumer boot index differs from pinned schema")
-    selected = [e for e in entries if posixpath.normpath(e["path"]).startswith(SLOT + "/")]
+    selected = [e for e in entries if posixpath.normpath(e["path"]).startswith(slot_path + "/")]
     # Pinned upstream emits static despite the authored link=dynamic. Qualify it honestly.
     if selected != [{"path": package_boot, "kind": "static"}]:
         raise ValueError("consumer boot index has no unique canonical package route")

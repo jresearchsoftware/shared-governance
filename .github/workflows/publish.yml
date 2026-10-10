@@ -1,0 +1,96 @@
+name: Publish accepted package
+
+on:
+  workflow_run:
+    workflows: [Public candidate checks]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Full accepted source main SHA to retry (same revision as the failed run)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+# Each accepted SHA retains its own run; a global concurrency group can discard
+# pending releases. Races at the destination fail atomically and can be retried.
+concurrency:
+  group: package-publication-${{ github.event.workflow_run.head_sha || inputs.source_sha }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: >-
+      github.repository == 'jresearchsoftware/shared-governance' &&
+      ((github.event_name == 'workflow_run' &&
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_repository.full_name == github.repository) ||
+       (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      SOURCE_SHA: ${{ github.event.workflow_run.head_sha || inputs.source_sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Bind retry to successful source-main checks
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [[ "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          gh api --method GET "repos/$GITHUB_REPOSITORY/actions/workflows/candidate.yml/runs" \
+            -f head_sha="$SOURCE_SHA" -f event=push -f status=success \
+            --jq '[.workflow_runs[] | select(.head_branch == "main")] | length' > "$RUNNER_TEMP/check-count"
+          test "$(cat "$RUNNER_TEMP/check-count")" -gt 0
+      - name: Inspect accepted version transition using main's release code
+        id: release
+        run: python3 scripts/package-release.py --source-ref "$SOURCE_SHA" --inspect-accepted
+      - name: Qualify the actual accepted merge or squash payload
+        if: steps.release.outputs.changed == 'true'
+        run: |
+          git checkout --detach "$SOURCE_SHA"
+          python3 scripts/qualify.py --export-ref HEAD
+      - name: Prepare the pinned publisher
+        if: steps.release.outputs.changed == 'true'
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, urllib.request
+          pin = json.loads(pathlib.Path('toolchain/vibevm.json').read_text())['linux_x86_64_musl_binary']
+          binary = pathlib.Path(os.environ['RUNNER_TEMP']) / 'vibe'
+          urllib.request.urlretrieve(pin['url'], binary)
+          if hashlib.sha256(binary.read_bytes()).hexdigest() != pin['sha256']:
+              raise SystemExit('Pinned publisher digest mismatch')
+          binary.chmod(0o700)
+          PY
+      - name: Publish once or safely skip an existing tag
+        if: steps.release.outputs.changed == 'true'
+        env:
+          RELEASE_TOKEN: ${{ secrets.DEVELOPMENT_GOVERNANCE_PUBLISH_TOKEN }}
+        run: |
+          # A token with contents:write on the distribution repository only.
+          # Never place credentials in a URL, Git config, artifact or log.
+          cat > "$RUNNER_TEMP/release-askpass" <<'SH'
+          #!/bin/sh
+          case "$1" in
+            *Username*) printf '%s\n' 'x-access-token' ;;
+            *Password*) printf '%s\n' "$RELEASE_TOKEN" ;;
+          esac
+          SH
+          chmod 700 "$RUNNER_TEMP/release-askpass"
+          export GIT_ASKPASS="$RUNNER_TEMP/release-askpass" GIT_TERMINAL_PROMPT=0
+          export VIBE_SETTINGS="$RUNNER_TEMP/release-settings"
+          export VIBEVM_USER_CONFIG="$VIBE_SETTINGS/config.toml"
+          python3 scripts/package-release.py --source-ref "$SOURCE_SHA" --publish --vibe "$RUNNER_TEMP/vibe"
+      - name: Publication recovery
+        if: failure()
+        run: |
+          printf 'Publication failed or pending for accepted source `%s`. Retry this same SHA using Publish accepted package. Existing tags are retained.\n' "$SOURCE_SHA" >> "$GITHUB_STEP_SUMMARY"

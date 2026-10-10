@@ -32,6 +32,11 @@ do not require reading it.
 Its accepted snapshot and reviewed update boundary are recorded in
 [self-adoption](docs/self-adoption.md).
 
+For package lifecycle changes, follow this producer's [release policy](docs/releases.md)
+and its adopted [package-versioning protocol](packages/development-governance/vibevm/vibespecs/protocols/package-versioning.md).
+The producer's cadence and workflow do not govern consumers merely because they
+install this package. Package availability, update and consumer adoption remain distinct.
+
 Read [CONTRIBUTING.md](CONTRIBUTING.md) for validation and
 [docs/authoring.md](docs/authoring.md) for the pinned VibeVM experiment. Avoid
 package publication, registry setup or consumer migration under bootstrap scope.
