@@ -1,6 +1,6 @@
 # Development Governance
 
-`org.jresearch.ai/development-governance@1.0.0` is one passive VibeVM flow,
+`org.jresearch.ai/development-governance` is one passive VibeVM flow,
 licensed under MIT. One whole-package version covers its conditional boot and
 ordinary [proportional-controls](vibevm/vibespecs/protocols/proportional-controls.md)
 and [package-versioning](vibevm/vibespecs/protocols/package-versioning.md) protocols.

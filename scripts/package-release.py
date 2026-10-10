@@ -149,7 +149,10 @@ def main():
                         raise ValueError("package PR requires one Package bump: major, minor or patch line")
                 else:
                     category = categories[0].lower()
-            report(transition(base, revision, category))
+            result = transition(base, revision, category)
+            if args.pr_body_file and result["changed"] and tag_exists(DESTINATION, "v" + result["version"]):
+                raise ValueError("candidate reuses an already published frozen tag; choose a new version")
+            report(result)
     except (ValueError, KeyError, OSError, subprocess.SubprocessError) as error:
         # Git stderr/URLs and credentials are not emitted by the release wrapper.
         report({"publication": "FAILED_OR_PENDING", "source_revision": args.source_ref,

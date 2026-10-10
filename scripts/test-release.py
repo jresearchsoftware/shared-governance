@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 """Focused release regressions; optional real pinned-publisher integration fixtures."""
 import argparse
+import contextlib
 import importlib.util
+import io
 import json
 import os
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import tempfile
 import tomllib
 import unittest
@@ -45,6 +48,9 @@ class ReleaseFixture(unittest.TestCase):
         self.base = self.commit()
         shutil.copytree(ROOT / preparation.PACKAGE, self.source / preparation.PACKAGE)
         (self.source / "vibe.toml").write_text('[workspace]\nmembers = ["' + preparation.PACKAGE + '"]\n')
+        manifest_path = self.source / preparation.PACKAGE / "vibe.toml"
+        authored = tomllib.loads(manifest_path.read_text())["package"]["version"]
+        manifest_path.write_text(manifest_path.read_text().replace('version = "' + authored + '"', 'version = "1.0.0"'))
         shutil.copytree(ROOT / "toolchain", self.source / "toolchain")
         self.revision = self.commit()
         self.addCleanup(setattr, preparation, "ROOT", preparation.ROOT)
@@ -93,16 +99,19 @@ class ReleaseTests(ReleaseFixture):
             RELEASE.transition(self.base, self.revision, "patch")
 
     def test_unaccepted_and_side_branch_heads_are_rejected(self):
+        self.git("switch", "-qc", "side")
         (self.source / "side.md").write_text("Side branch.\n")
         side = self.commit()
+        self.git("switch", "-q", "main")
+        self.git("merge", "--no-ff", "-qm", "Accepted merge", "side")
         with self.assertRaisesRegex(ValueError, "first-parent"):
-            RELEASE.accepted_transition(side, self.revision)
+            RELEASE.accepted_transition(side, "main")
         with self.assertRaises(ValueError):
             RELEASE.accepted_transition("main", "main")
 
     def test_existing_tag_never_invokes_native_publisher(self):
-        with patch.object(RELEASE, "tag_exists", return_value=True), patch.object(
-                RELEASE.subprocess, "run", side_effect=AssertionError("publisher called")):
+        # A nonexistent binary proves the repeat exits before loading/invoking it.
+        with patch.object(RELEASE, "tag_exists", return_value=True):
             result = RELEASE.publish(self.revision, Path("absent"), accepted_main="main")
         self.assertEqual(result["publication"], "ALREADY_PUBLISHED")
 
@@ -117,6 +126,27 @@ class ReleaseTests(ReleaseFixture):
         with patch.object(RELEASE, "tag_exists", return_value=False):
             with self.assertRaisesRegex(ValueError, "pinned"):
                 RELEASE.publish(self.revision, binary, "file:///fixture", "main")
+
+    def test_candidate_cli_rejects_existing_publication_before_merge(self):
+        body = self.directory / "pr-body"
+        body.write_text("Package bump: major\nStable contract declaration.\n")
+        with patch.object(sys, "argv", ["release", "--source-ref", self.revision,
+                                       "--base", self.base, "--pr-body-file", str(body)]), \
+                patch.object(RELEASE, "tag_exists", return_value=True), \
+                contextlib.redirect_stdout(io.StringIO()) as output:
+            with self.assertRaises(SystemExit):
+                RELEASE.main()
+        self.assertIn("already published", output.getvalue())
+
+    def test_candidate_cli_requires_one_category_for_package_changes(self):
+        body = self.directory / "pr-body"
+        body.write_text("No classified bump.\n")
+        with patch.object(sys, "argv", ["release", "--source-ref", self.revision,
+                                       "--base", self.base, "--pr-body-file", str(body)]), \
+                contextlib.redirect_stdout(io.StringIO()) as output:
+            with self.assertRaises(SystemExit):
+                RELEASE.main()
+        self.assertIn("requires one", output.getvalue())
 
 
 @unittest.skipUnless(VIBE, "pass --vibe for one-time native publisher integration")
@@ -230,11 +260,10 @@ class NativeDependencyTests(unittest.TestCase):
             '[requires.packages]\n' + ''.join(
                 f'"org.fixture/{key}"="{value}"\n' for key, value in requirements.items()))
 
-    def run_vibe(self, command="install", success=True):
-        args = [str(VIBE), "--offline", "--json", command, "--path", str(self.consumer),
-                "--registry", str(self.registry), "--no-default-registry", "--assume-yes"]
-        if command == "update":
-            args.append("--all")
+    def run_vibe(self, success=True):
+        args = [str(VIBE), "--offline", "--json", "install", "--path", str(self.consumer),
+                "--registry", str(self.registry), "--assume-yes"]
+        args.append("--no-default-registry")
         result = subprocess.run(args, env=self.env, capture_output=True, text=True)
         self.assertEqual(result.returncode == 0, success, result.stdout + result.stderr)
         return result
@@ -254,7 +283,8 @@ class NativeDependencyTests(unittest.TestCase):
         self.package("left", "1.0.0", {"shared": "~1.0.0"})
         self.package("right", "1.0.0", {"shared": "=2.0.0"})
         self.project({"left": "=1.0.0", "right": "=1.0.0"})
-        self.run_vibe(success=False)
+        conflict = self.run_vibe(success=False)
+        self.assertIn("conflict", (conflict.stdout + conflict.stderr).lower())
         self.project({"left": "=1.0.0"})
         self.run_vibe()
         self.assertEqual(self.closure(), {"left": "1.0.0", "shared": "1.0.0"})
@@ -262,10 +292,14 @@ class NativeDependencyTests(unittest.TestCase):
         self.package("shared", "1.0.1")
         # Publishing available versions does not edit the consumer's lock.
         self.assertEqual((self.consumer / "vibe.lock").read_bytes(), before)
-        self.run_vibe("update")
+        # Explicitly request the new transitive version and re-resolve the local
+        # registry fixture. Project install supports --registry; update's flag
+        # is for global apps. Direct-Git vibe update is covered by distribution.
+        self.project({"left": "=1.0.0", "shared": "=1.0.1"})
+        self.run_vibe()
         self.assertEqual(self.closure()["shared"], "1.0.1")
 
-    def test_included_snapshot_is_detected_but_unused_optional_fixture_is_not_in_closure(self):
+    def test_included_snapshot_is_detected_but_unused_package_is_not_in_closure(self):
         self.package("snapshot", "1.0.0", frozen=False)
         self.package("left", "1.0.0", {"snapshot": "=1.0.0"})
         self.package("unused", "1.0.0", frozen=False)

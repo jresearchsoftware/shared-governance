@@ -13,7 +13,8 @@ Each independently accepted package-changing PR increments the whole-package
 version once against current accepted `main`. Its English description contains
 one `Package bump: major`, `Package bump: minor` or `Package bump: patch` line
 and explains consumer-contract and operator-work impact. A PR with several edits
-uses at least the highest-impact category. CI checks the numeric transition;
+uses at least the highest-impact category. CI checks the numeric transition and
+rejects a proposed version whose distribution tag already exists;
 independent review checks whether the category is truthful. Tooling, research
 and documentation outside the package do not bump or publish a package.
 

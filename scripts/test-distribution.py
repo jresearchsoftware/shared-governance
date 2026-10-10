@@ -34,6 +34,9 @@ class DistributionTests(unittest.TestCase):
         self.package = self.source / DISTRIBUTION.PACKAGE
         shutil.copytree(REPOSITORY / DISTRIBUTION.PACKAGE, self.package)
         shutil.copyfile(REPOSITORY / "LICENSE", self.source / "LICENSE")
+        manifest_path = self.package / "vibe.toml"
+        authored = tomllib.loads(manifest_path.read_text())["package"]["version"]
+        manifest_path.write_text(manifest_path.read_text().replace('version = "' + authored + '"', 'version = "1.0.0"'))
         shutil.copyfile(REPOSITORY / "vibe.toml", self.source / "vibe.toml")
         # Windows-mounted files can appear executable; fixture Git modes are explicit.
         for path in self.package.rglob("*"):
