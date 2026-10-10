@@ -36,6 +36,15 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) for validation and
 [docs/authoring.md](docs/authoring.md) for the pinned VibeVM experiment. Avoid
 package publication, registry setup or consumer migration under bootstrap scope.
 
+For shared extraction, adaptation or adoption, preserve the complete accepted
+reusable semantics, including applicability, exceptions, routing and operator
+behavior. Establish a bounded canonical baseline and explain material coverage
+as described in [authoring](docs/authoring.md#semantic-completeness). Reusable
+omissions are producer migration defects; residual consumer rules do not prove
+successful extraction or become local overlays without an ownership rationale.
+Repair requires a later independently accepted package version, never rewriting
+the frozen release. Consumer authority transfer remains separately authorized.
+
 New or edited shared guidance is proposed content until independently accepted.
 Even after source acceptance, existing consumers retain their local canonical rules until
 a separately reviewed migration adopts the shared content and removes the local
