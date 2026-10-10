@@ -25,8 +25,10 @@ content does not define Issue, execution, publication or review authority.
 - Continue evidence-backed corrections within scope. Stop on missing authority,
   ambiguous external mutation or an unclear next correction, preserving work.
 
-For controls, validation or operator-workflow decisions, use the repository-local
-[proportional-controls Skill](.agents/skills/proportional-controls/SKILL.md).
+For proposed security, validation or operator controls, read the repository-local
+[proportional-controls protocol](.agents/protocols/proportional-controls.md)
+when relevant, including behaviorally free security hardening. Unrelated tasks
+do not require reading it.
 Its accepted snapshot and reviewed update boundary are recorded in
 [self-adoption](docs/self-adoption.md).
 

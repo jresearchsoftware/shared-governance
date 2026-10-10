@@ -1,0 +1,22 @@
+{
+  "distribution_qualification": "PASS",
+  "source_revision": "3172b9f289e255296e09cb4afb6a209ca2b4b37e",
+  "payload_sha256": "b53c64b793b80395a4e8958239e1414c4a56161ed38493ed299e1493114f62d0",
+  "distribution_revision": "ade4fbdd2597c86ee7c3cad7d7d2a3e69d27b1aa",
+  "vibevm_content_hash": "sha256:8c6b53c287e052892eb270c36748c54e52bda42f12151a1cd3aa92bd3827ad36",
+  "commands": 21,
+  "native_skills": "none declared/projected",
+  "accepted_semantics": "exact deterministic wrapper conversion plus unchanged procedure",
+  "local_publish_and_idempotence": "PASS",
+  "independent_cold_consumer": "PASS",
+  "tag_drift": "upstream lock/slot split reproduced; canonical verifier rejects",
+  "offline": "existing slots and complete Git rollback PASS; cache-only recovery FAIL",
+  "update": "synthetic version-only declaration change PASS",
+  "boot_index": "static package entry despite authored dynamic link",
+  "scope": "disposable local Git transport; remote publication not qualified",
+  "accepted_semantic_origin": "fd609af8a1ea8ce015fda4652e5a8c444ca821c5",
+  "original_procedure_sha256": "cfa62afee0aa267aa58bb966faece0225cb717a82fbb93d3d3b4bf7b29704c6c",
+  "flow_and_active_protocol_sha256": "f747508ab8d936299478029f17be3891f877f0a5e5c302c1e606f9c1e51b99a0",
+  "evidence_scope": "implementation snapshot; final PR head adds evidence only and requires exact-head source/export read-back",
+  "recorded_at_utc": "2026-10-10T10:10:23.451621+00:00"
+}

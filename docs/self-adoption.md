@@ -1,78 +1,79 @@
 # Repository self-adoption
 
-[Task 6](https://github.com/jresearchsoftware/shared-governance/issues/6) adopts
-`proportional-controls` for ordinary manual Codex work in this repository.
-The active [Skill](../.agents/skills/proportional-controls/SKILL.md) and its
-procedure are generated copies of the independently accepted package at
-`fd609af8a1ea8ce015fda4652e5a8c444ca821c5`, the `main` commit after
-[PR 5](https://github.com/jresearchsoftware/shared-governance/pull/5).
-The [source receipt](../.agents/proportional-controls-source.json) records that
-commit, canonical path and file hashes using the existing native exporter format.
-The repository's MIT LICENSE covers the projection. The adjacent VibeVM receipt
-records the two files owned by native projection; no other VibeVM state was
-created or is needed.
+[Task 10](https://github.com/jresearchsoftware/shared-governance/issues/10) proposes
+an explicit human-owned AGENTS route to the active
+[ordinary protocol](../.agents/protocols/proportional-controls.md) for relevant
+security, validation and operator-control decisions, including free hardening.
+Unrelated tasks skip the protocol. This replaces the native Skill adopted by
+[Task 6 / PR 7](https://github.com/jresearchsoftware/shared-governance/pull/7),
+merged as `d116cdaa8e8bbb3c9c991dd8b053927a9e2b6cd4`.
+The proposal becomes accepted repository guidance only with independent
+exact-head review and owner-authorized merge; authoring metadata alone does not
+activate it. An existing chat may still have its startup Skill catalog in memory;
+fresh sessions use the new AGENTS route after adoption.
 
-Codex discovers `.agents/skills` at the repository root; `AGENTS.md` routes
-applicable decisions to this active Skill. Detailed guidance remains in the
-canonical package source, with no separately authored policy in the projection.
-See the [official skill discovery documentation](https://learn.chatgpt.com/docs/build-skills).
-VibeVM is unnecessary for ordinary sessions and source checks.
+The [source receipt](../.agents/proportional-controls-source.json) pins the original
+accepted Skill/wrapper and procedure at
+`fd609af8a1ea8ce015fda4652e5a8c444ca821c5`, the accepted source after PR 5.
+`scripts/project-protocol.py` makes a deterministic delivery conversion: remove
+Skill discovery frontmatter and replace the obsolete Read-reference link with `Apply this protocol when`,
+retaining its complete applicability qualifier and all
+substantive wrapper instructions, replace only `The skill` with `This protocol`,
+and append the unchanged complete procedure. The output SHA-256 is
+`f747508ab8d936299478029f17be3891f877f0a5e5c302c1e606f9c1e51b99a0`.
+The receipt retains original file hashes, canonical source path, repository,
+full accepted revision, transformation name and generated output/license hashes.
+The root MIT LICENSE covers the projection and retains derived attribution.
 
-## Reproduce or update
+There is one editable canonical protocol in the flow package. The root active
+file is a generated accepted-origin snapshot, not a separately authored policy.
+It is deliberately independent of candidate authoring bytes and pins no
+unreviewed candidate commit. Both source and active snapshot are byte-identical
+to the reproducible conversion in this first-release proposal. The qualifier
+rebuilds active expectations from accepted Git blobs, then checks the receipt,
+active bytes, license and human AGENTS route. It separately checks first-release
+semantic equivalence and exact-commit package export. No `.agents/skills`
+projection or VibeVM Skill ownership receipt remains.
 
-Use a checkout of the full accepted source SHA above with the hash-verified
-Linux x86_64 musl VibeVM 1.0.7 tool from [authoring](authoring.md), with `$vibe`
-set to its absolute path. From that checkout's root, using disposable
-`VIBE_SETTINGS` and `VIBEVM_USER_CONFIG`:
+## Reproduce and review
+
+From a checkout with the accepted origin Git objects available:
 
 ```sh
-"$vibe" --offline --json skill list --path .
-"$vibe" --offline --json skill install --path . --agent codex \
-  --scope project --skill proportional-controls --yes
+destination="$(mktemp -d)/protocol"
+python3 scripts/project-protocol.py --destination "$destination"
 ```
 
-The workspace member is discovered natively and projected into the root's
-`.agents/skills/proportional-controls`, rather than the member's nested directory.
-The first install reports `created`; repeating it reports `unchanged`.
-Human-owned `AGENTS.md` is preserved. There is no dependency installation,
-path-only workaround, manifest edit, registry or publication step.
+Copy its `proportional-controls.md` to `.agents/protocols/proportional-controls.md`
+and `SOURCE.json` to `.agents/proportional-controls-source.json`; compare the
+exported LICENSE with the root LICENSE. Keep the explicit AGENTS route in the
+same independently reviewed adoption change. No VibeVM installation, runtime
+resolution, native discovery, dependency or global configuration is needed for
+ordinary manual Codex work here. The repository itself is an authoring workspace;
+it is not materialized as its own dependency.
 
-Copy the generated Skill directory and adjacent native receipt into the adoption
-branch. Recreate the source receipt with the existing `scripts/vendor-skill.py`
-at that full SHA into an empty temporary destination. Its `SKILL.md` and procedure
-must match the projected files, and its LICENSE must match the root LICENSE;
-copy only its `SOURCE.json` to `.agents/proportional-controls-source.json`.
-From the adoption branch, run `python3 scripts/qualify.py --export-ref HEAD` and
-`git diff --check`.
-The existing candidate CI verifies the active file set, bytes and both receipts
-against the pinned source independently of candidate authoring edits.
+After staging and committing the intended candidate:
 
-Authoring changes do not refresh active guidance. Do not edit the generated
-Skill or project an unreviewed workspace into it. After a new package version
-is independently accepted, a separately reviewed adoption change may reproduce
-projection from that accepted commit and update both receipts together. Retain
-the old snapshot while authoring or reviewing the proposed policy. Review the
-exact adoption head before merge; rollback uses an ordinary reviewed Git revert.
-This self-adoption does not publish a package or migrate another repository.
+```sh
+git diff --check
+python3 scripts/qualify.py --export-ref HEAD
+python3 scripts/test-distribution.py
+```
 
-## Acceptance evidence
+Future policy edits belong to later package versions. They do not refresh this
+active file or receipt. A separately authorized and independently reviewed
+self-adoption update must select the newly accepted source, reproduce the ordinary
+protocol snapshot/provenance, and update the human route and generated files
+together. Retain active guidance during candidate authoring/review; ordinary
+reviewed Git revert is rollback. This first-release conversion helper is bounded
+to the accepted historical input, not a general future-version adoption framework.
 
-Local qualification on 2026-10-10 (Europe/Prague):
+## Qualification boundary
 
-- Hash-verified VibeVM 1.0.7 discovered the workspace Skill at the root, installed
-  it as `created`, then returned `unchanged`; the human-owned AGENTS bytes were
-  identical before and after projection. Both projected files matched the pinned
-  accepted Git blobs byte-for-byte. The disposable authoring qualifier also
-  passed all six commands, with zero check errors, warnings or findings.
-- Native Windows Codex CLI 0.154.0 `skills/list` returned `proportional-controls`
-  with `scope=repo`, `enabled=true`, the root projection path and no skill errors.
-  A fresh ephemeral read-only session saw it in startup metadata without directory
-  discovery, read its Skill and procedure, and correctly distinguished secret-log
-  hardening from an unauthorized platform/install/ledger requirement for prose.
-  This is behavioral evidence, not independent review acceptance. The configured
-  `gpt-6.1-sol` was rejected by that CLI before a turn; the successful probe used
-  its advertised default `gpt-6-astra` without changing user configuration.
-- Source/exact-commit export and all 42 existing distribution tests passed.
-  A disposable boundary probe allowed an authoring-only procedure edit while
-  retaining active bytes, and rejected edits to active guidance, origin metadata
-  and the native receipt. No other consumer or external publication was exercised.
+Task 6's native discovery and read-only model result remain historical evidence
+for its old delivery. Task 10 requires fresh source/export, integrity regressions,
+actual hash-pinned VibeVM local publisher/consumer materialization, and fresh Codex
+traversal of the generated installed boot chain. See
+[Step 1 evidence](task-10/step-1/README.md) for results and model limitations.
+Local checks or model outputs are not independent acceptance. No other consumer
+or remote publication is adopted here.

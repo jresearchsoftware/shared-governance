@@ -55,9 +55,6 @@ class DistributionTests(unittest.TestCase):
         self.old_root = DISTRIBUTION.ROOT
         DISTRIBUTION.ROOT = self.source
         self.addCleanup(setattr, DISTRIBUTION, "ROOT", self.old_root)
-        self.old_export_root = EXPORTER.ROOT
-        EXPORTER.ROOT = self.source
-        self.addCleanup(setattr, EXPORTER, "ROOT", self.old_export_root)
         DISTRIBUTION.snapshot(self.revision)  # Negative tests start with a valid source.
 
     def git(self, *args):
@@ -72,26 +69,6 @@ class DistributionTests(unittest.TestCase):
     def payload(self, directory):
         return {path.relative_to(directory).as_posix(): path.read_bytes()
                 for path in directory.rglob("*") if path.is_file()}
-
-    def add_synthetic_skill(self, name="synthetic-passive"):
-        """Only a disposable fixture: no new governance rule enters the source."""
-        relative = "vibevm/vibespecs/skills/" + name
-        manifest = self.package / "vibe.toml"
-        with manifest.open("a") as stream:
-            stream.write('\n[[skill]]\nname = ' + json.dumps(name)
-                         + '\npath = ' + json.dumps(relative)
-                         + '\ninclude = ["SKILL.md", "references/*.md"]\n')
-        skill = self.package / relative
-        (skill / "references").mkdir(parents=True)
-        (skill / "SKILL.md").write_text(
-            "---\nname: " + name + "\ndescription: Synthetic passive test fixture.\n---\n\n"
-            "Read [references/note.md](references/note.md) for fixture text.\n")
-        (skill / "references/note.md").write_text("Synthetic test fixture, without a policy rule.\n")
-        (skill / "references/second.md").write_text("Another direct Markdown fixture reference.\n")
-        for path in skill.rglob("*"):
-            if path.is_file():
-                path.chmod(0o644)
-        return skill
 
     def rejected_source(self, revision=None):
         destination = self.directory / "rejected"
@@ -124,10 +101,11 @@ class DistributionTests(unittest.TestCase):
             'version = "0.1.0"\nsource_kind = "git"\n'
             'source_url = "file:///disposable/distribution.git"\nsource_ref = "v0.1.0"\n'
             'content_hash = ' + json.dumps(content_hash) + '\n')
-        declarations = tomllib.loads((slot / "vibe.toml").read_text())["skill"]
-        for declaration in declarations:
-            shutil.copytree(slot / declaration["path"],
-                            consumer / ".agents/skills" / declaration["name"])
+        index = consumer / DISTRIBUTION.BOOT_INDEX
+        index.parent.mkdir(parents=True)
+        index.write_text('schema = 1\n\n[[entry]]\npath = "' + SLOT +
+                         '/vibevm/vibespecs/boot/development-governance.md"\nkind = "static"\n')
+        (consumer / "AGENTS.md").write_text("Human-owned fixture instructions.\n\n" + DISTRIBUTION.BOOT_BLOCK + "\n")
         self.assertEqual(receipt, DISTRIBUTION.verify_consumer(self.revision, consumer))
         return consumer, slot, receipt
 
@@ -156,79 +134,115 @@ class DistributionTests(unittest.TestCase):
         self.assertEqual(status_before, self.git("status", "--porcelain", "--untracked-files=all"))
         self.assertEqual(self.revision, self.git("rev-parse", "HEAD").decode().strip())
 
-    def test_multiple_declared_passive_skills_are_prepared_and_all_projected(self):
-        self.add_synthetic_skill()
-        self.revision = self.commit()
-        expected = self.payload(self.package)
-        consumer, slot, receipt = self.consumer_fixture("multiple-skills")
-        self.assertEqual(set(receipt["sha256"]), set(expected))
-        for name in ("proportional-controls", "synthetic-passive"):
-            self.assertEqual(
-                self.payload(self.package / "vibevm/vibespecs/skills" / name),
-                self.payload(consumer / ".agents/skills" / name))
-        self.assertEqual(receipt, DISTRIBUTION.verify(self.revision, slot, installed=True))
-        self.assertEqual(receipt, DISTRIBUTION.verify_consumer(self.revision, consumer))
-
-    def test_safe_short_and_maximum_length_skill_names_are_supported(self):
-        for name in ("a", "a" * 64):
-            self.add_synthetic_skill(name)
-        self.revision = self.commit()
-        self.consumer_fixture("skill-name-boundaries")
-
-    def test_native_export_selects_an_additional_declared_skill_at_the_exact_commit(self):
-        second = self.add_synthetic_skill()
-        self.revision = self.commit()
-        expected = self.payload(second)
-        # The selected commit governs both declaration and bytes, despite dirty source.
-        (second / "SKILL.md").write_text("Uncommitted second Skill edit\n")
-        destination = self.directory / "native-second"
-        receipt = EXPORTER.export(self.revision, destination, "synthetic-passive")
-        self.assertEqual(receipt["revision"], self.revision)
-        self.assertEqual(receipt["source_path"],
-                         DISTRIBUTION.PACKAGE + "/vibevm/vibespecs/skills/synthetic-passive")
-        actual = self.payload(destination)
-        self.assertEqual(set(actual), set(expected) | {"LICENSE", "SOURCE.json"})
-        self.assertEqual({name: actual[name] for name in expected}, expected)
-        self.assertEqual(actual["LICENSE"], (self.source / "LICENSE").read_bytes())
-        self.assertEqual(receipt["sha256"], {
-            name: hashlib.sha256(data).hexdigest()
-            for name, data in {**expected, "LICENSE": actual["LICENSE"]}.items()})
-        self.assertEqual(json.loads(actual["SOURCE.json"]), receipt)
-
-    def test_native_export_rejects_missing_or_unsafe_skill_selection(self):
-        for name in ("absent-skill", "../escape", "UPPER", "", "a" * 65):
-            with self.subTest(skill=name):
-                destination = self.directory / "native-rejected"
-                with self.assertRaises(ValueError):
-                    EXPORTER.export(self.revision, destination, name)
-                self.assertFalse(destination.exists())
-
-    def test_native_export_rejects_undeclared_duplicate_or_missing_skill(self):
-        manifest = self.package / "vibe.toml"
-        first_only = manifest.read_text()
-        second = self.add_synthetic_skill()
-        declared = manifest.read_text()
-        second_declaration = declared[declared.index('[[skill]]\nname = "synthetic-passive"'):]
-        for name, altered in (("undeclared", first_only),
-                              ("duplicate", declared + second_declaration)):
-            with self.subTest(case=name):
-                manifest.write_text(altered)
-                destination = self.directory / ("native-" + name)
-                with self.assertRaises(ValueError):
-                    EXPORTER.export(self.commit(), destination, "synthetic-passive")
-                self.assertFalse(destination.exists())
-        manifest.write_text(declared)
-        (second / "SKILL.md").unlink()
-        destination = self.directory / "native-no-entrypoint"
-        with self.assertRaises(ValueError):
-            EXPORTER.export(self.commit(), destination, "synthetic-passive")
-        self.assertFalse(destination.exists())
-
     def test_only_full_source_commit_identity_is_accepted(self):
         for reference in ("HEAD", "main", self.revision[:12], self.revision.upper(),
                           self.revision + "0", "../source"):
             with self.subTest(reference=reference):
                 self.rejected_source(reference)
+
+    def test_first_flow_has_one_protocol_no_native_skill_and_is_frozen(self):
+        manifest = tomllib.loads((self.package / "vibe.toml").read_text())
+        self.assertIs(manifest["package"]["frozen"], True)
+        self.assertNotIn("skill", manifest)
+        consumer, _, receipt = self.consumer_fixture("flow")
+        self.assertFalse((consumer / ".agents/skills").exists())
+        self.assertIn(DISTRIBUTION.PROTOCOL, receipt["sha256"])
+
+    def test_any_skill_declaration_or_dependency_is_rejected(self):
+        manifest = self.package / "vibe.toml"
+        original = manifest.read_text()
+        for extra in ('skill = []\n', '[[skill]]\nname = "proportional-controls"\n',
+                      '[requires.packages]\n"unapproved/package" = "1.0.0"\n',
+                      '[tools]\ncommand = "unapproved"\n', '[hooks]\ncommand = "unapproved"\n',
+                      '[mcp]\ncommand = "unapproved"\n'):
+            with self.subTest(declaration=extra):
+                # An empty skill array must also be a top-level declaration.
+                manifest.write_text(extra + original if extra.startswith("skill =") else original + "\n" + extra)
+                self.rejected_source()
+
+    def test_protocol_must_be_nonempty_utf8(self):
+        path = self.package / DISTRIBUTION.PROTOCOL
+        for data in (b"", b" \n", b"\xff\xfe"):
+            with self.subTest(data=data):
+                path.write_bytes(data)
+                self.rejected_source()
+
+    def test_protocol_and_boot_links_stay_inside_complete_export(self):
+        protocol = self.package / DISTRIBUTION.PROTOCOL
+        original = protocol.read_text()
+        protocol.write_text(original + '\n[Boot](../boot/development-governance.md "Title")\n'
+                            '[Self][self]\n[self]: proportional-controls.md#proportional-controls\n')
+        DISTRIBUTION.snapshot(self.commit())
+        for link in ('[Missing](missing.md)', '[Escape](../../../../README.md)',
+                     '[Encoded](%2e%2e/%2e%2e/%2e%2e/%2e%2e/README.md)',
+                     '[Escape reference][e]\n[e]: ../../../../README.md "Title"'):
+            with self.subTest(link=link):
+                protocol.write_text(original + "\n" + link + "\n")
+                self.rejected_source()
+        protocol.write_text(original)
+        boot = self.package / "vibevm/vibespecs/boot/development-governance.md"
+        boot.write_text('[Missing protocol](../protocols/missing.md)\n')
+        self.rejected_source()
+
+    def test_consumer_rejects_orphan_skill_or_projection_receipt(self):
+        for relative in (".agents/skills/proportional-controls/SKILL.md",
+                         ".agents/skills/.proportional-controls.vibe-skill-receipt.toml"):
+            with self.subTest(path=relative):
+                consumer, slot, receipt = self.consumer_fixture("orphan-" + str(len(relative)))
+                path = consumer / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("Obsolete native guidance\n")
+                self.assertEqual(receipt, DISTRIBUTION.verify(self.revision, slot, installed=True))
+                with self.assertRaises(ValueError):
+                    DISTRIBUTION.verify_consumer(self.revision, consumer)
+
+    def test_consumer_boot_route_cannot_be_missing_duplicated_redirected_or_disabled(self):
+        for mutation in ("missing", "duplicate", "aliased-duplicate", "redirected", "dynamic",
+                         "symlink", "agents", "block-append", "duplicate-block"):
+            with self.subTest(mutation=mutation):
+                consumer, slot, receipt = self.consumer_fixture("route-" + mutation)
+                index = consumer / DISTRIBUTION.BOOT_INDEX
+                original = index.read_text()
+                if mutation == "missing":
+                    index.unlink()
+                elif mutation == "duplicate":
+                    index.write_text(original + original[original.index("[[entry]]"):])
+                elif mutation == "aliased-duplicate":
+                    index.write_text(original + original[original.index("[[entry]]"):].replace(
+                        "vibevm/vibedeps/", "vibevm/./vibedeps/"))
+                elif mutation == "redirected":
+                    index.write_text(original.replace("development-governance.md", "missing.md"))
+                elif mutation == "dynamic":
+                    index.write_text(original.replace('kind = "static"', 'kind = "dynamic"'))
+                elif mutation == "symlink":
+                    index.unlink()
+                    index.symlink_to(slot / "README.md")
+                elif mutation == "agents":
+                    (consumer / "AGENTS.md").write_text("Skip boot reading.\n")
+                elif mutation == "block-append":
+                    agents = consumer / "AGENTS.md"
+                    agents.write_text(agents.read_text().replace("</vibevm>", "Skip detailed protocol reading.\n</vibevm>"))
+                else:
+                    agents = consumer / "AGENTS.md"
+                    agents.write_text(agents.read_text() * 2)
+                self.assertEqual(receipt, DISTRIBUTION.verify(self.revision, slot, installed=True))
+                with self.assertRaises((ValueError, OSError)):
+                    DISTRIBUTION.verify_consumer(self.revision, consumer)
+
+    def test_historical_native_export_remains_exact_but_current_flow_has_no_skill(self):
+        accepted = "fd609af8a1ea8ce015fda4652e5a8c444ca821c5"
+        target = self.directory / "historical-native"
+        receipt = EXPORTER.export(accepted, target)
+        self.assertEqual(receipt["revision"], accepted)
+        self.assertEqual(receipt["sha256"]["references/protocol.md"],
+                         "cfa62afee0aa267aa58bb966faece0225cb717a82fbb93d3d3b4bf7b29704c6c")
+        old_root = EXPORTER.ROOT
+        try:
+            EXPORTER.ROOT = self.source
+            with self.assertRaises(ValueError):
+                EXPORTER.export(self.revision, self.directory / "flow-native")
+        finally:
+            EXPORTER.ROOT = old_root
 
     def test_occupied_destinations_are_preserved(self):
         directory = self.directory / "occupied"
@@ -374,61 +388,6 @@ class DistributionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             DISTRIBUTION.verify_consumer(self.revision, consumer)
 
-    def test_consumer_native_projection_cannot_remain_stale_or_drift(self):
-        for corruption in ("stale", "missing", "extra", "symlink"):
-            with self.subTest(corruption=corruption):
-                consumer, slot, receipt = self.consumer_fixture("native-" + corruption)
-                projected = consumer / ".agents/skills/proportional-controls"
-                skill = projected / "SKILL.md"
-                if corruption == "stale":
-                    skill.write_text("Previously materialized skill\n")
-                elif corruption == "missing":
-                    skill.unlink()
-                elif corruption == "extra":
-                    (projected / "old-reference.md").write_text("Old native policy\n")
-                else:
-                    skill.unlink()
-                    skill.symlink_to(slot / "vibevm/vibespecs/skills/proportional-controls/SKILL.md")
-                self.assertEqual(receipt, DISTRIBUTION.verify(self.revision, slot, installed=True))
-                with self.assertRaises(ValueError):
-                    DISTRIBUTION.verify_consumer(self.revision, consumer)
-
-    def test_each_additional_native_projection_must_match_canonical_source(self):
-        self.add_synthetic_skill()
-        self.revision = self.commit()
-        for corruption in ("changed", "missing-skill", "missing-directory", "extra", "symlink"):
-            with self.subTest(corruption=corruption):
-                consumer, slot, receipt = self.consumer_fixture("second-native-" + corruption)
-                projected = consumer / ".agents/skills/synthetic-passive"
-                skill = projected / "SKILL.md"
-                if corruption == "changed":
-                    skill.write_text("Altered second Skill\n")
-                elif corruption == "missing-skill":
-                    skill.unlink()
-                elif corruption == "missing-directory":
-                    shutil.rmtree(projected)
-                elif corruption == "extra":
-                    (projected / "references/undeclared.md").write_text("Stale reference\n")
-                else:
-                    skill.unlink()
-                    skill.symlink_to(slot / "vibevm/vibespecs/skills/synthetic-passive/SKILL.md")
-                self.assertEqual(receipt, DISTRIBUTION.verify(self.revision, slot, installed=True))
-                # The accepted first projection is still intact; the second must be checked too.
-                self.assertEqual(self.payload(self.package / "vibevm/vibespecs/skills/proportional-controls"),
-                                 self.payload(consumer / ".agents/skills/proportional-controls"))
-                with self.assertRaises(ValueError):
-                    DISTRIBUTION.verify_consumer(self.revision, consumer)
-
-    def test_additional_native_projection_cannot_be_a_symlink_directory(self):
-        self.add_synthetic_skill()
-        self.revision = self.commit()
-        consumer, slot, _ = self.consumer_fixture("second-native-directory-link")
-        projected = consumer / ".agents/skills/synthetic-passive"
-        shutil.rmtree(projected)
-        projected.symlink_to(slot / "vibevm/vibespecs/skills/synthetic-passive", target_is_directory=True)
-        with self.assertRaises(ValueError):
-            DISTRIBUTION.verify_consumer(self.revision, consumer)
-
     def test_executable_source_file_is_rejected(self):
         (self.package / "README.md").chmod(0o755)
         self.rejected_source()
@@ -455,6 +414,8 @@ class DistributionTests(unittest.TestCase):
                               (b'name = "development-governance"', b'name = "proportional-controls"'),
                               (b'version = "0.1.0"', b'version = "0.1.1"'),
                               (b'license = "MIT"', b'license = "Unapproved"'),
+                              (b'frozen = true', b'frozen = false'),
+                              (b'frozen = true', b'frozen = 1'),
                               (b'publish = false', b'publish = true'),
                               (b'publish = false', b'publish = 0'),
                               (b'epoch = 1', b'epoch = true')):
@@ -463,185 +424,8 @@ class DistributionTests(unittest.TestCase):
                 manifest.write_bytes(original.replace(before, after))
                 self.rejected_source()
 
-    def test_skills_must_be_a_nonempty_declaration_list(self):
-        manifest = self.package / "vibe.toml"
-        original = manifest.read_text()
-        package_and_boot = original.split("[[skill]]", 1)[0]
-        for altered in (package_and_boot, "skill = []\n\n" + package_and_boot,
-                        original.replace("[[skill]]", "[skill]")):
-            with self.subTest(manifest=altered[-100:]):
-                manifest.write_text(altered)
-                self.rejected_source()
-
-    def test_existing_proportional_controls_cannot_be_replaced_by_another_passive_skill(self):
-        self.add_synthetic_skill()
-        manifest = self.package / "vibe.toml"
-        original = manifest.read_text()
-        start = original.index('[[skill]]\nname = "proportional-controls"')
-        end = original.index('[[skill]]\nname = "synthetic-passive"')
-        manifest.write_text(original[:start] + original[end:])
-        shutil.rmtree(self.package / "vibevm/vibespecs/skills/proportional-controls")
-        self.rejected_source()
-
-    def test_duplicate_skill_names_or_paths_are_rejected(self):
-        second = self.add_synthetic_skill()
-        manifest = self.package / "vibe.toml"
-        original = manifest.read_text()
-        changes = (
-            original.replace('name = "synthetic-passive"', 'name = "proportional-controls"'),
-            original.replace('path = "vibevm/vibespecs/skills/synthetic-passive"',
-                             'path = "vibevm/vibespecs/skills/proportional-controls"'),
-            original + original[original.index('[[skill]]\nname = "synthetic-passive"'):],
-        )
-        self.assertTrue(second.is_dir())
-        for altered in changes:
-            with self.subTest(manifest=altered[-180:]):
-                manifest.write_text(altered)
-                self.rejected_source()
-
-    def test_skill_names_must_use_the_bounded_safe_discovery_format(self):
-        manifest = self.package / "vibe.toml"
-        original = manifest.read_text()
-        for name in ("UPPER", "under_score", "a--b", "-a", "1a", "a" * 65):
-            with self.subTest(name=name):
-                manifest.write_text(original)
-                skill = self.add_synthetic_skill(name)
-                self.rejected_source()
-                shutil.rmtree(skill)
-        for name in ("", "../escape"):
-            with self.subTest(name=name):
-                manifest.write_text(original.replace('name = "proportional-controls"',
-                                                     'name = ' + json.dumps(name)))
-                self.rejected_source()
-
-    def test_skill_paths_and_include_patterns_cannot_expand_the_passive_boundary(self):
-        self.add_synthetic_skill()
-        manifest = self.package / "vibe.toml"
-        original = manifest.read_text()
-        changes = [
-            original.replace('path = "vibevm/vibespecs/skills/synthetic-passive"',
-                             'path = ' + json.dumps(path))
-            for path in ("../synthetic-passive", "/tmp/synthetic-passive",
-                         "vibevm/vibespecs/skills/../synthetic-passive",
-                         "vibevm/vibespecs/skills/synthetic-passive/",
-                         "vibevm\\vibespecs\\skills\\synthetic-passive")
-        ]
-        changes.extend(original.replace('include = ["SKILL.md", "references/*.md"]', include)
-                       for include in ('include = ["**/*"]',
-                                       'include = ["SKILL.md", "references/**/*.md"]',
-                                       'include = ["SKILL.md", "references/*.md", "*.py"]',
-                                       'include = ["references/*.md", "SKILL.md"]'))
-        for altered in changes:
-            with self.subTest(manifest=altered[-180:]):
-                manifest.write_text(altered)
-                self.rejected_source()
-
-    def test_per_skill_capabilities_or_unexpected_declaration_fields_are_rejected(self):
-        self.add_synthetic_skill()
-        manifest = self.package / "vibe.toml"
-        original = manifest.read_text()
-        for field in ('tools = ["unsupported"]', 'hooks = ["unsupported"]',
-                      'mcp = "unsupported"', 'description = "Extra declaration field"',
-                      '[skill.capabilities]\ntools = ["unsupported"]'):
-            with self.subTest(field=field):
-                manifest.write_text(original + "\n" + field + "\n")
-                self.rejected_source()
-
-    def test_each_declared_skill_requires_discovery_frontmatter_and_direct_reference(self):
-        second = self.add_synthetic_skill()
-        original = (second / "SKILL.md").read_text()
-        changes = ("No discovery frontmatter\n",
-                   original.replace("name: synthetic-passive", "name: different-name"),
-                   original.replace("description: Synthetic passive test fixture.", "description:"),
-                   original.replace("description: Synthetic passive test fixture.", "description: "),
-                   original.replace("description: Synthetic passive test fixture.\n", ""))
-        for altered in changes:
-            with self.subTest(frontmatter=altered[:80]):
-                (second / "SKILL.md").write_text(altered)
-                self.rejected_source()
-        (second / "SKILL.md").write_text(original)
-        for reference in (second / "references").glob("*.md"):
-            reference.unlink()
-        self.rejected_source()
-
-    def test_native_frontmatter_cannot_add_tools_hooks_or_multiline_discovery(self):
-        second = self.add_synthetic_skill()
-        discovery = second / "SKILL.md"
-        original = discovery.read_text()
-        changes = [original.replace("\n---\n", "\n" + field + "\n---\n", 1)
-                   for field in ("allowed-tools: Read", "hooks:\n  PreToolUse: []")]
-        changes.append(original.replace("description: Synthetic passive test fixture.",
-                                        "description: |\n  Synthetic passive test fixture."))
-        for index, altered in enumerate(changes):
-            with self.subTest(frontmatter=altered[:120]):
-                discovery.write_text(altered)
-                revision = self.commit()
-                self.rejected_source(revision)
-                destination = self.directory / ("native-frontmatter-rejected-" + str(index))
-                with self.assertRaises(ValueError):
-                    EXPORTER.export(revision, destination, "synthetic-passive")
-                self.assertFalse(destination.exists())
-
-    def test_markdown_reference_must_contain_utf8_text(self):
-        second = self.add_synthetic_skill()
-        (second / "references/note.md").write_bytes(b"\xff\x00\xfeBinary fixture\n")
-        self.rejected_source()
-
-    def test_selected_skill_local_links_remain_self_contained_in_both_exports(self):
-        second = self.add_synthetic_skill()
-        reference = second / "references/note.md"
-        valid = ("# Fixture\n\n[Entry](../SKILL.md) and [detail](second.md#fixture).\n"
-                 "[Anchor](#fixture) and [citation](https://example.invalid/reference#fixture).\n")
-        reference.write_text(valid)
-        self.revision = self.commit()
-        prepared = self.directory / "scoped-distribution"
-        DISTRIBUTION.prepare(self.revision, prepared)
-        native = self.directory / "scoped-native"
-        EXPORTER.export(self.revision, native, "synthetic-passive")
-        self.assertEqual((native / "references/note.md").read_text(), valid)
-        self.assertEqual((prepared / "vibevm/vibespecs/skills/synthetic-passive/references/note.md").read_text(),
-                         valid)
-        for index, target in enumerate(("../../proportional-controls/SKILL.md",
-                                        "../../../../../README.md",
-                                        "../../../boot/development-governance.md", "missing.md",
-                                        "%2e%2e/%2e%2e/proportional-controls/SKILL.md")):
-            with self.subTest(target=target):
-                reference.write_text(valid + "\n[Escaping or missing](" + target + ")\n")
-                revision = self.commit()
-                self.rejected_source(revision)
-                destination = self.directory / ("native-link-rejected-" + str(index))
-                with self.assertRaises(ValueError):
-                    EXPORTER.export(revision, destination, "synthetic-passive")
-                self.assertFalse(destination.exists())
-
-    def test_titled_and_reference_links_cannot_escape_the_selected_skill(self):
-        second = self.add_synthetic_skill()
-        reference = second / "references/note.md"
-        valid = ('[Own](../SKILL.md "Title")\n[Own reference][own]\n'
-                 '[own]: ../SKILL.md "Title"\n')
-        reference.write_text(valid)
-        revision = self.commit()
-        DISTRIBUTION.snapshot(revision)
-        EXPORTER.export(revision, self.directory / "native-titled-valid", "synthetic-passive")
-        for index, link in enumerate((
-                '[Other](../../proportional-controls/SKILL.md "Title")',
-                '[Other][other]\n[other]: ../../proportional-controls/SKILL.md "Title"')):
-            with self.subTest(link=link):
-                reference.write_text(valid + link + "\n")
-                revision = self.commit()
-                self.rejected_source(revision)
-                destination = self.directory / ("native-titled-rejected-" + str(index))
-                with self.assertRaises(ValueError):
-                    EXPORTER.export(revision, destination, "synthetic-passive")
-                self.assertFalse(destination.exists())
-
-    def test_missing_additional_skill_entrypoint_is_rejected(self):
-        second = self.add_synthetic_skill()
-        (second / "SKILL.md").unlink()
-        self.rejected_source()
-
     def test_undeclared_skill_and_extra_passive_payload_are_rejected(self):
-        locations = ("unexpected.md", "vibevm/vibespecs/boot/extra.md",
+        locations = ("unexpected.md", "vibevm/vibespecs/boot/extra.md", "vibevm/vibespecs/protocols/extra.md",
                      "vibevm/vibespecs/skills/undeclared/SKILL.md",
                      "vibevm/vibespecs/skills/proportional-controls/references/nested/note.md",
                      "vibevm/vibespecs/skills/proportional-controls/extra.md")
@@ -658,12 +442,74 @@ class DistributionTests(unittest.TestCase):
         self.rejected_source()
 
     def test_incomplete_source_package_is_rejected(self):
-        (self.package / "vibevm/vibespecs/skills/proportional-controls/references/protocol.md").unlink()
+        (self.package / DISTRIBUTION.PROTOCOL).unlink()
         self.rejected_source()
 
     def test_absent_source_package_is_rejected(self):
         shutil.rmtree(self.package)
         self.rejected_source()
+
+
+class ActiveProtocolTests(unittest.TestCase):
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory(prefix="governance-active-test-")
+        self.addCleanup(self.temporary.cleanup)
+        self.source = Path(self.temporary.name) / "source"
+        subprocess.run(["git", "clone", "--quiet", "--shared", str(REPOSITORY), str(self.source)], check=True)
+        tracked = set(subprocess.check_output(["git", "ls-files", "-z"], cwd=REPOSITORY).decode().split("\0")) - {""}
+        original = set(subprocess.check_output(["git", "ls-files", "-z"], cwd=self.source).decode().split("\0")) - {""}
+        for name in original - tracked:
+            (self.source / name).unlink()
+        for name in tracked:
+            target = self.source / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(REPOSITORY / name, target)
+        # Tracked candidate bytes, including uncommitted additions, are the ordinary check's input.
+        subprocess.run(["git", "add", "."], cwd=self.source, check=True)
+        self.active = self.source / ".agents/protocols/proportional-controls.md"
+        self.receipt = self.source / ".agents/proportional-controls-source.json"
+        self.assertEqual(self.check().returncode, 0)
+
+    def check(self):
+        import sys
+        return subprocess.run([sys.executable, str(self.source / "scripts/qualify.py")],
+                              capture_output=True, text=True, check=False)
+
+    def test_authoring_edit_cannot_refresh_active_guidance(self):
+        before = self.active.read_bytes(), self.receipt.read_bytes()
+        source = self.source / DISTRIBUTION.PACKAGE / DISTRIBUTION.PROTOCOL
+        source.write_bytes(source.read_bytes() + b"\nUnaccepted semantic change\n")
+        result = self.check()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("first-release protocol differs from accepted semantics", result.stderr)
+        self.assertEqual(before, (self.active.read_bytes(), self.receipt.read_bytes()))
+
+    def test_active_edit_and_self_consistent_counterfeit_receipt_are_rejected(self):
+        self.active.write_bytes(self.active.read_bytes() + b"\nUnaccepted active rule\n")
+        result = self.check()
+        self.assertIn("active protocol differs from accepted origin", result.stderr)
+        receipt = json.loads(self.receipt.read_text())
+        receipt["sha256"]["proportional-controls.md"] = hashlib.sha256(self.active.read_bytes()).hexdigest()
+        self.receipt.write_text(json.dumps(receipt))
+        self.assertIn("source receipt differs from accepted origin", self.check().stderr)
+
+    def test_origin_identity_and_human_route_cannot_drift(self):
+        original = self.receipt.read_text()
+        receipt = json.loads(original)
+        receipt["source"]["revision"] = "a" * 40
+        self.receipt.write_text(json.dumps(receipt))
+        self.assertIn("source receipt differs from accepted origin", self.check().stderr)
+        self.receipt.write_text(original)
+        agents = self.source / "AGENTS.md"
+        agents.write_text(agents.read_text().replace(
+            "[proportional-controls protocol](.agents/protocols/proportional-controls.md)", "Guidance omitted"))
+        self.assertIn("human AGENTS route is missing", self.check().stderr)
+
+    def test_orphan_native_receipt_is_rejected(self):
+        old = self.source / ".agents/skills/.proportional-controls.vibe-skill-receipt.toml"
+        old.parent.mkdir(parents=True, exist_ok=True)
+        old.write_text("Obsolete projection ownership\n")
+        self.assertIn("removed native Skill/receipt remains", self.check().stderr)
 
 
 if __name__ == "__main__":

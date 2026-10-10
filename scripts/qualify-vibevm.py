@@ -65,7 +65,8 @@ def main():
         run("--json", "check", "--path", str(workspace))
         member_relative = tomllib.loads((workspace / "vibe.toml").read_text(encoding="utf-8"))["workspace"]["members"][0]
         member = workspace / member_relative
-        skills = tomllib.loads((member / "vibe.toml").read_text(encoding="utf-8"))["skill"]
+        if "skill" in tomllib.loads((member / "vibe.toml").read_text(encoding="utf-8")):
+            raise RuntimeError("flow must declare no native Skills")
         # Validate/projection may already have written state; only source-tracked bytes are payload.
         prefix = member_relative + "/"
         payload = {name.removeprefix(prefix): (workspace / name).read_bytes()
@@ -79,20 +80,11 @@ def main():
             target.write_bytes(data)
         run("--json", "check", "--path", str(member))
         agents_before = (workspace / "AGENTS.md").read_bytes()
-        for declaration in skills:
-            run("--offline", "--json", "skill", "install", "--path", str(member),
-                "--agent", "codex", "--scope", "project", "--skill", declaration["name"], "--yes")
-            skill = member / declaration["path"]
-            projected = member / ".agents/skills" / declaration["name"]
-            expected = {path.relative_to(skill).as_posix() for path in skill.rglob("*") if path.is_file()}
-            actual = {path.relative_to(projected).as_posix() for path in projected.rglob("*") if path.is_file()}
-            if actual != expected:
-                raise RuntimeError("VibeVM skill projection file set differs from canonical skill")
-            for source in skill.rglob("*"):
-                if source.is_file() and (projected / source.relative_to(skill)).read_bytes() != source.read_bytes():
-                    raise RuntimeError("VibeVM projection differs from canonical skill bytes")
+        listing = json.loads(run("--offline", "--json", "skill", "list", "--path", str(member)))
+        if listing.get("skills"):
+            raise RuntimeError("flow exposes a native Skill")
         if (workspace / "AGENTS.md").read_bytes() != agents_before:
-            raise RuntimeError("member skill projection changed root AGENTS.md")
+            raise RuntimeError("member qualification changed root AGENTS.md")
         run("--json", "check", "--path", str(workspace))
         if args.materialize:
             # This temporary project is an authoring probe, never a consumer migration.
@@ -119,7 +111,7 @@ def main():
             if len(blocks) != 1 or outside != agents_before.rstrip():
                 raise RuntimeError("dependency install modified human-owned AGENTS.md content")
         print(json.dumps({"vibevm_qualification": "PASS", "version": pin["version"],
-                          "commands": len(commands), "native_skill_bytes": "identical",
+                          "commands": len(commands), "native_skills": "none declared/projected",
                           "dependency_install": "PASS" if args.materialize else "not requested",
                           "fixture": "disposable local paths; no package publication or consumer writes"}))
 
