@@ -5,9 +5,11 @@ The root virtual workspace has one stable member,
 a routine bump changes that value without moving the authoring tree. Frozen
 `0.1.0` remains at its historical path as retained source, outside membership.
 Historical exports discover the path from the selected commit's workspace.
-The current passive flow contains two ordinary protocols and no native Skills,
-capabilities or dependencies. Its proportional-controls bytes retain the accepted
-baseline; package-versioning has explicit consumer-adoption applicability.
+The current passive flow contains three ordinary protocols and no native Skills,
+capabilities or dependencies. Proportional-controls preserves its accepted
+baseline and adds the scoped Task 19 existing-proof and friction corrections;
+requirement-authority is conditionally read interpretive guidance, while
+package-versioning has explicit consumer-adoption applicability.
 
 [Release policy](releases.md) separates this producer's cadence from reusable
 policy and documents automatic publication, exact-source retry and credentials.

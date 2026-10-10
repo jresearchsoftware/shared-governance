@@ -74,3 +74,44 @@ authority. Review for unnecessary state, gates, authority coupling, prerequisite
 and operator-visible actions in addition to implementation correctness. An
 unauthorized material operator-contract change needs the owning project's
 explicit owner disposition before acceptance.
+
+## Existing proof before another step
+
+Before adding another mandatory or ceremonial commit, review pass, validation
+gate, approval, state transition, handoff or recovery action, determine whether
+existing evidence already proves the same invariant for the relevant candidate.
+Require an independently justified purpose, new or changed candidate evidence,
+a concrete accepted risk or explicit authority for an additional step. A cheap
+repetition still needs a purpose; stricter ceremony alone is not justification.
+Reuse sufficient evidence in the owning project's existing records.
+
+This does not waive mandatory independent review, required checks or revalidation
+of a changed head. Evidence about a different candidate or invariant cannot
+prove the current one. Avoiding duplicate proof grants no acceptance, merge,
+publication or recovery authority and does not skip a separately justified
+protected-boundary check.
+
+## Reassess self-imposed control friction
+
+When an agent-created safety, resource, platform or validation limit breaks an
+otherwise supported and authorized workflow, investigate its original failure
+mode, practical risk, operator burden and less disruptive alternatives. When
+provenance affects the decision, read [requirement-authority](requirement-authority.md)
+to distinguish binding requirements from revisable implementation choices.
+Documentation, previous review or merge alone does not make an internal limit
+an enduring owner mandate.
+
+Prefer the smallest safe repair within the current Task, preserving real
+protections. For example, an internally chosen response-size cap that makes
+large Issue/PR review fail may warrant bounded paginated or streamed handling
+when the risk evidence supports it. The example grants no authority to change
+any particular runtime or consumer. Do not require the owner to diagnose or
+reauthorize an arbitrary historical engineering limit merely because an agent
+introduced it.
+
+A genuine owner-controlled requirement, material change to observable supported
+behavior, credential/trust/security boundary or unresolved material risk still
+requires the owning project's authorized disposition. Do not automatically
+remove a historical restriction because an agent invented it; preserve accepted
+contracts and protected invariants whatever their implementation origin. Use
+the existing authority mechanism, not a new approval loop or standing ledger.

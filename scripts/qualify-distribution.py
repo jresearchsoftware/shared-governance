@@ -46,7 +46,6 @@ def main():
     require(hashlib.sha256(vibe.read_bytes()).hexdigest() == pin["linux_x86_64_musl_binary"]["sha256"],
             "VibeVM binary differs from pinned musl bytes")
     preparation = module("preparation", "prepare-distribution.py")
-    projection = module("projection", "project-protocol.py")
     with tempfile.TemporaryDirectory(prefix="shared-governance-distribution-") as temporary:
         fixture = Path(temporary)
         env = {key: value for key, value in os.environ.items() if key in {"PATH", "LANG", "LC_ALL", "TMPDIR"}}
@@ -115,9 +114,10 @@ def main():
         require(lock["package"][0]["content_hash"] == expected_hash, "lock hash differs from canonical package")
         run(first, "install", "--no-default-registry", "--assume-yes")
         preparation.verify(args.source_ref, first / slot, installed=True)
-        protocol, license_bytes, _ = projection.snapshot()
+        canonical, _ = preparation.snapshot(args.source_ref)
+        protocol, license_bytes = canonical[preparation.PROTOCOL], canonical["LICENSE"]
         require((distribution / preparation.PROTOCOL).read_bytes() == protocol,
-                "flow protocol differs from the accepted semantics")
+                "flow protocol differs from the selected canonical source")
         require((distribution / "LICENSE").read_bytes() == license_bytes, "license differs from accepted origin")
         listing = json.loads(run(first, "skill", "list").stdout)
         require(not listing.get("skills"), "flow exposes a native Skill")
@@ -228,7 +228,7 @@ def main():
                           "payload_sha256": receipt["payload_sha256"], "distribution_revision": revision,
                           "vibevm_content_hash": expected_hash,
                           "commands": len(commands), "native_skills": "none declared/projected",
-                          "accepted_semantics": "exact deterministic wrapper conversion plus unchanged procedure",
+                          "protocol_source": "exact canonical source commit; independent acceptance is separate",
                           "local_publish_and_idempotence": "PASS", "independent_cold_consumer": "PASS",
                           "tag_drift": "upstream lock/slot split reproduced; canonical verifier rejects",
                           "offline": "existing slots and complete Git rollback PASS; cache-only recovery FAIL",

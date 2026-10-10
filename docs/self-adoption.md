@@ -70,6 +70,18 @@ to the accepted historical input, not a general future-version adoption framewor
 
 ## Qualification boundary
 
+[Task 19](https://github.com/jresearchsoftware/shared-governance/issues/19) updates
+the authored proportional-controls protocol and adds requirement-authority in a
+later whole-package candidate. The repository's active file, receipt and AGENTS
+route remain pinned to the accepted origin above during this source change.
+The candidate's conditional boot is exported for separately owned consumer
+adoption; it is not inserted as a competing active repository policy.
+Task 19's live Issue directly authorizes its current requirement/friction
+decisions. After independent source acceptance, a separately reviewed self-adoption
+update can select that accepted source and reconcile the generated snapshot and
+route together. No new mandatory runtime, owner confirmation or global check
+is added here. See the [coverage and G1 handoff](task-19/README.md).
+
 Task 6's native discovery and read-only model result remain historical evidence
 for its old delivery. Task 10 requires fresh source/export, integrity regressions,
 actual hash-pinned VibeVM local publisher/consumer materialization, and fresh Codex

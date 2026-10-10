@@ -2,12 +2,17 @@
 
 `org.jresearch.ai/development-governance` is one passive VibeVM flow,
 licensed under MIT. One whole-package version covers its conditional boot and
-ordinary [proportional-controls](vibevm/vibespecs/protocols/proportional-controls.md)
+ordinary [proportional-controls](vibevm/vibespecs/protocols/proportional-controls.md),
+[requirement-authority](vibevm/vibespecs/protocols/requirement-authority.md)
 and [package-versioning](vibevm/vibespecs/protocols/package-versioning.md) protocols.
 It has no executable capabilities, dependencies or native Codex Skills.
 
-The stable contract preserves the proportional-controls procedure and its
-applicability. Package-versioning is available for explicit project adoption;
+The stable contract preserves the proportional-controls procedure, exceptions
+and applicability. Its existing-proof and self-imposed-friction guidance reuse
+current evidence and project authority without additional operator steps.
+Requirement-authority is a common interpretive rule, conditionally read for
+relevant provenance decisions; it does not supply a contract-review procedure.
+Package-versioning is available for explicit project adoption;
 installation or a dependency update does not supersede existing local policies.
 Human-owned project instructions retain task, review, publication and adoption
 authority. Newly adopting producers choose their own cadence and routing.
