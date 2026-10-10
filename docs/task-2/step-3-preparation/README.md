@@ -1,5 +1,10 @@
 # Task 2 — Step 3 preparation
 
+**Historical Skill-payload packet.** [Task 10](https://github.com/jresearchsoftware/shared-governance/issues/10)
+proposes a frozen flow-protocol payload before first publication. After its accepted
+merge, regenerate source/content identities and seek new specific admission under
+Task 2. The evidence and draft below do not authorize or identify that new release.
+
 **PREPARATION FOR REVIEW — external publication and Step 3 execution remain NOT ADMITTED.**
 
 The evidence snapshot was produced on 2026-10-09, with live authority read-back

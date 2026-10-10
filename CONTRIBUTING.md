@@ -10,15 +10,18 @@ publication credentials or Task/Step machinery. Bootstrap authority remains
 [Relay Task 83](https://github.com/jresearchsoftware/codex-relay/issues/83);
 later substantive work uses repository-local Issues.
 
-Use Python 3.11 or newer and Git for the source/native-Skill baseline:
+Use Python 3.11 or newer and Git for source and exact-commit flow export:
 
 ```sh
 git diff --check
-python3 scripts/qualify.py
+python3 scripts/qualify.py --export-ref HEAD
 ```
 
 The qualifier checks tracked bytes, local links, manifests, package passivity
-and skill/export consistency. Stage intended new files before running it.
+and protocol/export consistency, including the accepted-origin active snapshot.
+Stage intended new files before running it; commit the candidate before comparing
+its exact-commit export. The first-release check also verifies semantic equivalence
+to the accepted Skill/procedure, with no native projection.
 Its credential scan reports paths only and covers bounded markers; it cannot
 prove absence of all secrets or private knowledge. Inspect the complete diff.
 

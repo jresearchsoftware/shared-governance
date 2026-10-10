@@ -6,7 +6,8 @@ kind = "flow"
 format = "simple"
 epoch = 1
 publish = false
-description = "Passive cross-project AI-development governance Skills."
+frozen = true
+description = "Passive cross-project AI-development governance flow protocol."
 license = "MIT"
 
 [boot_snippet]
@@ -14,7 +15,3 @@ source = "vibevm/vibespecs/boot/development-governance.md"
 category = "flow"
 link = "dynamic"
 
-[[skill]]
-name = "proportional-controls"
-path = "vibevm/vibespecs/skills/proportional-controls"
-include = ["SKILL.md", "references/*.md"]

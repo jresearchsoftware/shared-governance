@@ -1,7 +1,8 @@
 # Development governance
 
-Use the package's declared native Skills when relevant; load their references
-when needed. Initially, `proportional-controls` covers security, validation and
-operator controls through its `references/protocol.md`. Shared guidance does
-not grant task, publication, review or consumer-adoption authority. Each package
-version covers the full Skill set; consumers separately review and pin updates.
+For proposed security, validation or operator controls, read the full
+[proportional-controls protocol](../protocols/proportional-controls.md),
+including when assessing behaviorally free security hardening. Unrelated tasks
+do not require reading it. Apply shared guidance within the owning project's
+current scope and authority; it grants no task, publication, review or
+consumer-adoption permissions. Consumers separately review and pin updates.

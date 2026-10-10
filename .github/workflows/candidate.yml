@@ -20,7 +20,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
           persist-credentials: false
-      - name: Validate source and exact-commit native export
+      - name: Validate source, active protocol and exact-commit flow export
         run: python3 scripts/qualify.py --export-ref HEAD
       - name: Check passive distribution preparation and integrity failures
         run: python3 scripts/test-distribution.py

@@ -16,6 +16,8 @@ REPOSITORY = "https://github.com/jresearchsoftware/shared-governance"
 COORDINATE = "org.jresearch.ai/development-governance"
 SLOT = "vibevm/vibedeps/org.jresearch.ai.development-governance/0.1.0"
 RECEIPT = "DISTRIBUTION.json"
+PROTOCOL = "vibevm/vibespecs/protocols/proportional-controls.md"
+BOOT_INDEX = "vibevm/vibespecs/boot/INDEX.md"
 
 
 def vibe_hash(files):
@@ -31,7 +33,7 @@ def git(*args):
 
 
 def validate_skill_links(files, prefix):
-    """A selected native Skill must keep local references within its own export."""
+    """Keep passive Markdown references within the selected export (also legacy Skills)."""
     for name, data in files.items():
         if not name.startswith(prefix + "/"):
             continue
@@ -44,11 +46,11 @@ def validate_skill_links(files, prefix):
                 continue
             resolved = posixpath.normpath(posixpath.join(posixpath.dirname(name), unquote(url.path))) if url.path else name
             if not resolved.startswith(prefix + "/") or resolved not in files:
-                raise ValueError("native Skill has an escaping or missing local reference: " + name)
+                raise ValueError("passive payload has an escaping or missing local reference: " + name)
 
 
 def validate_payload(files, license_bytes):
-    """Allow only declared passive Skills and their bounded reference files."""
+    """Allow only the first frozen flow's boot and one ordinary canonical protocol."""
     for data in files.values():
         data.decode("utf-8")
     if "vibe.toml" not in files or "LICENSE" not in files:
@@ -59,47 +61,27 @@ def validate_payload(files, license_bytes):
         raise ValueError("source package metadata must be a table")
     expected = {"group": "org.jresearch.ai", "name": "development-governance",
                 "version": "0.1.0", "kind": "flow", "format": "simple", "epoch": 1,
-                "publish": False, "license": "MIT"}
+                "publish": False, "frozen": True, "license": "MIT"}
     if any(type(package.get(key)) is not type(value) or package.get(key) != value
            for key, value in expected.items()):
         raise ValueError("source package identity/passivity/publication boundary differs")
-    if set(manifest) != {"package", "boot_snippet", "skill"}:
+    if set(manifest) != {"package", "boot_snippet"}:
         raise ValueError("unexpected package capability or dependency")
     if set(package) - (set(expected) | {"description"}):
         raise ValueError("unexpected package metadata")
     boot = {"source": "vibevm/vibespecs/boot/development-governance.md",
             "category": "flow", "link": "dynamic"}
-    skills = manifest["skill"]
-    if manifest["boot_snippet"] != boot or not isinstance(skills, list) or not skills:
-        raise ValueError("package boot/skill declarations differ")
-    names = set()
-    allowed = {"vibe.toml", "LICENSE", "README.md", boot["source"]}
-    for skill in skills:
-        name = skill.get("name") if isinstance(skill, dict) else None
-        if (not isinstance(name, str) or len(name) > 64
-                or not re.fullmatch(r"[a-z][a-z0-9]*(?:-[a-z0-9]+)*", name) or name in names):
-            raise ValueError("native Skill names must be safe and unique")
-        names.add(name)
-        path = "vibevm/vibespecs/skills/" + name
-        if skill != {"name": name, "path": path, "include": ["SKILL.md", "references/*.md"]}:
-            raise ValueError("native Skill declaration must select only its passive instructions/references")
-        discovery = path + "/SKILL.md"
-        text = files.get(discovery, b"").decode()
-        if not re.match(r"---\nname: " + re.escape(name) + r"\ndescription: [^\n]*\S[^\n]*\n---\n", text):
-            raise ValueError("native Skill discovery frontmatter is missing or mismatched: " + name)
-        references = {item for item in files
-                      if re.fullmatch(re.escape(path) + r"/references/[^/\\]+\.md", item)}
-        if not references:
-            raise ValueError("native Skill requires passive reference text: " + name)
-        allowed.update({discovery, *references})
-        validate_skill_links(files, path)
-    if "proportional-controls" not in names:
-        raise ValueError("the accepted proportional-controls Skill must be retained")
+    if manifest["boot_snippet"] != boot:
+        raise ValueError("package boot declaration differs")
+    allowed = {"vibe.toml", "LICENSE", "README.md", boot["source"], PROTOCOL}
     if set(files) != allowed:
         raise ValueError("source package file set differs from declared passive payload")
     if files["LICENSE"] != license_bytes:
         raise ValueError("source/package license notices differ")
-    return skills
+    validate_skill_links(files, "vibevm/vibespecs")
+    if not files[PROTOCOL].strip():
+        raise ValueError("canonical protocol is empty")
+    return manifest
 
 
 def snapshot(revision):
@@ -213,18 +195,28 @@ def verify_consumer(revision, directory):
             "version": "0.1.0", "source_kind": "git", "source_url": requirement["git"],
             "source_ref": requirement.get("rev") or requirement["tag"], "content_hash": vibe_hash(files)}.items()):
         raise ValueError("consumer lock differs from canonical content/source declaration")
-    for skill in tomllib.loads(files["vibe.toml"].decode())["skill"]:
-        projected = directory / ".agents/skills" / skill["name"]
-        prefix = skill["path"] + "/"
-        expected = {name.removeprefix(prefix): data for name, data in files.items() if name.startswith(prefix)}
-        if not projected.is_dir() or projected.is_symlink():
-            raise ValueError("consumer native skill projection is missing: " + skill["name"])
-        paths = list(projected.rglob("*"))
-        if any(path.is_symlink() or (not path.is_file() and not path.is_dir()) for path in paths):
-            raise ValueError("consumer native skill projection contains non-ordinary files")
-        actual = {path.relative_to(projected).as_posix(): path.read_bytes() for path in paths if path.is_file()}
-        if actual != expected:
-            raise ValueError("consumer native skill projection differs from canonical source: " + skill["name"])
+    # The removed package Skill and its native receipt must not remain active.
+    for relative in (".agents/skills/proportional-controls",
+                     ".agents/skills/.proportional-controls.vibe-skill-receipt.toml"):
+        if (directory / relative).exists() or (directory / relative).is_symlink():
+            raise ValueError("consumer retains the removed native Skill: " + relative)
+    index = directory / BOOT_INDEX
+    agents = directory / "AGENTS.md"
+    if any(path.is_symlink() or not path.is_file() for path in (index, agents)):
+        raise ValueError("consumer generated boot route must use ordinary files")
+    boot = tomllib.loads(index.read_text(encoding="utf-8"))
+    package_boot = SLOT + "/vibevm/vibespecs/boot/development-governance.md"
+    entries = boot.get("entry", [])
+    if boot.get("schema") != 1 or not isinstance(entries, list) or any(not isinstance(e, dict) for e in entries):
+        raise ValueError("consumer boot index differs from pinned schema")
+    selected = [e for e in entries if e.get("path", "").startswith(SLOT + "/")]
+    # Pinned upstream emits static despite the authored link=dynamic. Qualify it honestly.
+    if selected != [{"path": package_boot, "kind": "static"}]:
+        raise ValueError("consumer boot index has no unique canonical package route")
+    blocks = re.findall(r"<vibevm>.*?</vibevm>", agents.read_text(encoding="utf-8"), flags=re.S)
+    if (len(blocks) != 1 or BOOT_INDEX not in blocks[0]
+            or "Read every file named" not in blocks[0] or "in the listed order" not in blocks[0]):
+        raise ValueError("consumer AGENTS does not route through the generated boot index")
     return receipt
 
 
@@ -235,7 +227,7 @@ def main():
     action.add_argument("--destination", type=Path, help="new/empty directory outside this authoring checkout")
     action.add_argument("--verify", type=Path, metavar="DIRECTORY", help="compare prepared bytes with canonical source")
     action.add_argument("--verify-installed", type=Path, metavar="DIRECTORY", help="also validate VibeVM's generated slot receipt")
-    action.add_argument("--verify-consumer", type=Path, metavar="DIRECTORY", help="validate manifest, lock, installed bytes and native projection")
+    action.add_argument("--verify-consumer", type=Path, metavar="DIRECTORY", help="validate manifest, lock, installed bytes and absence of the removed native Skill")
     args = parser.parse_args()
     try:
         if args.destination is not None:

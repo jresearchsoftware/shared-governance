@@ -13,7 +13,6 @@ import tempfile
 import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
-ACCEPTED_BASELINE = "aa1e18085dee2aa59e19c5939e882cd8084eea00"
 COORDINATE = "org.jresearch.ai/development-governance"
 SLOT = "vibevm/vibedeps/org.jresearch.ai.development-governance/0.1.0"
 
@@ -34,13 +33,21 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--vibe", type=Path, required=True, help="exact pinned Linux x86_64 musl binary")
     parser.add_argument("--source-ref", required=True, help="full canonical package source commit")
+    parser.add_argument("--consumer-destination", type=Path,
+                        help="optional new/empty copy of the verified installed consumer for fresh read-only Codex probes")
     args = parser.parse_args()
+    if args.consumer_destination:
+        destination = args.consumer_destination
+        require(not destination.is_symlink() and not destination.resolve().is_relative_to(ROOT),
+                "consumer evidence destination must be outside source and ordinary")
+        require(not destination.exists() or (destination.is_dir() and not any(destination.iterdir())),
+                "consumer evidence destination must be absent or empty")
     vibe = args.vibe.resolve()
     pin = json.loads((ROOT / "toolchain/vibevm.json").read_text())
     require(hashlib.sha256(vibe.read_bytes()).hexdigest() == pin["linux_x86_64_musl_binary"]["sha256"],
             "VibeVM binary differs from pinned musl bytes")
     preparation = module("preparation", "prepare-distribution.py")
-    vendor = module("vendor", "vendor-skill.py")
+    projection = module("projection", "project-protocol.py")
     with tempfile.TemporaryDirectory(prefix="shared-governance-distribution-") as temporary:
         fixture = Path(temporary)
         env = {key: value for key, value in os.environ.items() if key in {"PATH", "LANG", "LC_ALL", "TMPDIR"}}
@@ -76,7 +83,7 @@ def main():
 
         distribution = fixture / "distribution"
         receipt = preparation.prepare(args.source_ref, distribution)
-        skills = tomllib.loads((distribution / "vibe.toml").read_text())["skill"]
+        require("skill" not in tomllib.loads((distribution / "vibe.toml").read_text()), "flow declares native Skills")
         remote = fixture / "distribution.git"
         git(fixture, "init", "--bare", "-b", "main", str(remote))
         preparation.verify(args.source_ref, distribution)
@@ -105,27 +112,12 @@ def main():
         require(lock["package"][0]["content_hash"] == expected_hash, "lock hash differs from canonical package")
         run(first, "install", "--no-default-registry", "--assume-yes")
         preparation.verify(args.source_ref, first / SLOT, installed=True)
-        baselines = {}
-        for skill in skills:
-            run(first, "skill", "install", "--agent", "codex", "--scope", "project",
-                "--skill", skill["name"], "--yes")
-            baseline = fixture / "native-skills" / skill["name"]
-            vendor.export(args.source_ref, baseline, skill["name"])
-            baselines[skill["name"]] = baseline
-            projected = first / ".agents/skills" / skill["name"]
-            expected = {p.relative_to(distribution / skill["path"]).as_posix()
-                        for p in (distribution / skill["path"]).rglob("*") if p.is_file()}
-            actual = {p.relative_to(projected).as_posix() for p in projected.rglob("*") if p.is_file()}
-            require(expected == actual, "native VibeVM file set differs")
-            for relative in expected:
-                require((projected / relative).read_bytes() == (baseline / relative).read_bytes(), "native skill bytes differ")
-        accepted = fixture / "accepted-proportional-controls"
-        vendor.export(ACCEPTED_BASELINE, accepted)
-        original = {p.relative_to(accepted).as_posix(): p.read_bytes() for p in accepted.rglob("*")
-                    if p.is_file() and p.name != "SOURCE.json"}
-        current = {p.relative_to(baselines["proportional-controls"]).as_posix(): p.read_bytes()
-                   for p in baselines["proportional-controls"].rglob("*") if p.is_file() and p.name != "SOURCE.json"}
-        require(current == original, "proportional-controls bytes differ from accepted bootstrap")
+        protocol, license_bytes, _ = projection.snapshot()
+        require((distribution / preparation.PROTOCOL).read_bytes() == protocol,
+                "flow protocol differs from the accepted semantics")
+        require((distribution / "LICENSE").read_bytes() == license_bytes, "license differs from accepted origin")
+        listing = json.loads(run(first, "skill", "list").stdout)
+        require(not listing.get("skills"), "flow exposes a native Skill")
         agents = (first / "AGENTS.md").read_bytes()
         require(len(re.findall(rb"<vibevm>.*?</vibevm>", agents, flags=re.S)) == 1,
                 "expected one managed AGENTS block")
@@ -133,16 +125,17 @@ def main():
                 "human-owned AGENTS content changed")
         run(first, "check")
         preparation.verify_consumer(args.source_ref, first)
+        if args.consumer_destination:
+            shutil.copytree(first, args.consumer_destination, dirs_exist_ok=True,
+                            ignore=shutil.ignore_patterns(".git", ".vibe"))
+            preparation.verify_consumer(args.source_ref, args.consumer_destination)
         git(first, "init", "-b", "main")
-        git(first, "add", "AGENTS.md", "vibe.toml", "vibe.lock", "vibevm", ".agents")
+        git(first, "add", "AGENTS.md", "vibe.toml", "vibe.lock", "vibevm")
         git(first, "commit", "-m", "Disposable complete materialized baseline")
         baseline_revision = git(first, "rev-parse", "HEAD")
         second = consumer("independent-consumer")
         cold_settings = fixture / "independent-settings"
         run(second, "install", "--no-default-registry", "--assume-yes", settings=cold_settings)
-        for skill in skills:
-            run(second, "skill", "install", "--agent", "codex", "--scope", "project",
-                "--skill", skill["name"], "--yes", settings=cold_settings)
         preparation.verify_consumer(args.source_ref, second)
 
         # Default file:// Git archive does not serve arbitrary commit IDs.
@@ -217,15 +210,8 @@ def main():
         require(upgraded.is_dir() and not (first / SLOT).exists(), "synthetic update/pruning failed")
         require(tomllib.loads((upgraded / "vibe.toml").read_text())["package"]["version"] == "0.1.1",
                 "synthetic update installed wrong version")
-        for skill in skills:
-            for source in (distribution / skill["path"]).rglob("*"):
-                if source.is_file():
-                    relative = source.relative_to(distribution / skill["path"])
-                    require((upgraded / skill["path"] / relative).read_bytes()
-                            == (baselines[skill["name"]] / relative).read_bytes(),
-                            "version-only update changed canonical skill bytes")
-            run(first, "skill", "install", "--agent", "codex", "--scope", "project",
-                "--skill", skill["name"], "--yes")
+        require((upgraded / preparation.PROTOCOL).read_bytes() == protocol,
+                "version-only update changed canonical protocol bytes")
         # Rollback restores the entire reviewed/materialized consumer state.
         git(first, "restore", "--source=" + baseline_revision, "--staged", "--worktree", "--", ".")
         shutil.rmtree(upgraded)
@@ -238,12 +224,13 @@ def main():
         print(json.dumps({"distribution_qualification": "PASS", "source_revision": args.source_ref,
                           "payload_sha256": receipt["payload_sha256"], "distribution_revision": revision,
                           "vibevm_content_hash": expected_hash,
-                          "commands": len(commands), "native_skill_bytes": "identical",
-                          "accepted_proportional_controls_bytes": "identical",
+                          "commands": len(commands), "native_skills": "none declared/projected",
+                          "accepted_semantics": "exact deterministic wrapper conversion plus unchanged procedure",
                           "local_publish_and_idempotence": "PASS", "independent_cold_consumer": "PASS",
                           "tag_drift": "upstream lock/slot split reproduced; canonical verifier rejects",
                           "offline": "existing slots and complete Git rollback PASS; cache-only recovery FAIL",
                           "update": "synthetic version-only declaration change PASS",
+                          "boot_index": "static package entry despite authored dynamic link",
                           "scope": "disposable local Git transport; remote publication not qualified"}))
 
 

@@ -1,5 +1,9 @@
 # Task 2 — Step 3 proposed owner admission
 
+**Historical draft for the previous Skill payload; not an execution request.**
+Task 10's proposed frozen flow requires a fresh accepted source SHA, no native
+projection step, and newly admitted Task 2 remote qualification before publication.
+
 **DRAFT ONLY — awaiting explicit owner admission in the live Issue.**
 This text is committed for review. No part is currently in effect; acceptance
 or merge of this source documentation does not admit external execution.

@@ -1,10 +1,18 @@
 {
-  "repository": "https://github.com/jresearchsoftware/shared-governance",
-  "revision": "fd609af8a1ea8ce015fda4652e5a8c444ca821c5",
-  "source_path": "vibevm/vibepacks/org.jresearch.ai/development-governance/v0.1.0/vibevm/vibespecs/skills/proportional-controls",
+  "schema": 1,
+  "transformation": "skill-to-protocol-v1",
+  "source": {
+    "repository": "https://github.com/jresearchsoftware/shared-governance",
+    "revision": "fd609af8a1ea8ce015fda4652e5a8c444ca821c5",
+    "source_path": "vibevm/vibepacks/org.jresearch.ai/development-governance/v0.1.0/vibevm/vibespecs/skills/proportional-controls",
+    "sha256": {
+      "SKILL.md": "9889a1c2d70772b61c5b1f247e8ea228e2c91ac72a15d899d3025cad39efdf54",
+      "references/protocol.md": "cfa62afee0aa267aa58bb966faece0225cb717a82fbb93d3d3b4bf7b29704c6c",
+      "LICENSE": "89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853"
+    }
+  },
   "sha256": {
-    "SKILL.md": "9889a1c2d70772b61c5b1f247e8ea228e2c91ac72a15d899d3025cad39efdf54",
-    "references/protocol.md": "cfa62afee0aa267aa58bb966faece0225cb717a82fbb93d3d3b4bf7b29704c6c",
+    "proportional-controls.md": "b51934ec43ffd65e8728eca399715e887f26dc1badee588c760962c84374271e",
     "LICENSE": "89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853"
   }
 }

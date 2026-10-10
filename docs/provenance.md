@@ -23,8 +23,16 @@ The accepted architecture comes from
   requirement. The Relay implementation and local rules are unchanged.
 
 Copyright notices for derived Relay text are retained in both repository and
-package LICENSE files. There is one canonical procedure, inside the skill's
-`references/protocol.md`. Both export paths carry those same bytes. Package
+package LICENSE files. The first frozen flow's canonical protocol is
+`vibevm/vibespecs/protocols/proportional-controls.md` inside the current package.
+[Task 10](https://github.com/jresearchsoftware/shared-governance/issues/10) retains
+the complete original procedure bytes (SHA-256
+`cfa62afee0aa267aa58bb966faece0225cb717a82fbb93d3d3b4bf7b29704c6c`),
+preceded by the accepted wrapper body. Only discovery frontmatter, its obsolete
+navigation paragraph and the delivery noun `skill` are removed or adapted.
+`scripts/project-protocol.py` reproduces that conversion from accepted
+`fd609af8a1ea8ce015fda4652e5a8c444ca821c5`; source qualification compares the
+result exactly, including all exceptions and attribution. Package
 metadata and a Git export receipt identify source content; neither is a competing
 policy or live execution record.
 
@@ -38,9 +46,12 @@ distribution repository are historical evidence only; no package was published.
 The admitted Step 2 source candidate uses
 `org.jresearch.ai/development-governance` v0.1.0, initially retaining the accepted
 `proportional-controls` Skill/procedure bytes and MIT/derived attribution.
-One version covers all declared passive Skills. This layout/identity change
-requires independent exact-head source acceptance and grants no publication or
-consumer adoption authority.
+That historical multi-Skill adaptation was accepted in PR 4. Task 10 proposes
+one ordinary flow protocol, no Skills, and `frozen = true` for the first `0.1.0`
+release without migrating its directory. The packaging/self-adoption change
+requires independent exact-head acceptance and grants no publication or consumer
+adoption authority. [Self-adoption](self-adoption.md) records accepted-origin
+active guidance separately from candidate authoring.
 
 VibeVM is pinned to `v1.0.7`, source
 `b6659978453f50e6d1d4d99626d70b980a2c5847`, and
