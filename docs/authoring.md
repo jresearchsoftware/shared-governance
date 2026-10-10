@@ -24,6 +24,60 @@ snapshot and explicit human AGENTS route. Candidate authoring edits cannot
 silently refresh it. Normal sessions read committed files without runtime
 remote resolution or VibeVM installation.
 
+## Semantic completeness
+
+[Task 15](https://github.com/jresearchsoftware/shared-governance/issues/15)
+establishes the accepted invariant for future governance extraction, package
+adaptation and consumer adoption: preserve the complete accepted reusable
+semantics when moving policy ownership. Working behavior supplied by leftover
+consumer instructions does not prove successful extraction.
+
+Before moving ownership, read all relevant current canonical policy slices,
+their project integrations and outcome/correction evidence. Where earlier splits
+or adaptations matter, consult accepted source history and original instructions.
+Bound this baseline to the domain's decisions and behaviors; one current
+paragraph or like-named file is not necessarily its complete contract.
+
+Explain source-to-shared coverage of each material obligation, trigger, qualifier,
+exception, cost/authority boundary, operator flow and agent-routing condition in
+the existing Task/PR/review evidence. Distinguish exact preservation,
+meaning-preserving reformulation, explicitly accepted semantic change,
+omission/weakening, and genuinely consumer-specific binding. Map obligations,
+not strings; byte equality alone cannot establish completeness of the baseline.
+
+An omitted or weakened reusable requirement is a producer migration defect.
+Repair canonical shared source and independently accept a new package version
+before relying on it for that behavior; do not rewrite or republish frozen
+`development-governance@0.1.0`. Product-owned contracts and deliberate local
+overlays remain local only with an explicit, defensible ownership rationale.
+Record material omissions and owner dispositions rather than silently relying
+on the old consumer to supply missing shared semantics.
+
+Exercise the shared guidance in at least one other plausible consumer or
+scenario without the old project's residual rules, and assess the original
+consumer after replacing its reusable duplicates. Prove loading and application
+where possible. Separate file/text evidence, CLI behavior and actual model
+behavior; identify unavailable evidence instead of claiming it passed. A
+scenario supports the coverage argument, not an always-on global test gate.
+
+Under each consumer's separately admitted migration, adopt pinned reviewed
+content and remove the genuinely duplicated canonical local guidance in the
+same reviewed change. Preserve documented product bindings and verified local
+overlays, checking for missing, weakened or doubly authoritative rules. Use
+normal independent exact-head review and ordinary Git rollback. Source
+acceptance alone transfers no consumer authority.
+
+Scale this argument to the material change. Trivial editorial edits need no
+exhaustive manual mapping; this procedure adds no standing ledger, rigid global
+checklist, service or extra owner step. Assess any proposed new gate using
+[proportional controls](../.agents/protocols/proportional-controls.md).
+Task 15's first demonstration compares the frozen `proportional-controls` flow
+with its [Relay provenance](provenance.md) in Task/PR evidence. Unresolved
+producer findings and consumer-owned verification belong in the handoff to
+[Relay Task 97](https://github.com/jresearchsoftware/codex-relay/issues/97);
+the separate [routing investigation, Task 99](https://github.com/jresearchsoftware/codex-relay/issues/99),
+does not accept or repair semantic migration gaps.
+
 ## Git baseline and exact-commit export
 
 Git and Python 3.11+ suffice. Stage intended additions; commit before testing its
