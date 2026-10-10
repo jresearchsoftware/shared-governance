@@ -1,2 +1,2 @@
 [workspace]
-members = ["vibevm/vibepacks/org.jresearch.ai/development-governance/v0.1.0"]
+members = ["packages/development-governance"]

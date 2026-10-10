@@ -24,7 +24,7 @@ def export(ref, destination, skill="proportional-controls"):
         raise ValueError("select a safe declared native Skill name")
     # Resolve the layout from this exact commit; historical baseline exports remain supported.
     members = tomllib.loads(git("show", revision + ":vibe.toml").decode())["workspace"]["members"]
-    if len(members) != 1 or members[0] not in {PACKAGE, LEGACY_PACKAGE}:
+    if len(members) != 1 or members[0] not in {PACKAGE, LEGACY_PACKAGE, "packages/development-governance"}:
         raise ValueError("the selected commit has no supported governance package")
     package = members[0]
     skill_path = "vibevm/vibespecs/skills/" + skill

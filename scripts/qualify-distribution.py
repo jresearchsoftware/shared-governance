@@ -14,7 +14,6 @@ import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
 COORDINATE = "org.jresearch.ai/development-governance"
-SLOT = "vibevm/vibedeps/org.jresearch.ai.development-governance/0.1.0"
 
 
 def module(name, filename):
@@ -83,6 +82,10 @@ def main():
 
         distribution = fixture / "distribution"
         receipt = preparation.prepare(args.source_ref, distribution)
+        version = receipt["version"]
+        major, minor, patch = map(int, version.split("."))
+        next_version = f"{major}.{minor}.{patch + 1}"
+        slot = preparation.slot(version)
         require("skill" not in tomllib.loads((distribution / "vibe.toml").read_text()), "flow declares native Skills")
         remote = fixture / "distribution.git"
         git(fixture, "init", "--bare", "-b", "main", str(remote))
@@ -90,7 +93,7 @@ def main():
         run(distribution, "registry", "publish", str(distribution), "--repo-url", remote.as_uri(), "--dry-run")
         require(not git(remote, "for-each-ref"), "dry-run mutated remote refs")
         run(distribution, "registry", "publish", str(distribution), "--repo-url", remote.as_uri())
-        revision = git(remote, "rev-parse", "v0.1.0^{commit}")
+        revision = git(remote, "rev-parse", "v" + version + "^{commit}")
         refs = git(remote, "for-each-ref")
         run(distribution, "registry", "publish", str(distribution), "--repo-url", remote.as_uri())
         require(git(remote, "for-each-ref") == refs, "identical republish changed refs")
@@ -98,20 +101,20 @@ def main():
         def consumer(name):
             path = fixture / name
             path.mkdir()
-            (path / "vibe.toml").write_text('[project]\nname = "disposable-consumer"\nversion = "0.0.0"\nspec_format = "mixed"\n'
-                + '\n[requires.packages]\n"' + COORDINATE + '" = { version = "=0.1.0", git = "'
-                + remote.as_uri() + '", tag = "v0.1.0", auth = "none" }\n')
+            (path / "vibe.toml").write_text(('[project]\nname = "disposable-consumer"\nversion = "0.0.0"\nspec_format = "mixed"\n'
+                + '\n[requires.packages]\n"' + COORDINATE + '" = { version = "=1.0.0", git = "'
+                + remote.as_uri() + '", tag = "v1.0.0", auth = "none" }\n').replace("1.0.0", version))
             (path / "AGENTS.md").write_text("Human-owned fixture instructions.\n")
             return path
 
         first = consumer("consumer")
         run(first, "install", "--no-default-registry", "--assume-yes")
-        preparation.verify(args.source_ref, first / SLOT, installed=True)
+        preparation.verify(args.source_ref, first / slot, installed=True)
         lock = tomllib.loads((first / "vibe.lock").read_text())
         expected_hash = preparation.vibe_hash(preparation.snapshot(args.source_ref)[0])
         require(lock["package"][0]["content_hash"] == expected_hash, "lock hash differs from canonical package")
         run(first, "install", "--no-default-registry", "--assume-yes")
-        preparation.verify(args.source_ref, first / SLOT, installed=True)
+        preparation.verify(args.source_ref, first / slot, installed=True)
         protocol, license_bytes, _ = projection.snapshot()
         require((distribution / preparation.PROTOCOL).read_bytes() == protocol,
                 "flow protocol differs from the accepted semantics")
@@ -141,7 +144,7 @@ def main():
         # Default file:// Git archive does not serve arbitrary commit IDs.
         by_revision = consumer("revision-consumer")
         manifest = by_revision / "vibe.toml"
-        manifest.write_text(manifest.read_text().replace('tag = "v0.1.0"', 'rev = "' + revision + '"'))
+        manifest.write_text(manifest.read_text().replace('tag = "v' + version + '"', 'rev = "' + revision + '"'))
         failure = run(by_revision, "install", "--no-default-registry", "--assume-yes", success=False)
         require("git archive" in failure.stderr and "no such ref" in failure.stderr,
                 "file Git revision failure differs from the known transport restriction")
@@ -177,11 +180,11 @@ def main():
         else:
             raise ValueError("prepublication verifier accepted changed bytes")
         run(distribution, "registry", "publish", str(distribution), "--repo-url", remote.as_uri())
-        require(git(remote, "rev-parse", "v0.1.0^{commit}") != revision, "tag drift was not exercised")
+        require(git(remote, "rev-parse", "v" + version + "^{commit}") != revision, "tag drift was not exercised")
         run(first, "install", "--no-default-registry", "--assume-yes")
         drift_lock = tomllib.loads((first / "vibe.lock").read_text())["package"][0]
         require(drift_lock["content_hash"] != expected_hash, "expected upstream lock drift was not observed")
-        preparation.verify(args.source_ref, first / SLOT, installed=True)  # Slot still has old bytes.
+        preparation.verify(args.source_ref, first / slot, installed=True)  # Slot still has old bytes.
         try:
             preparation.verify_consumer(args.source_ref, first)
         except ValueError:
@@ -192,7 +195,7 @@ def main():
         drifted = consumer("drifted-consumer")
         run(drifted, "install", "--no-default-registry", "--assume-yes", settings=fixture / "drift-settings")
         try:
-            preparation.verify(args.source_ref, drifted / SLOT, installed=True)
+            preparation.verify(args.source_ref, drifted / slot, installed=True)
         except ValueError:
             pass
         else:
@@ -201,14 +204,14 @@ def main():
         # Only temporary version metadata changes: no second authored package.
         readme.write_bytes(original_readme)
         package_manifest = distribution / "vibe.toml"
-        package_manifest.write_text(package_manifest.read_text().replace('version = "0.1.0"', 'version = "0.1.1"'))
+        package_manifest.write_text(package_manifest.read_text().replace('version = "' + version + '"', 'version = "' + next_version + '"'))
         run(distribution, "registry", "publish", str(distribution), "--repo-url", remote.as_uri())
         manifest = first / "vibe.toml"
-        manifest.write_text(manifest.read_text().replace('=0.1.0', '=0.1.1').replace('v0.1.0', 'v0.1.1'))
+        manifest.write_text(manifest.read_text().replace('=' + version, '=' + next_version).replace('v' + version, 'v' + next_version))
         run(first, "update", "--all", "--assume-yes")
-        upgraded = first / SLOT.replace("0.1.0", "0.1.1")
-        require(upgraded.is_dir() and not (first / SLOT).exists(), "synthetic update/pruning failed")
-        require(tomllib.loads((upgraded / "vibe.toml").read_text())["package"]["version"] == "0.1.1",
+        upgraded = first / preparation.slot(next_version)
+        require(upgraded.is_dir() and not (first / slot).exists(), "synthetic update/pruning failed")
+        require(tomllib.loads((upgraded / "vibe.toml").read_text())["package"]["version"] == next_version,
                 "synthetic update installed wrong version")
         require((upgraded / preparation.PROTOCOL).read_bytes() == protocol,
                 "version-only update changed canonical protocol bytes")

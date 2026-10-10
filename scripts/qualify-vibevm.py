@@ -73,7 +73,8 @@ def main():
                    for name in tracked if name.startswith(prefix)}
         # Keep native projection receipts out of the source-tree registry transport.
         registry = fixture_root / "registry"
-        registry_member = registry / Path(member_relative).relative_to("vibevm/vibepacks")
+        version = tomllib.loads(payload["vibe.toml"].decode())["package"]["version"]
+        registry_member = registry / "org.jresearch.ai/development-governance" / ("v" + version)
         for relative, data in payload.items():
             target = registry_member / relative
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -88,15 +89,15 @@ def main():
         run("--json", "check", "--path", str(workspace))
         if args.materialize:
             # This temporary project is an authoring probe, never a consumer migration.
-            requirement = ('{ path = "' + member_relative + '", version = "=0.1.0", link = "dynamic" }'
-                           if args.path_source else '"=0.1.0"')
+            requirement = ('{ path = "' + member_relative + '", version = "=' + version + '", link = "dynamic" }'
+                           if args.path_source else '"=' + version + '"')
             with (workspace / "vibe.toml").open("a", encoding="utf-8") as manifest:
                 manifest.write('\n[project]\nname = "authoring-fixture"\nversion = "0.0.0"\nspec_format = "mixed"\n'
                                '\n[requires.packages]\n"org.jresearch.ai/development-governance" = '
                                + requirement + '\n')
             run("--offline", "--json", "install", "--path", str(workspace), "--registry",
                 str(registry), "--no-default-registry", "--assume-yes")
-            installed = workspace / "vibevm/vibedeps/org.jresearch.ai.development-governance/0.1.0"
+            installed = workspace / ("vibevm/vibedeps/org.jresearch.ai.development-governance/" + version)
             actual = {path.relative_to(installed).as_posix() for path in installed.rglob("*") if path.is_file()}
             if actual != set(payload) | {".vibe-slot.toml"}:
                 raise RuntimeError("materialized payload file set differs from authored source; missing="

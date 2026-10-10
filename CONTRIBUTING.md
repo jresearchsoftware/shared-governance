@@ -15,6 +15,7 @@ Use Python 3.11 or newer and Git for source and exact-commit flow export:
 ```sh
 git diff --check
 python3 scripts/qualify.py --export-ref HEAD
+python3 scripts/test-release.py
 ```
 
 The qualifier checks tracked bytes, local links, manifests, package passivity
@@ -34,4 +35,7 @@ Governance changes should preserve examples and exceptions, distinguish generic
 principles from product mechanisms, and state material behavior changes. Compare
 new findings with the starting state before calling them regressions. Use a
 focused behavioral check when it adds evidence, rather than tests that repeat
-wording. Publication and consumer adoption require their own owner authority.
+wording. Package-changing PRs follow [release policy](docs/releases.md): justify
+one `Package bump: major|minor|patch` category and recompute against current main.
+The reviewed owner merge admits automatic publication; consumer adoption remains
+separately owned.

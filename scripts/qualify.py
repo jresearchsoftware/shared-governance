@@ -83,6 +83,10 @@ def check(export_ref=None):
     # This first-release migration preserves every substantive accepted instruction.
     # A future semantic/version change needs its own scoped qualification update.
     require(payload[preparation.PROTOCOL] == protocol, "first-release protocol differs from accepted semantics")
+    # The original distribution and active snapshot are retained, not refreshed.
+    frozen = preparation.HISTORICAL_PACKAGE
+    require(not preparation.git("diff", "3fa243b83a630ccd4973114e5cad12e1351d1558", "--", frozen),
+            "frozen 0.1.0 source must remain unchanged")
     if export_ref:
         revision = preparation.git("rev-parse", "--verify", export_ref + "^{commit}").decode().strip()
         with tempfile.TemporaryDirectory(prefix="shared-governance-flow-") as temporary:

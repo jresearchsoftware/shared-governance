@@ -21,7 +21,7 @@ EXPORT_SPEC = importlib.util.spec_from_file_location(
 EXPORTER = importlib.util.module_from_spec(EXPORT_SPEC)
 EXPORT_SPEC.loader.exec_module(EXPORTER)
 COORDINATE = "org.jresearch.ai/development-governance"
-SLOT = "vibevm/vibedeps/org.jresearch.ai.development-governance/0.1.0"
+SLOT = "vibevm/vibedeps/org.jresearch.ai.development-governance/1.0.0"
 
 
 class DistributionTests(unittest.TestCase):
@@ -34,6 +34,9 @@ class DistributionTests(unittest.TestCase):
         self.package = self.source / DISTRIBUTION.PACKAGE
         shutil.copytree(REPOSITORY / DISTRIBUTION.PACKAGE, self.package)
         shutil.copyfile(REPOSITORY / "LICENSE", self.source / "LICENSE")
+        manifest_path = self.package / "vibe.toml"
+        authored = tomllib.loads(manifest_path.read_text())["package"]["version"]
+        manifest_path.write_text(manifest_path.read_text().replace('version = "' + authored + '"', 'version = "1.0.0"'))
         shutil.copyfile(REPOSITORY / "vibe.toml", self.source / "vibe.toml")
         # Windows-mounted files can appear executable; fixture Git modes are explicit.
         for path in self.package.rglob("*"):
@@ -95,11 +98,11 @@ class DistributionTests(unittest.TestCase):
         (consumer / "vibe.toml").write_text(
             '[project]\nname = "disposable-consumer"\nversion = "0.0.0"\nspec_format = "mixed"\n'
             '\n[requires.packages]\n"' + COORDINATE + '" = '
-            '{version = "=0.1.0", git = "file:///disposable/distribution.git", tag = "v0.1.0"}\n')
+            '{version = "=1.0.0", git = "file:///disposable/distribution.git", tag = "v1.0.0"}\n')
         (consumer / "vibe.lock").write_text(
             '[meta]\nschema_version = 7\n\n[[package]]\ngroup = "org.jresearch.ai"\nname = "development-governance"\n'
-            'version = "0.1.0"\nsource_kind = "git"\n'
-            'source_url = "file:///disposable/distribution.git"\nsource_ref = "v0.1.0"\n'
+            'version = "1.0.0"\nsource_kind = "git"\n'
+            'source_url = "file:///disposable/distribution.git"\nsource_ref = "v1.0.0"\n'
             'content_hash = ' + json.dumps(content_hash) + '\n')
         index = consumer / DISTRIBUTION.BOOT_INDEX
         index.parent.mkdir(parents=True)
@@ -127,7 +130,7 @@ class DistributionTests(unittest.TestCase):
         self.assertEqual(receipt["source_revision"], self.revision)
         self.assertEqual(receipt["package"], COORDINATE)
         self.assertEqual(receipt["source_path"],
-                         "vibevm/vibepacks/org.jresearch.ai/development-governance/v0.1.0")
+                         DISTRIBUTION.PACKAGE)
         self.assertEqual(receipt["sha256"], {
             name: hashlib.sha256(data).hexdigest() for name, data in expected.items()})
         self.assertEqual(source_before, self.payload(self.package))
@@ -140,7 +143,7 @@ class DistributionTests(unittest.TestCase):
             with self.subTest(reference=reference):
                 self.rejected_source(reference)
 
-    def test_first_flow_has_one_protocol_no_native_skill_and_is_frozen(self):
+    def test_current_flow_has_two_protocols_no_native_skill_and_is_frozen(self):
         manifest = tomllib.loads((self.package / "vibe.toml").read_text())
         self.assertIs(manifest["package"]["frozen"], True)
         self.assertNotIn("skill", manifest)
@@ -357,7 +360,7 @@ class DistributionTests(unittest.TestCase):
             (lock_path, original_lock.replace('schema_version = 7', 'schema_version = 999')),
             (lock_path, original_lock.replace('[meta]\nschema_version = 7\n\n', '')),
             (lock_path, original_lock.replace(content_hash, "sha256:" + "0" * 64)),
-            (lock_path, original_lock.replace('source_ref = "v0.1.0"', 'source_ref = "v0.1.1"')),
+            (lock_path, original_lock.replace('source_ref = "v1.0.0"', 'source_ref = "v1.0.1"')),
             (lock_path, original_lock.replace('file:///disposable/distribution.git', 'file:///other.git')),
             (lock_path, original_lock.replace('group = "org.jresearch.ai"',
                                              'group = "org.jresearch.governance"')),
@@ -365,10 +368,10 @@ class DistributionTests(unittest.TestCase):
                                              'name = "proportional-controls"')),
             (manifest_path, original_manifest.replace(COORDINATE,
                                                      "org.jresearch.governance/proportional-controls")),
-            (manifest_path, original_manifest.replace('version = "=0.1.0"', 'version = "*"')),
-            (manifest_path, original_manifest.replace('tag = "v0.1.0"',
-                                                     'tag = "v0.1.0", rev = "' + "a" * 40 + '"')),
-            (manifest_path, original_manifest.replace('tag = "v0.1.0"', 'rev = "abcdef"')),
+            (manifest_path, original_manifest.replace('version = "=1.0.0"', 'version = "*"')),
+            (manifest_path, original_manifest.replace('tag = "v1.0.0"',
+                                                     'tag = "v1.0.0", rev = "' + "a" * 40 + '"')),
+            (manifest_path, original_manifest.replace('tag = "v1.0.0"', 'rev = "abcdef"')),
         ]
         for path, altered in mutations:
             with self.subTest(file=path.name, content=altered[-100:]):
@@ -382,7 +385,7 @@ class DistributionTests(unittest.TestCase):
 
     def test_historical_installed_slot_cannot_replace_the_current_coordinate(self):
         consumer, slot, _ = self.consumer_fixture("historical-slot")
-        historical = consumer / "vibevm/vibedeps/org.jresearch.governance.proportional-controls/0.1.0"
+        historical = consumer / "vibevm/vibedeps/org.jresearch.governance.proportional-controls/1.0.0"
         historical.parent.mkdir(parents=True)
         slot.rename(historical)
         with self.assertRaises(ValueError):
@@ -412,7 +415,7 @@ class DistributionTests(unittest.TestCase):
         original = manifest.read_bytes()
         for before, after in ((b'group = "org.jresearch.ai"', b'group = "org.jresearch.governance"'),
                               (b'name = "development-governance"', b'name = "proportional-controls"'),
-                              (b'version = "0.1.0"', b'version = "0.1.1"'),
+                              (b'version = "1.0.0"', b'version = "invalid"'),
                               (b'license = "MIT"', b'license = "Unapproved"'),
                               (b'frozen = true', b'frozen = false'),
                               (b'frozen = true', b'frozen = 1'),
