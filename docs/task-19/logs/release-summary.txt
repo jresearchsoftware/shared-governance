@@ -1,0 +1,10 @@
+Observed local check, 2026-10-10:
+python3 scripts/test-release.py
+
+Ran 16 tests in 12.893s
+OK (skipped=6)
+
+10 ordinary release-boundary/retry/category tests passed.
+6 optional pre-existing native publisher/resolver integration tests were skipped
+because --vibe was not requested. Their transport/closure/concurrency behavior
+is unchanged by this policy correction; no new release integration is claimed.

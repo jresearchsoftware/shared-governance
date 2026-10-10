@@ -46,11 +46,16 @@ class ReleaseFixture(unittest.TestCase):
         shutil.copyfile(ROOT / "LICENSE", self.source / "LICENSE")
         (self.source / "vibe.toml").write_text('[workspace]\nmembers = ["' + historical + '"]\n')
         self.base = self.commit()
-        shutil.copytree(ROOT / preparation.PACKAGE, self.source / preparation.PACKAGE)
+        # Release regressions start from the real accepted stable 1.0.0 payload,
+        # rather than relabelling later authored semantics as that frozen version.
+        stable, _ = preparation.snapshot("901186bdd1aabc9b7f1094eeb2cc294f96b688f7")
+        for name, data in stable.items():
+            if name == preparation.RECEIPT:
+                continue
+            target = self.source / preparation.PACKAGE / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data)
         (self.source / "vibe.toml").write_text('[workspace]\nmembers = ["' + preparation.PACKAGE + '"]\n')
-        manifest_path = self.source / preparation.PACKAGE / "vibe.toml"
-        authored = tomllib.loads(manifest_path.read_text())["package"]["version"]
-        manifest_path.write_text(manifest_path.read_text().replace('version = "' + authored + '"', 'version = "1.0.0"'))
         shutil.copytree(ROOT / "toolchain", self.source / "toolchain")
         self.revision = self.commit()
         self.addCleanup(setattr, preparation, "ROOT", preparation.ROOT)

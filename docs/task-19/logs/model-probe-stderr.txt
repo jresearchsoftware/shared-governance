@@ -1,0 +1,3 @@
+2026-10-10T18:29:10.171755Z  WARN codex_core::shell_snapshot: Failed to create shell snapshot for powershell: Shell snapshot not supported yet for PowerShell
+2026-10-10T18:29:22.665248Z ERROR codex_core::tools::router: error=exec_command failed: CreateProcess { message: "Rejected(\"`\\\"C:\\\\\\\\Program Files\\\\\\\\PowerShell\\\\\\\\7\\\\\\\\pwsh.exe\\\" -Command \\\"Get-Content -LiteralPath 'AGENTS.md' -Raw\\\"` rejected: blocked by policy\")" }
+2026-10-10T18:29:33.573396Z ERROR codex_core::tools::router: error=exec_command failed: CreateProcess { message: "Rejected(\"`\\\"C:\\\\\\\\Program Files\\\\\\\\PowerShell\\\\\\\\7\\\\\\\\pwsh.exe\\\" -NoProfile -Command 'rg --no-heading --line-number . AGENTS.md'` rejected: blocked by policy\")" }

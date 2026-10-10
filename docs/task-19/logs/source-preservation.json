@@ -1,0 +1,18 @@
+{
+  "baseline": "901186bdd1aabc9b7f1094eeb2cc294f96b688f7",
+  "original_protocol_bytes": 4494,
+  "original_protocol_sha256": "f747508ab8d936299478029f17be3891f877f0a5e5c302c1e606f9c1e51b99a0",
+  "candidate_preserves_original_prefix": true,
+  "candidate_protocol_sha256": "6fbd1dc55bd40ee67c442614cd3d71fda45f4ebdba7012b976e72857c0eacfed",
+  "unchanged_paths": [
+    "AGENTS.md",
+    ".agents",
+    "packages/development-governance/vibevm/vibespecs/protocols/package-versioning.md",
+    "vibevm/vibepacks/org.jresearch.ai/development-governance/v0.1.0"
+  ],
+  "frozen_remote_tag_objects": {
+    "refs/tags/v0.1.0": "0098ff6f983bb02345b3c7d270497fc340006408",
+    "refs/tags/v1.0.0": "99750af72be63d01ba07d91aa880627b5082138a"
+  },
+  "scope": "one-time source preservation and read-only remote ref observation; no acceptance or publication"
+}

@@ -80,11 +80,14 @@ def check(export_ref=None):
         require(not obsolete.exists() and not obsolete.is_symlink(), "removed native Skill/receipt remains")
     require("[proportional-controls protocol](.agents/protocols/proportional-controls.md)" in
             (ROOT / "AGENTS.md").read_text(encoding="utf-8"), "human AGENTS route is missing")
-    # This first-release migration preserves every substantive accepted instruction.
-    # A future semantic/version change needs its own scoped qualification update.
-    require(payload[preparation.PROTOCOL] == protocol, "first-release protocol differs from accepted semantics")
-    # The original distribution and active snapshot are retained, not refreshed.
+    # Qualify retained first-release semantics, not equality of later authoring
+    # to an old release. Task 19 admits later source/version changes; semantic
+    # coverage and the existing release checks govern those candidates.
     frozen = preparation.HISTORICAL_PACKAGE
+    require(preparation.git("show", "3fa243b83a630ccd4973114e5cad12e1351d1558:" +
+                            frozen + "/" + preparation.PROTOCOL) == protocol,
+            "first-release protocol differs from accepted semantics")
+    # The original distribution and active snapshot are retained, not refreshed.
     require(not preparation.git("diff", "3fa243b83a630ccd4973114e5cad12e1351d1558", "--", frozen),
             "frozen 0.1.0 source must remain unchanged")
     if export_ref:
