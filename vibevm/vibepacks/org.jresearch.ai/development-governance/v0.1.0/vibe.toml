@@ -14,4 +14,3 @@ license = "MIT"
 source = "vibevm/vibespecs/boot/development-governance.md"
 category = "flow"
 link = "dynamic"
-
