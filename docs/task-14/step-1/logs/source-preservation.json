@@ -1,0 +1,69 @@
+{
+  "starting_main": "129d452ddfa6b9ac1030ccc7803994793467ab2d",
+  "preservation": "PASS",
+  "retained_files": {
+    ".agents/protocols/proportional-controls.md": {
+      "unchanged": true,
+      "sha256": "f747508ab8d936299478029f17be3891f877f0a5e5c302c1e606f9c1e51b99a0"
+    },
+    ".agents/proportional-controls-source.json": {
+      "unchanged": true,
+      "sha256": "704c91e5d6b5af66ae8557a2445bde0c4c912b5fab4e67185dc891b04989dfbe"
+    },
+    "packages/development-governance/vibevm/vibespecs/protocols/proportional-controls.md": {
+      "unchanged": true,
+      "sha256": "6fbd1dc55bd40ee67c442614cd3d71fda45f4ebdba7012b976e72857c0eacfed"
+    },
+    "packages/development-governance/vibevm/vibespecs/protocols/requirement-authority.md": {
+      "unchanged": true,
+      "sha256": "9e5af613383c2c1492325338d9c37933bc83e1175ae809055718fc354a5532ca"
+    },
+    "packages/development-governance/vibevm/vibespecs/protocols/package-versioning.md": {
+      "unchanged": true,
+      "sha256": "14c48fcc25bae6c7dee9b0a6c2e6310fa8df2917c6e17c4553fdefb461fec652"
+    },
+    "LICENSE": {
+      "unchanged": true,
+      "sha256": "89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853"
+    },
+    ".github/workflows/candidate.yml": {
+      "unchanged": true,
+      "sha256": "e3cf9183827dea5ce802966ed2a4ca984a238b363d11602a57e807a344ad5206"
+    },
+    ".github/workflows/publish.yml": {
+      "unchanged": true,
+      "sha256": "69e444ecd1dfe87fd8b264def8a442343d3d7559670e23a7a2cadd567770943b"
+    },
+    "toolchain/vibevm.json": {
+      "unchanged": true,
+      "sha256": "b9f8721f80e50b99bf57db619e79f44fe1f6fd2febb418b99acfe03ac91593c7"
+    },
+    "vibevm/vibepacks/org.jresearch.ai/development-governance/v0.1.0/LICENSE": {
+      "unchanged": true,
+      "sha256": "89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853"
+    },
+    "vibevm/vibepacks/org.jresearch.ai/development-governance/v0.1.0/README.md": {
+      "unchanged": true,
+      "sha256": "e12c6f822edd88b60c6021ca67bbe058e5a569526d32e7403837bfad0514de37"
+    },
+    "vibevm/vibepacks/org.jresearch.ai/development-governance/v0.1.0/vibe.toml": {
+      "unchanged": true,
+      "sha256": "f4db1baa8b6cc733de09fe7cc60daf4030550e56063fd723c861b79eb4b4039e"
+    },
+    "vibevm/vibepacks/org.jresearch.ai/development-governance/v0.1.0/vibevm/vibespecs/boot/development-governance.md": {
+      "unchanged": true,
+      "sha256": "c79de71c868232f7610129a84f77eb71ba898c3542929172677c6c5b9571cef8"
+    },
+    "vibevm/vibepacks/org.jresearch.ai/development-governance/v0.1.0/vibevm/vibespecs/protocols/proportional-controls.md": {
+      "unchanged": true,
+      "sha256": "f747508ab8d936299478029f17be3891f877f0a5e5c302c1e606f9c1e51b99a0"
+    }
+  },
+  "distribution_tags_read_only_observation": [
+    "0098ff6f983bb02345b3c7d270497fc340006408\trefs/tags/v0.1.0",
+    "99750af72be63d01ba07d91aa880627b5082138a\trefs/tags/v1.0.0",
+    "f33ffaf4f8a95faeea24f5acf4a37ef9c9f0ece9\trefs/tags/v1.1.0"
+  ],
+  "tag_observation_limit": "Observed only; no distribution mutation or publication performed",
+  "active_task_handoff": "Not projected or activated; authoring/review route only"
+}
