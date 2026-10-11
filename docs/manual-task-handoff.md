@@ -1,10 +1,9 @@
 # Manual Codex task handoff
 
-This example uses this repository's current Issue/AGENTS authority. It is a local
+This example describes this repository's Issue/AGENTS authority. It is a local
 client binding and authoring example, not a second Task charter, universal prompt
-schema or automatic adoption of the candidate
+schema or automatic adoption of the
 [task-handoff protocol](../packages/development-governance/vibevm/vibespecs/protocols/task-handoff.md).
-Task 14's current Issue separately admits its Step 1 implementation and qualification.
 
 For governed work here, keep the repository Issue and explicitly linked canonical
 decisions current. The owner-admitted work identifies its Step and purpose; local
@@ -12,7 +11,9 @@ test/fix iterations remain inside that effort. Future Step allocation, retries
 and conversation reuse follow the current Issue's declared instructions. No
 stage-versus-attempt counter is inferred from this example.
 
-An execution prompt can be as short as:
+An execution prompt can be as short as the following historical Task 14 / Step 1
+example, based on the owner admission dated 2026-10-11. It illustrates the binding
+and supplies no current execution authority:
 
 ```text
 Task 14 — Step 1 — Shared Task Handoff Protocol
@@ -49,8 +50,9 @@ separate. One account copying a separate evaluator's assessment does not create
 native approval or authenticate a distinct reviewer. Preserve the repository's
 existing independent-review requirements.
 
-Task 14 ends at that PR/Outcome handoff. Its admission authorizes no self-approval,
-merge, package publication, consumer change, installation or Issue closure. A
-future continuation follows the then-current Issue and review frontier, not this
-dated example. [Self-adoption](self-adoption.md) describes the candidate/active
-boundary; [Step 1 evidence](task-14/step-1/README.md) records the qualification.
+The 2026-10-11 Task 14 / Step 1 admission authorized implementation, qualification
+and the PR/Outcome handoff. It authorized no self-approval, merge, package
+publication, consumer change, installation or Issue closure. Later continuation
+follows the then-current Issue and review frontier, not this dated example.
+[Self-adoption](self-adoption.md) describes the authoring/adoption boundary;
+[dated Step 1 evidence](task-14/step-1/README.md) records that qualification.

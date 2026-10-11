@@ -70,21 +70,21 @@ to the accepted historical input, not a general future-version adoption framewor
 
 ## Qualification boundary
 
-[Task 14](https://github.com/jresearchsoftware/shared-governance/issues/14) admits
-the new task-handoff flow protocol, conditional routing and qualification as a
-source candidate. Its package boot routes only for explicit project adoption.
-The root AGENTS route selects the proposed text for task-handoff authoring/review;
-it does not activate it as a competing execution policy. The
+The task-handoff flow protocol and its package boot require explicit project
+adoption. The root AGENTS route selects the text for task-handoff authoring/review
+assessment; that selection does not activate it as a competing execution policy
+or establish source acceptance. The
 [manual example](manual-task-handoff.md) describes this repository's existing
 Issue-owned path and client binding, with no universal Step counter.
 
-The current Issue directly authorizes Step 1. Existing active proportional-controls
-bytes/receipt and other repository authority remain intact; no new snapshot is
-projected from an unaccepted candidate. After independent source acceptance,
-a separately reviewed self-adoption change can select that accepted task-handoff
-source, reconcile genuinely duplicated guidance and retain explicit local
-bindings. Other consumers own their separate adoption. See the
-[Step 1 coverage and five walks](task-14/step-1/README.md).
+Task execution follows the current canonical Issue and repository authority.
+Candidate authoring does not refresh the active proportional-controls snapshot
+or receipt. Task-handoff self-adoption requires a separately authorized and
+independently reviewed change selecting independently accepted source,
+reconciling genuinely duplicated guidance and retaining explicit local bindings.
+Other consumers own their separate adoption. The dated
+[Task 14 / Step 1 coverage and five walks](task-14/step-1/README.md) record that
+authoring effort; current Task and review status belong in its Issue/PR.
 
 [Task 19](https://github.com/jresearchsoftware/shared-governance/issues/19) updates
 the authored proportional-controls protocol and adds requirement-authority in a
