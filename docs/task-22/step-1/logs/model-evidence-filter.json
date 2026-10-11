@@ -1,0 +1,16 @@
+[
+  {
+    "probe": "codex-probe",
+    "raw_sha256": "783d73f1628f4c67b8dae65d6d22501b30e6ae1846701a5625d1534f1027cdd1",
+    "retained_events": 7,
+    "selection": "startup/usage and completed commands/tool metadata/errors; source/memory text and reasoning omitted",
+    "raw_local_archive": "Q:\\work\\repo\\github\\jresearchsoftware\\shared-governance\\.vibe\\codex-probe-raw.jsonl"
+  },
+  {
+    "probe": "codex-fallback",
+    "raw_sha256": "bd995e87aba552e2f274e420b155e5850002bb0b0ff0d5a21c394e2e4c00bb75",
+    "retained_events": 10,
+    "selection": "startup/usage and completed commands/tool metadata/errors; source/memory text and reasoning omitted",
+    "raw_local_archive": "Q:\\work\\repo\\github\\jresearchsoftware\\shared-governance\\.vibe\\codex-fallback-raw.jsonl"
+  }
+]

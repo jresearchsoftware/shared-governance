@@ -1,0 +1,8 @@
+test_publication_must_follow_acceptance_then_update (__main__.AdoptionTests.test_publication_must_follow_acceptance_then_update) ... ok
+test_interrupted_selector_write_keeps_previous_version (__main__.AdoptionTests.test_interrupted_selector_write_keeps_previous_version) ... ok
+test_local_rollback_and_retry_use_only_verified_versions (__main__.AdoptionTests.test_local_rollback_and_retry_use_only_verified_versions) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 49.820s
+
+OK

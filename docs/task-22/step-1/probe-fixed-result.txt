@@ -1,0 +1,30 @@
+The proposed extra approval command is **not justified as mandatory on the stated facts**. The accepted proportional-controls protocol rejects stricter ceremony alone as justification and requires checking whether existing evidence already proves the relevant invariant for the exact candidate. Reuse the sufficient exact-head evidence.
+
+An extra mandatory operator command is a cost-bearing control. It needs concrete justification and explicit canonical owner authorization before becoming mandatory. A stricter test pattern has no such authority; an internal choice does not become an enduring owner requirement merely through documentation, review or merge.
+
+The applicable exceptions remain:
+
+- Required checks, mandatory independent review and revalidation after a head change still apply. Evidence for another candidate or invariant is insufficient.
+- Separately justified protected-boundary checks remain necessary, particularly for credential, privacy, production, merge or publication risks.
+- Behaviorally free hardening can proceed without a separate owner decision only when it preserves supported workflows and adds no material work, prerequisite, gate, trust boundary or recovery burden. An extra approval command does not qualify.
+- Avoiding duplicate proof grants no Task, acceptance, merge, publication or recovery authority.
+
+The retained receipt identifies **Development Governance 1.2.0** exactly:
+
+- Source revision: `73798b919efbd0d8b0ee1317bf84a6c48d7e99d1`
+- Release commit: `4e701dcb0c97bb7a220800a550eb2f668a8ab20b`
+- Payload SHA-256: `23d2f2ea4b28c5aafb17007d5e875b78f4b472c36d89fd66a1549e79070d0349`
+- Returned directory: `C:\Users\horto\AppData\Local\Temp\task22-fixed-82cee5c96c6b42ffbf94f94bda9bdb93\.vibe\accepted-governance\73798b919efbd0d8b0ee1317bf84a6c48d7e99d1`
+- Recorded result: `PASS`; warnings: `[]`.
+
+Actual files read, relative to the clone:
+
+- `AGENTS.md`
+- `docs/self-adoption.md`
+- `.vibe/accepted-governance/STARTUP.json`
+- `CONTRIBUTING.md`
+- `docs/authoring.md`
+- Under the returned directory: `vibevm/vibespecs/protocols/proportional-controls.md`
+- Under the returned directory: `vibevm/vibespecs/protocols/requirement-authority.md`
+
+This demonstrated **retained-guidance traversal only**. The attempted `python scripts/self-adopt.py` was rejected before Python started, with `setup refresh had errors`. The parent harness’s recorded success is separate evidence; this run did not demonstrate automatic startup or independently reverify the complete payload. No source or external state was written, and no subagents, secrets or external memory were accessed.

@@ -1,0 +1,30 @@
+test_projection_retains_inherited_workspace_reader_access (__main__.AdoptionTests.test_projection_retains_inherited_workspace_reader_access) ... Get-Acl : The 'Get-Acl' command was found in the module 'Microsoft.PowerShell.Security', but the module could not be lo
+aded. For more information, run 'Import-Module Microsoft.PowerShell.Security'.
+At line:1 char:2
++ (Get-Acl -LiteralPath 'C:\Users\horto\AppData\Local\Temp\adoption-tes ...
++  ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (Get-Acl:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CouldNotAutoloadMatchingModule
+
+ERROR
+test_interrupted_selector_write_keeps_previous_version (__main__.AdoptionTests.test_interrupted_selector_write_keeps_previous_version) ... ok
+test_local_rollback_and_retry_use_only_verified_versions (__main__.AdoptionTests.test_local_rollback_and_retry_use_only_verified_versions) ... ok
+
+======================================================================
+ERROR: test_projection_retains_inherited_workspace_reader_access (__main__.AdoptionTests.test_projection_retains_inherited_workspace_reader_access)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "Q:\work\repo\github\jresearchsoftware\shared-governance\scripts\test-self-adoption.py", line 103, in test_projection_retains_inherited_workspace_reader_access
+    protected = subprocess.check_output(["powershell", "-NoProfile", "-NonInteractive", "-Command", command],
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\horto\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 466, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\horto\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['powershell', '-NoProfile', '-NonInteractive', '-Command', "(Get-Acl -LiteralPath 'C:\\Users\\horto\\AppData\\Local\\Temp\\adoption-test-byd214bf\\client\\.agents\\accepted\\73798b919efbd0d8b0ee1317bf84a6c48d7e99d1').AreAccessRulesProtected"]' returned non-zero exit status 1.
+
+----------------------------------------------------------------------
+Ran 3 tests in 39.992s
+
+FAILED (errors=1)

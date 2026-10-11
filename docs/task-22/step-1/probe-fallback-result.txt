@@ -1,0 +1,32 @@
+The proposed mandatory approval command is **not justified by the stated facts**: a stricter test pattern supplies no owner authority. Root `AGENTS.md` requires explicit owner authority for a material operator-workflow change.
+
+However, **the accepted-protocol assessment is incomplete**. Both relevant protocol reads failed with `EPERM`; I cannot truthfully report their detailed exceptions, including the behaviorally free hardening exception, as verified.
+
+The boundaries confirmed by root instructions remain: evidence-backed corrections may continue within scope; material workflow changes need owner authority; independent acceptance binds the exact reviewed head; successful checks grant no merge, publication, closure or consumer-adoption authority.
+
+Recorded accepted identity, matching `STARTUP.json` and `ACTIVE.json`:
+
+```text
+Package:        org.jresearch.ai/development-governance
+Version:        1.2.0
+Source revision:73798b919efbd0d8b0ee1317bf84a6c48d7e99d1
+Release commit: 4e701dcb0c97bb7a220800a550eb2f668a8ab20b
+Payload SHA256: 23d2f2ea4b28c5aafb17007d5e875b78f4b472c36d89fd66a1549e79070d0349
+Startup status: PASS
+Warnings:       []
+Directory:      .agents/accepted/73798b919efbd0d8b0ee1317bf84a6c48d7e99d1
+```
+
+Files actually read:
+
+- `AGENTS.md`
+- `.agents/accepted/STARTUP.json`
+- `.agents/accepted/ACTIVE.json`
+- `docs/self-adoption.md`
+- `CONTRIBUTING.md`
+- `docs/authoring.md`
+- External memory registry `C:/Users/horto/.codex/memories/MEMORY.md`, consulted for orientation only.
+
+Attempted but **not read**, under the returned directory’s `vibevm/vibespecs/protocols/`: `proportional-controls.md` and `requirement-authority.md`. I did not substitute editable source or memory for them.
+
+**This demonstrated neither successful automatic startup nor complete retained-protocol traversal.** The startup command failed before launching; retained metadata traversal succeeded, but protocol access failed. No source or external state was changed, and no subagents were launched.

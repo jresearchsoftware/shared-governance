@@ -63,12 +63,19 @@ These costs/mechanism are explicitly in Issue 22's authorized investigation scop
 
 ## Validation and limitations
 
-The [self-adoption regressions](logs/self-adoption.txt) exercise fresh-clone/offline
+The [self-adoption regressions](logs/self-adoption.txt) pass 18 tests on native Linux
+with one Windows-only ACL test skipped. They exercise fresh-clone/offline
 reproduction, dirty feature isolation, merged side-branch exclusion,
 acceptance-before-publication, major eligibility, unchanged payload/retry,
 registry failure, counterfeit payload, moved tag, interrupted selector commit,
-rollback and poisoned active guidance. Exact logs and final counts are recorded
-after final candidate checks.
+rollback, poisoned active guidance and preservation of project refs/index/
+instructions. [Distribution](logs/distribution.txt): 31 PASS.
+[Release integration](logs/release.txt): 16 PASS, including the pinned publisher,
+closure and concurrency probes. [Materialization](logs/materialization.txt):
+7-command PASS. [Windows checks](logs/windows-cache-access.txt): inherited DACL,
+interruption and rollback all PASS. [Source/export](logs/qualification.txt),
+[unchanged release boundary](logs/version-boundary.txt), whitespace and
+[scope preservation](logs/scope-preservation.json) PASS.
 
 [Live selection](logs/live-selection.json) and [offline selection](logs/offline-selection.json)
 identify 1.2.0, accepted source `73798b919efbd0d8b0ee1317bf84a6c48d7e99d1`,
@@ -84,8 +91,50 @@ Publication failure retains prior eligible guidance; the publication workflow
 remains responsible for its existing CI/source/atomic-push boundary. This
 candidate has not yet been independently accepted or activated through owner merge.
 
-Ordinary local checks and implementation behavioral probes are not independent
-acceptance. Actual Codex traversal evidence and any runtime limitations are
-recorded separately before handoff. No broad reliability/cost or native JIT claim
-is made. [Self-adoption](../../self-adoption.md) documents safe retry, new major,
+## Windows correction and model evidence
+
+The initial fresh probe could read root instructions but could not launch the
+helper (`helper_unknown_error: setup refresh had errors`; alternate spawn EPERM).
+The first prepared-cache probe then exposed a real materialization defect:
+Python's private temporary-directory DACL survived rename and prevented sandbox
+readers from accessing the accepted protocols. Both failures remain in the
+[initial result](probe-result.txt) and [prepared result](probe-fallback-result.txt).
+
+The correction creates public guidance with ordinary inherited workspace access
+and keeps generated files plus the local Git-object cache under ignored `.vibe`,
+outside protected `.agents` and project `.git`. No existing ACL, credentials,
+sandbox settings or host capability is repaired. [Before/after ACL evidence](logs/acl-correction.json)
+confirms a protected private old DACL versus inherited new access. An initial
+Windows test harness used Windows PowerShell with an incompatible inherited
+module path; [its failed log](logs/windows-activation-fixed.txt) is retained.
+The final ACL regression reads the native Win32 descriptor directly and passes.
+
+The [corrected fresh result](probe-fixed-result.txt) and
+[actual protocol-read events](logs/codex-fixed.jsonl) demonstrate root AGENTS →
+verified retained identity → complete accepted proportional-controls and
+requirement-authority reads. The model correctly rejects added mandatory ceremony
+without owner authority and retains required checks, independent review,
+changed-head revalidation, protected-boundary purposes and free hardening.
+It reads the accepted projection, not editable authoring or external memory.
+
+**Full automatic CLI startup remains unqualified:** the shell helper is rejected
+before Python starts by the existing setup failure. Standalone live refresh and
+prepared retained-protocol traversal are separately qualified; this is not a
+claim that the fresh CLI ran automatic refresh. The probes use the unchanged
+configured default model, with no substitute or separate verified server-model
+identity. They are implementation observations, not independent acceptance or
+broad reliability/context/quota evidence.
+
+[Probe inputs](probe-prompt.txt), [prepared-cache input](probe-fallback-prompt.txt)
+and [corrected input](probe-fixed-prompt.txt) preserve the scenarios. Initial
+JSONL is filtered to task commands, tool metadata/errors and startup/usage;
+unrelated memory/source dumps and reasoning are omitted, with raw hashes and
+local archival provenance in [filter receipt](logs/model-evidence-filter.json).
+No unrelated private memory content is published. No broad reliability/cost or
+native JIT claim is made. [Self-adoption](../../self-adoption.md) documents safe retry, new major,
 unavailable tool/registry, shallow clone and temporary rollback behavior.
+
+The corrected model and native fixtures use implementation commit `c6a269f9b933672cd6962a5b7841190d3621249e`.
+The final evidence commit also repairs only the Windows test harness and adds
+reports/logs; production selector/package bytes are identical. Exact final-head
+source/export and CI results belong in the canonical Outcome.

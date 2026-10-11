@@ -98,11 +98,21 @@ class AdoptionTests(unittest.TestCase):
 
     @unittest.skipUnless(os.name == "nt", "Windows inherited-DACL regression")
     def test_projection_retains_inherited_workspace_reader_access(self):
+        import ctypes
+        from ctypes import wintypes
         directory = self.refresh(offline=True)["directory"]
-        command = "(Get-Acl -LiteralPath '" + directory.replace("'", "''") + "').AreAccessRulesProtected"
-        protected = subprocess.check_output(["powershell", "-NoProfile", "-NonInteractive", "-Command", command],
-                                            text=True).strip()
-        self.assertEqual(protected, "False", "projection acquired a private DACL during materialization")
+        security = ctypes.WinDLL("advapi32", use_last_error=True)
+        security.GetFileSecurityW.argtypes = [wintypes.LPCWSTR, wintypes.DWORD, wintypes.LPVOID,
+                                             wintypes.DWORD, ctypes.POINTER(wintypes.DWORD)]
+        needed = wintypes.DWORD()
+        security.GetFileSecurityW(directory, 4, None, 0, ctypes.byref(needed))
+        descriptor = ctypes.create_string_buffer(needed.value)
+        if not security.GetFileSecurityW(directory, 4, descriptor, len(descriptor), ctypes.byref(needed)):
+            raise ctypes.WinError(ctypes.get_last_error())
+        control, revision = wintypes.WORD(), wintypes.DWORD()
+        if not security.GetSecurityDescriptorControl(descriptor, ctypes.byref(control), ctypes.byref(revision)):
+            raise ctypes.WinError(ctypes.get_last_error())
+        self.assertFalse(control.value & 0x1000, "projection acquired a private DACL during materialization")
 
     def test_source_network_failure_retains_last_verified_guidance(self):
         self.refresh()
