@@ -12,8 +12,8 @@ Other consumers still adopt under their own policies.
 
 The human-owned root AGENTS route runs `python3 scripts/self-adopt.py` at the start
 of work. The authoring boot routes to the same mechanism. The command fetches
-canonical source main into a dedicated local `refs/self-adoption/main` tracking
-ref, reads the existing direct-Git distribution's version tags in a disposable
+canonical source main into a dedicated `refs/self-adoption/main` tracking
+ref in its ignored local Git-object cache, reads the existing direct-Git distribution's version tags in a disposable
 bare clone and selects the newest **first-parent source-main** revision with a
 matching published package. This uses acceptance/publication order, not highest
 SemVer or the distribution default branch. Proposed checkout bytes, PR branch
@@ -37,13 +37,15 @@ distribution and canonical source owners remain the existing trust boundary;
 this does not cryptographically authenticate individual reviewers or CI.
 
 The command materializes byte-identical passive package files into an ignored
-`.agents/accepted/<source-sha>/` directory. All files are written before an atomic
+`.vibe/accepted-governance/<source-sha>/` directory. All files are written before an atomic
 `ACTIVE.json` selector replacement. It prints the absolute directory and exact
 identity; read only relevant adopted protocols from that directory. The selector
 is disposable local materialization, not an external status record. Hash checks
 are automatic output of the existing exporter, not a reviewer transport ritual.
-Git branches, the index, package source, global tool configuration and user refs
-are preserved. Namespaced release refs retain verified Git publication objects
+Git branches, the index, package source, global tool configuration and the
+project Git database/user refs are preserved. The helper writes only its ignored
+`.vibe/accepted-governance` cache, outside protected `.agents` instructions.
+Public guidance inherits the workspace ACL; no host or existing ACL is repaired. Namespaced release refs retain verified Git publication objects
 for offline provenance checks. No VibeVM executable is needed for ordinary work.
 
 ## Failure, repeat and rollback

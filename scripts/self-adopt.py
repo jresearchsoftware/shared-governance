@@ -18,6 +18,7 @@ BASELINE_RELEASE = "4e701dcb0c97bb7a220800a550eb2f668a8ab20b"
 SPEC = importlib.util.spec_from_file_location("adoption_preparation", ROOT / "scripts/prepare-distribution.py")
 PREPARATION = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(PREPARATION)
+CACHE = ".vibe/accepted-governance"
 
 
 def git(root, *args):
@@ -35,6 +36,20 @@ def snapshot(root, revision):
         PREPARATION.ROOT = previous
 
 
+def history(root):
+    cache = root / CACHE
+    if not cache.resolve().is_relative_to(root.resolve()) or cache.is_symlink():
+        raise ValueError("accepted cache must remain inside this workspace")
+    cache.mkdir(parents=True, exist_ok=True)
+    repository = cache / "history.git"
+    if repository.is_symlink():
+        raise ValueError("accepted history must be an ordinary local cache")
+    if not repository.exists():
+        # Read project Git objects without writing its protected .git directory.
+        git(root, "clone", "--quiet", "--bare", "--no-hardlinks", "--", str(root), str(repository))
+    return repository
+
+
 def tree(root, revision):
     files = {}
     for entry in git(root, "ls-tree", "-rz", revision).split(b"\0"):
@@ -48,9 +63,9 @@ def tree(root, revision):
     return files
 
 
-def baseline(root):
+def baseline(root, repository=None):
     pin = json.loads((root / ".agents/self-adoption.json").read_text())
-    files, receipt = snapshot(root, BASELINE)
+    files, receipt = snapshot(repository or root, BASELINE)
     if pin != {"source_revision": BASELINE, "release_commit": BASELINE_RELEASE,
                "payload_sha256": receipt["payload_sha256"], "version": receipt["version"]}:
         raise ValueError("bootstrap identity differs from accepted baseline")
@@ -58,25 +73,26 @@ def baseline(root):
 
 
 def verified(root, metadata):
+    repository = history(root)
     revision = metadata["source_revision"]
     accepted = BASELINE
     probe = subprocess.run(["git", "rev-parse", "--verify", "refs/self-adoption/main"],
-                           cwd=root, capture_output=True, timeout=30)
+                           cwd=repository, capture_output=True, timeout=30)
     if not probe.returncode:
         accepted = probe.stdout.decode().strip()
-    if revision not in git(root, "rev-list", "--first-parent", accepted).decode().splitlines():
+    if revision not in git(repository, "rev-list", "--first-parent", accepted).decode().splitlines():
         raise ValueError("active source is not accepted first-parent history")
-    files, receipt = snapshot(root, metadata["source_revision"])
+    files, receipt = snapshot(repository, metadata["source_revision"])
     if metadata != {**receipt, "release_commit": metadata["release_commit"]}:
         raise ValueError("active identity differs from accepted source")
     if revision == BASELINE:
         if metadata["release_commit"] != BASELINE_RELEASE:
             raise ValueError("bootstrap release identity differs")
     else:
-        retained = git(root, "rev-parse", "refs/self-adoption/releases/v" + receipt["version"]).decode().strip()
-        if retained != metadata["release_commit"] or tree(root, retained) != files:
+        retained = git(repository, "rev-parse", "refs/self-adoption/releases/v" + receipt["version"]).decode().strip()
+        if retained != metadata["release_commit"] or tree(repository, retained) != files:
             raise ValueError("active publication proof differs from accepted export")
-    directory = root / ".agents/accepted" / metadata["source_revision"]
+    directory = root / CACHE / metadata["source_revision"]
     if directory.is_symlink():
         raise ValueError("active directory is a symlink")
     actual = {p.relative_to(directory).as_posix(): p.read_bytes()
@@ -87,7 +103,7 @@ def verified(root, metadata):
 
 
 def activate(root, files, metadata, current=None):
-    cache = root / ".agents/accepted"
+    cache = root / CACHE
     cache.mkdir(parents=True, exist_ok=True)
     if cache.is_symlink():
         raise ValueError("active cache is a symlink")
@@ -152,8 +168,9 @@ def select(root, distribution, main):
 
 def refresh(root=ROOT, *, offline=False, rollback=False, source=SOURCE, distribution=DISTRIBUTION):
     root = Path(root)
+    repository = history(root)
     warnings = []
-    pointer = root / ".agents/accepted/ACTIVE.json"
+    pointer = root / CACHE / "ACTIVE.json"
     state = json.loads(pointer.read_text()) if pointer.exists() else {}
     if not isinstance(state, dict) or set(state) - {"current", "previous"}:
         raise ValueError("invalid active selector")
@@ -161,7 +178,7 @@ def refresh(root=ROOT, *, offline=False, rollback=False, source=SOURCE, distribu
     if current:
         verified(root, current)
     else:
-        files, current = baseline(root)
+        files, current = baseline(root, repository)
         activate(root, files, current)
     if rollback:
         previous = state.get("previous")
@@ -174,23 +191,23 @@ def refresh(root=ROOT, *, offline=False, rollback=False, source=SOURCE, distribu
         try:
             # A namespaced local tracking ref avoids races with a user's FETCH_HEAD.
             # No force, checkout, user branch or origin/main rewrite is required.
-            git(root, "fetch", "--quiet", "--no-tags", "--", source,
+            git(repository, "fetch", "--quiet", "--no-tags", "--", source,
                 "refs/heads/main:refs/self-adoption/main")
-            main = git(root, "rev-parse", "refs/self-adoption/main").decode().strip()
+            main = git(repository, "rev-parse", "refs/self-adoption/main").decode().strip()
             with tempfile.TemporaryDirectory(prefix="governance-adoption-") as temporary:
                 remote = Path(temporary) / "distribution.git"
                 git(root, "clone", "--quiet", "--bare", "--", distribution, str(remote))
-                files, selected, warning = select(root, remote, main)
+                files, selected, warning = select(repository, remote, main)
                 if selected["version"] == current["version"] and selected["release_commit"] != current["release_commit"]:
                     raise ValueError("frozen active release tag moved")
                 # Retain normal Git publication objects for offline provenance checks.
                 # A non-force namespaced ref also refuses replacement of a retained tag.
                 release_ref = "refs/self-adoption/releases/v" + selected["version"]
                 retained = subprocess.run(["git", "rev-parse", "--verify", release_ref],
-                                          cwd=root, capture_output=True, timeout=30)
+                                          cwd=repository, capture_output=True, timeout=30)
                 if not retained.returncode and retained.stdout.decode().strip() != selected["release_commit"]:
                     raise ValueError("previously retained frozen release moved")
-                git(root, "fetch", "--quiet", "--no-tags", "--", str(remote),
+                git(repository, "fetch", "--quiet", "--no-tags", "--", str(remote),
                     selected["release_commit"] + ":" + release_ref)
                 target = activate(root, files, selected, current)
                 current = selected
@@ -200,7 +217,7 @@ def refresh(root=ROOT, *, offline=False, rollback=False, source=SOURCE, distribu
             # Avoid exposing transport stderr, remote credentials or command arguments.
             reason = str(error) if isinstance(error, ValueError) else type(error).__name__
             warnings.append("Update failed (" + reason + "); retained accepted guidance. Retry after recovery")
-    target = root / ".agents/accepted" / current["source_revision"]
+    target = root / CACHE / current["source_revision"]
     verified(root, current)
     return result(current, target, warnings)
 

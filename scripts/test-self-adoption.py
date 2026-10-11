@@ -76,7 +76,7 @@ class AdoptionTests(unittest.TestCase):
         return ADOPTION.refresh(self.client, source=str(self.source), distribution=str(self.distribution), **kwargs)
 
     def pointer(self):
-        return (self.client / ".agents/accepted/ACTIVE.json").read_bytes()
+        return (self.client / ADOPTION.CACHE / "ACTIVE.json").read_bytes()
 
     def test_fresh_clone_bootstrap_is_reproducible_offline(self):
         result = self.refresh(offline=True)
@@ -111,6 +111,16 @@ class AdoptionTests(unittest.TestCase):
                                   distribution=str(self.distribution))
         self.assertTrue(result["warnings"])
         self.assertEqual(before, self.pointer())
+
+    def test_refresh_preserves_project_git_refs_index_and_instruction_files(self):
+        before = (self.git(self.client, "for-each-ref"), self.git(self.client, "ls-files", "--stage"),
+                  (self.client / "AGENTS.md").read_bytes(),
+                  (self.client / ".agents/self-adoption.json").read_bytes())
+        self.refresh()
+        after = (self.git(self.client, "for-each-ref"), self.git(self.client, "ls-files", "--stage"),
+                 (self.client / "AGENTS.md").read_bytes(),
+                 (self.client / ".agents/self-adoption.json").read_bytes())
+        self.assertEqual(before, after)
 
     def test_side_branch_commit_is_not_accepted_after_merge(self):
         self.git(self.source, "switch", "-qc", "candidate")
@@ -204,7 +214,7 @@ class AdoptionTests(unittest.TestCase):
         path.write_text(path.read_text().replace('version = "1.2.0"', 'version = "1.3.0"'))
         candidate = self.commit(self.client)
         files, receipt = ADOPTION.snapshot(self.client, candidate)
-        cache = self.client / ".agents/accepted" / candidate
+        cache = self.client / ADOPTION.CACHE / candidate
         for name, data in files.items():
             target = cache / name
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -218,7 +228,7 @@ class AdoptionTests(unittest.TestCase):
         revision = self.changed()
         self.refresh()  # Observe accepted main while publication is still absent.
         files, receipt = ADOPTION.snapshot(self.source, revision)
-        cache = self.client / ".agents/accepted" / revision
+        cache = self.client / ADOPTION.CACHE / revision
         for name, data in files.items():
             target = cache / name
             target.parent.mkdir(parents=True, exist_ok=True)
