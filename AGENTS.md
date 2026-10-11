@@ -32,6 +32,13 @@ do not require reading it.
 Its accepted snapshot and reviewed update boundary are recorded in
 [self-adoption](docs/self-adoption.md).
 
+For task-handoff protocol authoring or review, read the proposed
+[task-handoff protocol](packages/development-governance/vibevm/vibespecs/protocols/task-handoff.md)
+and [manual binding/example](docs/manual-task-handoff.md). This conditional route
+selects candidate content for assessment, not active self-adoption or a second
+Task authority. Ordinary execution keeps its current Issue and repository rules;
+unrelated work does not require the candidate protocol.
+
 For package lifecycle changes, follow this producer's [release policy](docs/releases.md)
 and its adopted [package-versioning protocol](packages/development-governance/vibevm/vibespecs/protocols/package-versioning.md).
 The producer's cadence and workflow do not govern consumers merely because they

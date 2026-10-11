@@ -20,3 +20,10 @@ human-owned AGENTS or equivalent policy. Installing or updating this package
 does not activate that protocol or replace pre-existing local versioning rules.
 Newly adopting projects select their route in their own accepted guidance;
 unrelated tasks skip it. Conditional reading does not selectively install clauses.
+
+For governed task execution, handoff or continuation, read
+[task-handoff](../protocols/task-handoff.md) only when the owning project has
+explicitly adopted it through human-owned AGENTS or equivalent guidance.
+Installing/updating this package does not activate the topic or replace local
+Task authority, Step allocation, review or execution mechanisms. Unrelated tasks
+skip it; client adapters and product-version compatibility remain project-owned.

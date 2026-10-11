@@ -7,9 +7,11 @@ Public authoring source for reusable AI-development governance owned by
 One passive VibeVM flow is authored at the stable
 [Development Governance](packages/development-governance/README.md) path.
 Its manifest owns the whole-package version. Ordinary proportional-controls,
-requirement-authority and package-versioning use compact conditional boot routing,
-with no native Codex Skills or executable capabilities. Package-versioning requires
-explicit project adoption and preserves existing locally owned policies.
+requirement-authority, package-versioning and task-handoff use compact conditional
+boot routing, with no native Codex Skills or executable capabilities.
+Package-versioning and task-handoff require explicit project adoption and preserve
+existing locally owned policies. [Manual task handoff](docs/manual-task-handoff.md)
+illustrates this repository's Issue-owned execution path and local client binding.
 
 [Version tags](https://github.com/jrs-vibevm/org.jresearch.ai.development-governance/tags)
 and [publication runs](https://github.com/jresearchsoftware/shared-governance/actions/workflows/publish.yml)

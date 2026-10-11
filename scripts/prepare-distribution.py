@@ -19,6 +19,7 @@ RECEIPT = "DISTRIBUTION.json"
 PROTOCOL = "vibevm/vibespecs/protocols/proportional-controls.md"
 VERSIONING = "vibevm/vibespecs/protocols/package-versioning.md"
 AUTHORITY = "vibevm/vibespecs/protocols/requirement-authority.md"
+HANDOFF = "vibevm/vibespecs/protocols/task-handoff.md"
 BOOT_INDEX = "vibevm/vibespecs/boot/INDEX.md"
 # Exact ordinary AGENTS contribution emitted by the pinned VibeVM 1.0.7 probe.
 BOOT_BLOCK = '''<vibevm>
@@ -113,15 +114,17 @@ def validate_payload(files, license_bytes, historical=False):
     allowed = {"vibe.toml", "LICENSE", "README.md", boot["source"], PROTOCOL}
     if not historical:
         allowed.add(VERSIONING)
-    # Earlier full-commit exports retain their accepted one/two-protocol shapes.
+    # Earlier full-commit exports retain their accepted one/two/three-protocol shapes.
     if tuple(map(int, version.split("."))) >= (1, 1, 0):
         allowed.add(AUTHORITY)
+    if tuple(map(int, version.split("."))) >= (1, 2, 0):
+        allowed.add(HANDOFF)
     if set(files) != allowed:
         raise ValueError("source package file set differs from declared passive payload")
     if files["LICENSE"] != license_bytes:
         raise ValueError("source/package license notices differ")
     validate_skill_links(files, "vibevm/vibespecs")
-    protocols = allowed & {PROTOCOL, VERSIONING, AUTHORITY}
+    protocols = allowed & {PROTOCOL, VERSIONING, AUTHORITY, HANDOFF}
     if any(not files[name].strip() for name in protocols):
         raise ValueError("canonical protocol is empty")
     return manifest
