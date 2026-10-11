@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 import subprocess
 import tempfile
+import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = "https://github.com/jresearchsoftware/shared-governance.git"
@@ -94,14 +95,15 @@ def activate(root, files, metadata, current=None):
     if target.exists():
         verified(root, metadata)
     else:
-        with tempfile.TemporaryDirectory(prefix="pending-", dir=cache) as temporary:
-            pending = Path(temporary) / "package"
-            pending.mkdir()
-            for name, data in files.items():
-                path = pending / name
-                path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_bytes(data)
-            os.rename(pending, target)
+        # Public guidance must inherit workspace access. TemporaryDirectory's
+        # private Windows DACL survives rename and excludes sandbox readers.
+        pending = cache / ("pending-" + uuid.uuid4().hex)
+        pending.mkdir()
+        for name, data in files.items():
+            path = pending / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(data)
+        os.rename(pending, target)
     state = {"current": metadata}
     if current and current != metadata:
         state["previous"] = current

@@ -96,6 +96,14 @@ class AdoptionTests(unittest.TestCase):
     def test_valid_fresh_online_selection_has_no_warning(self):
         self.assertEqual(self.refresh()["self_adoption"], "PASS")
 
+    @unittest.skipUnless(os.name == "nt", "Windows inherited-DACL regression")
+    def test_projection_retains_inherited_workspace_reader_access(self):
+        directory = self.refresh(offline=True)["directory"]
+        command = "(Get-Acl -LiteralPath '" + directory.replace("'", "''") + "').AreAccessRulesProtected"
+        protected = subprocess.check_output(["powershell", "-NoProfile", "-NonInteractive", "-Command", command],
+                                            text=True).strip()
+        self.assertEqual(protected, "False", "projection acquired a private DACL during materialization")
+
     def test_source_network_failure_retains_last_verified_guidance(self):
         self.refresh()
         before = self.pointer()
