@@ -1,0 +1,13 @@
+{
+  "starting_head": "1b0149a5b76e013f6af4deff7016e18b338a6d1d",
+  "correction_head": "4db4e64a7d8f4548bafaa91fd855277ce02f248c",
+  "changed_paths": [
+    "docs/manual-task-handoff.md",
+    "docs/self-adoption.md"
+  ],
+  "all_other_tracked_paths_unchanged": true,
+  "package_tree_before": "1a23e2c722b829a87a2c3485a1844b5353b4f85f",
+  "package_tree_after": "1a23e2c722b829a87a2c3485a1844b5353b4f85f",
+  "step1_evidence_tree_before": "1d8912b5c563f21a5835d48d5a5373a239d1b8f9",
+  "step1_evidence_tree_after": "1d8912b5c563f21a5835d48d5a5373a239d1b8f9"
+}
