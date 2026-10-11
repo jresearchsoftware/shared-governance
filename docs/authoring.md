@@ -17,8 +17,9 @@ schemas, Step counters and acceptance identity requirements stay project-owned.
 policy and documents automatic publication, exact-source retry and credentials.
 [Distribution](distribution.md) describes the generated source receipt and
 one-time integration tests. The authoring boot is outside the exported package.
-The active proportional-controls snapshot and its source receipt remain pinned
-as described in [self-adoption](self-adoption.md); candidate bytes cannot refresh it.
+The active four-topic guidance is selected automatically from accepted published
+source as described in [self-adoption](self-adoption.md); candidate bytes cannot
+refresh it.
 
 ## Semantic completeness
 
@@ -66,7 +67,7 @@ acceptance alone transfers no consumer authority.
 Scale this argument to the material change. Trivial editorial edits need no
 exhaustive manual mapping; this procedure adds no standing ledger, rigid global
 checklist, service or extra owner step. Assess any proposed new gate using
-[proportional controls](../.agents/protocols/proportional-controls.md).
+the accepted proportional-controls route in [self-adoption](self-adoption.md).
 Task 15's first demonstration compares the frozen `proportional-controls` flow
 with its [Relay provenance](provenance.md) in Task/PR evidence. Unresolved
 producer findings and consumer-owned verification belong in the handoff to
@@ -83,6 +84,7 @@ git diff --check
 python3 scripts/qualify.py --export-ref HEAD
 python3 scripts/test-distribution.py
 python3 scripts/test-release.py
+python3 scripts/test-self-adoption.py
 ```
 
 Stage new files and commit before checking exact-commit export. It selects the

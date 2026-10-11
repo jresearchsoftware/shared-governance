@@ -1,10 +1,11 @@
 # This producer's release policy
 
-This repository adopts the [package-versioning protocol](../packages/development-governance/vibevm/vibespecs/protocols/package-versioning.md)
-for its package lifecycle. It owns one package at the stable
+This repository adopts accepted `package-versioning` through its
+[automatic self-adoption](self-adoption.md) route for its package lifecycle.
+Editable package source is assessed as candidate content. It owns one package at the stable
 `packages/development-governance` path. `[package].version` is the sole authored
-whole-package version. Frozen `0.1.0`, historical receipts and the active
-proportional-controls snapshot are retained unchanged. Package splitting,
+whole-package version. Frozen `0.1.0` and historical evidence remain unchanged.
+Active guidance refreshes only from eligible accepted publication. Package splitting,
 parallel major maintenance lines and consumer migration need separate decisions.
 
 ## Contribution and integration
