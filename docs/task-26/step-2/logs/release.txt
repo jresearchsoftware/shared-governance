@@ -1,0 +1,21 @@
+test_frozen_transitive_diamond_conflict_and_deliberate_lock_update (__main__.NativeDependencyTests.test_frozen_transitive_diamond_conflict_and_deliberate_lock_update) ... skipped 'pass --vibe for one-time resolver integration'
+test_included_snapshot_is_detected_but_unused_package_is_not_in_closure (__main__.NativeDependencyTests.test_included_snapshot_is_detected_but_unused_package_is_not_in_closure) ... skipped 'pass --vibe for one-time resolver integration'
+test_concurrent_tag_cannot_be_replaced_or_change_main (__main__.NativeReleaseTests.test_concurrent_tag_cannot_be_replaced_or_change_main) ... skipped 'pass --vibe for one-time native publisher integration'
+test_failure_with_absent_tag_can_retry_same_accepted_sha (__main__.NativeReleaseTests.test_failure_with_absent_tag_can_retry_same_accepted_sha) ... skipped 'pass --vibe for one-time native publisher integration'
+test_new_lower_version_is_valid_after_higher_tag (__main__.NativeReleaseTests.test_new_lower_version_is_valid_after_higher_tag) ... skipped 'pass --vibe for one-time native publisher integration'
+test_real_publish_repeat_and_same_sha_retry (__main__.NativeReleaseTests.test_real_publish_repeat_and_same_sha_retry) ... skipped 'pass --vibe for one-time native publisher integration'
+test_candidate_cli_rejects_existing_publication_before_merge (__main__.ReleaseTests.test_candidate_cli_rejects_existing_publication_before_merge) ... ok
+test_candidate_cli_requires_one_category_for_package_changes (__main__.ReleaseTests.test_candidate_cli_requires_one_category_for_package_changes) ... ok
+test_existing_tag_never_invokes_native_publisher (__main__.ReleaseTests.test_existing_tag_never_invokes_native_publisher) ... ok
+test_invalid_pinned_binary_cannot_publish (__main__.ReleaseTests.test_invalid_pinned_binary_cannot_publish) ... ok
+test_missing_production_credential_is_visible_and_retryable (__main__.ReleaseTests.test_missing_production_credential_is_visible_and_retryable) ... ok
+test_same_version_content_change_is_rejected (__main__.ReleaseTests.test_same_version_content_change_is_rejected) ... ok
+test_source_only_change_skips_release (__main__.ReleaseTests.test_source_only_change_skips_release) ... ok
+test_stable_path_and_major_transition_from_frozen_history (__main__.ReleaseTests.test_stable_path_and_major_transition_from_frozen_history) ... ok
+test_stale_parallel_bump_is_recomputed (__main__.ReleaseTests.test_stale_parallel_bump_is_recomputed) ... ok
+test_unaccepted_and_side_branch_heads_are_rejected (__main__.ReleaseTests.test_unaccepted_and_side_branch_heads_are_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 29.945s
+
+OK (skipped=6)
