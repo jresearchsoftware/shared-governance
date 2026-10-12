@@ -11,7 +11,10 @@ baseline and adds the scoped Task 19 existing-proof and friction corrections;
 requirement-authority is conditionally read interpretive guidance, while
 package-versioning and task-handoff have explicit consumer-adoption applicability.
 Task-handoff is a manual-capable authority/result/continuation protocol; product
-schemas, Step counters and acceptance identity requirements stay project-owned.
+schemas, execution authorization mechanisms and acceptance identity requirements
+stay project-owned. The shared execution-cycle Step definition and chronological
+authority apply on adoption; Direct/Deliberative strategies govern review-verdict
+publication, with owner-authorized overrides and project extensions.
 
 [Release policy](releases.md) separates this producer's cadence from reusable
 policy and documents automatic publication, exact-source retry and credentials.
