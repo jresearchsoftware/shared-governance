@@ -86,6 +86,9 @@ version-specific literals in its regression fixtures are made version-aware so
 negative lock/index/range tests actually mutate the new version. No exporter,
 resolver, publisher, workflow, host configuration or credential change is needed.
 Four other protocol bytes and frozen/historical content remain preserved.
+Native install prunes the superseded installed 1.3.0 slot as normal consumer
+state; frozen 0.1.0 and retained 1.3.0 registry source are byte-unchanged. This is
+not a rewrite of any frozen distribution release.
 Candidate materialization is co-committed in this PR and remains proposal data
 for this effort; source acceptance, later publication and other consumers' adoption
 are separate events.
@@ -102,11 +105,30 @@ none of that product or any installed consumer; it defines no new Relay fields.
 
 [26 scenario walks](scenarios.md) cover all requested lifecycle/handoff and
 acceptance edges without Relay: 13 plus 13 PASS on their desk-based criteria.
-They do not claim model reliability or runtime enforcement. Source/export,
-distribution/release/native recovery regressions, pinned native materialization,
-scope preservation and final-head CI are recorded with primary logs in this
-directory and bound by the canonical Outcome. Validation is pending until those
-commands and published-head checks complete.
+They do not claim model reliability or runtime enforcement. Local tests ran on
+implementation/materialization commit `997f762514597e359249cba3f48967c422c32caf`;
+the subsequent evidence commit changes no package, projection or test bytes.
+
+| Verification | Observed result / primary evidence |
+| --- | --- |
+| Exact source/export/producer projection | PASS; [qualification](logs/qualification.txt) compares complete authored/source/slot/lock/index/agent state. No native Skills or dependencies. |
+| Distribution/integrity regressions | 31 PASS; [complete log](logs/distribution.txt), including historical exports and corrupted/missing task-handoff rejection. |
+| Release regressions | 10 PASS, 6 unchanged optional native publisher/resolver tests skipped; [complete log](logs/release.txt). |
+| Native self-adoption mismatch/recovery | 12 PASS on Windows; [complete log](logs/self-adoption.txt). Version-aware mutations retain lock/index/range coverage at 2.0.0. |
+| Windows native candidate generation | Pinned VibeVM 1.0.7 executable SHA-256 `ceb0b8582e059dfab708ee0c5221e700c232c97912bdd5174dc0df1d03011b46`; [source staging](logs/native-source.txt), [native install](logs/native-install.txt). |
+| Native Linux package materialization | PASS; musl pin SHA-256 `20d111df02eb28040ef4cb766bfcb0bde8ff4427b031f88f33eacb3711c3e240`, 7 disposable commands, three checks with zero errors/warnings/findings, full payload comparison; [complete log](logs/native-linux-materialization.txt). |
+| Whole-package boundary | PASS, 1.3.0 -> 2.0.0 / major against accepted main; [release result](logs/version-boundary.txt). |
+| Preservation / scope | PASS; [reproducible optional check](check-preservation.py) and [result](logs/preservation.json) cover other protocols, accepted authored/slot agreement, human root routes, frozen sources, prior Task evidence, license, tool pin, exporter/publisher and workflows. |
+| Whitespace and canonical authority | `git diff --check` PASS; [dated authority snapshot](logs/authority.json) retains the original charter and admission for evidence, subordinate to live authority. |
+| Published final-head CI | The canonical Outcome identifies the final PR/remote/CI SHA, run/check and inspected annotations/logs; this local report does not invent that later result. |
+
+One rejected staging invocation passed symbolic HEAD where the existing exporter
+requires a full SHA; [initial failure](logs/native-source-initial.txt) is retained.
+Resolving the exact Git SHA corrected the invocation; generation and qualification
+passed without implementation changes. Windows staging/fixture Git emits the
+existing CRLF-to-LF normalization notices for public logs; Git stores canonical
+LF and protected historical bytes are unchanged. These are disclosed observations,
+not suppressed failed tests or evidence of consumer/runtime failure.
 
 Existing Task 24 Windows-to-Linux and actual Linux Codex loading proof is reused
 for the unchanged loader contract. This Step makes no fresh client/model startup
