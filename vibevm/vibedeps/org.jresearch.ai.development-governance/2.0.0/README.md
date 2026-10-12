@@ -25,11 +25,16 @@ Decisions. Minimal handoffs navigate to that authority. Direct acceptance permit
 immediate qualified approval; Deliberative acceptance requires non-approving review
 and owner discussion/Decision before formal approval. Project bindings retain
 authorization, review sufficiency and identity requirements without redefining
-shared Step semantics. Manual/single-account limits remain explicit.
+shared Step semantics. One canonical Outcome follows the whole actual Step result:
+exclusively one result PR uses that PR; no PR, known multiple result PRs or a PR
+plus an independent Task-level result uses the Task. Unresolved binding stops
+publication; replay does not duplicate the Outcome. Manual/single-account limits
+remain explicit.
 
 Version 2.0.0 changes the existing task-handoff contract: earlier project-defined
-Step interpretations and immediate approval of decision-grade results may need
-migration. This is a MAJOR change, not an additive topic or silent consumer update.
+Step interpretations, Outcome publication routing and immediate approval of
+decision-grade results may need migration. This is a MAJOR change, not an additive
+topic or silent consumer update.
 Existing consumers retain their accepted local rules until separately reviewed
 adoption; frozen versions are retained.
 Human-owned project instructions retain task, review, publication and adoption

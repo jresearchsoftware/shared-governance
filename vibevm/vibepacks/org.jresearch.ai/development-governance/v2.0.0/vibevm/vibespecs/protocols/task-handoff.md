@@ -115,6 +115,43 @@ boundary is inaccessible, or repetition yields no new evidence. Preserve useful
 results and disclose unreconciled work. A preferred new workflow or material
 obligation needs the owning project's decision before implementation.
 
+## Canonical Outcome publication target
+
+Select one canonical terminal Outcome target from the complete actual result of
+that Step. Launch route, where execution was authorized, manual versus automated
+execution and the number of PRs associated with the Task overall do not select
+the target. Use the project's authorized publication mechanism and preserve its
+required attribution, identity and trust boundaries.
+
+For a GitHub binding:
+
+| Complete Step result | One canonical Outcome target |
+| --- | --- |
+| Exclusively one clearly identified result PR | A top-level conversation comment on that PR, including when Issue admission led to creating it or the Task has other unrelated PRs. Ordinary checks, committed evidence and documentation supporting that PR do not create a separate Task-level result. |
+| No PR, two or more known result PRs, or one PR plus a substantive independent Task-level result | The canonical Task Issue. For known multiple result PRs, identify each relevant PR, its exact result SHA/revision and pertinent status/limits. |
+
+Another tracker needs equivalent, unambiguous Task/result surfaces in its local
+binding. A known multi-PR result is a Task-level target, not an ambiguous binding.
+If the intended result-to-PR mapping or required identity is missing, conflicting
+or genuinely ambiguous, stop publication and reconcile it. Inability to resolve
+a PR target is not permission to fall back to the Issue. A known no-PR result
+needs no artificial PR, empty commit or fabricated SHA.
+
+Publish exactly one attributable Outcome for the whole terminal result. Do not
+duplicate, split, retrospectively relocate or republish the same Outcome across
+Task and PR surfaces. On recovery/replay of the same execution/result, reconcile
+prior publication first: retain an existing canonical Outcome; if none was
+published, publish once at the resolved authorized target. An uncertain mutation
+does not justify another copy or a different target.
+
+Keep the Task-to-result/PR relationship discoverable through ordinary canonical
+links and existing project navigation. No duplicate status comment, mandatory
+synchronizer, multi-PR orchestrator, native structured record or Relay Writer
+identity is required by this shared method. A Task-level Outcome does not accept
+or integrate several PRs by implication: each PR still requires its independent
+exact-head review and applicable acceptance/integration authority. Consumer-owned
+stronger Writer/Reviewer/admission/merge guarantees remain intact.
+
 ## Exact result and independent assessment
 
 Publish an attributable result through the project's authorized path, verify the

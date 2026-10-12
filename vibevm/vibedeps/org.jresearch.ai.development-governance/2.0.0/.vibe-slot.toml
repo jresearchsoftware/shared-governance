@@ -1,5 +1,5 @@
 schema = 1
-source_hash = "sha256:a8dea27efc6a1fd8fa022a8634160f575483f5a3b5557003400e8145066d8f08"
+source_hash = "sha256:c97b85f1bd804576c54105efb4d931210ce5ffa10ab08eec1f917d787f978a27"
 spec_format = "mixed"
 
 [[file]]
@@ -8,7 +8,7 @@ sha256 = "89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853"
 
 [[file]]
 path = "README.md"
-sha256 = "842e9c7ed778948927ba283325f83bf1115de762cabd313cb5067de6f09aaaa5"
+sha256 = "8f574dc5158f76713257c2f75d00b0e38e91f6045a3ff22ddcd73fd2fffaf223"
 
 [[file]]
 path = "vibe.toml"
@@ -36,4 +36,4 @@ sha256 = "43d56c78d4d12803ad28eef24afaa809e5941b19727da9f30274600e95d5be53"
 
 [[file]]
 path = "vibevm/vibespecs/protocols/task-handoff.md"
-sha256 = "90af1725e75b97eff7c54c3865c5a2f294c9f2830aa9afcd02f43f27fd76ab43"
+sha256 = "b3e9058f8ff80bc7c57854ef97a71e57983d4c3f18d538ead66cb8e4ebca9ac2"
