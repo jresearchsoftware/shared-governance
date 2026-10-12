@@ -2,6 +2,7 @@
 """Exercise the pinned VibeVM only in a disposable local authoring fixture."""
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -27,6 +28,9 @@ def main():
         parser.exit(1, "VibeVM binary digest differs from the pinned release bytes\n")
     tracked = [name for name in subprocess.check_output(
         ["git", "ls-files", "-z"], cwd=ROOT).decode().split("\0") if name]
+    spec = importlib.util.spec_from_file_location("preparation", ROOT / "scripts/prepare-distribution.py")
+    preparation = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(preparation)
     with tempfile.TemporaryDirectory(prefix="shared-governance-vibe-") as temporary:
         fixture_root = Path(temporary)
         workspace = fixture_root / "workspace"
@@ -70,7 +74,8 @@ def main():
         # Validate/projection may already have written state; only source-tracked bytes are payload.
         prefix = member_relative + "/"
         payload = {name.removeprefix(prefix): (workspace / name).read_bytes()
-                   for name in tracked if name.startswith(prefix)}
+                   for name in tracked if name.startswith(prefix)
+                   and name.removeprefix(prefix) not in preparation.SOURCE_ARTIFACTS}
         # Keep native projection receipts out of the source-tree registry transport.
         registry = fixture_root / "registry"
         version = tomllib.loads(payload["vibe.toml"].decode())["package"]["version"]
@@ -91,10 +96,11 @@ def main():
             # This temporary project is an authoring probe, never a consumer migration.
             requirement = ('{ path = "' + member_relative + '", version = "=' + version + '", link = "dynamic" }'
                            if args.path_source else '"=' + version + '"')
-            with (workspace / "vibe.toml").open("a", encoding="utf-8") as manifest:
-                manifest.write('\n[project]\nname = "authoring-fixture"\nversion = "0.0.0"\nspec_format = "mixed"\n'
-                               '\n[requires.packages]\n"org.jresearch.ai/development-governance" = '
-                               + requirement + '\n')
+            (workspace / "vibe.toml").write_text(
+                '[workspace]\nmembers=["' + member_relative + '"]\n'
+                '[project]\nname="authoring-fixture"\nversion="0.0.0"\nspec_format="mixed"\n'
+                '[requires.packages]\n"flow:org.jresearch.ai/development-governance" = '
+                + requirement + '\n', encoding="utf-8")
             run("--offline", "--json", "install", "--path", str(workspace), "--registry",
                 str(registry), "--no-default-registry", "--assume-yes")
             installed = workspace / ("vibevm/vibedeps/org.jresearch.ai.development-governance/" + version)
@@ -109,7 +115,8 @@ def main():
             agents_after = (workspace / "AGENTS.md").read_bytes()
             blocks = re.findall(rb"<vibevm>.*?</vibevm>", agents_after, flags=re.S)
             outside = re.sub(rb"<vibevm>.*?</vibevm>", b"", agents_after, flags=re.S).rstrip()
-            if len(blocks) != 1 or outside != agents_before.rstrip():
+            before_overlay = re.sub(rb"<vibevm>.*?</vibevm>", b"", agents_before, flags=re.S).rstrip()
+            if len(blocks) != 1 or outside != before_overlay:
                 raise RuntimeError("dependency install modified human-owned AGENTS.md content")
         print(json.dumps({"vibevm_qualification": "PASS", "version": pin["version"],
                           "commands": len(commands), "native_skills": "none declared/projected",

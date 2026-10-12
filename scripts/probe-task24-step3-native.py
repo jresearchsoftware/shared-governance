@@ -170,6 +170,7 @@ def main():
             (work / "packages/development-governance/vibe.toml").write_bytes((new_source / "vibe.toml").read_bytes())
             manifest = work / "vibe.toml"
             manifest.write_text(manifest.read_text().replace('=1.2.0', '=1.2.1'))
+            run(work, "old Windows URL explicit version change update", "update")
             run(work, "old Windows URL explicit version change install")
             new_slot = work / SLOT.replace("1.2.0", "1.2.1")
             observations["meaningful_version_change_visible"] = new_slot.is_dir() and (new_slot / "vibevm/vibespecs/protocols/task-handoff.md").read_bytes().endswith(b'Public disposable patch marker.\n')

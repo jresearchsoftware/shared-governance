@@ -125,6 +125,7 @@ class DistributionTests(unittest.TestCase):
         self.assertEqual(self.payload(first), self.payload(second))
         self.assertEqual(receipt, DISTRIBUTION.verify(self.revision, first))
         prepared = self.payload(first)
+        expected = {name: data for name, data in expected.items() if name not in DISTRIBUTION.SOURCE_ARTIFACTS}
         self.assertEqual(set(prepared), set(expected) | {DISTRIBUTION.RECEIPT})
         self.assertEqual({name: prepared[name] for name in expected}, expected)
         self.assertEqual(receipt["source_revision"], self.revision)
