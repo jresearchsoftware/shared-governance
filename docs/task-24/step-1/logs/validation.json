@@ -1,3 +1,44 @@
 {
-  "validation": "pending local checks before handoff"
+  "code_commit": "5583b65c55e9e09f4929c7de1eb9db317d06d4e3",
+  "checks": {
+    "distribution": {
+      "result": "PASS",
+      "tests_run": 31,
+      "skipped": 0,
+      "log": "distribution.txt"
+    },
+    "release": {
+      "result": "PASS",
+      "tests_run": 16,
+      "skipped": 6,
+      "log": "release.txt"
+    },
+    "self-adoption": {
+      "result": "PASS",
+      "tests_run": 19,
+      "skipped": 1,
+      "log": "self-adoption.txt"
+    }
+  },
+  "source_export": {
+    "qualification": "PASS",
+    "tracked_files": 130,
+    "local_links": 143,
+    "secret_scan": "bounded markers PASS",
+    "active_protocol": "PASS",
+    "accepted_origin": "73798b919efbd0d8b0ee1317bf84a6c48d7e99d1",
+    "native_skill": "absent",
+    "flow_export": "PASS"
+  },
+  "release_boundary": {
+    "changed": false,
+    "before": "1.2.0",
+    "version": "1.2.0",
+    "source_revision": "5583b65c55e9e09f4929c7de1eb9db317d06d4e3",
+    "bump": null
+  },
+  "syntax_and_whitespace": "PASS",
+  "native_replacement": "BLOCKED; see native.json",
+  "final_exact_head_checks": "published in canonical Outcome; source/export and CI repeated on final evidence head",
+  "independent_acceptance": "PENDING"
 }

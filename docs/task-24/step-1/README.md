@@ -42,6 +42,9 @@ filesystem with the exact musl binary SHA-256
 `20d111df02eb28040ef4cb766bfcb0bde8ff4427b031f88f33eacb3711c3e240`.
 Every source mutation, install, commit, pull and rollback below was disposable;
 synthetic fixture commits are not accepted production source.
+[Generated states and source/projection diff](logs/native-generated.json)
+retain both synthetic locks, boot indexes and root/member AGENTS, captured
+read-only from the retained commits with the probe script's SHA-256.
 
 | Probe | Observed result | Consequence |
 | --- | --- | --- |
