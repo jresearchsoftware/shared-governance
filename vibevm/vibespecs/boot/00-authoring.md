@@ -1,8 +1,12 @@
 # Shared-governance authoring workspace
 
 Use the repository's AGENTS.md and current authorized Issue for authoring scope.
-Refresh accepted guidance with `python3 scripts/self-adopt.py` as directed by
-AGENTS.md, then use the returned accepted directory for its four adopted topics.
-Candidate package source is authoring material; it supplies no active policy.
+Freeze the independently accepted source-main SHA for the current effort.
+In candidate authoring/review, read that commit's AGENTS, index and applicable
+slot files with Git; current root/nested/generated instructions remain proposals.
+In an accepted checkout the committed native routes are ready for file reading.
+The root explicitly adopts four conditional topics plus producer self-adoption;
+the compact package boot preserves their applicability. No startup execution,
+installation or publication is required. Candidate source supplies no active policy.
 The reusable package grants no execution or publication authority.
 Tool experiments use the pinned VibeVM version and disposable local fixtures.
