@@ -1,0 +1,39 @@
+schema = 1
+source_hash = "sha256:00bf63e40ecb3f89b920dd0a17756bf0c1ddf700b0ec14d764dcae7b06ae12fe"
+spec_format = "mixed"
+
+[[file]]
+path = "LICENSE"
+sha256 = "89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853"
+
+[[file]]
+path = "README.md"
+sha256 = "697ef48f6d270e4428c96e4a903281fd1977d9a31bfe2e5469aa9a5d7aaba642"
+
+[[file]]
+path = "vibe.toml"
+sha256 = "49fc21ceba4221b8e50932b0e2d2f19dd522f08f5443771c60b1724af6a53824"
+
+[[file]]
+path = "vibevm/vibespecs/boot/development-governance.md"
+sha256 = "6f5b9ad942209b52b11aa305f8741e611031279c4c62672498d63aa5e97c99cc"
+
+[[file]]
+path = "vibevm/vibespecs/protocols/package-versioning.md"
+sha256 = "14c48fcc25bae6c7dee9b0a6c2e6310fa8df2917c6e17c4553fdefb461fec652"
+
+[[file]]
+path = "vibevm/vibespecs/protocols/proportional-controls.md"
+sha256 = "6fbd1dc55bd40ee67c442614cd3d71fda45f4ebdba7012b976e72857c0eacfed"
+
+[[file]]
+path = "vibevm/vibespecs/protocols/requirement-authority.md"
+sha256 = "9e5af613383c2c1492325338d9c37933bc83e1175ae809055718fc354a5532ca"
+
+[[file]]
+path = "vibevm/vibespecs/protocols/self-adoption.md"
+sha256 = "43d56c78d4d12803ad28eef24afaa809e5941b19727da9f30274600e95d5be53"
+
+[[file]]
+path = "vibevm/vibespecs/protocols/task-handoff.md"
+sha256 = "8dbafd42fbe0de67ab6360172d45f138f4daf5c931aeecbba43af7cee4b57056"

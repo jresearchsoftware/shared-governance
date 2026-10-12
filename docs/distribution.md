@@ -31,6 +31,12 @@ not a mandatory recurring remote per-file hash ritual. Native-Skill export is
 historical only. Pinned VibeVM emits a static INDEX entry for the compact boot;
 its protocol reads are conditional.
 
+This producer's native in-tree source and committed projection use the same
+exporter via `--producer-source` / `--verify-producer`, omitting the public
+release-only receipt and generated member routing from the package payload.
+Their exact provenance is the accepted source commit containing source and
+projection together. See [native self-adoption](self-adoption.md).
+
 ## Publication and consumers
 
 [Release policy](releases.md) documents automatic publication of accepted

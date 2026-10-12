@@ -1,0 +1,6 @@
+test_native_export_regenerates_proposals_and_preserves_unexpected_content (__main__.NativeAdoptionTests.test_native_export_regenerates_proposals_and_preserves_unexpected_content) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 4.142s
+
+OK

@@ -27,3 +27,11 @@ explicitly adopted it through human-owned AGENTS or equivalent guidance.
 Installing/updating this package does not activate the topic or replace local
 Task authority, Step allocation, review or execution mechanisms. Unrelated tasks
 skip it; client adapters and product-version compatibility remain project-owned.
+
+Where a producer consumes guidance or Skills it authors, read
+[self-adoption](../protocols/self-adoption.md) only when its owning project has
+explicitly adopted that topic. Develop/review under identifiable independently
+accepted source-main guidance; candidate rules remain proposals. Ordinary native
+materialization, committed ready files and conditional reading preserve project
+overlays and local authority. Other repositories and unrelated work skip this
+topic; package installation or update does not activate it.

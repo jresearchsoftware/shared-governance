@@ -5,7 +5,8 @@ licensed under MIT. One whole-package version covers its conditional boot and
 ordinary [proportional-controls](vibevm/vibespecs/protocols/proportional-controls.md),
 [requirement-authority](vibevm/vibespecs/protocols/requirement-authority.md),
 [package-versioning](vibevm/vibespecs/protocols/package-versioning.md)
-and [task-handoff](vibevm/vibespecs/protocols/task-handoff.md) protocols.
+and [task-handoff](vibevm/vibespecs/protocols/task-handoff.md) protocols,
+plus conditional [producer self-adoption](vibevm/vibespecs/protocols/self-adoption.md).
 It has no executable capabilities, dependencies or native Codex Skills.
 
 The stable contract preserves the proportional-controls procedure, exceptions
@@ -22,6 +23,10 @@ convention leaves Step allocation and review sufficiency with the project, and
 discloses manual/single-account identity limits without requiring automation.
 Human-owned project instructions retain task, review, publication and adoption
 authority. Newly adopting producers choose their own cadence and routing.
+Self-adoption is a compatible addition available for explicit adoption only where
+a producer consumes its own guidance. It separates accepted source from public
+publication and candidate rules from authority, preferring supported native
+ready-file workflows without imposing this producer's implementation on consumers.
 
 Canonical source is [shared-governance](https://github.com/jresearchsoftware/shared-governance).
 Version tags and publication history are in the

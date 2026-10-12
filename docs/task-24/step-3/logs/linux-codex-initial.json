@@ -1,0 +1,53 @@
+{
+  "accepted_source_main": "96d26c51b6d05ee5ec4576a44f541b904f0f13fb",
+  "platform": "posix",
+  "fixture": "/tmp/task24-step3-codex-v8s5yihg",
+  "client_sha256": "628e35487d888a28f0427fc37501da529dd3d81fcbad7a2c3421c1e8670d92e1",
+  "model": "configured default; server model identity not independently established",
+  "target": "before\n",
+  "cases": [
+    {
+      "label": "linux-tools",
+      "argv": [
+        "/tmp/task24-step3-codex-client/package/vendor/x86_64-unknown-linux-musl/bin/codex",
+        "exec",
+        "--json",
+        "-C",
+        "/tmp/task24-step3-codex-v8s5yihg/candidate",
+        "--sandbox",
+        "workspace-write",
+        "-"
+      ],
+      "exit": 1,
+      "events": [
+        {
+          "type": "thread.started",
+          "thread_id": "01a1301b-7a54-7cf2-b006-3c68dd0f003d"
+        },
+        {
+          "type": "item.completed",
+          "item": {
+            "id": "item_0",
+            "type": "error",
+            "message": "Model metadata for `gpt-5.4` not found. Defaulting to fallback metadata; this can degrade performance and cause issues."
+          }
+        },
+        {
+          "type": "turn.started"
+        },
+        {
+          "type": "error",
+          "message": "{\"type\":\"error\",\"status\":400,\"error\":{\"type\":\"invalid_request_error\",\"message\":\"The 'gpt-5.4' model is not supported when using Codex with a ChatGPT account.\"}}"
+        },
+        {
+          "type": "turn.failed",
+          "error": {
+            "message": "{\"type\":\"error\",\"status\":400,\"error\":{\"type\":\"invalid_request_error\",\"message\":\"The 'gpt-5.4' model is not supported when using Codex with a ChatGPT account.\"}}"
+          }
+        }
+      ],
+      "warnings": [],
+      "stdout_sha256": "a68403e09aaf76be00dd01e35f59f03b65680aad6159afbbdb464e972675388c"
+    }
+  ]
+}

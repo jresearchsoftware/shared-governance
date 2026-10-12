@@ -1,0 +1,41 @@
+{
+  "status": "PASS for existing required checks; native replacement BLOCKED",
+  "tested_source_head": "e7d7dcb1069fe46dd6825939694aa412b1f29e65",
+  "environment": "Windows PowerShell, Python 3.11+, normal project Git; native investigation separately on Debian WSL",
+  "source_export": {
+    "status": "PASS",
+    "log": "qualification.txt"
+  },
+  "distribution": {
+    "status": "PASS",
+    "tests": 31,
+    "skipped": 0,
+    "log": "distribution.txt"
+  },
+  "release": {
+    "status": "PASS",
+    "tests": 16,
+    "passed": 10,
+    "skipped": 6,
+    "log": "release.txt",
+    "skip_reason": "Optional native publisher/dependency integrations; release implementation unchanged"
+  },
+  "self_adoption": {
+    "status": "PASS",
+    "tests": 19,
+    "skipped": 0,
+    "log": "self-adoption.txt"
+  },
+  "package_boundary": {
+    "changed": false,
+    "before": "1.2.0",
+    "version": "1.2.0",
+    "source_revision": "e7d7dcb1069fe46dd6825939694aa412b1f29e65",
+    "bump": null
+  },
+  "whitespace": "PASS: git diff --check origin/main HEAD",
+  "diagnostic_syntax": "PASS: python -m py_compile for all three new scripts",
+  "native_investigation": "Completed diagnostic, not replacement qualification; see native.json",
+  "codex_investigation": "No-tool binding/application PASS in tested cases; actual file-read/edit cases BLOCKED by exec setup",
+  "final_evidence_commit": "Only documentation/log evidence changes after tested head. Final exact-head CI and publication read-back belong to the canonical Step 2 Outcome."
+}

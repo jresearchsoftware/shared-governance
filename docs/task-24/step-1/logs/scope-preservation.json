@@ -1,0 +1,17 @@
+{
+  "base": "96d26c51b6d05ee5ec4576a44f541b904f0f13fb",
+  "protected_source_diff": "empty",
+  "sha256": {
+    "AGENTS.md": "d8723a1a3a8e624137b0fe234360a347681ac0e10f66cbe8e28832b7475a51bc",
+    "vibe.toml": "69018913739073525fb01e226bc6b7a08c6fc150c872b762b91904960674f094",
+    ".agents/self-adoption.json": "ced2e737e6824d272052be3aee8d6b8d119c58661536ac69bb67d9ee72c494f1",
+    "scripts/self-adopt.py": "67568326cf51192f926bb5eff52b72337abf65a11d213561de135042627083af",
+    "scripts/test-self-adoption.py": "28b560acfafa90fe089a569a6f330d3c46958f8dc749ec9096b3b96a6431dfd7",
+    "scripts/qualify.py": "791c685d2b369d8b48d49d74c53a75aee9fafd9e5978159bb34202fc58aedee9",
+    "scripts/prepare-distribution.py": "f1c836fc6d66d39b24e98fca4b90ea0055f5d1b1d3de785438c8b13014bf53a4",
+    ".github/workflows/candidate.yml": "d8214f770c3b8f74803fce2ad86f115ebf6668f6f33cbe558d57b11dba6e0508",
+    ".github/workflows/publish.yml": "69e444ecd1dfe87fd8b264def8a442343d3d7559670e23a7a2cadd567770943b"
+  },
+  "package_version": "1.2.0",
+  "package_payload_and_frozen_source_unchanged": true
+}

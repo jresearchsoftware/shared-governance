@@ -1,2 +1,11 @@
 [workspace]
 members = ["packages/development-governance"]
+
+[project]
+name = "shared-governance"
+version = "0.0.0"
+spec_format = "mixed"
+
+[requires.packages."flow:org.jresearch.ai/development-governance"]
+version = "=1.3.0"
+link = "dynamic"

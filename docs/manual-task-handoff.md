@@ -3,7 +3,7 @@
 This example describes this repository's Issue/AGENTS authority. It is a local
 client binding and authoring example, not a second Task charter or universal prompt
 schema. Root AGENTS explicitly adopts accepted task-handoff through
-[automatic self-adoption](self-adoption.md); editable package source remains
+[native self-adoption](self-adoption.md); editable package source remains
 candidate content during authoring.
 
 For governed work here, keep the repository Issue and explicitly linked canonical
@@ -30,7 +30,10 @@ independent exact-head review within the Issue's current permission boundaries.
 Use the supported Codex chat-title tool where available, then read the title back.
 If rename or read-back is unavailable, state that limitation and retain the
 Task/Step/purpose plus Issue link in a supported visible navigation aid. A prompt
-does not prove the client's model/effort settings changed. Subagents supply bounded
+does not prove the client's model/effort settings changed. A current execution
+prompt also binds the independently verified accepted source-main SHA as described
+in self-adoption; candidate root/nested/generated instructions remain proposals.
+Subagents supply bounded
 implementation assistance only where permitted; they cannot enlarge scope or
 provide this candidate's independent acceptance.
 

@@ -1,0 +1,297 @@
+{
+  "accepted_source_main": "96d26c51b6d05ee5ec4576a44f541b904f0f13fb",
+  "canonical_receipt": {
+    "schema": 1,
+    "source_repository": "https://github.com/jresearchsoftware/shared-governance",
+    "source_revision": "96d26c51b6d05ee5ec4576a44f541b904f0f13fb",
+    "source_path": "packages/development-governance",
+    "package": "org.jresearch.ai/development-governance",
+    "version": "1.2.0",
+    "payload_sha256": "23d2f2ea4b28c5aafb17007d5e875b78f4b472c36d89fd66a1549e79070d0349",
+    "sha256": {
+      "LICENSE": "89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853",
+      "README.md": "a10fad7a0d57e7d650e1d295edf358095ed788596d913bfb1de31b73ef749dbc",
+      "vibe.toml": "5c57a28f8245c1fd5e8ce3ba58d0a9dc53530451158d14a846e6740d6464b9bc",
+      "vibevm/vibespecs/boot/development-governance.md": "074e4ad047a258228668b0e3bea275234e2812ac0976d78743e1b36107ff1202",
+      "vibevm/vibespecs/protocols/package-versioning.md": "14c48fcc25bae6c7dee9b0a6c2e6310fa8df2917c6e17c4553fdefb461fec652",
+      "vibevm/vibespecs/protocols/proportional-controls.md": "6fbd1dc55bd40ee67c442614cd3d71fda45f4ebdba7012b976e72857c0eacfed",
+      "vibevm/vibespecs/protocols/requirement-authority.md": "9e5af613383c2c1492325338d9c37933bc83e1175ae809055718fc354a5532ca",
+      "vibevm/vibespecs/protocols/task-handoff.md": "8dbafd42fbe0de67ab6360172d45f138f4daf5c931aeecbba43af7cee4b57056"
+    }
+  },
+  "platform": "posix",
+  "binary_sha256": "20d111df02eb28040ef4cb766bfcb0bde8ff4427b031f88f33eacb3711c3e240",
+  "fixture": "/tmp/task24-step3-native-vib6n2hs",
+  "cases": [
+    {
+      "label": "Linux retained Windows slots install",
+      "argv": [
+        "/tmp/shared-governance-step3-preparation.Tg2JmPIU/vibe",
+        "--json",
+        "install",
+        "--path",
+        "/tmp/task24-step3-native-vib6n2hs/linux-seed",
+        "--registry",
+        "/tmp/task24-step3-native-vib6n2hs/linux-seed/vibevm/vibepacks",
+        "--offline",
+        "--assume-yes",
+        "--no-default-registry"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"install\",\n  \"complete\": true,\n  \"materialised\": [],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"project\": \"/tmp/task24-step3-native-vib6n2hs/linux-seed\",\n  \"pruned\": [],\n  \"skipped\": [],\n  \"unchanged\": true\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "Linux retained Windows slots update",
+      "argv": [
+        "/tmp/shared-governance-step3-preparation.Tg2JmPIU/vibe",
+        "--json",
+        "update",
+        "--path",
+        "/tmp/task24-step3-native-vib6n2hs/linux-seed",
+        "--registry",
+        "/tmp/task24-step3-native-vib6n2hs/linux-seed/vibevm/vibepacks",
+        "--offline",
+        "--assume-yes",
+        "--all"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"update\",\n  \"complete\": true,\n  \"materialised\": [],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"packages\": [],\n  \"packages_resolved\": 0,\n  \"project\": \"/tmp/task24-step3-native-vib6n2hs/linux-seed\",\n  \"pruned\": [],\n  \"scope\": \"all\",\n  \"skipped\": [],\n  \"unchanged\": true,\n  \"version_bumps\": [],\n  \"hooks\": []\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "Linux missing Windows slot install",
+      "argv": [
+        "/tmp/shared-governance-step3-preparation.Tg2JmPIU/vibe",
+        "--json",
+        "install",
+        "--path",
+        "/tmp/task24-step3-native-vib6n2hs/missing-slot",
+        "--registry",
+        "/tmp/task24-step3-native-vib6n2hs/missing-slot/vibevm/vibepacks",
+        "--offline",
+        "--assume-yes",
+        "--no-default-registry"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"install:plan\",\n  \"packages\": [\n    {\n      \"package\": \"org.jresearch.ai/development-governance\",\n      \"version\": \"1.2.0\"\n    }\n  ]\n}\n{\n  \"command\": \"install:closure-diff\",\n  \"unchanged\": true,\n  \"packages\": 1\n}\n{\n  \"command\": \"install\",\n  \"complete\": true,\n  \"materialised\": [\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.0\"\n  ],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"project\": \"/tmp/task24-step3-native-vib6n2hs/missing-slot\",\n  \"pruned\": [],\n  \"skipped\": [],\n  \"unchanged\": false\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "force-raw pinned restoration",
+      "argv": [
+        "/tmp/shared-governance-step3-preparation.Tg2JmPIU/vibe",
+        "--json",
+        "reinstall",
+        "/tmp/task24-step3-native-vib6n2hs/force-raw",
+        "--offline",
+        "--assume-yes",
+        "--force"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"reinstall\",\n  \"complete\": true,\n  \"forced\": true,\n  \"materialised\": [],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"project\": \"/tmp/task24-step3-native-vib6n2hs/force-raw\",\n  \"pruned\": [],\n  \"skipped\": [],\n  \"unchanged\": false,\n  \"hooks\": []\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "force-configured pinned restoration",
+      "argv": [
+        "/tmp/shared-governance-step3-preparation.Tg2JmPIU/vibe",
+        "--json",
+        "reinstall",
+        "/tmp/task24-step3-native-vib6n2hs/force-configured",
+        "--offline",
+        "--assume-yes",
+        "--force"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"reinstall\",\n  \"complete\": true,\n  \"forced\": true,\n  \"materialised\": [],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"project\": \"/tmp/task24-step3-native-vib6n2hs/force-configured\",\n  \"pruned\": [],\n  \"skipped\": [],\n  \"unchanged\": false,\n  \"hooks\": []\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "force-missing pinned restoration",
+      "argv": [
+        "/tmp/shared-governance-step3-preparation.Tg2JmPIU/vibe",
+        "--json",
+        "reinstall",
+        "/tmp/task24-step3-native-vib6n2hs/force-missing",
+        "--offline",
+        "--assume-yes",
+        "--force"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"reinstall\",\n  \"complete\": true,\n  \"forced\": true,\n  \"materialised\": [],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"project\": \"/tmp/task24-step3-native-vib6n2hs/force-missing\",\n  \"pruned\": [],\n  \"skipped\": [],\n  \"unchanged\": false,\n  \"hooks\": []\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "plain reinstall boot restoration",
+      "argv": [
+        "/tmp/shared-governance-step3-preparation.Tg2JmPIU/vibe",
+        "--json",
+        "reinstall",
+        "/tmp/task24-step3-native-vib6n2hs/plain-index",
+        "--offline",
+        "--assume-yes"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"reinstall\",\n  \"complete\": true,\n  \"forced\": false,\n  \"materialised\": [],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"project\": \"/tmp/task24-step3-native-vib6n2hs/plain-index\",\n  \"pruned\": [],\n  \"skipped\": [],\n  \"unchanged\": false,\n  \"hooks\": []\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "old Windows URL deliberate same-version source edit install",
+      "argv": [
+        "/tmp/shared-governance-step3-preparation.Tg2JmPIU/vibe",
+        "--json",
+        "install",
+        "--path",
+        "/tmp/task24-step3-native-vib6n2hs/same-version-source",
+        "--registry",
+        "/tmp/task24-step3-native-vib6n2hs/same-version-source/vibevm/vibepacks",
+        "--offline",
+        "--assume-yes",
+        "--no-default-registry"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"install\",\n  \"complete\": true,\n  \"materialised\": [],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"project\": \"/tmp/task24-step3-native-vib6n2hs/same-version-source\",\n  \"pruned\": [],\n  \"skipped\": [],\n  \"unchanged\": true\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "old Windows URL deliberate same-version source edit update",
+      "argv": [
+        "/tmp/shared-governance-step3-preparation.Tg2JmPIU/vibe",
+        "--json",
+        "update",
+        "--path",
+        "/tmp/task24-step3-native-vib6n2hs/same-version-source",
+        "--registry",
+        "/tmp/task24-step3-native-vib6n2hs/same-version-source/vibevm/vibepacks",
+        "--offline",
+        "--assume-yes",
+        "--all"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"update\",\n  \"complete\": true,\n  \"materialised\": [],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"packages\": [],\n  \"packages_resolved\": 0,\n  \"project\": \"/tmp/task24-step3-native-vib6n2hs/same-version-source\",\n  \"pruned\": [],\n  \"scope\": \"all\",\n  \"skipped\": [],\n  \"unchanged\": true,\n  \"version_bumps\": [],\n  \"hooks\": []\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "old Windows URL explicit version change update",
+      "argv": [
+        "/tmp/shared-governance-step3-preparation.Tg2JmPIU/vibe",
+        "--json",
+        "update",
+        "--path",
+        "/tmp/task24-step3-native-vib6n2hs/version-change",
+        "--registry",
+        "/tmp/task24-step3-native-vib6n2hs/version-change/vibevm/vibepacks",
+        "--offline",
+        "--assume-yes",
+        "--all"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"install:plan\",\n  \"packages\": [\n    {\n      \"package\": \"org.jresearch.ai/development-governance\",\n      \"version\": \"1.2.1\"\n    }\n  ]\n}\n{\n  \"command\": \"install:closure-diff\",\n  \"added\": [],\n  \"removed\": [],\n  \"changed\": [\n    \"org.jresearch.ai/development-governance 1.2.0 -> 1.2.1\"\n  ],\n  \"lanes\": []\n}\n{\n  \"command\": \"update\",\n  \"complete\": true,\n  \"materialised\": [\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.1\"\n  ],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"packages\": [],\n  \"packages_resolved\": 1,\n  \"project\": \"/tmp/task24-step3-native-vib6n2hs/version-change\",\n  \"pruned\": [\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.0\"\n  ],\n  \"scope\": \"all\",\n  \"skipped\": [],\n  \"unchanged\": false,\n  \"version_bumps\": [],\n  \"hooks\": []\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "old Windows URL explicit version change install",
+      "argv": [
+        "/tmp/shared-governance-step3-preparation.Tg2JmPIU/vibe",
+        "--json",
+        "install",
+        "--path",
+        "/tmp/task24-step3-native-vib6n2hs/version-change",
+        "--registry",
+        "/tmp/task24-step3-native-vib6n2hs/version-change/vibevm/vibepacks",
+        "--offline",
+        "--assume-yes",
+        "--no-default-registry"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"install:plan\",\n  \"packages\": [\n    {\n      \"package\": \"org.jresearch.ai/development-governance\",\n      \"version\": \"1.2.1\"\n    }\n  ]\n}\n{\n  \"command\": \"install:closure-diff\",\n  \"unchanged\": true,\n  \"packages\": 1\n}\n{\n  \"command\": \"install\",\n  \"complete\": true,\n  \"materialised\": [],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"project\": \"/tmp/task24-step3-native-vib6n2hs/version-change\",\n  \"pruned\": [],\n  \"skipped\": [\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.1\"\n  ],\n  \"unchanged\": false\n}\n",
+      "stderr": ""
+    }
+  ],
+  "observations": {
+    "clean_checkout_slot": "PASS",
+    "ready_index_without_bootstrap": true,
+    "unchanged_windows_source_url": "file:///Q:/work/repo/github/jresearchsoftware/shared-governance/.vibe/task24-step3-native-kgefkfid/windows-producer/vibevm/vibepacks/org.jresearch.ai/development-governance/v1.2.0",
+    "old_url_unreachable_on_linux": true,
+    "retained_install_slot": "PASS",
+    "missing_slot_restored": "PASS",
+    "force-raw_restored": "PASS",
+    "force-configured_restored": "PASS",
+    "force-missing_restored": "PASS",
+    "plain_reinstall_index_restored": true,
+    "same_version_retained_slot": "PASS",
+    "same_version_source_diff_detected_by_exporter": true,
+    "meaningful_version_change_visible": true,
+    "version_change_source_slot_canonical": true,
+    "pull_advances_source_and_slot": true,
+    "rollback_windows_slot": "PASS",
+    "checkout_forward_slot": true
+  },
+  "states": {
+    "linux-clean-Windows-artifacts": {
+      "vibe.lock": "[meta]\ngenerated_by = \"vibe 1.0.7\"\ngenerated_at = \"2026-10-12T12:32:20Z\"\nschema_version = 7\nroot_dependencies = [\"flow:org.jresearch.ai/development-governance@=1.2.0\"]\n\n[[package]]\nkind = \"flow\"\nname = \"development-governance\"\ngroup = \"org.jresearch.ai\"\nversion = \"1.2.0\"\nsource_url = \"file:///Q:/work/repo/github/jresearchsoftware/shared-governance/.vibe/task24-step3-native-kgefkfid/windows-producer/vibevm/vibepacks/org.jresearch.ai/development-governance/v1.2.0\"\ncontent_hash = \"sha256:b6573632d7ee400adbcef167e66b5137b308bb1315adac7bcb8d8768130721b2\"\nfiles_written = []\nadmitted_by = \"root-edge\"\nsource_kind = \"registry\"\n",
+      "vibe.toml": "[workspace]\nmembers=[\"packages/development-governance\"]\n[project]\nname=\"task24-step3-fixture\"\nversion=\"0.0.0\"\nspec_format=\"mixed\"\n[requires.packages.\"flow:org.jresearch.ai/development-governance\"]\nversion=\"=1.2.0\"\nlink=\"dynamic\"\n",
+      "AGENTS.md": "Public disposable Task 24 Step 3 local overlay.\n\n<vibevm>\n<!-- Generated by vibe \u2014 do not edit inside this block; it is rewritten on `vibe install`. Text outside the <vibevm> markers is yours. -->\n\n# Session boot\n\nThis project's boot sequence is computed by vibe (the PROP-009 loading\nmodel). To begin a session, read these files in order:\n\n1. `vibevm/vibespecs/boot/STATIC.md` \u2014 if it exists. The static (priority) lane: read it\n   first and in full.\n2. `vibevm/vibespecs/boot/INDEX.md` \u2014 a generated TOML manifest. Read every file named\n   by its `[[entry]]` tables, in the listed order. A `kind = \"static\"`\n   entry is read directly; a `kind = \"dynamic\"` entry is an INCLUDE\n   resolved at boot, and one carrying a `when` condition is read only when\n   that condition holds for the current session.\n\nBoot is pure file-reading \u2014 there is nothing to execute.\n</vibevm>\n",
+      "vibevm/vibespecs/boot/INDEX.md": "# vibevm/vibespecs/boot/INDEX.md\u2014 generated by vibe, do not edit.\n# The computed boot sequence (PROP-009 \u00a72.3). Read every file the\n# `[[entry]]` list names, in order.\n#\n# `installed:<group>/<name>` is resolved during generation: true\n# contributions appear normally; false contributions are absent entirely.\n# A `kind = \"static\"` entry: read the file directly. A `kind = \"dynamic\"`\n# entry: an INCLUDE resolved at boot \u2014 when it also carries\n# `when = \"os:<name>\"`, read the file only if the session's operating\n# system is <name> (windows / macos / linux), and skip it otherwise.\n\nschema = 1\n\n[[entry]]\npath = \"vibevm/vibespecs/boot/00-authoring.md\"\nkind = \"static\"\n\n[[entry]]\npath = \"vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.0/vibevm/vibespecs/boot/development-governance.md\"\nkind = \"static\"\n",
+      "vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.0/.vibe-slot.toml": "schema = 1\nsource_hash = \"sha256:b6573632d7ee400adbcef167e66b5137b308bb1315adac7bcb8d8768130721b2\"\nspec_format = \"mixed\"\n\n[[file]]\npath = \"DISTRIBUTION.json\"\nsha256 = \"2680df3355125d29d4ff0ccacce44b274f2d3e85968750b087d67b73265c6016\"\n\n[[file]]\npath = \"LICENSE\"\nsha256 = \"89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853\"\n\n[[file]]\npath = \"README.md\"\nsha256 = \"a10fad7a0d57e7d650e1d295edf358095ed788596d913bfb1de31b73ef749dbc\"\n\n[[file]]\npath = \"vibe.toml\"\nsha256 = \"5c57a28f8245c1fd5e8ce3ba58d0a9dc53530451158d14a846e6740d6464b9bc\"\n\n[[file]]\npath = \"vibevm/vibespecs/boot/development-governance.md\"\nsha256 = \"074e4ad047a258228668b0e3bea275234e2812ac0976d78743e1b36107ff1202\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/package-versioning.md\"\nsha256 = \"14c48fcc25bae6c7dee9b0a6c2e6310fa8df2917c6e17c4553fdefb461fec652\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/proportional-controls.md\"\nsha256 = \"6fbd1dc55bd40ee67c442614cd3d71fda45f4ebdba7012b976e72857c0eacfed\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/requirement-authority.md\"\nsha256 = \"9e5af613383c2c1492325338d9c37933bc83e1175ae809055718fc354a5532ca\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/task-handoff.md\"\nsha256 = \"8dbafd42fbe0de67ab6360172d45f138f4daf5c931aeecbba43af7cee4b57056\"\n"
+    },
+    "linux-retained": {
+      "vibe.lock": "[meta]\ngenerated_by = \"vibe 1.0.7\"\ngenerated_at = \"2026-10-12T12:32:20Z\"\nschema_version = 7\nroot_dependencies = [\"flow:org.jresearch.ai/development-governance@=1.2.0\"]\n\n[[package]]\nkind = \"flow\"\nname = \"development-governance\"\ngroup = \"org.jresearch.ai\"\nversion = \"1.2.0\"\nsource_url = \"file:///Q:/work/repo/github/jresearchsoftware/shared-governance/.vibe/task24-step3-native-kgefkfid/windows-producer/vibevm/vibepacks/org.jresearch.ai/development-governance/v1.2.0\"\ncontent_hash = \"sha256:b6573632d7ee400adbcef167e66b5137b308bb1315adac7bcb8d8768130721b2\"\nfiles_written = []\nadmitted_by = \"root-edge\"\nsource_kind = \"registry\"\n",
+      "vibe.toml": "[workspace]\nmembers=[\"packages/development-governance\"]\n[project]\nname=\"task24-step3-fixture\"\nversion=\"0.0.0\"\nspec_format=\"mixed\"\n[requires.packages.\"flow:org.jresearch.ai/development-governance\"]\nversion=\"=1.2.0\"\nlink=\"dynamic\"\n",
+      "AGENTS.md": "Public disposable Task 24 Step 3 local overlay.\n\n<vibevm>\n<!-- Generated by vibe \u2014 do not edit inside this block; it is rewritten on `vibe install`. Text outside the <vibevm> markers is yours. -->\n\n# Session boot\n\nThis project's boot sequence is computed by vibe (the PROP-009 loading\nmodel). To begin a session, read these files in order:\n\n1. `vibevm/vibespecs/boot/STATIC.md` \u2014 if it exists. The static (priority) lane: read it\n   first and in full.\n2. `vibevm/vibespecs/boot/INDEX.md` \u2014 a generated TOML manifest. Read every file named\n   by its `[[entry]]` tables, in the listed order. A `kind = \"static\"`\n   entry is read directly; a `kind = \"dynamic\"` entry is an INCLUDE\n   resolved at boot, and one carrying a `when` condition is read only when\n   that condition holds for the current session.\n\nBoot is pure file-reading \u2014 there is nothing to execute.\n</vibevm>\n",
+      "vibevm/vibespecs/boot/INDEX.md": "# vibevm/vibespecs/boot/INDEX.md\u2014 generated by vibe, do not edit.\n# The computed boot sequence (PROP-009 \u00a72.3). Read every file the\n# `[[entry]]` list names, in order.\n#\n# `installed:<group>/<name>` is resolved during generation: true\n# contributions appear normally; false contributions are absent entirely.\n# A `kind = \"static\"` entry: read the file directly. A `kind = \"dynamic\"`\n# entry: an INCLUDE resolved at boot \u2014 when it also carries\n# `when = \"os:<name>\"`, read the file only if the session's operating\n# system is <name> (windows / macos / linux), and skip it otherwise.\n\nschema = 1\n\n[[entry]]\npath = \"vibevm/vibespecs/boot/00-authoring.md\"\nkind = \"static\"\n\n[[entry]]\npath = \"vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.0/vibevm/vibespecs/boot/development-governance.md\"\nkind = \"static\"\n",
+      "vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.0/.vibe-slot.toml": "schema = 1\nsource_hash = \"sha256:b6573632d7ee400adbcef167e66b5137b308bb1315adac7bcb8d8768130721b2\"\nspec_format = \"mixed\"\n\n[[file]]\npath = \"DISTRIBUTION.json\"\nsha256 = \"2680df3355125d29d4ff0ccacce44b274f2d3e85968750b087d67b73265c6016\"\n\n[[file]]\npath = \"LICENSE\"\nsha256 = \"89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853\"\n\n[[file]]\npath = \"README.md\"\nsha256 = \"a10fad7a0d57e7d650e1d295edf358095ed788596d913bfb1de31b73ef749dbc\"\n\n[[file]]\npath = \"vibe.toml\"\nsha256 = \"5c57a28f8245c1fd5e8ce3ba58d0a9dc53530451158d14a846e6740d6464b9bc\"\n\n[[file]]\npath = \"vibevm/vibespecs/boot/development-governance.md\"\nsha256 = \"074e4ad047a258228668b0e3bea275234e2812ac0976d78743e1b36107ff1202\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/package-versioning.md\"\nsha256 = \"14c48fcc25bae6c7dee9b0a6c2e6310fa8df2917c6e17c4553fdefb461fec652\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/proportional-controls.md\"\nsha256 = \"6fbd1dc55bd40ee67c442614cd3d71fda45f4ebdba7012b976e72857c0eacfed\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/requirement-authority.md\"\nsha256 = \"9e5af613383c2c1492325338d9c37933bc83e1175ae809055718fc354a5532ca\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/task-handoff.md\"\nsha256 = \"8dbafd42fbe0de67ab6360172d45f138f4daf5c931aeecbba43af7cee4b57056\"\n"
+    },
+    "missing-slot": {
+      "vibe.lock": "[meta]\ngenerated_by = \"vibe 1.0.7\"\ngenerated_at = \"2026-10-12T12:57:44Z\"\nschema_version = 7\nroot_dependencies = [\"flow:org.jresearch.ai/development-governance@=1.2.0\"]\n\n[[package]]\nkind = \"flow\"\nname = \"development-governance\"\ngroup = \"org.jresearch.ai\"\nversion = \"1.2.0\"\nsource_url = \"file:///tmp/task24-step3-native-vib6n2hs/missing-slot/vibevm/vibepacks/org.jresearch.ai/development-governance/v1.2.0\"\ncontent_hash = \"sha256:b6573632d7ee400adbcef167e66b5137b308bb1315adac7bcb8d8768130721b2\"\nfiles_written = []\nadmitted_by = \"root-edge\"\nsource_kind = \"registry\"\n",
+      "vibe.toml": "[workspace]\nmembers=[\"packages/development-governance\"]\n[project]\nname=\"task24-step3-fixture\"\nversion=\"0.0.0\"\nspec_format=\"mixed\"\n[requires.packages.\"flow:org.jresearch.ai/development-governance\"]\nversion=\"=1.2.0\"\nlink=\"dynamic\"\n",
+      "AGENTS.md": "Public disposable Task 24 Step 3 local overlay.\n\n<vibevm>\n<!-- Generated by vibe \u2014 do not edit inside this block; it is rewritten on `vibe install`. Text outside the <vibevm> markers is yours. -->\n\n# Session boot\n\nThis project's boot sequence is computed by vibe (the PROP-009 loading\nmodel). To begin a session, read these files in order:\n\n1. `vibevm/vibespecs/boot/STATIC.md` \u2014 if it exists. The static (priority) lane: read it\n   first and in full.\n2. `vibevm/vibespecs/boot/INDEX.md` \u2014 a generated TOML manifest. Read every file named\n   by its `[[entry]]` tables, in the listed order. A `kind = \"static\"`\n   entry is read directly; a `kind = \"dynamic\"` entry is an INCLUDE\n   resolved at boot, and one carrying a `when` condition is read only when\n   that condition holds for the current session.\n\nBoot is pure file-reading \u2014 there is nothing to execute.\n</vibevm>\n",
+      "vibevm/vibespecs/boot/INDEX.md": "# vibevm/vibespecs/boot/INDEX.md\u2014 generated by vibe, do not edit.\n# The computed boot sequence (PROP-009 \u00a72.3). Read every file the\n# `[[entry]]` list names, in order.\n#\n# `installed:<group>/<name>` is resolved during generation: true\n# contributions appear normally; false contributions are absent entirely.\n# A `kind = \"static\"` entry: read the file directly. A `kind = \"dynamic\"`\n# entry: an INCLUDE resolved at boot \u2014 when it also carries\n# `when = \"os:<name>\"`, read the file only if the session's operating\n# system is <name> (windows / macos / linux), and skip it otherwise.\n\nschema = 1\n\n[[entry]]\npath = \"vibevm/vibespecs/boot/00-authoring.md\"\nkind = \"static\"\n\n[[entry]]\npath = \"vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.0/vibevm/vibespecs/boot/development-governance.md\"\nkind = \"static\"\n",
+      "vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.0/.vibe-slot.toml": "schema = 1\nsource_hash = \"sha256:b6573632d7ee400adbcef167e66b5137b308bb1315adac7bcb8d8768130721b2\"\nspec_format = \"mixed\"\n\n[[file]]\npath = \"DISTRIBUTION.json\"\nsha256 = \"2680df3355125d29d4ff0ccacce44b274f2d3e85968750b087d67b73265c6016\"\n\n[[file]]\npath = \"LICENSE\"\nsha256 = \"89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853\"\n\n[[file]]\npath = \"README.md\"\nsha256 = \"a10fad7a0d57e7d650e1d295edf358095ed788596d913bfb1de31b73ef749dbc\"\n\n[[file]]\npath = \"vibe.toml\"\nsha256 = \"5c57a28f8245c1fd5e8ce3ba58d0a9dc53530451158d14a846e6740d6464b9bc\"\n\n[[file]]\npath = \"vibevm/vibespecs/boot/development-governance.md\"\nsha256 = \"074e4ad047a258228668b0e3bea275234e2812ac0976d78743e1b36107ff1202\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/package-versioning.md\"\nsha256 = \"14c48fcc25bae6c7dee9b0a6c2e6310fa8df2917c6e17c4553fdefb461fec652\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/proportional-controls.md\"\nsha256 = \"6fbd1dc55bd40ee67c442614cd3d71fda45f4ebdba7012b976e72857c0eacfed\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/requirement-authority.md\"\nsha256 = \"9e5af613383c2c1492325338d9c37933bc83e1175ae809055718fc354a5532ca\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/task-handoff.md\"\nsha256 = \"8dbafd42fbe0de67ab6360172d45f138f4daf5c931aeecbba43af7cee4b57056\"\n"
+    },
+    "force-raw": {
+      "vibe.lock": "[meta]\ngenerated_by = \"vibe 1.0.7\"\ngenerated_at = \"2026-10-12T12:32:20Z\"\nschema_version = 7\nroot_dependencies = [\"flow:org.jresearch.ai/development-governance@=1.2.0\"]\n\n[[package]]\nkind = \"flow\"\nname = \"development-governance\"\ngroup = \"org.jresearch.ai\"\nversion = \"1.2.0\"\nsource_url = \"file:///Q:/work/repo/github/jresearchsoftware/shared-governance/.vibe/task24-step3-native-kgefkfid/windows-producer/vibevm/vibepacks/org.jresearch.ai/development-governance/v1.2.0\"\ncontent_hash = \"sha256:b6573632d7ee400adbcef167e66b5137b308bb1315adac7bcb8d8768130721b2\"\nfiles_written = []\nadmitted_by = \"root-edge\"\nsource_kind = \"registry\"\n",
+      "vibe.toml": "[workspace]\nmembers=[\"packages/development-governance\"]\n[project]\nname=\"task24-step3-fixture\"\nversion=\"0.0.0\"\nspec_format=\"mixed\"\n[requires.packages.\"flow:org.jresearch.ai/development-governance\"]\nversion=\"=1.2.0\"\nlink=\"dynamic\"\n",
+      "AGENTS.md": "Public disposable Task 24 Step 3 local overlay.\n\n<vibevm>\n<!-- Generated by vibe \u2014 do not edit inside this block; it is rewritten on `vibe install`. Text outside the <vibevm> markers is yours. -->\n\n# Session boot\n\nThis project's boot sequence is computed by vibe (the PROP-009 loading\nmodel). To begin a session, read these files in order:\n\n1. `vibevm/vibespecs/boot/STATIC.md` \u2014 if it exists. The static (priority) lane: read it\n   first and in full.\n2. `vibevm/vibespecs/boot/INDEX.md` \u2014 a generated TOML manifest. Read every file named\n   by its `[[entry]]` tables, in the listed order. A `kind = \"static\"`\n   entry is read directly; a `kind = \"dynamic\"` entry is an INCLUDE\n   resolved at boot, and one carrying a `when` condition is read only when\n   that condition holds for the current session.\n\nBoot is pure file-reading \u2014 there is nothing to execute.\n</vibevm>\n",
+      "vibevm/vibespecs/boot/INDEX.md": "# vibevm/vibespecs/boot/INDEX.md\u2014 generated by vibe, do not edit.\n# The computed boot sequence (PROP-009 \u00a72.3). Read every file the\n# `[[entry]]` list names, in order.\n#\n# `installed:<group>/<name>` is resolved during generation: true\n# contributions appear normally; false contributions are absent entirely.\n# A `kind = \"static\"` entry: read the file directly. A `kind = \"dynamic\"`\n# entry: an INCLUDE resolved at boot \u2014 when it also carries\n# `when = \"os:<name>\"`, read the file only if the session's operating\n# system is <name> (windows / macos / linux), and skip it otherwise.\n\nschema = 1\n\n[[entry]]\npath = \"vibevm/vibespecs/boot/00-authoring.md\"\nkind = \"static\"\n\n[[entry]]\npath = \"vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.0/vibevm/vibespecs/boot/development-governance.md\"\nkind = \"static\"\n",
+      "vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.0/.vibe-slot.toml": "schema = 1\nsource_hash = \"sha256:b6573632d7ee400adbcef167e66b5137b308bb1315adac7bcb8d8768130721b2\"\nspec_format = \"mixed\"\n\n[[file]]\npath = \"DISTRIBUTION.json\"\nsha256 = \"2680df3355125d29d4ff0ccacce44b274f2d3e85968750b087d67b73265c6016\"\n\n[[file]]\npath = \"LICENSE\"\nsha256 = \"89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853\"\n\n[[file]]\npath = \"README.md\"\nsha256 = \"a10fad7a0d57e7d650e1d295edf358095ed788596d913bfb1de31b73ef749dbc\"\n\n[[file]]\npath = \"vibe.toml\"\nsha256 = \"5c57a28f8245c1fd5e8ce3ba58d0a9dc53530451158d14a846e6740d6464b9bc\"\n\n[[file]]\npath = \"vibevm/vibespecs/boot/development-governance.md\"\nsha256 = \"074e4ad047a258228668b0e3bea275234e2812ac0976d78743e1b36107ff1202\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/package-versioning.md\"\nsha256 = \"14c48fcc25bae6c7dee9b0a6c2e6310fa8df2917c6e17c4553fdefb461fec652\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/proportional-controls.md\"\nsha256 = \"6fbd1dc55bd40ee67c442614cd3d71fda45f4ebdba7012b976e72857c0eacfed\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/requirement-authority.md\"\nsha256 = \"9e5af613383c2c1492325338d9c37933bc83e1175ae809055718fc354a5532ca\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/task-handoff.md\"\nsha256 = \"8dbafd42fbe0de67ab6360172d45f138f4daf5c931aeecbba43af7cee4b57056\"\n"
+    },
+    "force-configured": {
+      "vibe.lock": "[meta]\ngenerated_by = \"vibe 1.0.7\"\ngenerated_at = \"2026-10-12T12:32:20Z\"\nschema_version = 7\nroot_dependencies = [\"flow:org.jresearch.ai/development-governance@=1.2.0\"]\n\n[[package]]\nkind = \"flow\"\nname = \"development-governance\"\ngroup = \"org.jresearch.ai\"\nversion = \"1.2.0\"\nsource_url = \"file:///Q:/work/repo/github/jresearchsoftware/shared-governance/.vibe/task24-step3-native-kgefkfid/windows-producer/vibevm/vibepacks/org.jresearch.ai/development-governance/v1.2.0\"\ncontent_hash = \"sha256:b6573632d7ee400adbcef167e66b5137b308bb1315adac7bcb8d8768130721b2\"\nfiles_written = []\nadmitted_by = \"root-edge\"\nsource_kind = \"registry\"\n",
+      "vibe.toml": "[workspace]\nmembers=[\"packages/development-governance\"]\n[project]\nname=\"task24-step3-fixture\"\nversion=\"0.0.0\"\nspec_format=\"mixed\"\n[requires.packages.\"flow:org.jresearch.ai/development-governance\"]\nversion=\"=1.2.0\"\nlink=\"dynamic\"\n",
+      "AGENTS.md": "Public disposable Task 24 Step 3 local overlay.\n\n<vibevm>\n<!-- Generated by vibe \u2014 do not edit inside this block; it is rewritten on `vibe install`. Text outside the <vibevm> markers is yours. -->\n\n# Session boot\n\nThis project's boot sequence is computed by vibe (the PROP-009 loading\nmodel). To begin a session, read these files in order:\n\n1. `vibevm/vibespecs/boot/STATIC.md` \u2014 if it exists. The static (priority) lane: read it\n   first and in full.\n2. `vibevm/vibespecs/boot/INDEX.md` \u2014 a generated TOML manifest. Read every file named\n   by its `[[entry]]` tables, in the listed order. A `kind = \"static\"`\n   entry is read directly; a `kind = \"dynamic\"` entry is an INCLUDE\n   resolved at boot, and one carrying a `when` condition is read only when\n   that condition holds for the current session.\n\nBoot is pure file-reading \u2014 there is nothing to execute.\n</vibevm>\n",
+      "vibevm/vibespecs/boot/INDEX.md": "# vibevm/vibespecs/boot/INDEX.md\u2014 generated by vibe, do not edit.\n# The computed boot sequence (PROP-009 \u00a72.3). Read every file the\n# `[[entry]]` list names, in order.\n#\n# `installed:<group>/<name>` is resolved during generation: true\n# contributions appear normally; false contributions are absent entirely.\n# A `kind = \"static\"` entry: read the file directly. A `kind = \"dynamic\"`\n# entry: an INCLUDE resolved at boot \u2014 when it also carries\n# `when = \"os:<name>\"`, read the file only if the session's operating\n# system is <name> (windows / macos / linux), and skip it otherwise.\n\nschema = 1\n\n[[entry]]\npath = \"vibevm/vibespecs/boot/00-authoring.md\"\nkind = \"static\"\n\n[[entry]]\npath = \"vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.0/vibevm/vibespecs/boot/development-governance.md\"\nkind = \"static\"\n",
+      "vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.0/.vibe-slot.toml": "schema = 1\nsource_hash = \"sha256:b6573632d7ee400adbcef167e66b5137b308bb1315adac7bcb8d8768130721b2\"\nspec_format = \"mixed\"\n\n[[file]]\npath = \"DISTRIBUTION.json\"\nsha256 = \"2680df3355125d29d4ff0ccacce44b274f2d3e85968750b087d67b73265c6016\"\n\n[[file]]\npath = \"LICENSE\"\nsha256 = \"89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853\"\n\n[[file]]\npath = \"README.md\"\nsha256 = \"a10fad7a0d57e7d650e1d295edf358095ed788596d913bfb1de31b73ef749dbc\"\n\n[[file]]\npath = \"vibe.toml\"\nsha256 = \"5c57a28f8245c1fd5e8ce3ba58d0a9dc53530451158d14a846e6740d6464b9bc\"\n\n[[file]]\npath = \"vibevm/vibespecs/boot/development-governance.md\"\nsha256 = \"074e4ad047a258228668b0e3bea275234e2812ac0976d78743e1b36107ff1202\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/package-versioning.md\"\nsha256 = \"14c48fcc25bae6c7dee9b0a6c2e6310fa8df2917c6e17c4553fdefb461fec652\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/proportional-controls.md\"\nsha256 = \"6fbd1dc55bd40ee67c442614cd3d71fda45f4ebdba7012b976e72857c0eacfed\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/requirement-authority.md\"\nsha256 = \"9e5af613383c2c1492325338d9c37933bc83e1175ae809055718fc354a5532ca\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/task-handoff.md\"\nsha256 = \"8dbafd42fbe0de67ab6360172d45f138f4daf5c931aeecbba43af7cee4b57056\"\n"
+    },
+    "force-missing": {
+      "vibe.lock": "[meta]\ngenerated_by = \"vibe 1.0.7\"\ngenerated_at = \"2026-10-12T12:32:20Z\"\nschema_version = 7\nroot_dependencies = [\"flow:org.jresearch.ai/development-governance@=1.2.0\"]\n\n[[package]]\nkind = \"flow\"\nname = \"development-governance\"\ngroup = \"org.jresearch.ai\"\nversion = \"1.2.0\"\nsource_url = \"file:///Q:/work/repo/github/jresearchsoftware/shared-governance/.vibe/task24-step3-native-kgefkfid/windows-producer/vibevm/vibepacks/org.jresearch.ai/development-governance/v1.2.0\"\ncontent_hash = \"sha256:b6573632d7ee400adbcef167e66b5137b308bb1315adac7bcb8d8768130721b2\"\nfiles_written = []\nadmitted_by = \"root-edge\"\nsource_kind = \"registry\"\n",
+      "vibe.toml": "[workspace]\nmembers=[\"packages/development-governance\"]\n[project]\nname=\"task24-step3-fixture\"\nversion=\"0.0.0\"\nspec_format=\"mixed\"\n[requires.packages.\"flow:org.jresearch.ai/development-governance\"]\nversion=\"=1.2.0\"\nlink=\"dynamic\"\n",
+      "AGENTS.md": "Public disposable Task 24 Step 3 local overlay.\n\n<vibevm>\n<!-- Generated by vibe \u2014 do not edit inside this block; it is rewritten on `vibe install`. Text outside the <vibevm> markers is yours. -->\n\n# Session boot\n\nThis project's boot sequence is computed by vibe (the PROP-009 loading\nmodel). To begin a session, read these files in order:\n\n1. `vibevm/vibespecs/boot/STATIC.md` \u2014 if it exists. The static (priority) lane: read it\n   first and in full.\n2. `vibevm/vibespecs/boot/INDEX.md` \u2014 a generated TOML manifest. Read every file named\n   by its `[[entry]]` tables, in the listed order. A `kind = \"static\"`\n   entry is read directly; a `kind = \"dynamic\"` entry is an INCLUDE\n   resolved at boot, and one carrying a `when` condition is read only when\n   that condition holds for the current session.\n\nBoot is pure file-reading \u2014 there is nothing to execute.\n</vibevm>\n",
+      "vibevm/vibespecs/boot/INDEX.md": "# vibevm/vibespecs/boot/INDEX.md\u2014 generated by vibe, do not edit.\n# The computed boot sequence (PROP-009 \u00a72.3). Read every file the\n# `[[entry]]` list names, in order.\n#\n# `installed:<group>/<name>` is resolved during generation: true\n# contributions appear normally; false contributions are absent entirely.\n# A `kind = \"static\"` entry: read the file directly. A `kind = \"dynamic\"`\n# entry: an INCLUDE resolved at boot \u2014 when it also carries\n# `when = \"os:<name>\"`, read the file only if the session's operating\n# system is <name> (windows / macos / linux), and skip it otherwise.\n\nschema = 1\n\n[[entry]]\npath = \"vibevm/vibespecs/boot/00-authoring.md\"\nkind = \"static\"\n\n[[entry]]\npath = \"vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.0/vibevm/vibespecs/boot/development-governance.md\"\nkind = \"static\"\n",
+      "vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.0/.vibe-slot.toml": "schema = 1\nsource_hash = \"sha256:b6573632d7ee400adbcef167e66b5137b308bb1315adac7bcb8d8768130721b2\"\nspec_format = \"mixed\"\n\n[[file]]\npath = \"DISTRIBUTION.json\"\nsha256 = \"2680df3355125d29d4ff0ccacce44b274f2d3e85968750b087d67b73265c6016\"\n\n[[file]]\npath = \"LICENSE\"\nsha256 = \"89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853\"\n\n[[file]]\npath = \"README.md\"\nsha256 = \"a10fad7a0d57e7d650e1d295edf358095ed788596d913bfb1de31b73ef749dbc\"\n\n[[file]]\npath = \"vibe.toml\"\nsha256 = \"5c57a28f8245c1fd5e8ce3ba58d0a9dc53530451158d14a846e6740d6464b9bc\"\n\n[[file]]\npath = \"vibevm/vibespecs/boot/development-governance.md\"\nsha256 = \"074e4ad047a258228668b0e3bea275234e2812ac0976d78743e1b36107ff1202\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/package-versioning.md\"\nsha256 = \"14c48fcc25bae6c7dee9b0a6c2e6310fa8df2917c6e17c4553fdefb461fec652\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/proportional-controls.md\"\nsha256 = \"6fbd1dc55bd40ee67c442614cd3d71fda45f4ebdba7012b976e72857c0eacfed\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/requirement-authority.md\"\nsha256 = \"9e5af613383c2c1492325338d9c37933bc83e1175ae809055718fc354a5532ca\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/task-handoff.md\"\nsha256 = \"8dbafd42fbe0de67ab6360172d45f138f4daf5c931aeecbba43af7cee4b57056\"\n"
+    },
+    "plain-index": {
+      "vibe.lock": "[meta]\ngenerated_by = \"vibe 1.0.7\"\ngenerated_at = \"2026-10-12T12:32:20Z\"\nschema_version = 7\nroot_dependencies = [\"flow:org.jresearch.ai/development-governance@=1.2.0\"]\n\n[[package]]\nkind = \"flow\"\nname = \"development-governance\"\ngroup = \"org.jresearch.ai\"\nversion = \"1.2.0\"\nsource_url = \"file:///Q:/work/repo/github/jresearchsoftware/shared-governance/.vibe/task24-step3-native-kgefkfid/windows-producer/vibevm/vibepacks/org.jresearch.ai/development-governance/v1.2.0\"\ncontent_hash = \"sha256:b6573632d7ee400adbcef167e66b5137b308bb1315adac7bcb8d8768130721b2\"\nfiles_written = []\nadmitted_by = \"root-edge\"\nsource_kind = \"registry\"\n",
+      "vibe.toml": "[workspace]\nmembers=[\"packages/development-governance\"]\n[project]\nname=\"task24-step3-fixture\"\nversion=\"0.0.0\"\nspec_format=\"mixed\"\n[requires.packages.\"flow:org.jresearch.ai/development-governance\"]\nversion=\"=1.2.0\"\nlink=\"dynamic\"\n",
+      "AGENTS.md": "Public disposable Task 24 Step 3 local overlay.\n\n<vibevm>\n<!-- Generated by vibe \u2014 do not edit inside this block; it is rewritten on `vibe install`. Text outside the <vibevm> markers is yours. -->\n\n# Session boot\n\nThis project's boot sequence is computed by vibe (the PROP-009 loading\nmodel). To begin a session, read these files in order:\n\n1. `vibevm/vibespecs/boot/STATIC.md` \u2014 if it exists. The static (priority) lane: read it\n   first and in full.\n2. `vibevm/vibespecs/boot/INDEX.md` \u2014 a generated TOML manifest. Read every file named\n   by its `[[entry]]` tables, in the listed order. A `kind = \"static\"`\n   entry is read directly; a `kind = \"dynamic\"` entry is an INCLUDE\n   resolved at boot, and one carrying a `when` condition is read only when\n   that condition holds for the current session.\n\nBoot is pure file-reading \u2014 there is nothing to execute.\n</vibevm>\n",
+      "vibevm/vibespecs/boot/INDEX.md": "# vibevm/vibespecs/boot/INDEX.md\u2014 generated by vibe, do not edit.\n# The computed boot sequence (PROP-009 \u00a72.3). Read every file the\n# `[[entry]]` list names, in order.\n#\n# `installed:<group>/<name>` is resolved during generation: true\n# contributions appear normally; false contributions are absent entirely.\n# A `kind = \"static\"` entry: read the file directly. A `kind = \"dynamic\"`\n# entry: an INCLUDE resolved at boot \u2014 when it also carries\n# `when = \"os:<name>\"`, read the file only if the session's operating\n# system is <name> (windows / macos / linux), and skip it otherwise.\n\nschema = 1\n\n[[entry]]\npath = \"vibevm/vibespecs/boot/00-authoring.md\"\nkind = \"static\"\n\n[[entry]]\npath = \"vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.0/vibevm/vibespecs/boot/development-governance.md\"\nkind = \"static\"\n",
+      "vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.0/.vibe-slot.toml": "schema = 1\nsource_hash = \"sha256:b6573632d7ee400adbcef167e66b5137b308bb1315adac7bcb8d8768130721b2\"\nspec_format = \"mixed\"\n\n[[file]]\npath = \"DISTRIBUTION.json\"\nsha256 = \"2680df3355125d29d4ff0ccacce44b274f2d3e85968750b087d67b73265c6016\"\n\n[[file]]\npath = \"LICENSE\"\nsha256 = \"89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853\"\n\n[[file]]\npath = \"README.md\"\nsha256 = \"a10fad7a0d57e7d650e1d295edf358095ed788596d913bfb1de31b73ef749dbc\"\n\n[[file]]\npath = \"vibe.toml\"\nsha256 = \"5c57a28f8245c1fd5e8ce3ba58d0a9dc53530451158d14a846e6740d6464b9bc\"\n\n[[file]]\npath = \"vibevm/vibespecs/boot/development-governance.md\"\nsha256 = \"074e4ad047a258228668b0e3bea275234e2812ac0976d78743e1b36107ff1202\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/package-versioning.md\"\nsha256 = \"14c48fcc25bae6c7dee9b0a6c2e6310fa8df2917c6e17c4553fdefb461fec652\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/proportional-controls.md\"\nsha256 = \"6fbd1dc55bd40ee67c442614cd3d71fda45f4ebdba7012b976e72857c0eacfed\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/requirement-authority.md\"\nsha256 = \"9e5af613383c2c1492325338d9c37933bc83e1175ae809055718fc354a5532ca\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/task-handoff.md\"\nsha256 = \"8dbafd42fbe0de67ab6360172d45f138f4daf5c931aeecbba43af7cee4b57056\"\n"
+    },
+    "same-version-source": {
+      "vibe.lock": "[meta]\ngenerated_by = \"vibe 1.0.7\"\ngenerated_at = \"2026-10-12T12:32:20Z\"\nschema_version = 7\nroot_dependencies = [\"flow:org.jresearch.ai/development-governance@=1.2.0\"]\n\n[[package]]\nkind = \"flow\"\nname = \"development-governance\"\ngroup = \"org.jresearch.ai\"\nversion = \"1.2.0\"\nsource_url = \"file:///Q:/work/repo/github/jresearchsoftware/shared-governance/.vibe/task24-step3-native-kgefkfid/windows-producer/vibevm/vibepacks/org.jresearch.ai/development-governance/v1.2.0\"\ncontent_hash = \"sha256:b6573632d7ee400adbcef167e66b5137b308bb1315adac7bcb8d8768130721b2\"\nfiles_written = []\nadmitted_by = \"root-edge\"\nsource_kind = \"registry\"\n",
+      "vibe.toml": "[workspace]\nmembers=[\"packages/development-governance\"]\n[project]\nname=\"task24-step3-fixture\"\nversion=\"0.0.0\"\nspec_format=\"mixed\"\n[requires.packages.\"flow:org.jresearch.ai/development-governance\"]\nversion=\"=1.2.0\"\nlink=\"dynamic\"\n",
+      "AGENTS.md": "Public disposable Task 24 Step 3 local overlay.\n\n<vibevm>\n<!-- Generated by vibe \u2014 do not edit inside this block; it is rewritten on `vibe install`. Text outside the <vibevm> markers is yours. -->\n\n# Session boot\n\nThis project's boot sequence is computed by vibe (the PROP-009 loading\nmodel). To begin a session, read these files in order:\n\n1. `vibevm/vibespecs/boot/STATIC.md` \u2014 if it exists. The static (priority) lane: read it\n   first and in full.\n2. `vibevm/vibespecs/boot/INDEX.md` \u2014 a generated TOML manifest. Read every file named\n   by its `[[entry]]` tables, in the listed order. A `kind = \"static\"`\n   entry is read directly; a `kind = \"dynamic\"` entry is an INCLUDE\n   resolved at boot, and one carrying a `when` condition is read only when\n   that condition holds for the current session.\n\nBoot is pure file-reading \u2014 there is nothing to execute.\n</vibevm>\n",
+      "vibevm/vibespecs/boot/INDEX.md": "# vibevm/vibespecs/boot/INDEX.md\u2014 generated by vibe, do not edit.\n# The computed boot sequence (PROP-009 \u00a72.3). Read every file the\n# `[[entry]]` list names, in order.\n#\n# `installed:<group>/<name>` is resolved during generation: true\n# contributions appear normally; false contributions are absent entirely.\n# A `kind = \"static\"` entry: read the file directly. A `kind = \"dynamic\"`\n# entry: an INCLUDE resolved at boot \u2014 when it also carries\n# `when = \"os:<name>\"`, read the file only if the session's operating\n# system is <name> (windows / macos / linux), and skip it otherwise.\n\nschema = 1\n\n[[entry]]\npath = \"vibevm/vibespecs/boot/00-authoring.md\"\nkind = \"static\"\n\n[[entry]]\npath = \"vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.0/vibevm/vibespecs/boot/development-governance.md\"\nkind = \"static\"\n",
+      "vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.0/.vibe-slot.toml": "schema = 1\nsource_hash = \"sha256:b6573632d7ee400adbcef167e66b5137b308bb1315adac7bcb8d8768130721b2\"\nspec_format = \"mixed\"\n\n[[file]]\npath = \"DISTRIBUTION.json\"\nsha256 = \"2680df3355125d29d4ff0ccacce44b274f2d3e85968750b087d67b73265c6016\"\n\n[[file]]\npath = \"LICENSE\"\nsha256 = \"89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853\"\n\n[[file]]\npath = \"README.md\"\nsha256 = \"a10fad7a0d57e7d650e1d295edf358095ed788596d913bfb1de31b73ef749dbc\"\n\n[[file]]\npath = \"vibe.toml\"\nsha256 = \"5c57a28f8245c1fd5e8ce3ba58d0a9dc53530451158d14a846e6740d6464b9bc\"\n\n[[file]]\npath = \"vibevm/vibespecs/boot/development-governance.md\"\nsha256 = \"074e4ad047a258228668b0e3bea275234e2812ac0976d78743e1b36107ff1202\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/package-versioning.md\"\nsha256 = \"14c48fcc25bae6c7dee9b0a6c2e6310fa8df2917c6e17c4553fdefb461fec652\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/proportional-controls.md\"\nsha256 = \"6fbd1dc55bd40ee67c442614cd3d71fda45f4ebdba7012b976e72857c0eacfed\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/requirement-authority.md\"\nsha256 = \"9e5af613383c2c1492325338d9c37933bc83e1175ae809055718fc354a5532ca\"\n\n[[file]]\npath = \"vibevm/vibespecs/protocols/task-handoff.md\"\nsha256 = \"8dbafd42fbe0de67ab6360172d45f138f4daf5c931aeecbba43af7cee4b57056\"\n"
+    },
+    "version-change": {
+      "vibe.lock": "[meta]\ngenerated_by = \"vibe 1.0.7\"\ngenerated_at = \"2026-10-12T12:58:14Z\"\nschema_version = 7\nroot_dependencies = [\"flow:org.jresearch.ai/development-governance@=1.2.1\"]\n\n[[package]]\nkind = \"flow\"\nname = \"development-governance\"\ngroup = \"org.jresearch.ai\"\nversion = \"1.2.1\"\nsource_url = \"file:///tmp/task24-step3-native-vib6n2hs/version-change/vibevm/vibepacks/org.jresearch.ai/development-governance/v1.2.1\"\ncontent_hash = \"sha256:0baf9363c388c35aa7aafb85b6400b5aa5b3ff2ca3e2398878fee57701a0af1e\"\nfiles_written = []\nadmitted_by = \"root-edge\"\nsource_kind = \"registry\"\n",
+      "vibe.toml": "[workspace]\nmembers=[\"packages/development-governance\"]\n[project]\nname=\"task24-step3-fixture\"\nversion=\"0.0.0\"\nspec_format=\"mixed\"\n[requires.packages.\"flow:org.jresearch.ai/development-governance\"]\nversion=\"=1.2.1\"\nlink=\"dynamic\"\n",
+      "AGENTS.md": "Public disposable Task 24 Step 3 local overlay.\n\n<vibevm>\n<!-- Generated by vibe \u2014 do not edit inside this block; it is rewritten on `vibe install`. Text outside the <vibevm> markers is yours. -->\n\n# Session boot\n\nThis project's boot sequence is computed by vibe (the PROP-009 loading\nmodel). To begin a session, read these files in order:\n\n1. `vibevm/vibespecs/boot/STATIC.md` \u2014 if it exists. The static (priority) lane: read it\n   first and in full.\n2. `vibevm/vibespecs/boot/INDEX.md` \u2014 a generated TOML manifest. Read every file named\n   by its `[[entry]]` tables, in the listed order. A `kind = \"static\"`\n   entry is read directly; a `kind = \"dynamic\"` entry is an INCLUDE\n   resolved at boot, and one carrying a `when` condition is read only when\n   that condition holds for the current session.\n\nBoot is pure file-reading \u2014 there is nothing to execute.\n</vibevm>\n",
+      "vibevm/vibespecs/boot/INDEX.md": "# vibevm/vibespecs/boot/INDEX.md\u2014 generated by vibe, do not edit.\n# The computed boot sequence (PROP-009 \u00a72.3). Read every file the\n# `[[entry]]` list names, in order.\n#\n# `installed:<group>/<name>` is resolved during generation: true\n# contributions appear normally; false contributions are absent entirely.\n# A `kind = \"static\"` entry: read the file directly. A `kind = \"dynamic\"`\n# entry: an INCLUDE resolved at boot \u2014 when it also carries\n# `when = \"os:<name>\"`, read the file only if the session's operating\n# system is <name> (windows / macos / linux), and skip it otherwise.\n\nschema = 1\n\n[[entry]]\npath = \"vibevm/vibespecs/boot/00-authoring.md\"\nkind = \"static\"\n\n[[entry]]\npath = \"vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.1/vibevm/vibespecs/boot/development-governance.md\"\nkind = \"static\"\n"
+    }
+  },
+  "windows_commit": "fef8ac65b9eed9edad30a5b66a7d833c485be557",
+  "windows_lock_blob": "7d4925088a9b8c4f22027942fe9f922026443eb0"
+}

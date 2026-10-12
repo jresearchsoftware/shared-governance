@@ -1,0 +1,23 @@
+{
+  "scope": "disposable unaccepted same-version proposal; frozen releases untouched",
+  "revision": "09328dbef0864d7b2aa5cb055f3525381f7f4526",
+  "argv": [
+    "/tmp/shared-governance-step3-preparation.Tg2JmPIU/vibe",
+    "--json",
+    "install",
+    "--path",
+    "/tmp/task24-step3-candidate-regenerate-ebckypjg/candidate",
+    "--registry",
+    "/tmp/task24-step3-candidate-regenerate-ebckypjg/candidate/vibevm/vibepacks",
+    "--offline",
+    "--no-default-registry",
+    "--assume-yes"
+  ],
+  "exit": 0,
+  "stdout": "{\n  \"command\": \"install:plan\",\n  \"packages\": [\n    {\n      \"package\": \"org.jresearch.ai/development-governance\",\n      \"version\": \"1.3.0\"\n    }\n  ]\n}\n{\n  \"command\": \"install:closure-diff\",\n  \"added\": [\n    \"org.jresearch.ai/development-governance@1.3.0 (root-edge)\"\n  ],\n  \"removed\": [],\n  \"changed\": [],\n  \"lanes\": []\n}\n{\n  \"command\": \"install\",\n  \"complete\": true,\n  \"materialised\": [\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/1.3.0\"\n  ],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"project\": \"/tmp/task24-step3-candidate-regenerate-ebckypjg/candidate\",\n  \"pruned\": [],\n  \"skipped\": [],\n  \"unchanged\": false\n}\n",
+  "stderr": "",
+  "old_windows_lock": "[meta]\ngenerated_by = \"vibe 1.0.7\"\ngenerated_at = \"2026-10-12T12:45:06Z\"\nschema_version = 7\nroot_dependencies = [\"flow:org.jresearch.ai/development-governance@=1.3.0\"]\n\n[[package]]\nkind = \"flow\"\nname = \"development-governance\"\ngroup = \"org.jresearch.ai\"\nversion = \"1.3.0\"\nsource_url = \"file:///Q:/work/repo/github/jresearchsoftware/shared-governance/vibevm/vibepacks/org.jresearch.ai/development-governance/v1.3.0\"\ncontent_hash = \"sha256:00bf63e40ecb3f89b920dd0a17756bf0c1ddf700b0ec14d764dcae7b06ae12fe\"\nfiles_written = []\nadmitted_by = \"root-edge\"\nsource_kind = \"registry\"\n",
+  "new_lock": "[meta]\ngenerated_by = \"vibe 1.0.7\"\ngenerated_at = \"2026-10-12T13:06:29Z\"\nschema_version = 7\nroot_dependencies = [\"flow:org.jresearch.ai/development-governance@=1.3.0\"]\n\n[[package]]\nkind = \"flow\"\nname = \"development-governance\"\ngroup = \"org.jresearch.ai\"\nversion = \"1.3.0\"\nsource_url = \"file:///tmp/task24-step3-candidate-regenerate-ebckypjg/candidate/vibevm/vibepacks/org.jresearch.ai/development-governance/v1.3.0\"\ncontent_hash = \"sha256:14244f7e97e169b1c1e9b24bd42397a62a00fd63045c7d337cc21bd007ef3579\"\nfiles_written = []\nadmitted_by = \"root-edge\"\nsource_kind = \"registry\"\n",
+  "canonical_producer": "PASS",
+  "operation": "discard only proposal lock; native fresh resolve, no URL editing"
+}

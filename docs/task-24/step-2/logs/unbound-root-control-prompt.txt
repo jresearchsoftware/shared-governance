@@ -1,0 +1,1 @@
+Do not call tools. Return only the current RULE_MARKER visible in your inherited instructions.

@@ -1,0 +1,16 @@
+[meta]
+generated_by = "vibe 1.0.7"
+generated_at = "2026-10-12T12:45:06Z"
+schema_version = 7
+root_dependencies = ["flow:org.jresearch.ai/development-governance@=1.3.0"]
+
+[[package]]
+kind = "flow"
+name = "development-governance"
+group = "org.jresearch.ai"
+version = "1.3.0"
+source_url = "file:///Q:/work/repo/github/jresearchsoftware/shared-governance/vibevm/vibepacks/org.jresearch.ai/development-governance/v1.3.0"
+content_hash = "sha256:00bf63e40ecb3f89b920dd0a17756bf0c1ddf700b0ec14d764dcae7b06ae12fe"
+files_written = []
+admitted_by = "root-edge"
+source_kind = "registry"

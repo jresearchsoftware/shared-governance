@@ -10,9 +10,9 @@ import subprocess
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
-SPEC = importlib.util.spec_from_file_location("adoption", ROOT / "scripts/self-adopt.py")
-ADOPTION = importlib.util.module_from_spec(SPEC)
-SPEC.loader.exec_module(ADOPTION)
+SPEC = importlib.util.spec_from_file_location("preparation", ROOT / "scripts/prepare-distribution.py")
+PREPARATION = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(PREPARATION)
 
 
 def main():
@@ -23,7 +23,8 @@ def main():
     pin = json.loads((ROOT / "toolchain/vibevm.json").read_text())
     if hashlib.sha256(vibe.read_bytes()).hexdigest() != pin["linux_x86_64_musl_binary"]["sha256"]:
         raise ValueError("probe requires the pinned musl binary")
-    files, _ = ADOPTION.snapshot(ROOT, ADOPTION.BASELINE)
+    # Preserve this diagnostic's historical accepted input after helper retirement.
+    files, _ = PREPARATION.snapshot("73798b919efbd0d8b0ee1317bf84a6c48d7e99d1")
     files.pop("DISTRIBUTION.json")
     with tempfile.TemporaryDirectory(prefix="self-consumption-vibe-") as temporary:
         base = Path(temporary)
@@ -36,8 +37,8 @@ def main():
                 target = directory / name
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_bytes(data)
-        (package / ADOPTION.PREPARATION.PROTOCOL).write_bytes(
-            files[ADOPTION.PREPARATION.PROTOCOL] + b"\nLOCAL CANDIDATE SENTINEL\n")
+        (package / PREPARATION.PROTOCOL).write_bytes(
+            files[PREPARATION.PROTOCOL] + b"\nLOCAL CANDIDATE SENTINEL\n")
         manifest = ('[workspace]\nmembers = ["packages/development-governance"]\n'
                     '[project]\nname = "self-adoption-probe"\nversion = "0.0.0"\nspec_format = "mixed"\n'
                     '[requires.packages]\n"org.jresearch.ai/development-governance" = "^1.2.0"\n')
@@ -60,7 +61,7 @@ def main():
         if first.returncode:
             raise ValueError("native workspace install failed")
         slot = workspace / "vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.0"
-        shadowed = b"LOCAL CANDIDATE SENTINEL" in (slot / ADOPTION.PREPARATION.PROTOCOL).read_bytes()
+        shadowed = b"LOCAL CANDIDATE SENTINEL" in (slot / PREPARATION.PROTOCOL).read_bytes()
         index = (workspace / "vibevm/vibespecs/boot/INDEX.md").read_text()
         boot_targets = "LOCAL CANDIDATE SENTINEL" in "\n".join(
             p.read_text() for p in workspace.rglob("*.md") if "packages" not in p.parts)

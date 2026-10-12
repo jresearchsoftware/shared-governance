@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "product": "vibevm",
+  "repository": "vibevm/vibevm",
+  "version": "1.0.7",
+  "tag": "v1.0.7",
+  "source_commit": "b6659978453f50e6d1d4d99626d70b980a2c5847",
+  "target": "x86_64-pc-windows-msvc",
+  "asset": {
+    "name": "vibevm-1.0.7-x86_64-pc-windows-msvc.zip",
+    "size": 95529835,
+    "digest": "sha256:0a78bd3fed8e225213ff5a27aef656af3849cc6e60d53f6b9b2ad67e8f50782b"
+  },
+  "bootstrap": {
+    "name": "vibe-bootstrap-x86_64-pc-windows-msvc.exe",
+    "size": 89094144,
+    "digest": "sha256:ceb0b8582e059dfab708ee0c5221e700c232c97912bdd5174dc0df1d03011b46"
+  },
+  "bundle": {
+    "schema_version": 1,
+    "product": "vibevm",
+    "repository": "vibevm/vibevm",
+    "version": "1.0.7",
+    "tag": "v1.0.7",
+    "source_commit": "b6659978453f50e6d1d4d99626d70b980a2c5847",
+    "target": "x86_64-pc-windows-msvc",
+    "components": [
+      {
+        "name": "vibe",
+        "path": "vibe.exe",
+        "size": 89094144,
+        "digest": "sha256:ceb0b8582e059dfab708ee0c5221e700c232c97912bdd5174dc0df1d03011b46"
+      },
+      {
+        "name": "vibe-index",
+        "path": "vibe-index.exe",
+        "size": 11621888,
+        "digest": "sha256:e2814c5f6408a49a9903513740857a6cf25e855dfeffb0f0adc788b1338f30d0"
+      }
+    ],
+    "source_archive": {
+      "path": "vibevm-source.zip",
+      "size": 208008041,
+      "digest": "sha256:b13f9dd22a1583e725eeb35fdf1c85c92686864e620dfd99ea079ceed9e09587",
+      "tree_oid": "b0bc892dadcd39faef0a6c89d3fd53f7c3b51a88"
+    }
+  }
+}

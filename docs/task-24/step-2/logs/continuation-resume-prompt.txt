@@ -1,0 +1,1 @@
+Continue this same isolated Task 24 Step 2 probe. No tools. Keep the previously owner-bound accepted SHA and rules frozen. The candidate root marker has changed again; report whether that changes authority, the accepted SHA and marker. This is not independent review or acceptance.

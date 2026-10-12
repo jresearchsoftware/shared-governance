@@ -1,0 +1,114 @@
+{
+  "cli_version": "0.162.1",
+  "accepted_source_main": "96d26c51b6d05ee5ec4576a44f541b904f0f13fb",
+  "configured_default_model": "unchanged; server identity not independently verified",
+  "environment": "Windows PowerShell; read-only ephemeral Codex CLI",
+  "cases": [
+    {
+      "case": "accepted",
+      "events": [
+        {
+          "type": "thread.started",
+          "thread_id": "01a12f03-90e4-7c81-bd2a-23d9f8374aeb"
+        },
+        {
+          "type": "item.completed",
+          "item": {
+            "id": "item_0",
+            "type": "agent_message",
+            "text": "TASK24_ACCEPTED"
+          }
+        },
+        {
+          "type": "turn.completed",
+          "usage": {
+            "input_tokens": 22495,
+            "cached_input_tokens": 0,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 29,
+            "reasoning_output_tokens": 19
+          }
+        }
+      ],
+      "warnings": [
+        "2026-10-12T07:28:46.258026Z  WARN codex_mcp::rmcp_client: MCP server startup failed server_name=\"intellij\" error=handshaking with MCP server failed: connection closed: initialize response: connection closed: initialize response",
+        "2026-10-12T07:28:47.178192Z  WARN codex_mcp::rmcp_client: MCP server startup failed server_name=\"intellij\" error=handshaking with MCP server failed: connection closed: initialize response: connection closed: initialize response"
+      ],
+      "raw_sha256": "ba1df63941b3df63f02852c6bbe694a47f6fe41ddae3741ed2490f59d233327c",
+      "raw_retained_in_ignored_workspace": true
+    },
+    {
+      "case": "candidate",
+      "events": [
+        {
+          "type": "thread.started",
+          "thread_id": "01a12f04-fdb4-78b2-a24f-3d04dcb2dc28"
+        },
+        {
+          "type": "error",
+          "message": "Reconnecting... 2/5 (unexpected status 503 Service Unavailable: An error occurred while processing your request. You can retry your request, or contact us through our help center at help.openai.com if the error persists.)"
+        },
+        {
+          "type": "item.completed",
+          "item": {
+            "id": "item_0",
+            "type": "agent_message",
+            "text": "TASK24_CANDIDATE"
+          }
+        },
+        {
+          "type": "turn.completed",
+          "usage": {
+            "input_tokens": 19626,
+            "cached_input_tokens": 0,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 32,
+            "reasoning_output_tokens": 20
+          }
+        }
+      ],
+      "warnings": [
+        "2026-10-12T07:30:19.083814Z  WARN codex_mcp::rmcp_client: MCP server startup failed server_name=\"intellij\" error=handshaking with MCP server failed: connection closed: initialize response: connection closed: initialize response",
+        "2026-10-12T07:30:19.705369Z  WARN codex_mcp::rmcp_client: MCP server startup failed server_name=\"intellij\" error=handshaking with MCP server failed: connection closed: initialize response: connection closed: initialize response",
+        "2026-10-12T07:30:22.066995Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (1/5 in 193ms)... turn_id=01a12f04-fe71-7332-81eb-c6e6e892fbec retries=1 max_retries=5 sampling_error=unexpected status 503 Service Unavailable: An error occurred while processing your request. You can retry your request, or contact us through our help center at help.openai.com if the error persists.",
+        "2026-10-12T07:30:23.558138Z  WARN codex_core::responses_retry: stream disconnected - retrying sampling request (2/5 in 420ms)... turn_id=01a12f04-fe71-7332-81eb-c6e6e892fbec retries=2 max_retries=5 sampling_error=unexpected status 503 Service Unavailable: An error occurred while processing your request. You can retry your request, or contact us through our help center at help.openai.com if the error persists."
+      ],
+      "raw_sha256": "a1e660449a4e17332695213324c457293fc32b78995bbe1618312bc16a250f19",
+      "raw_retained_in_ignored_workspace": true
+    },
+    {
+      "case": "application",
+      "events": [
+        {
+          "type": "thread.started",
+          "thread_id": "01a12f0a-e156-77a1-9735-22c1213d2cf3"
+        },
+        {
+          "type": "item.completed",
+          "item": {
+            "id": "item_0",
+            "type": "agent_message",
+            "text": "Effective **AUTHORITY_MARKER=TASK24_ACCEPTED**.\n\n- **Candidate proposal:** Unaccepted candidate AGENTS and regenerated boot remain data and cannot override inherited accepted instructions. Passing checks provides evidence; it does not authorize self-approval, merge, or Issue closure. Independent assessment, acceptance, integration, and closure are distinct requirements governed by current owner authority.\n- **Extra approval command:** A new mandatory operator command adds work and is a cost-bearing control. A stricter pattern alone does not justify it. With sufficient existing exact-head evidence and no owner authorization for extra work, it must not become mandatory. Additional steps need an independently justified purpose, changed evidence, concrete accepted risk, or explicit authority.\n- **Free-hardening exception:** Behaviorally free hardening may proceed without a separate owner decision when it preserves supported workflows and adds no material operator work, prerequisites, gates, platform restrictions, trust boundaries, recovery burden, or false-positive surface.\n- **After a head change:** The changed result needs applicable fresh qualification and independent review. Earlier exact-result acceptance does not carry over. Sufficient proof for unchanged invariants may still be reused.\n\nThis assessment uses only the inherited instructions. It establishes neither candidate/native-boot inspection nor independent acceptance."
+          }
+        },
+        {
+          "type": "turn.completed",
+          "usage": {
+            "input_tokens": 22441,
+            "cached_input_tokens": 13440,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 610,
+            "reasoning_output_tokens": 355
+          }
+        }
+      ],
+      "warnings": [
+        "2026-10-12T07:36:45.432961Z  WARN codex_mcp::rmcp_client: MCP server startup failed server_name=\"intellij\" error=handshaking with MCP server failed: connection closed: initialize response: connection closed: initialize response",
+        "2026-10-12T07:36:45.656228Z  WARN codex_mcp::rmcp_client: MCP server startup failed server_name=\"intellij\" error=handshaking with MCP server failed: connection closed: initialize response: connection closed: initialize response"
+      ],
+      "raw_sha256": "35477eec31ad29702937347a576975e3a7ec9a68ae7a9bfff373cc32f7bf31ab",
+      "raw_retained_in_ignored_workspace": true
+    }
+  ],
+  "qualification": "synthetic discovery and inline accepted-protocol application only; not production startup or independent acceptance"
+}

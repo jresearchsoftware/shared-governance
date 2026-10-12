@@ -1,0 +1,151 @@
+{
+  "source_revision": "96d26c51b6d05ee5ec4576a44f541b904f0f13fb",
+  "vibevm_revision": "b6659978453f50e6d1d4d99626d70b980a2c5847",
+  "binary_sha256": "20d111df02eb28040ef4cb766bfcb0bde8ff4427b031f88f33eacb3711c3e240",
+  "fixtures": "/tmp/task24-self-adoption-0_7dvlsm",
+  "cases": [
+    {
+      "fixture": "path-resolvo",
+      "command": "install",
+      "solver": "resolvo",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "{\"ok\":false,\"error\":\"regenerating boot artifacts for the empty world: projecting one install owner world: `__host__/task24-fixture` reaches `org.jresearch.ai/development-governance`, which is absent from the supplied installed world (violates spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW; fix: supply a complete resolved world, or run `vibe install` to relock it)\"}\n"
+    },
+    {
+      "fixture": "path-naive",
+      "command": "install",
+      "solver": "naive",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "{\"ok\":false,\"error\":\"regenerating boot artifacts for the empty world: projecting one install owner world: `__host__/task24-fixture` reaches `org.jresearch.ai/development-governance`, which is absent from the supplied installed world (violates spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW; fix: supply a complete resolved world, or run `vibe install` to relock it)\"}\n"
+    },
+    {
+      "fixture": "path-sat",
+      "command": "install",
+      "solver": "sat",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "{\"ok\":false,\"error\":\"regenerating boot artifacts for the empty world: projecting one install owner world: `__host__/task24-fixture` reaches `org.jresearch.ai/development-governance`, which is absent from the supplied installed world (violates spec://org.vibevm.core/vibevm/common/PROP-054#ORDER-LAW; fix: supply a complete resolved world, or run `vibe install` to relock it)\"}\n"
+    },
+    {
+      "fixture": "stable-tree-registry",
+      "command": "install",
+      "solver": "resolvo",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "{\"ok\":false,\"error\":\"package `org.jresearch.ai/development-governance` is not available in any configured registry (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; fix: check the name, or add the registry that hosts it to [[registry]])\"}\n"
+    },
+    {
+      "fixture": "registry-materialization",
+      "command": "install",
+      "solver": "resolvo",
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"install:plan\",\n  \"packages\": [\n    {\n      \"package\": \"org.jresearch.ai/development-governance\",\n      \"version\": \"1.2.0\"\n    }\n  ]\n}\n{\n  \"command\": \"install:closure-diff\",\n  \"added\": [\n    \"org.jresearch.ai/development-governance@1.2.0 (root-edge)\"\n  ],\n  \"removed\": [],\n  \"changed\": [],\n  \"lanes\": [\n    {\n      \"lane\": \"vibevm/vibespecs/boot/INDEX.md\",\n      \"before\": null,\n      \"after\": 819\n    }\n  ]\n}\n{\n  \"command\": \"install\",\n  \"complete\": true,\n  \"materialised\": [\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.0\"\n  ],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"project\": \"/tmp/task24-self-adoption-0_7dvlsm/registry-materialization\",\n  \"pruned\": [],\n  \"skipped\": [],\n  \"unchanged\": false\n}\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "registry-materialization",
+      "command": "install",
+      "solver": "resolvo",
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"install\",\n  \"complete\": true,\n  \"materialised\": [],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"project\": \"/tmp/task24-self-adoption-0_7dvlsm/registry-materialization\",\n  \"pruned\": [],\n  \"skipped\": [],\n  \"unchanged\": true\n}\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "registry-materialization",
+      "command": "install",
+      "solver": "resolvo",
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"install:plan\",\n  \"packages\": [\n    {\n      \"package\": \"org.jresearch.ai/development-governance\",\n      \"version\": \"1.2.1\"\n    }\n  ]\n}\n{\n  \"command\": \"install:closure-diff\",\n  \"added\": [],\n  \"removed\": [],\n  \"changed\": [\n    \"org.jresearch.ai/development-governance 1.2.0 -> 1.2.1\"\n  ],\n  \"lanes\": []\n}\n{\n  \"command\": \"install\",\n  \"complete\": true,\n  \"materialised\": [\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.1\"\n  ],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"project\": \"/tmp/task24-self-adoption-0_7dvlsm/registry-materialization\",\n  \"pruned\": [\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/1.2.0\"\n  ],\n  \"skipped\": [],\n  \"unchanged\": false\n}\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "registry-materialization",
+      "command": "check",
+      "solver": "resolvo",
+      "exit": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"command\": \"check\",\n  \"project\": \"/tmp/task24-self-adoption-0_7dvlsm/registry-materialization\",\n  \"summary\": {\n    \"error\": 0,\n    \"warning\": 0,\n    \"info\": 0\n  },\n  \"findings\": []\n}\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "registry-materialization",
+      "command": "install",
+      "solver": "resolvo",
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"install\",\n  \"complete\": true,\n  \"materialised\": [],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"project\": \"/tmp/task24-self-adoption-0_7dvlsm/registry-materialization\",\n  \"pruned\": [],\n  \"skipped\": [],\n  \"unchanged\": true\n}\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "registry-materialization",
+      "command": "check",
+      "solver": "resolvo",
+      "exit": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"command\": \"check\",\n  \"project\": \"/tmp/task24-self-adoption-0_7dvlsm/registry-materialization\",\n  \"summary\": {\n    \"error\": 0,\n    \"warning\": 0,\n    \"info\": 0\n  },\n  \"findings\": []\n}\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "registry-materialization",
+      "command": "install",
+      "solver": "resolvo",
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"install\",\n  \"complete\": true,\n  \"materialised\": [],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"project\": \"/tmp/task24-self-adoption-0_7dvlsm/registry-materialization\",\n  \"pruned\": [],\n  \"skipped\": [],\n  \"unchanged\": true\n}\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "registry-materialization",
+      "command": "check",
+      "solver": "resolvo",
+      "exit": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"command\": \"check\",\n  \"project\": \"/tmp/task24-self-adoption-0_7dvlsm/registry-materialization\",\n  \"summary\": {\n    \"error\": 0,\n    \"warning\": 0,\n    \"info\": 0\n  },\n  \"findings\": []\n}\n",
+      "stderr": ""
+    },
+    {
+      "fixture": "registry-materialization",
+      "command": "install",
+      "solver": "resolvo",
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"install\",\n  \"complete\": true,\n  \"materialised\": [],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"project\": \"/tmp/task24-self-adoption-0_7dvlsm/registry-materialization\",\n  \"pruned\": [],\n  \"skipped\": [],\n  \"unchanged\": true\n}\n",
+      "stderr": ""
+    }
+  ],
+  "observations": {
+    "path_only_install": "BLOCKED on all three solvers",
+    "stable_source_as_registry": "BLOCKED",
+    "registry_payload_byte_equal": true,
+    "human_overlay_preserved": true,
+    "repeat_lock_unchanged": true,
+    "committed_clean_clone_readable_without_tools": true,
+    "candidate_materialized": true,
+    "git_pull_moves_source_and_projection": true,
+    "git_checkout_rollback": true,
+    "git_checkout_forward": true,
+    "corrupt_slot_check_exit": 0,
+    "corrupt_slot_retry_exit": 0,
+    "corrupt_slot_repaired": false,
+    "missing_slot_check_exit": 0,
+    "missing_slot_retry_exit": 0,
+    "missing_slot_repaired": false,
+    "missing_index_check_exit": 0,
+    "missing_index_retry_exit": 0,
+    "missing_index_restored": true,
+    "lock_package_provenance": [
+      {
+        "kind": "flow",
+        "name": "development-governance",
+        "group": "org.jresearch.ai",
+        "version": "1.2.0",
+        "source_url": "file:///tmp/task24-self-adoption-0_7dvlsm/registry/org.jresearch.ai/development-governance/v1.2.0",
+        "content_hash": "sha256:1fbd984e28172298881ec2c7603364355a24876b55eb154720438c6cce7bac54",
+        "files_written": [],
+        "admitted_by": "root-edge",
+        "source_kind": "registry"
+      }
+    ],
+    "synthetic_commits": [
+      "d9963570bd88f544ae4a36a0f70153acadd2ede1",
+      "4d8882975d77231a6a4ed22d0ec685b932df01b9"
+    ]
+  },
+  "disposition": "Investigation only. No active implementation replacement or package/consumer publication."
+}
