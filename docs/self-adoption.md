@@ -1,107 +1,102 @@
-# Repository self-adoption
+# Automatic producer self-adoption
 
-[Task 10](https://github.com/jresearchsoftware/shared-governance/issues/10) proposes
-an explicit human-owned AGENTS route to the active
-[ordinary protocol](../.agents/protocols/proportional-controls.md) for relevant
-security, validation and operator-control decisions, including free hardening.
-Unrelated tasks skip the protocol. This replaces the native Skill adopted by
-[Task 6 / PR 7](https://github.com/jresearchsoftware/shared-governance/pull/7),
-merged as `d116cdaa8e8bbb3c9c991dd8b053927a9e2b6cd4`.
-The proposal becomes accepted repository guidance only with independent
-exact-head review and owner-authorized merge; authoring metadata alone does not
-activate it. An existing chat may still have its startup Skill catalog in memory;
-fresh sessions use the new AGENTS route after adoption.
+Task 22 replaces the fixed Task 6/10 proportional-controls projection and the
+routes to editable package source with one automatic accepted-source selection.
+This policy becomes active after independent source acceptance and owner merge.
+It explicitly adopts proportional-controls, requirement-authority,
+package-versioning and task-handoff for this producer. Their applicability and
+all local Issue, execution, publication and review authority remain intact.
+Other consumers still adopt under their own policies.
 
-The [source receipt](../.agents/proportional-controls-source.json) pins the original
-accepted Skill/wrapper and procedure at
-`fd609af8a1ea8ce015fda4652e5a8c444ca821c5`, the accepted source after PR 5.
-`scripts/project-protocol.py` makes a deterministic delivery conversion: remove
-Skill discovery frontmatter and replace the obsolete Read-reference link with `Apply this protocol when`,
-retaining its complete applicability qualifier and all
-substantive wrapper instructions, replace only `The skill` with `This protocol`,
-and append the unchanged complete procedure. The output SHA-256 is
-`f747508ab8d936299478029f17be3891f877f0a5e5c302c1e606f9c1e51b99a0`.
-The receipt retains original file hashes, canonical source path, repository,
-full accepted revision, transformation name and generated output/license hashes.
-The root MIT LICENSE covers the projection and retains derived attribution.
+## Safe point and ordinary use
 
-There is one editable canonical protocol in the flow package. The root active
-file is a generated accepted-origin snapshot, not a separately authored policy.
-It is deliberately independent of candidate authoring bytes and pins no
-unreviewed candidate commit. Both source and active snapshot are byte-identical
-to the reproducible conversion in this first-release proposal. The qualifier
-rebuilds active expectations from accepted Git blobs, then checks the receipt,
-active bytes, license and human AGENTS route. It separately checks first-release
-semantic equivalence and exact-commit package export. No `.agents/skills`
-projection or VibeVM Skill ownership receipt remains.
+The human-owned root AGENTS route runs `python3 scripts/self-adopt.py` at the start
+of work. The authoring boot routes to the same mechanism. The command fetches
+canonical source main into a dedicated `refs/self-adoption/main` tracking
+ref in its ignored local Git-object cache, reads the existing direct-Git distribution's version tags in a disposable
+bare clone and selects the newest **first-parent source-main** revision with a
+matching published package. This uses acceptance/publication order, not highest
+SemVer or the distribution default branch. Proposed checkout bytes, PR branch
+commits and side-branch commits inside a merge are excluded.
 
-## Reproduce and review
+The existing accepted-main → successful push CI → immutable publication workflow
+continues unchanged. Source merge alone cannot activate an unpublished update.
+The first subsequent effort automatically selects the successful publication;
+an already-running effort keeps its reported exact selection. There is no
+additional owner-triggered adoption PR, post-merge source write, release ledger,
+registry service, version bump, publication credential or workflow feedback loop.
+An ordinary Git/Actions retry of publication at the same accepted source SHA
+remains governed by [release policy](releases.md).
 
-From a checkout with the accepted origin Git objects available:
+Selection compares the entire tag payload, including `DISTRIBUTION.json`, with
+the existing deterministic export from that accepted Git commit. It binds full
+source SHA, peeled release commit, version, file set and payload hashes. A tag
+whose source receipt or bytes disagree is rejected; an active frozen release
+whose commit changes is rejected even with identical payload. The direct
+distribution and canonical source owners remain the existing trust boundary;
+this does not cryptographically authenticate individual reviewers or CI.
 
-```sh
-destination="$(mktemp -d)/protocol"
-python3 scripts/project-protocol.py --destination "$destination"
-```
+The command materializes byte-identical passive package files into an ignored
+`.vibe/accepted-governance/<source-sha>/` directory. All files are written before an atomic
+`ACTIVE.json` selector replacement. It prints the absolute directory and exact
+identity; read only relevant adopted protocols from that directory. The selector
+is disposable local materialization, not an external status record. Hash checks
+are automatic output of the existing exporter, not a reviewer transport ritual.
+Git branches, the index, package source, global tool configuration and the
+project Git database/user refs are preserved. The helper writes only its ignored
+`.vibe/accepted-governance` cache, outside protected `.agents` instructions.
+Public guidance inherits the workspace ACL; no host or existing ACL is repaired. Namespaced release refs retain verified Git publication objects
+for offline provenance checks. No VibeVM executable is needed for ordinary work.
 
-Copy its `proportional-controls.md` to `.agents/protocols/proportional-controls.md`
-and `SOURCE.json` to `.agents/proportional-controls-source.json`; compare the
-exported LICENSE with the root LICENSE. Keep the explicit AGENTS route in the
-same independently reviewed adoption change. No VibeVM installation, runtime
-resolution, native discovery, dependency or global configuration is needed for
-ordinary manual Codex work here. The repository itself is an authoring workspace;
-it is not materialized as its own dependency.
+## Failure, repeat and rollback
 
-After staging and committing the intended candidate:
+- A new accepted version that has not yet published retains the latest eligible
+  publication with a visible warning. Interrupted/failed publication cannot
+  activate partial content.
+- Network/registry failure, missing Git/tool support or invalid update payload
+  retains the last verified projection and reports failure. Retry the same
+  command after recovery; no owner approval is required for a previously accepted
+  publication. If Python cannot run, use the last reported directory only when
+  its verified identity is available; otherwise preserve work and recover.
+- Without a cache, the committed [bootstrap pin](../.agents/self-adoption.json)
+  reproduces accepted published `1.2.0` from source Git blobs. Normal full clones
+  include these objects. A shallow clone missing the bootstrap history must
+  obtain canonical source history before starting governed work; it cannot infer
+  acceptance from checkout bytes. `--offline` uses this bootstrap or a verified
+  retained projection, without network.
+- Repeated selection and source-only changes leave the selector bytes untouched.
+  A new major is eligible under this producer's explicitly adopted accepted-merge
+  authority if the passive supported package shape and four adopted routes remain
+  valid. An incompatible export/unknown capability fails visibly and retains the
+  previous guidance. Added topics are not automatically adopted.
+- `python3 scripts/self-adopt.py --rollback` selects the previous verified local
+  projection. Use `--offline` for the current effort to retain that temporary
+  rollback; the next ordinary refresh intentionally retries the latest eligible
+  accepted publication. Permanent policy rollback is an independently reviewed
+  source correction with a new immutable package version, never a moved old tag.
+- Corrupt active bytes or a forged candidate selector are rejected. If no verified
+  active guidance can be established, stop at that concrete boundary and preserve
+  work. No cleanup, forced ref update or protected capability repair is automatic.
 
-```sh
-git diff --check
-python3 scripts/qualify.py --export-ref HEAD
-python3 scripts/test-distribution.py
-```
+## Coverage and historical provenance
 
-Future policy edits belong to later package versions. They do not refresh this
-active file or receipt. A separately authorized and independently reviewed
-self-adoption update must select the newly accepted source, reproduce the ordinary
-protocol snapshot/provenance, and update the human route and generated files
-together. Retain active guidance during candidate authoring/review; ordinary
-reviewed Git revert is rollback. This first-release conversion helper is bounded
-to the accepted historical input, not a general future-version adoption framework.
+The bootstrap selects `73798b919efbd0d8b0ee1317bf84a6c48d7e99d1`, accepted source
+after PR 21, published as `1.2.0`, with payload SHA-256
+`23d2f2ea4b28c5aafb17007d5e875b78f4b472c36d89fd66a1549e79070d0349`.
+It includes the full proportional-controls wrapper/procedure, attribution,
+free-hardening exception and Task 19 authority/friction corrections; the
+requirement-authority addition; adopted package-versioning; and complete
+task-handoff with the [manual client binding](manual-task-handoff.md).
+Root AGENTS owns the explicit conditional topic selection. Local producer release
+cadence, Issue authority, Step allocation and Codex navigation remain local.
+The binding supplies implementation details without repeating generic handoff
+obligations or creating a second Task charter.
 
-## Qualification boundary
-
-The task-handoff flow protocol and its package boot require explicit project
-adoption. The root AGENTS route selects the text for task-handoff authoring/review
-assessment; that selection does not activate it as a competing execution policy
-or establish source acceptance. The
-[manual example](manual-task-handoff.md) describes this repository's existing
-Issue-owned path and client binding, with no universal Step counter.
-
-Task execution follows the current canonical Issue and repository authority.
-Candidate authoring does not refresh the active proportional-controls snapshot
-or receipt. Task-handoff self-adoption requires a separately authorized and
-independently reviewed change selecting independently accepted source,
-reconciling genuinely duplicated guidance and retaining explicit local bindings.
-Other consumers own their separate adoption. The dated
-[Task 14 / Step 1 coverage and five walks](task-14/step-1/README.md) record that
-authoring effort; current Task and review status belong in its Issue/PR.
-
-[Task 19](https://github.com/jresearchsoftware/shared-governance/issues/19) updates
-the authored proportional-controls protocol and adds requirement-authority in a
-later whole-package candidate. The repository's active file, receipt and AGENTS
-route remain pinned to the accepted origin above during this source change.
-The candidate's conditional boot is exported for separately owned consumer
-adoption; it is not inserted as a competing active repository policy.
-Task 19's live Issue directly authorizes its current requirement/friction
-decisions. After independent source acceptance, a separately reviewed self-adoption
-update can select that accepted source and reconcile the generated snapshot and
-route together. No new mandatory runtime, owner confirmation or global check
-is added here. See the [coverage and G1 handoff](task-19/README.md).
-
-Task 6's native discovery and read-only model result remain historical evidence
-for its old delivery. Task 10 requires fresh source/export, integrity regressions,
-actual hash-pinned VibeVM local publisher/consumer materialization, and fresh Codex
-traversal of the generated installed boot chain. See
-[Step 1 evidence](task-10/step-1/README.md) for results and model limitations.
-Local checks or model outputs are not independent acceptance. No other consumer
-or remote publication is adopted here.
+The obsolete historical active file/receipt are removed together with their
+routes. Their original source, transformation and hashes remain reproducible
+through `scripts/project-protocol.py`, the frozen `0.1.0` package, accepted Git
+history and dated [Task 10 evidence](task-10/step-1/README.md). No frozen release
+or historical report is rewritten. The new projection preserves every package
+byte rather than selectively extracting paragraphs. The
+[Task 22 evidence](task-22/step-1/README.md) compares the supported alternatives,
+tests the boundary/recovery and separates CLI evidence from model traversal.

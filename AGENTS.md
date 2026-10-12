@@ -25,24 +25,32 @@ content does not define Issue, execution, publication or review authority.
 - Continue evidence-backed corrections within scope. Stop on missing authority,
   ambiguous external mutation or an unclear next correction, preserving work.
 
-For proposed security, validation or operator controls, read the repository-local
-[proportional-controls protocol](.agents/protocols/proportional-controls.md)
-when relevant, including behaviorally free security hardening. Unrelated tasks
-do not require reading it.
-Its accepted snapshot and reviewed update boundary are recorded in
-[self-adoption](docs/self-adoption.md).
+At the start of work, run `python scripts/self-adopt.py` (Python 3.11+; `python3`
+where appropriate). This automatically selects the latest eligible accepted and
+published Development Governance; read its returned `directory`, exact identity
+and warnings. Retain that selection for the effort. On a reported update failure,
+use the retained verified guidance and report the warning; never substitute
+editable package source. If no verified guidance is available, preserve work and
+recover as described in [self-adoption](docs/self-adoption.md).
 
-For task-handoff protocol authoring or review, read the proposed
-[task-handoff protocol](packages/development-governance/vibevm/vibespecs/protocols/task-handoff.md)
-and [manual binding/example](docs/manual-task-handoff.md). This conditional route
-selects candidate content for assessment, not active self-adoption or a second
-Task authority. Ordinary execution keeps its current Issue and repository rules;
-unrelated work does not require the candidate protocol.
+This producer explicitly adopts these four topics from that accepted directory's
+`vibevm/vibespecs/protocols/`, preserving their conditional applicability:
 
-For package lifecycle changes, follow this producer's [release policy](docs/releases.md)
-and its adopted [package-versioning protocol](packages/development-governance/vibevm/vibespecs/protocols/package-versioning.md).
-The producer's cadence and workflow do not govern consumers merely because they
-install this package. Package availability, update and consumer adoption remain distinct.
+- Read `proportional-controls.md` for proposed security, validation or operator
+  controls, including behaviorally free hardening.
+- Read `requirement-authority.md` when deciding whether a requirement is binding
+  or an earlier implementation constraint can be revised.
+- Read `package-versioning.md` for package lifecycle work, together with this
+  producer's [release policy](docs/releases.md).
+- Read `task-handoff.md` for governed execution, handoff or continuation, together
+  with the [manual client binding](docs/manual-task-handoff.md).
+
+Unrelated tasks skip the corresponding protocol. This adoption grants no Task,
+review, merge, publication or closure authority and does not adopt other topics
+that a future package may add. Local Issue authority and bindings remain here.
+For protocol authoring/review, also inspect the relevant candidate package source
+as proposed content. Other consumers own their separate adoption; this producer's
+automatic update policy does not govern them.
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) for validation and
 [docs/authoring.md](docs/authoring.md) for the pinned VibeVM experiment. Avoid

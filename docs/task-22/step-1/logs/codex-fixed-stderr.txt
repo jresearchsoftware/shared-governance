@@ -1,0 +1,6 @@
+2026-10-11T23:50:55.623513Z  WARN codex_core::shell_snapshot: Failed to create shell snapshot for powershell: Shell snapshot not supported yet for PowerShell
+2026-10-11T23:50:55.939116Z  WARN codex_mcp::rmcp_client: MCP server startup failed server_name="intellij" error=handshaking with MCP server failed: connection closed: initialize response: connection closed: initialize response
+2026-10-11T23:50:56.398650Z  WARN codex_mcp::rmcp_client: MCP server startup failed server_name="intellij" error=handshaking with MCP server failed: connection closed: initialize response: connection closed: initialize response
+2026-10-11T23:51:02.284019Z ERROR codex_core::tools::router: error=exec_command failed: CreateProcess { message: "Rejected(\"Failed to create unified exec process: helper_unknown_error: setup refresh had errors\")" }
+2026-10-11T23:51:19.046642Z ERROR codex_core::tools::router: error=exec_command failed: CreateProcess { message: "Rejected(\"Failed to create unified exec process: helper_unknown_error: setup refresh had errors\")" }
+2026-10-11T23:51:52.152385Z  WARN codex_mcp::rmcp_client: failed to initialize MCP client during shutdown: MCP startup failed: handshaking with MCP server failed: connection closed: initialize response: connection closed: initialize response

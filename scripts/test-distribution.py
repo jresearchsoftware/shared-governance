@@ -496,65 +496,6 @@ class DistributionTests(unittest.TestCase):
         self.rejected_source()
 
 
-class ActiveProtocolTests(unittest.TestCase):
-    def setUp(self):
-        self.temporary = tempfile.TemporaryDirectory(prefix="governance-active-test-")
-        self.addCleanup(self.temporary.cleanup)
-        self.source = Path(self.temporary.name) / "source"
-        subprocess.run(["git", "clone", "--quiet", "--shared", str(REPOSITORY), str(self.source)], check=True)
-        tracked = set(subprocess.check_output(["git", "ls-files", "-z"], cwd=REPOSITORY).decode().split("\0")) - {""}
-        original = set(subprocess.check_output(["git", "ls-files", "-z"], cwd=self.source).decode().split("\0")) - {""}
-        for name in original - tracked:
-            (self.source / name).unlink()
-        for name in tracked:
-            target = self.source / name
-            target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(REPOSITORY / name, target)
-        # Tracked candidate bytes, including uncommitted additions, are the ordinary check's input.
-        subprocess.run(["git", "add", "."], cwd=self.source, check=True)
-        self.active = self.source / ".agents/protocols/proportional-controls.md"
-        self.receipt = self.source / ".agents/proportional-controls-source.json"
-        self.assertEqual(self.check().returncode, 0)
-
-    def check(self):
-        import sys
-        return subprocess.run([sys.executable, str(self.source / "scripts/qualify.py")],
-                              capture_output=True, text=True, check=False)
-
-    def test_authoring_edit_cannot_refresh_active_guidance(self):
-        before = self.active.read_bytes(), self.receipt.read_bytes()
-        source = self.source / DISTRIBUTION.PACKAGE / DISTRIBUTION.PROTOCOL
-        source.write_bytes(source.read_bytes() + b"\nUnaccepted semantic change\n")
-        result = self.check()
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(before, (self.active.read_bytes(), self.receipt.read_bytes()))
-
-    def test_active_edit_and_self_consistent_counterfeit_receipt_are_rejected(self):
-        self.active.write_bytes(self.active.read_bytes() + b"\nUnaccepted active rule\n")
-        result = self.check()
-        self.assertIn("active protocol differs from accepted origin", result.stderr)
-        receipt = json.loads(self.receipt.read_text())
-        receipt["sha256"]["proportional-controls.md"] = hashlib.sha256(self.active.read_bytes()).hexdigest()
-        self.receipt.write_text(json.dumps(receipt))
-        self.assertIn("source receipt differs from accepted origin", self.check().stderr)
-
-    def test_origin_identity_and_human_route_cannot_drift(self):
-        original = self.receipt.read_text()
-        receipt = json.loads(original)
-        receipt["source"]["revision"] = "a" * 40
-        self.receipt.write_text(json.dumps(receipt))
-        self.assertIn("source receipt differs from accepted origin", self.check().stderr)
-        self.receipt.write_text(original)
-        agents = self.source / "AGENTS.md"
-        agents.write_text(agents.read_text().replace(
-            "[proportional-controls protocol](.agents/protocols/proportional-controls.md)", "Guidance omitted"))
-        self.assertIn("human AGENTS route is missing", self.check().stderr)
-
-    def test_orphan_native_receipt_is_rejected(self):
-        old = self.source / ".agents/skills/.proportional-controls.vibe-skill-receipt.toml"
-        old.parent.mkdir(parents=True, exist_ok=True)
-        old.write_text("Obsolete projection ownership\n")
-        self.assertIn("removed native Skill/receipt remains", self.check().stderr)
 
 
 if __name__ == "__main__":

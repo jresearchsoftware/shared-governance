@@ -1,0 +1,17 @@
+**The extra approval command should not be mandatory on the stated facts.** The root `AGENTS.md` requires explicit owner authority for a material operator-workflow change. A stricter test pattern does not supply that authority.
+
+**No accepted-guidance traversal occurred.** The shell failed with `helper_unknown_error`; the alternate helper launch returned `spawn EPERM`. Consequently, I could not verify the accepted protocols, their complete exceptions, or the selected identity.
+
+`docs/self-adoption.md` records this bootstrap identity, **not a verified selection from this probe**:
+
+- Version: `1.2.0`
+- Source: `73798b919efbd0d8b0ee1317bf84a6c48d7e99d1`
+
+That document explicitly names the free-hardening exception and authority/friction corrections. I did not read their accepted protocol wording, so I cannot claim a complete assessment of those exceptions.
+
+Actual files read:
+
+- `AGENTS.md`
+- `docs/self-adoption.md`
+
+No source edits, publications, messages, approvals, merges, credential reads, or external-state changes were performed.

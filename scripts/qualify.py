@@ -68,18 +68,21 @@ def check(export_ref=None):
     projection = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(projection)
     protocol, license_bytes, expected = projection.snapshot()
-    # Active guidance derives from accepted history, never from editable authoring.
-    active = ROOT / ".agents/protocols/proportional-controls.md"
-    receipt = json.loads((ROOT / ".agents/proportional-controls-source.json").read_text(encoding="utf-8"))
-    require(receipt == expected, "active protocol source receipt differs from accepted origin")
-    require(active.is_file() and not active.is_symlink() and active.read_bytes() == protocol,
-            "active protocol differs from accepted origin")
+    # Bootstrap and automatic projections derive from accepted Git history.
+    spec = importlib.util.spec_from_file_location("adoption", ROOT / "scripts/self-adopt.py")
+    adoption = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(adoption)
+    _, receipt = adoption.baseline(ROOT)
     require((ROOT / "LICENSE").read_bytes() == license_bytes, "active protocol license differs")
     for obsolete in (ROOT / ".agents/skills/proportional-controls",
-                     ROOT / ".agents/skills/.proportional-controls.vibe-skill-receipt.toml"):
+                     ROOT / ".agents/skills/.proportional-controls.vibe-skill-receipt.toml",
+                     ROOT / ".agents/protocols/proportional-controls.md",
+                     ROOT / ".agents/proportional-controls-source.json"):
         require(not obsolete.exists() and not obsolete.is_symlink(), "removed native Skill/receipt remains")
-    require("[proportional-controls protocol](.agents/protocols/proportional-controls.md)" in
-            (ROOT / "AGENTS.md").read_text(encoding="utf-8"), "human AGENTS route is missing")
+    agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+    require("python scripts/self-adopt.py" in agents and all(name + ".md" in agents for name in
+            ("proportional-controls", "requirement-authority", "package-versioning", "task-handoff")),
+            "human AGENTS route is missing")
     # Qualify retained first-release semantics, not equality of later authoring
     # to an old release. Task 19 admits later source/version changes; semantic
     # coverage and the existing release checks govern those candidates.
@@ -87,7 +90,7 @@ def check(export_ref=None):
     require(preparation.git("show", "3fa243b83a630ccd4973114e5cad12e1351d1558:" +
                             frozen + "/" + preparation.PROTOCOL) == protocol,
             "first-release protocol differs from accepted semantics")
-    # The original distribution and active snapshot are retained, not refreshed.
+    # Frozen historical package bytes stay unchanged.
     require(not preparation.git("diff", "3fa243b83a630ccd4973114e5cad12e1351d1558", "--", frozen),
             "frozen 0.1.0 source must remain unchanged")
     if export_ref:
@@ -101,7 +104,7 @@ def check(export_ref=None):
             require(exported == payload, "exact-commit flow export differs from candidate bytes")
     return {"qualification": "PASS", "tracked_files": len(tracked), "local_links": links,
             "secret_scan": "bounded markers PASS", "active_protocol": "PASS",
-            "accepted_origin": receipt["source"]["revision"], "native_skill": "absent",
+            "accepted_origin": receipt["source_revision"], "native_skill": "absent",
             "flow_export": "PASS" if export_ref else "not requested"}
 
 
