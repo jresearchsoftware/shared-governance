@@ -1,0 +1,27 @@
+{
+  "starting_step1_head": "e091718b0b6eb8c2a64726174317bce69afd42d8",
+  "accepted_main": "96d26c51b6d05ee5ec4576a44f541b904f0f13fb",
+  "preserved_paths": [
+    "AGENTS.md",
+    ".agents",
+    "packages",
+    ".github/workflows",
+    "vibevm/vibespecs/boot",
+    "scripts/self-adopt.py",
+    "scripts/test-self-adoption.py",
+    "scripts/prepare-distribution.py",
+    "docs/self-adoption.md",
+    "docs/task-24/step-1",
+    "scripts/probe-task24-self-adoption.py"
+  ],
+  "diff_empty": true,
+  "harness_sha256": {
+    "scripts/probe-task24-step2.py": "ca5f58d99539fee5d384a00551097f23fa097bb2f66af04e28bede131dab4b3d",
+    "scripts/probe-task24-codex-step2.py": "8b2803d7d7ef5e65aa563d191ed55b74e01398d422effc9c2a1a7732127e548c",
+    "scripts/probe-task24-codex-continuation.py": "b453f2a3b791c0bf37d086baf76ccaf60949d974e62ad1b04551ed72755b4c28"
+  },
+  "package_changed": false,
+  "version": "1.2.0",
+  "active_helper_replaced": false,
+  "protocol_packaged": false
+}
