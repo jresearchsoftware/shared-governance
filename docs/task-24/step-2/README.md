@@ -258,6 +258,10 @@ used. Do not repair denied sandbox operations to turn this evidence into a pass.
 
 Final source/export, distribution, release, self-adoption, package-boundary and
 whitespace validation is recorded in [validation evidence](logs/validation.json).
+Local Windows results are 31 distribution tests, 19 self-adoption tests and
+10 release tests passed, with six optional native release integrations skipped.
+Logs identify the tested source head; the following evidence-only commit preserves
+that implementation. Final exact-head CI independently runs the required suite.
 Exact-head CI and the published candidate identity are reported in the distinct
 Step 2 Outcome. Passing existing checks is not replacement qualification,
 independent acceptance, merge, publication or closure authority.

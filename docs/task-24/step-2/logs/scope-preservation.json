@@ -15,13 +15,19 @@
     "scripts/probe-task24-self-adoption.py"
   ],
   "diff_empty": true,
-  "harness_sha256": {
+  "package_changed": false,
+  "version": "1.2.0",
+  "active_helper_replaced": false,
+  "protocol_packaged": false,
+  "harness_worktree_bytes_sha256": {
     "scripts/probe-task24-step2.py": "ca5f58d99539fee5d384a00551097f23fa097bb2f66af04e28bede131dab4b3d",
     "scripts/probe-task24-codex-step2.py": "8b2803d7d7ef5e65aa563d191ed55b74e01398d422effc9c2a1a7732127e548c",
     "scripts/probe-task24-codex-continuation.py": "b453f2a3b791c0bf37d086baf76ccaf60949d974e62ad1b04551ed72755b4c28"
   },
-  "package_changed": false,
-  "version": "1.2.0",
-  "active_helper_replaced": false,
-  "protocol_packaged": false
+  "harness_committed_bytes_sha256": {
+    "scripts/probe-task24-step2.py": "2e8fa237ba07609c5fb70ad0cb1fba61b69e9fd0f90ee6a428d5b71ad477f5c1",
+    "scripts/probe-task24-codex-step2.py": "8b2803d7d7ef5e65aa563d191ed55b74e01398d422effc9c2a1a7732127e548c",
+    "scripts/probe-task24-codex-continuation.py": "e10d456cd4f36dcd0f061d4fcc2aba98a832d34d85aa1463c86310807a00045b"
+  },
+  "line_endings": "Git normalizes CRLF to LF; working-file and committed-blob byte hashes are reported separately."
 }
