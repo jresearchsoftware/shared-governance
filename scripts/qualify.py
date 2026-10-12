@@ -47,7 +47,7 @@ def check(export_ref=None):
             resolved = (path.parent / unquote(url.path)).resolve() if url.path else path
             require(resolved.is_relative_to(ROOT) and resolved.exists(), str(relative) + ": broken local link")
     workspace = tomllib.loads((ROOT / "vibe.toml").read_text(encoding="utf-8"))
-    require(set(workspace) == {"workspace"}, "root must remain an authoring-only workspace")
+    require(set(workspace) == {"workspace", "project", "requires"}, "root must remain a bounded native producer workspace")
     members = workspace["workspace"]["members"]
     require(len(members) == 1, "authoring has one bounded governance package")
     member = ROOT / members[0]
@@ -60,7 +60,9 @@ def check(export_ref=None):
     for path in member.rglob("*"):
         require(not path.is_symlink(), "package must contain ordinary passive text only")
         if path.is_file():
-            payload[path.relative_to(member).as_posix()] = path.read_bytes()
+            relative = path.relative_to(member).as_posix()
+            if relative not in preparation.SOURCE_ARTIFACTS and relative != "vibevm/vibespecs/boot/.vibe-boot-artifacts.lock":
+                payload[relative] = path.read_bytes()
     preparation.validate_payload(payload, (ROOT / "LICENSE").read_bytes())
     pin = json.loads((ROOT / "toolchain/vibevm.json").read_text(encoding="utf-8"))
     require(pin["version"] == "1.0.7" and pin["source_revision"] == "b6659978453f50e6d1d4d99626d70b980a2c5847", "qualified VibeVM pin changed")
@@ -68,11 +70,6 @@ def check(export_ref=None):
     projection = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(projection)
     protocol, license_bytes, expected = projection.snapshot()
-    # Bootstrap and automatic projections derive from accepted Git history.
-    spec = importlib.util.spec_from_file_location("adoption", ROOT / "scripts/self-adopt.py")
-    adoption = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(adoption)
-    _, receipt = adoption.baseline(ROOT)
     require((ROOT / "LICENSE").read_bytes() == license_bytes, "active protocol license differs")
     for obsolete in (ROOT / ".agents/skills/proportional-controls",
                      ROOT / ".agents/skills/.proportional-controls.vibe-skill-receipt.toml",
@@ -80,7 +77,7 @@ def check(export_ref=None):
                      ROOT / ".agents/proportional-controls-source.json"):
         require(not obsolete.exists() and not obsolete.is_symlink(), "removed native Skill/receipt remains")
     agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
-    require("python scripts/self-adopt.py" in agents and all(name + ".md" in agents for name in
+    require("scripts/self-adopt.py" not in agents and all(name + ".md" in agents for name in
             ("proportional-controls", "requirement-authority", "package-versioning", "task-handoff")),
             "human AGENTS route is missing")
     # Qualify retained first-release semantics, not equality of later authoring
@@ -102,9 +99,13 @@ def check(export_ref=None):
             exported, _ = preparation.snapshot(revision)
             exported.pop(preparation.RECEIPT)
             require(exported == payload, "exact-commit flow export differs from candidate bytes")
+        receipt = preparation.verify_producer(revision)
+    else:
+        revision = preparation.git("rev-parse", "HEAD").decode().strip()
+        receipt = preparation.verify_producer(revision)
     return {"qualification": "PASS", "tracked_files": len(tracked), "local_links": links,
             "secret_scan": "bounded markers PASS", "active_protocol": "PASS",
-            "accepted_origin": receipt["source_revision"], "native_skill": "absent",
+            "native_projection_source": receipt["source_revision"], "native_skill": "absent",
             "flow_export": "PASS" if export_ref else "not requested"}
 
 

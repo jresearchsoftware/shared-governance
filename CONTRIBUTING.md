@@ -20,14 +20,14 @@ python3 scripts/test-self-adoption.py
 ```
 
 The qualifier checks tracked bytes, local links, manifests, package passivity
-and protocol/export consistency, including the accepted self-adoption bootstrap.
+and protocol/export consistency, including committed native producer state.
 Stage intended new files before running it; commit the candidate before comparing
 its exact-commit export. The retained first-release check verifies semantic
 equivalence to the accepted Skill/procedure, with no native projection.
 Later protocol changes use the admitted scope, semantic coverage argument and
 whole-package version/release checks; candidate authoring never refreshes active
-guidance. [Self-adoption](docs/self-adoption.md) selects accepted publication at
-the start of ordinary work.
+guidance. [Self-adoption](docs/self-adoption.md) binds ordinary work to accepted
+source-main and reads committed native files without bootstrap or publication.
 Its credential scan reports paths only and covers bounded markers; it cannot
 prove absence of all secrets or private knowledge. Inspect the complete diff.
 

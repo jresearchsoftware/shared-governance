@@ -5,7 +5,7 @@ The root virtual workspace has one stable member,
 a routine bump changes that value without moving the authoring tree. Frozen
 `0.1.0` remains at its historical path as retained source, outside membership.
 Historical exports discover the path from the selected commit's workspace.
-The current passive flow contains four ordinary protocols and no native Skills,
+The current passive flow contains five conditional protocols and no native Skills,
 capabilities or dependencies. Proportional-controls preserves its accepted
 baseline and adds the scoped Task 19 existing-proof and friction corrections;
 requirement-authority is conditionally read interpretive guidance, while
@@ -17,9 +17,10 @@ schemas, Step counters and acceptance identity requirements stay project-owned.
 policy and documents automatic publication, exact-source retry and credentials.
 [Distribution](distribution.md) describes the generated source receipt and
 one-time integration tests. The authoring boot is outside the exported package.
-The active four-topic guidance is selected automatically from accepted published
-source as described in [self-adoption](self-adoption.md); candidate bytes cannot
-refresh it.
+The four existing topics and explicitly adopted producer self-adoption are read
+from a frozen independently accepted source-main commit as described in
+[self-adoption](self-adoption.md). Native generated source/slot/boot files are
+committed alongside authoring; candidate instructions remain proposal data.
 
 ## Semantic completeness
 
