@@ -58,9 +58,29 @@ may assist only where permitted and do not supply independent acceptance.
 ## Result and acceptance binding
 
 Commit substantive source and repository-accessible qualification evidence, use
-ordinary non-force push, open/update the PR and read its exact head back. Publish
-one attributable English Outcome on the canonical Issue through ordinary
-Git/GitHub channels; Relay Writer or typed Task Request is not required here.
+ordinary non-force push, open/update the PR and read its exact head back. Select
+one canonical English Outcome target by the whole actual terminal Step result:
+
+- Exclusively one clearly identified result PR: publish one attributable Outcome
+  as a top-level conversation comment on that PR. Issue admission, creating the
+  PR during execution or other unrelated PRs on the Task do not change this.
+  Ordinary checks, committed evidence and documentation supporting that PR are
+  part of its result, not a separate Task-level result.
+- No PR, two or more known result PRs, or one PR plus a substantive independent
+  Task-level result: publish one Outcome on the canonical Task Issue. For multiple
+  result PRs, identify each PR, its exact result SHA/revision and pertinent
+  status/limits; their reviews and acceptance remain independently exact-head.
+
+Missing, conflicting or genuinely ambiguous result-to-PR mapping or required
+identity stops publication for reconciliation, rather than silently falling back
+to the Issue. Known multiple result PRs are an Issue target, not ambiguity.
+Use ordinary authorized Git/GitHub channels and read the published comment back;
+Relay Writer or typed Task Request is not required here. Link the Task and result
+PRs through the PR body and existing canonical navigation so the Outcome is
+discoverable. Do not duplicate, split, retrospectively relocate or republish the
+same terminal Outcome on both surfaces, or impose an extra status comment or
+synchronizer. Recovery/replay retains an existing Outcome; reconcile uncertain
+publication before publishing an absent result once at its authorized target.
 Report checks, material warnings, gaps and remaining work honestly. Do not use
 automatic closing references to bypass closure authority.
 
@@ -90,6 +110,8 @@ Acceptance, recommendation selection, owner-authorized integration, publication,
 further execution and closure remain distinct.
 
 [Task 14 Step 2](task-14/step-2/README.md) is historical evidence of a new admitted
-Step correcting the same PR. [Task 26 walks](task-26/step-1/scenarios.md) exercise
-this binding and shared strategies without Relay. Current admissions and verdicts
+Step correcting the same PR. [Task 26 Step 1 walks](task-26/step-1/scenarios.md)
+exercise lifecycle and acceptance strategies;
+[Step 2 walks](task-26/step-2/scenarios.md) exercise Outcome routing, replay and
+linked review without Relay. Current admissions and verdicts
 remain in canonical Issues/PRs, not these examples.
