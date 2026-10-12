@@ -1,0 +1,36 @@
+{
+  "tested_source_head": "c8e7b7b35ba0033d1e7ce987e7bb74caa9eefcbf",
+  "frozen_authority": "96d26c51b6d05ee5ec4576a44f541b904f0f13fb",
+  "integrations": {
+    "source_mutation_native_force": "retains old slot; canonical checks reject stale state",
+    "real_Linux_Codex_file_read": "PASS",
+    "Windows_to_Linux": "PASS, genuine artifacts",
+    "native_pinned_restoration": "PASS, corrupt and missing",
+    "candidate_regeneration": "PASS, proposal lock fresh resolve",
+    "Windows_Codex": "UNQUALIFIED, exec helper fails before process creation",
+    "pinned_authoring": "PASS"
+  },
+  "required_local": {
+    "native_regressions": {
+      "passed": 12,
+      "changed_regeneration_case": "native-regeneration-correction.txt PASS",
+      "platform": "native Linux",
+      "log": "native-regressions-linux.txt"
+    },
+    "distribution": {
+      "passed": 31,
+      "platform": "native Linux",
+      "log": "distribution-linux.txt"
+    },
+    "source_exact_export_native_projection": "PASS",
+    "package_boundary": "minor 1.2.0 -> 1.3.0 PASS",
+    "release": {
+      "passed": 10,
+      "log": "release.txt",
+      "skipped_optional_native_integrations": 6
+    }
+  },
+  "shared_payload_sha256": "a84fb14aa9f4759286fb0aba84d1f669d3030aa5c6b583ff1194cac0feb772da",
+  "native_ready_probe_head": "f324d69d1227bc83c4bb3ba8fd6c3d960282c91a",
+  "final_head_ci": "Published separately in canonical Step 3 Outcome; this local record is not CI or independent acceptance"
+}

@@ -1,0 +1,23 @@
+{
+  "label": "old Windows URL source edit forced install",
+  "argv": [
+    "/tmp/shared-governance-step3-preparation.Tg2JmPIU/vibe",
+    "--json",
+    "install",
+    "--path",
+    "/tmp/task24-step3-native-vib6n2hs/same-version-source",
+    "--registry",
+    "/tmp/task24-step3-native-vib6n2hs/same-version-source/vibevm/vibepacks",
+    "--offline",
+    "--no-default-registry",
+    "--assume-yes",
+    "--force"
+  ],
+  "exit": 0,
+  "stdout": "{\n  \"command\": \"install\",\n  \"complete\": true,\n  \"materialised\": [],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"project\": \"/tmp/task24-step3-native-vib6n2hs/same-version-source\",\n  \"pruned\": [],\n  \"skipped\": [],\n  \"unchanged\": true\n}\n",
+  "stderr": "",
+  "slot_before": "8dbafd42fbe0de67ab6360172d45f138f4daf5c931aeecbba43af7cee4b57056",
+  "slot_after": "8dbafd42fbe0de67ab6360172d45f138f4daf5c931aeecbba43af7cee4b57056",
+  "changed_source_selected": false,
+  "scope": "disposable same-version integrity incident, not accepted frozen mutation"
+}

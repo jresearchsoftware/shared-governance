@@ -51,7 +51,7 @@ production acceptance.
 | Pull / checkout rollback / forward | Source and committed projection advance/restore together. |
 | Corrupt and missing slots, `reinstall --force --offline` | Canonical exporter verification PASS with fresh fixture-local settings; no `--registry` assumption. |
 | Plain reinstall with removed index | Index regenerated. |
-| Same-version source mutation incident | Native install/update retain old slot; canonical source comparison detects the change. Frozen same-version edits also fail release transition. |
+| Same-version source mutation incident | Native install/update (including forced install) can retain old slot; canonical comparison detects it. Frozen same-version edits also fail release transition. |
 | Lock churn | Timestamp may change; retained identity/hash and URL are distinguished from exact lock bytes. |
 
 Complete [Windows](logs/windows-native.json) and [Linux](logs/linux-native.json)
@@ -60,6 +60,16 @@ command/state evidence is retained. An initial harness wrote a nonexistent
 [initial record](logs/linux-native-initial.json) is preserved. The corrected
 configured case uses the documented fixture-local `registry.toml`; the simpler
 unconfigured in-tree path also passes. No protected/global host config was edited.
+The [forced-install source-change probe](logs/force-source-change.json) retains
+old bytes and is not presented as adoption. A separate [unaccepted candidate
+regeneration](logs/candidate-regeneration.json) stages a same-1.3.0 correction,
+discards only that proposal's generated lock and runs ordinary native install.
+Full canonical producer verification passes with the changed source/slot/hash.
+This standard Git/native authoring recovery needs no new manager, permission or
+extra package bump before acceptance, and never edits lock URLs or frozen releases.
+The additional recovery action is confined to changed proposals with stale locks;
+ordinary ready-file startup remains zero bootstrap/operator commands.
+
 Absolute URLs are native location metadata. Accepted Git plus canonical
 source/slot/lock/index checks supply provenance; a native exit/check alone does not.
 

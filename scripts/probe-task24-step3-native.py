@@ -157,9 +157,13 @@ def main():
             run(work, "old Windows URL deliberate same-version source edit update", "update")
             verify(work, "same_version_retained_slot")
             observations["same_version_source_diff_detected_by_exporter"] = (work / SOURCE / "vibevm/vibespecs/protocols/task-handoff.md").read_bytes() != payload["vibevm/vibespecs/protocols/task-handoff.md"]
+            run(work, "old Windows URL deliberate source edit forced install", extra=["--force"])
+            observations["forced_install_reads_changed_source"] = (work / SLOT / "vibevm/vibespecs/protocols/task-handoff.md").read_text() == "Disposable source mutation\n"
         else:
             new_source = work / REGISTRY / PACKAGE / "v1.2.1"
             for relative, data in payload.items():
+                if relative == exporter.RECEIPT:
+                    continue
                 if relative == "vibe.toml":
                     data = data.replace(b'1.2.0', b'1.2.1')
                 if relative == "vibevm/vibespecs/protocols/task-handoff.md":
@@ -167,7 +171,9 @@ def main():
                 target = new_source / relative
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_bytes(data)
-            (work / "packages/development-governance/vibe.toml").write_bytes((new_source / "vibe.toml").read_bytes())
+                authored = work / "packages/development-governance" / relative
+                authored.parent.mkdir(parents=True, exist_ok=True)
+                authored.write_bytes(data)
             manifest = work / "vibe.toml"
             manifest.write_text(manifest.read_text().replace('=1.2.0', '=1.2.1'))
             run(work, "old Windows URL explicit version change update", "update")
@@ -177,6 +183,11 @@ def main():
             git(work, "add", "-A")
             git(work, "commit", "-qm", "Synthetic Linux patch source and projection together")
             second = git(work, "rev-parse", "HEAD")
+            exporter_root = exporter.ROOT
+            exporter.ROOT = work
+            exporter.verify(second, new_slot, installed=True, native=True)
+            observations["version_change_source_slot_canonical"] = True
+            exporter.ROOT = exporter_root
             pull = clone(args.windows_fixture, "pull-consumer")
             git(pull, "remote", "set-url", "origin", str(work))
             git(pull, "pull", "-q", "--ff-only", "origin", "HEAD")

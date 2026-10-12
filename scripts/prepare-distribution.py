@@ -224,18 +224,26 @@ def stage_producer(revision, directory=ROOT):
 
     Local source + projection inherit the owning accepted Git commit's provenance;
     the release-only DISTRIBUTION receipt would create a self-referential commit pin.
-    No resolution, installation, authority selection or existing-output overwrite.
+    No resolution, installation or authority selection. Regeneration updates only
+    this version's known generated payload; unexpected content is preserved/rejected.
     """
     files, receipt = snapshot(revision)
     files.pop(RECEIPT)
     target = Path(directory) / "vibevm/vibepacks" / COORDINATE / ("v" + receipt["version"])
-    if target.is_symlink() or (target.exists() and any(target.iterdir())):
-        raise ValueError("native source must be new/empty; use a new version or ordinary Git restore")
+    if target == Path(directory) / HISTORICAL_PACKAGE:
+        raise ValueError("the historical frozen authoring root cannot be regenerated")
+    if target.is_symlink() or not target.resolve().is_relative_to(Path(directory).resolve()):
+        raise ValueError("native source must stay inside the producer")
+    if target.exists():
+        for path in target.rglob("*"):
+            if path.is_symlink() or (path.is_file() and path.relative_to(target).as_posix() not in files):
+                raise ValueError("native source contains unexpected content; preserve it for diagnosis")
     target.mkdir(parents=True, exist_ok=True)
     for name, data in files.items():
         path = target / name
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_bytes(data)
+        if not path.is_file() or path.read_bytes() != data:
+            path.write_bytes(data)
     return receipt
 
 
@@ -387,7 +395,8 @@ def main():
             receipt = verify(args.source_ref, args.verify or args.verify_installed, bool(args.verify_installed))
     except (ValueError, KeyError, OSError, subprocess.CalledProcessError) as error:
         parser.exit(1, "Distribution validation failed: " + str(error) + "\n")
-    print(json.dumps({"distribution": "PASS", "action": "prepare" if args.destination else "verify",
+    action_name = "stage-native-source" if args.producer_source else "prepare" if args.destination else "verify"
+    print(json.dumps({"distribution": "PASS", "action": action_name,
                       "source_revision": receipt["source_revision"],
                       "payload_sha256": receipt["payload_sha256"], "files": len(receipt["sha256"]),
                       "publication": "this command never publishes; acceptance/remote authority are external"}))

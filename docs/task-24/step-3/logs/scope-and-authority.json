@@ -1,0 +1,17 @@
+{
+  "accepted_source_main": "96d26c51b6d05ee5ec4576a44f541b904f0f13fb",
+  "tested_head": "c8e7b7b35ba0033d1e7ce987e7bb74caa9eefcbf",
+  "protocols_unchanged": {
+    "vibevm/vibespecs/protocols/proportional-controls.md": true,
+    "vibevm/vibespecs/protocols/requirement-authority.md": true,
+    "vibevm/vibespecs/protocols/package-versioning.md": true,
+    "vibevm/vibespecs/protocols/task-handoff.md": true
+  },
+  "payload_sha256": "a84fb14aa9f4759286fb0aba84d1f669d3030aa5c6b583ff1194cac0feb772da",
+  "package_version": "1.3.0",
+  "frozen_history_diff": "",
+  "release_workflow_diff": "",
+  "helper_retired_after_ready_probe": true,
+  "owner_model_authorization": "User explicitly approved gpt-6.1-sol for one-off qualification launches; no host config changes",
+  "validation_scope": "Linux required suites and final exact-head CI are separate records"
+}

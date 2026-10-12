@@ -122,11 +122,17 @@ class NativeAdoptionTests(unittest.TestCase):
         self.revision = self.git(self.work, "rev-parse", "HEAD")
         self.reject()
 
-    def test_native_export_does_not_overwrite_source(self):
+    def test_native_export_regenerates_proposals_and_preserves_unexpected_content(self):
         before = (self.source / EXPORTER.HANDOFF).read_bytes()
+        (self.source / EXPORTER.HANDOFF).write_text("Stale proposed materialization\n")
+        EXPORTER.stage_producer(self.revision, self.work)
+        EXPORTER.verify_producer(self.revision, self.work)
+        unexpected = self.source / "unexpected.txt"
+        unexpected.write_text("preserve me\n")
         with self.assertRaises(ValueError):
             EXPORTER.stage_producer(self.revision, self.work)
         self.assertEqual(before, (self.source / EXPORTER.HANDOFF).read_bytes())
+        self.assertEqual("preserve me\n", unexpected.read_text())
 
 
 if __name__ == "__main__":

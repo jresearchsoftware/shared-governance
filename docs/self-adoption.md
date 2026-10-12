@@ -58,7 +58,17 @@ routing, excluded from the passive public export and checked separately.
 Only the current generated version is needed; retain frozen historical source.
 
 `--producer-source` reuses the exact Git exporter, with no resolver or selector.
-It writes a new/empty version directory and never overwrites prior content.
+It stages or regenerates only the known generated payload for the current
+candidate version, rejecting/preserving unexpected content and the frozen
+historical source. Repeated authoring corrections need no extra version bump
+before that candidate is accepted/published; existing release checks still
+require one truthful bump against main.
+When a cross-OS lock retains old content for a revised unaccepted candidate,
+discard only that task-generated `vibe.lock` and run the same native install
+again. This is fresh resolution of a proposal, distinct from pinned-byte force
+reinstall. Source URLs are never hand-edited. The resulting complete projection
+is checked/committed in the same PR; accepted or published versions still need
+a new version for semantic corrections.
 The local export omits release-only `DISTRIBUTION.json`: the accepted Git commit
 owns source and projection together, avoiding a circular commit pin or dependence
 on a PR-only commit surviving squash. Public distribution retains its normal
