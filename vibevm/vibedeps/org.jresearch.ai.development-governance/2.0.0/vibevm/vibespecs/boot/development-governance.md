@@ -25,7 +25,8 @@ For governed task execution, handoff or continuation, read
 [task-handoff](../protocols/task-handoff.md) only when the owning project has
 explicitly adopted it through human-owned AGENTS or equivalent guidance.
 Installing/updating this package does not activate the topic or replace local
-Task authority, Step allocation, review or execution mechanisms. Unrelated tasks
+Task authority, authorization, review or execution mechanisms. Adopted bindings
+implement its shared Step semantics and selected acceptance strategy. Unrelated tasks
 skip it; client adapters and product-version compatibility remain project-owned.
 
 Where a producer consumes guidance or Skills it authors, read
