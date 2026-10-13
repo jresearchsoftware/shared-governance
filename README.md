@@ -10,6 +10,8 @@ Its manifest owns the whole-package version. Ordinary proportional-controls,
 requirement-authority, package-versioning, task-handoff and producer self-adoption
 use compact conditional
 boot routing, with no native Codex Skills or executable capabilities.
+Workflow-aware GitHub repository governance is an additional explicitly adopted
+topic with conditional setup/protection guidance; it does not apply settings.
 Package-versioning and task-handoff require explicit project adoption and preserve
 existing locally owned policies. [Manual task handoff](docs/manual-task-handoff.md)
 and [native self-adoption](docs/self-adoption.md)

@@ -21,6 +21,7 @@ VERSIONING = "vibevm/vibespecs/protocols/package-versioning.md"
 AUTHORITY = "vibevm/vibespecs/protocols/requirement-authority.md"
 HANDOFF = "vibevm/vibespecs/protocols/task-handoff.md"
 SELF_ADOPTION = "vibevm/vibespecs/protocols/self-adoption.md"
+REPOSITORY_GOVERNANCE = "vibevm/vibespecs/protocols/github-repository-governance.md"
 BOOT_INDEX = "vibevm/vibespecs/boot/INDEX.md"
 # Producer-only native routing is committed alongside authored source, not exported.
 SOURCE_ARTIFACTS = {"AGENTS.md", "CLAUDE.md", "GEMINI.md", BOOT_INDEX,
@@ -125,12 +126,15 @@ def validate_payload(files, license_bytes, historical=False):
         allowed.add(HANDOFF)
     if tuple(map(int, version.split("."))) >= (1, 3, 0):
         allowed.add(SELF_ADOPTION)
+    if tuple(map(int, version.split("."))) >= (2, 1, 0):
+        allowed.add(REPOSITORY_GOVERNANCE)
     if set(files) != allowed:
         raise ValueError("source package file set differs from declared passive payload")
     if files["LICENSE"] != license_bytes:
         raise ValueError("source/package license notices differ")
     validate_skill_links(files, "vibevm/vibespecs")
-    protocols = allowed & {PROTOCOL, VERSIONING, AUTHORITY, HANDOFF, SELF_ADOPTION}
+    protocols = allowed & {PROTOCOL, VERSIONING, AUTHORITY, HANDOFF, SELF_ADOPTION,
+                           REPOSITORY_GOVERNANCE}
     if any(not files[name].strip() for name in protocols):
         raise ValueError("canonical protocol is empty")
     return manifest

@@ -5,7 +5,7 @@ The root virtual workspace has one stable member,
 a routine bump changes that value without moving the authoring tree. Frozen
 `0.1.0` remains at its historical path as retained source, outside membership.
 Historical exports discover the path from the selected commit's workspace.
-The current passive flow contains five conditional protocols and no native Skills,
+The current passive flow contains six conditional protocols and no native Skills,
 capabilities or dependencies. Proportional-controls preserves its accepted
 baseline and adds the scoped Task 19 existing-proof and friction corrections;
 requirement-authority is conditionally read interpretive guidance, while
@@ -15,6 +15,9 @@ schemas, execution authorization mechanisms and acceptance identity requirements
 stay project-owned. The shared execution-cycle Step definition and chronological
 authority apply on adoption; Direct/Deliberative strategies govern review-verdict
 publication, with owner-authorized overrides and project extensions.
+Workflow-aware GitHub repository governance is available for explicit adoption;
+its conditional setup, protection and verification guidance neither activates
+against existing local policy nor changes repository settings.
 
 [Release policy](releases.md) separates this producer's cadence from reusable
 policy and documents automatic publication, exact-source retry and credentials.

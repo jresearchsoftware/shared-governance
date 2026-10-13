@@ -7,6 +7,10 @@ ordinary [proportional-controls](vibevm/vibespecs/protocols/proportional-control
 [package-versioning](vibevm/vibespecs/protocols/package-versioning.md)
 and [task-handoff](vibevm/vibespecs/protocols/task-handoff.md) protocols,
 plus conditional [producer self-adoption](vibevm/vibespecs/protocols/self-adoption.md).
+It also offers [workflow-aware GitHub repository governance](vibevm/vibespecs/protocols/github-repository-governance.md)
+for explicit topic adoption: conditional PR, direct-main, publication and mixed
+paths, proportionate protections, a short setup checklist and event-based
+verification. Guidance does not apply GitHub settings or authorize mutation.
 It has no executable capabilities, dependencies or native Codex Skills.
 
 The stable contract preserves the proportional-controls procedure, exceptions
@@ -31,10 +35,11 @@ plus an independent Task-level result uses the Task. Unresolved binding stops
 publication; replay does not duplicate the Outcome. Manual/single-account limits
 remain explicit.
 
-Version 2.0.0 changes the existing task-handoff contract: earlier project-defined
+The 2.0.0 task-handoff contract changed earlier project-defined
 Step interpretations, Outcome publication routing and immediate approval of
 decision-grade results may need migration. This is a MAJOR change, not an additive
-topic or silent consumer update.
+topic or silent consumer update. Version 2.1.0 adds repository-governance as an
+explicitly adopted topic; the five existing protocols remain unchanged.
 Existing consumers retain their accepted local rules until separately reviewed
 adoption; frozen versions are retained.
 Human-owned project instructions retain task, review, publication and adoption

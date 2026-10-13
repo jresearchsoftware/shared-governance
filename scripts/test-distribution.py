@@ -144,7 +144,7 @@ class DistributionTests(unittest.TestCase):
             with self.subTest(reference=reference):
                 self.rejected_source(reference)
 
-    def test_current_flow_has_five_protocols_no_native_skill_and_is_frozen(self):
+    def test_current_flow_has_six_protocols_no_native_skill_and_is_frozen(self):
         manifest = tomllib.loads((self.package / "vibe.toml").read_text())
         self.assertIs(manifest["package"]["frozen"], True)
         self.assertNotIn("skill", manifest)
@@ -155,6 +155,7 @@ class DistributionTests(unittest.TestCase):
         self.assertIn(DISTRIBUTION.AUTHORITY, receipt["sha256"])
         self.assertIn(DISTRIBUTION.HANDOFF, receipt["sha256"])
         self.assertIn(DISTRIBUTION.SELF_ADOPTION, receipt["sha256"])
+        self.assertIn(DISTRIBUTION.REPOSITORY_GOVERNANCE, receipt["sha256"])
 
     def test_accepted_historical_payload_shapes_remain_exportable(self):
         # The disposable source has no accepted objects; select the real history.
@@ -162,14 +163,16 @@ class DistributionTests(unittest.TestCase):
         for revision, version, count in (
                 ("3fa243b83a630ccd4973114e5cad12e1351d1558", "0.1.0", 1),
                 ("901186bdd1aabc9b7f1094eeb2cc294f96b688f7", "1.0.0", 2),
-                ("129d452ddfa6b9ac1030ccc7803994793467ab2d", "1.1.0", 3)):
+                ("129d452ddfa6b9ac1030ccc7803994793467ab2d", "1.1.0", 3),
+                ("1b97f0aadcc769c04415d8f4855098cee35b9f3a", "2.0.0", 5)):
             with self.subTest(version=version):
                 files, receipt = DISTRIBUTION.snapshot(revision)
                 self.assertEqual(receipt["version"], version)
                 self.assertEqual(sum(name.startswith("vibevm/vibespecs/protocols/")
                                      for name in files), count)
                 self.assertEqual(DISTRIBUTION.AUTHORITY in files, count >= 3)
-                self.assertNotIn(DISTRIBUTION.HANDOFF, files)
+                self.assertEqual(DISTRIBUTION.HANDOFF in files, count >= 4)
+                self.assertNotIn(DISTRIBUTION.REPOSITORY_GOVERNANCE, files)
 
     def test_any_skill_declaration_or_dependency_is_rejected(self):
         manifest = self.package / "vibe.toml"
@@ -185,7 +188,8 @@ class DistributionTests(unittest.TestCase):
 
     def test_protocol_must_be_nonempty_utf8(self):
         for name in (DISTRIBUTION.PROTOCOL, DISTRIBUTION.VERSIONING,
-                     DISTRIBUTION.AUTHORITY, DISTRIBUTION.HANDOFF):
+                     DISTRIBUTION.AUTHORITY, DISTRIBUTION.HANDOFF,
+                     DISTRIBUTION.SELF_ADOPTION, DISTRIBUTION.REPOSITORY_GOVERNANCE):
             path = self.package / name
             original = path.read_bytes()
             for data in (b"", b" \n", b"\xff\xfe"):
@@ -485,7 +489,8 @@ class DistributionTests(unittest.TestCase):
 
     def test_incomplete_source_package_is_rejected(self):
         for name in (DISTRIBUTION.PROTOCOL, DISTRIBUTION.VERSIONING,
-                     DISTRIBUTION.AUTHORITY, DISTRIBUTION.HANDOFF):
+                     DISTRIBUTION.AUTHORITY, DISTRIBUTION.HANDOFF,
+                     DISTRIBUTION.SELF_ADOPTION, DISTRIBUTION.REPOSITORY_GOVERNANCE):
             path = self.package / name
             original = path.read_bytes()
             with self.subTest(protocol=name):
