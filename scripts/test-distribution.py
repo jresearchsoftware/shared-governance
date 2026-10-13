@@ -21,7 +21,7 @@ EXPORT_SPEC = importlib.util.spec_from_file_location(
 EXPORTER = importlib.util.module_from_spec(EXPORT_SPEC)
 EXPORT_SPEC.loader.exec_module(EXPORTER)
 COORDINATE = "org.jresearch.ai/development-governance"
-SLOT = "vibevm/vibedeps/org.jresearch.ai.development-governance/1.3.0"
+SLOT = "vibevm/vibedeps/org.jresearch.ai.development-governance/2.1.0"
 
 
 class DistributionTests(unittest.TestCase):
@@ -36,7 +36,7 @@ class DistributionTests(unittest.TestCase):
         shutil.copyfile(REPOSITORY / "LICENSE", self.source / "LICENSE")
         manifest_path = self.package / "vibe.toml"
         authored = tomllib.loads(manifest_path.read_text())["package"]["version"]
-        manifest_path.write_text(manifest_path.read_text().replace('version = "' + authored + '"', 'version = "1.3.0"'))
+        manifest_path.write_text(manifest_path.read_text().replace('version = "' + authored + '"', 'version = "2.1.0"'))
         shutil.copyfile(REPOSITORY / "vibe.toml", self.source / "vibe.toml")
         # Windows-mounted files can appear executable; fixture Git modes are explicit.
         for path in self.package.rglob("*"):
@@ -98,11 +98,11 @@ class DistributionTests(unittest.TestCase):
         (consumer / "vibe.toml").write_text(
             '[project]\nname = "disposable-consumer"\nversion = "0.0.0"\nspec_format = "mixed"\n'
             '\n[requires.packages]\n"' + COORDINATE + '" = '
-            '{version = "=1.3.0", git = "file:///disposable/distribution.git", tag = "v1.3.0"}\n')
+            '{version = "=2.1.0", git = "file:///disposable/distribution.git", tag = "v2.1.0"}\n')
         (consumer / "vibe.lock").write_text(
             '[meta]\nschema_version = 7\n\n[[package]]\ngroup = "org.jresearch.ai"\nname = "development-governance"\n'
-            'version = "1.3.0"\nsource_kind = "git"\n'
-            'source_url = "file:///disposable/distribution.git"\nsource_ref = "v1.3.0"\n'
+            'version = "2.1.0"\nsource_kind = "git"\n'
+            'source_url = "file:///disposable/distribution.git"\nsource_ref = "v2.1.0"\n'
             'content_hash = ' + json.dumps(content_hash) + '\n')
         index = consumer / DISTRIBUTION.BOOT_INDEX
         index.parent.mkdir(parents=True)
@@ -178,7 +178,7 @@ class DistributionTests(unittest.TestCase):
         manifest = self.package / "vibe.toml"
         original = manifest.read_text()
         for extra in ('skill = []\n', '[[skill]]\nname = "proportional-controls"\n',
-                      '[requires.packages]\n"unapproved/package" = "1.3.0"\n',
+                      '[requires.packages]\n"unapproved/package" = "2.1.0"\n',
                       '[tools]\ncommand = "unapproved"\n', '[hooks]\ncommand = "unapproved"\n',
                       '[mcp]\ncommand = "unapproved"\n'):
             with self.subTest(declaration=extra):
@@ -402,7 +402,7 @@ class DistributionTests(unittest.TestCase):
             (lock_path, original_lock.replace('schema_version = 7', 'schema_version = 999')),
             (lock_path, original_lock.replace('[meta]\nschema_version = 7\n\n', '')),
             (lock_path, original_lock.replace(content_hash, "sha256:" + "0" * 64)),
-            (lock_path, original_lock.replace('source_ref = "v1.3.0"', 'source_ref = "v1.3.1"')),
+            (lock_path, original_lock.replace('source_ref = "v2.1.0"', 'source_ref = "v2.1.1"')),
             (lock_path, original_lock.replace('file:///disposable/distribution.git', 'file:///other.git')),
             (lock_path, original_lock.replace('group = "org.jresearch.ai"',
                                              'group = "org.jresearch.governance"')),
@@ -410,10 +410,10 @@ class DistributionTests(unittest.TestCase):
                                              'name = "proportional-controls"')),
             (manifest_path, original_manifest.replace(COORDINATE,
                                                      "org.jresearch.governance/proportional-controls")),
-            (manifest_path, original_manifest.replace('version = "=1.3.0"', 'version = "*"')),
-            (manifest_path, original_manifest.replace('tag = "v1.3.0"',
-                                                     'tag = "v1.3.0", rev = "' + "a" * 40 + '"')),
-            (manifest_path, original_manifest.replace('tag = "v1.3.0"', 'rev = "abcdef"')),
+            (manifest_path, original_manifest.replace('version = "=2.1.0"', 'version = "*"')),
+            (manifest_path, original_manifest.replace('tag = "v2.1.0"',
+                                                     'tag = "v2.1.0", rev = "' + "a" * 40 + '"')),
+            (manifest_path, original_manifest.replace('tag = "v2.1.0"', 'rev = "abcdef"')),
         ]
         for path, altered in mutations:
             with self.subTest(file=path.name, content=altered[-100:]):
@@ -457,8 +457,8 @@ class DistributionTests(unittest.TestCase):
         original = manifest.read_bytes()
         for before, after in ((b'group = "org.jresearch.ai"', b'group = "org.jresearch.governance"'),
                               (b'name = "development-governance"', b'name = "proportional-controls"'),
-                              (b'version = "1.3.0"', b'version = "invalid"'),
-                              (b'version = "1.3.0"', b'version = "1.1.0"'),
+                              (b'version = "2.1.0"', b'version = "invalid"'),
+                              (b'version = "2.1.0"', b'version = "1.1.0"'),
                               (b'license = "MIT"', b'license = "Unapproved"'),
                               (b'frozen = true', b'frozen = false'),
                               (b'frozen = true', b'frozen = 1'),

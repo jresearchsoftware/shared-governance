@@ -1,0 +1,34 @@
+{
+  "preservation": "PASS",
+  "accepted_source_main": "1b97f0aadcc769c04415d8f4855098cee35b9f3a",
+  "comparison_head": "1e67d816e4e79823e5eca3b0f1fb176f1c9fdb15",
+  "five_protocol_sha256": {
+    "proportional-controls": "6fbd1dc55bd40ee67c442614cd3d71fda45f4ebdba7012b976e72857c0eacfed",
+    "requirement-authority": "9e5af613383c2c1492325338d9c37933bc83e1175ae809055718fc354a5532ca",
+    "package-versioning": "14c48fcc25bae6c7dee9b0a6c2e6310fa8df2917c6e17c4553fdefb461fec652",
+    "task-handoff": "b3e9058f8ff80bc7c57854ef97a71e57983d4c3f18d538ead66cb8e4ebca9ac2",
+    "self-adoption": "43d56c78d4d12803ad28eef24afaa809e5941b19727da9f30274600e95d5be53"
+  },
+  "protected_paths": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    "CONTRIBUTING.md",
+    "toolchain",
+    ".github",
+    "docs/self-adoption.md",
+    "docs/manual-task-handoff.md",
+    "docs/releases.md",
+    "docs/task-10",
+    "docs/task-14",
+    "docs/task-19",
+    "docs/task-22",
+    "docs/task-24",
+    "docs/task-26",
+    "vibevm/vibepacks/org.jresearch.ai/development-governance/v0.1.0",
+    "vibevm/vibepacks/org.jresearch.ai/development-governance/v1.3.0",
+    "vibevm/vibepacks/org.jresearch.ai/development-governance/v2.0.0"
+  ],
+  "unexpected_changes": [],
+  "retired_slot": "Only generated 2.0.0 slot; accepted source/history/registry retained."
+}

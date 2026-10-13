@@ -95,6 +95,16 @@ consumer rules. They are desk-based application evidence, not GitHub enforcement
 or model compliance. Source/export/native consistency and existing regressions
 are exercised separately; complete receipts are in `logs/`.
 
+The first distribution run failed all 31 cases during fixture setup: the test
+copied the six-topic source but relabeled it 1.3.0, whose accepted shape has five
+topics. [Initial log](logs/distribution-initial.txt) is retained. The fixture's
+version, slot, tag and negative substitutions now consistently use 2.1.0; the
+accepted 2.0.0 five-topic export remains a separate historical regression.
+No passivity/integrity guard was weakened. An earlier malformed full-SHA staging
+invocation was rejected before mutation; staging with the resolved full commit
+then passed. These in-Step corrections do not change package content or bump
+intent and require no separate execution admission.
+
 No live settings/protections, release refs, credentials, existing consumer
 installation, Relay workflow or package publication is exercised. Existing
 native transport/Windows-to-Linux and loader qualification is reused; routine
