@@ -1,5 +1,5 @@
 schema = 1
-source_hash = "sha256:c97b85f1bd804576c54105efb4d931210ce5ffa10ab08eec1f917d787f978a27"
+source_hash = "sha256:d2dbcc4bda1cb5ed77208e25739e25f8b9113f9cd5bae18a543941048a69e8bf"
 spec_format = "mixed"
 
 [[file]]
@@ -8,15 +8,19 @@ sha256 = "89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853"
 
 [[file]]
 path = "README.md"
-sha256 = "8f574dc5158f76713257c2f75d00b0e38e91f6045a3ff22ddcd73fd2fffaf223"
+sha256 = "a769714f767ad972030225ba29d9bc476cba484be6e7e347a65fa6e59f179414"
 
 [[file]]
 path = "vibe.toml"
-sha256 = "2acaf6cb4070972b0bd4a0dfe7087877698a255d0c726d2e63e56474bb36cd87"
+sha256 = "bfcceaed6af61b02ae489b3c1e49094ec3a23309de209809d7c4a7c3f9297165"
 
 [[file]]
 path = "vibevm/vibespecs/boot/development-governance.md"
-sha256 = "88628fd19decaaf6583a52d1f04914aeecf44c23c489d2b4270c885712e3ff32"
+sha256 = "8e932a4ae27a9efa440acb59488f3687fa5e2e8f1b9f19cef63e8670b2216e8d"
+
+[[file]]
+path = "vibevm/vibespecs/protocols/github-repository-governance.md"
+sha256 = "335cbc73ecb355919d5ca5bd8d4a525d8371aedaf92381e6c8244f41ebe5d45b"
 
 [[file]]
 path = "vibevm/vibespecs/protocols/package-versioning.md"

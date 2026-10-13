@@ -36,3 +36,10 @@ accepted source-main guidance; candidate rules remain proposals. Ordinary native
 materialization, committed ready files and conditional reading preserve project
 overlays and local authority. Other repositories and unrelated work skip this
 topic; package installation or update does not activate it.
+
+For GitHub repository onboarding, workflow or protection-policy decisions, read
+[workflow-aware repository governance](../protocols/github-repository-governance.md)
+only when the owning project explicitly adopts that topic. Preserve its accepted
+PR, direct-main, publication and mixed paths; installing/updating guidance neither
+applies settings nor grants permission to change them. Existing local policy
+remains authoritative until reviewed adoption. Unrelated tasks skip this topic.
