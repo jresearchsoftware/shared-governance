@@ -114,6 +114,34 @@ skipped when the pinned Linux tool is not supplied, not counted as passes.
 The accepted Windows Codex CLI startup gap remains unqualified; no ACL/sandbox
 or host repair is attempted. CLI/file/projection checks do not prove model behavior.
 
+| Local verification | Result / primary receipt |
+| --- | --- |
+| Source, exact export and complete native projection | PASS at materialized commit `1e67d816e4e79823e5eca3b0f1fb176f1c9fdb15`; [qualification](logs/qualification.txt). Final evidence-only head is qualified again before handoff. |
+| Distribution/integrity | 31/31 PASS after the fixture correction, including accepted 2.0.0 export and missing/empty added-protocol rejection; [log](logs/distribution.txt). |
+| Release | 10 PASS; 6 optional native publisher/resolver integrations SKIP; [log](logs/release.txt). |
+| Native producer self-adoption/recovery | 12/12 PASS on Windows; [log](logs/self-adoption.txt). |
+| Pinned VibeVM generation/check | Source staging and ordinary offline registry install PASS; check has zero errors/warnings/findings; [source](logs/native-source.txt), [install](logs/native-install.txt), [check](logs/native-check.txt). |
+| Version boundary | MINOR 2.0.0 to 2.1.0 PASS at `03dbcf19ef4e14426326e054b493718859d9f12b`; [receipt](logs/version-boundary.txt). Live main was refreshed and still equals frozen baseline. |
+| Scope preservation | Five protocols, human routes, frozen/retained sources, earlier evidence, workflows and pins PASS; [receipt](logs/preservation.json). |
+| Semantic application | 18 desk walks PASS; [scenarios](scenarios.md). No model/enforcement claim. |
+
+Windows executable digest was verified before use against accepted Task 24's
+official release fragment:
+`ceb0b8582e059dfab708ee0c5221e700c232c97912bdd5174dc0df1d03011b46`.
+Generated native content hash is
+`sha256:d2dbcc4bda1cb5ed77208e25739e25f8b9113f9cd5bae18a543941048a69e8bf`.
+The normal install pruned only the stale generated 2.0.0 dependency slot;
+accepted history and all historical registry source are retained. Root human
+overlays and generated member routes did not change. No lock URL edit, forced
+install, host repair or active topic-adoption expansion was needed.
+
+Git emitted CRLF-to-LF notices for new Windows logs; committed bytes use canonical
+LF and protected bytes are unchanged. Initial fixture failure is corrected and
+retained, not hidden as a pass. Bounded marker scanning and API evidence do not
+establish absence of all secrets, UI warnings or hidden rules. Live enforcement
+and new consumer adoption remain unqualified. Exact-head CI and final identity
+are recorded in the canonical PR Outcome rather than a circular source receipt.
+
 One result PR owns this source and supporting evidence. The canonical terminal
 Codex Outcome belongs as one top-level comment on that PR, linked to Task 13.
 The implementer stops for substantive independent exact-head non-approving
