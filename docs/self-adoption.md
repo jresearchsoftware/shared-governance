@@ -11,8 +11,10 @@ Other consumers retain their own policies and adoption decisions.
 ## Ordinary execution and candidate binding
 
 Resolve the independently accepted source-main commit from live owner authority
-and Git facts and freeze it for the effort/review. The Task execution prompt
-binds that exact SHA independently of candidate instructions. For example:
+and Git facts and freeze it for the effort/review. The Task execution binding
+supplies that exact SHA independently of candidate instructions. Use the admitted
+Task's explicit accepted-SHA binding when supplied there; otherwise include this
+irreducible producer routing fact in the minimal execution prompt. For example:
 
 ```text
 Bind this effort to independently accepted source-main <full-accepted-sha> of

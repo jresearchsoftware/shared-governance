@@ -40,7 +40,9 @@ class NativeAdoptionTests(unittest.TestCase):
             EXPORTER.verify_producer(self.revision, self.work)
 
     def test_clean_checkout_is_ready_without_runtime_or_publication(self):
-        self.assertEqual(self.receipt["version"], "1.3.0")
+        import tomllib
+        manifest = tomllib.loads((self.work / EXPORTER.PACKAGE / "vibe.toml").read_text())
+        self.assertEqual(self.receipt["version"], manifest["package"]["version"])
         self.assertFalse((self.slot / EXPORTER.RECEIPT).exists())
         self.assertFalse((self.source / EXPORTER.RECEIPT).exists())
 
@@ -72,7 +74,7 @@ class NativeAdoptionTests(unittest.TestCase):
         path = self.work / "vibe.lock"
         original = path.read_text()
         for before, after in [('content_hash = "sha256:', 'content_hash = "sha256:forged'),
-                              ('version = "1.3.0"', 'version = "1.3.1"'),
+                              ('version = "' + self.receipt["version"] + '"', 'version = "0.0.0"'),
                               ('source_kind = "registry"', 'source_kind = "git"')]:
             with self.subTest(before=before):
                 path.write_text(original.replace(before, after))
@@ -83,7 +85,7 @@ class NativeAdoptionTests(unittest.TestCase):
         path = self.work / "vibe.lock"
         text = path.read_text()
         import re
-        text = re.sub(r'source_url = ".*?"', 'source_url = "file:///unreachable/windows/vibevm/vibepacks/' + EXPORTER.COORDINATE + '/v1.3.0"', text)
+        text = re.sub(r'source_url = ".*?"', 'source_url = "file:///unreachable/windows/vibevm/vibepacks/' + EXPORTER.COORDINATE + '/v' + self.receipt["version"] + '"', text)
         text = re.sub(r'generated_at = ".*?"', 'generated_at = "2000-01-01T00:00:00Z"', text)
         path.write_text(text)
         EXPORTER.verify_producer(self.revision, self.work)
@@ -93,7 +95,7 @@ class NativeAdoptionTests(unittest.TestCase):
         original = path.read_bytes()
         path.unlink()
         self.reject()
-        path.write_bytes(original.replace(b'1.3.0', b'1.2.0'))
+        path.write_bytes(original.replace(self.receipt["version"].encode(), b'0.0.0'))
         self.reject()
 
     def test_generated_member_route_and_root_overlay(self):
@@ -107,7 +109,7 @@ class NativeAdoptionTests(unittest.TestCase):
     def test_manifest_range_or_link_change_rejected(self):
         path = self.work / "vibe.toml"
         original = path.read_text()
-        for before, after in [('=1.3.0', '^1.3.0'), ('link = "dynamic"', 'link = "static-transitive"')]:
+        for before, after in [('=' + self.receipt["version"], '^' + self.receipt["version"]), ('link = "dynamic"', 'link = "static-transitive"')]:
             with self.subTest(before=before):
                 path.write_text(original.replace(before, after))
                 self.reject()

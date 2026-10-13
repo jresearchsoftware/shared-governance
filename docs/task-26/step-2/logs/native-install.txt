@@ -1,0 +1,35 @@
+[start] Installing packages
+[start] Resolving dependencies
+  → re-resolving — `org.jresearch.ai/development-governance` resolves from an in-workspace file:// source (a mutable working tree); re-resolving to pick up any source edit (PROP-011 §2.6)
+Resolving 1 root package…
+[done] Resolving dependencies [0ms]
+[start] Fetching package content
+[start] Fetching org.jresearch.ai/development-governance
+[done] Fetching org.jresearch.ai/development-governance [79ms]
+[progress] Fetching package content: 1 packages [80ms]
+[progress] Fetching package content: 1/1 packages [80ms]
+[done] Fetching package content [80ms]
+
+Materialising 1 package into vibedeps/:
+  org.jresearch.ai/development-governance@2.0.0
+
+[start] Applying resolved packages
+[progress] Applying resolved packages: 0/1 packages [0ms]
+[start] Materialising dependency slots
+[progress] Materialising dependency slots: 0/1 packages [0ms]
+[start] Materialising org.jresearch.ai/development-governance@2.0.0
+[done] Materialising org.jresearch.ai/development-governance@2.0.0 [5ms]
+[progress] Materialising dependency slots: 1/1 packages [5ms]
+[done] Materialising dependency slots [7ms]
+[start] Generating boot artifacts
+[progress] Generating boot artifacts: 0/2 nodes [0ms]
+[progress] Generating boot artifacts: 2/2 nodes [7ms]
+[done] Generating boot artifacts [7ms]
+[progress] Applying resolved packages: 1/1 packages [15ms]
+[done] Applying resolved packages [15ms]
+[start] Recording installation state
+[done] Recording installation state [0ms]
+  → closure unchanged (1 packages)
+
+Materialised 1 package into vibedeps/; regenerated boot artifacts for 2 node(s).
+[done] Installing packages [114ms]

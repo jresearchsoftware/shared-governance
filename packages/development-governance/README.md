@@ -18,9 +18,25 @@ Package-versioning is available for explicit project adoption;
 installation or a dependency update does not supersede existing local policies.
 Task-handoff likewise requires explicit project adoption. It connects current
 Task authority, work identity, short handoffs, exact results, substantive independent assessment
-and authorized continuation. Its `Task N — Step S — <purpose>` navigation
-convention leaves Step allocation and review sufficiency with the project, and
-discloses manual/single-account identity limits without requiring automation.
+and authorized continuation. One Step is an authorized execution cycle ending
+in a terminal result; subsequent new execution advances Step even on the same PR.
+The charter stays historical from first execution, with chronological authorized
+Decisions. Minimal handoffs navigate to that authority. Direct acceptance permits
+immediate qualified approval; Deliberative acceptance requires non-approving review
+and owner discussion/Decision before formal approval. Project bindings retain
+authorization, review sufficiency and identity requirements without redefining
+shared Step semantics. One canonical Outcome follows the whole actual Step result:
+exclusively one result PR uses that PR; no PR, known multiple result PRs or a PR
+plus an independent Task-level result uses the Task. Unresolved binding stops
+publication; replay does not duplicate the Outcome. Manual/single-account limits
+remain explicit.
+
+Version 2.0.0 changes the existing task-handoff contract: earlier project-defined
+Step interpretations, Outcome publication routing and immediate approval of
+decision-grade results may need migration. This is a MAJOR change, not an additive
+topic or silent consumer update.
+Existing consumers retain their accepted local rules until separately reviewed
+adoption; frozen versions are retained.
 Human-owned project instructions retain task, review, publication and adoption
 authority. Newly adopting producers choose their own cadence and routing.
 Self-adoption is a compatible addition available for explicit adoption only where

@@ -1,0 +1,38 @@
+{
+  "preservation": "PASS",
+  "accepted_source_main": "80318d00ec14ee3bc49a1b94cbc24e859371f80f",
+  "candidate": "997f762514597e359249cba3f48967c422c32caf",
+  "versions": [
+    "1.3.0",
+    "2.0.0"
+  ],
+  "unchanged_paths": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    "CONTRIBUTING.md",
+    "LICENSE",
+    "docs/releases.md",
+    "toolchain",
+    ".github",
+    "scripts/prepare-distribution.py",
+    "scripts/package-release.py",
+    "vibevm/vibepacks/org.jresearch.ai/development-governance/v0.1.0",
+    "vibevm/vibepacks/org.jresearch.ai/development-governance/v1.3.0",
+    "docs/task-10",
+    "docs/task-14",
+    "docs/task-19",
+    "docs/task-2",
+    "docs/task-22",
+    "docs/task-24",
+    "docs/task-9"
+  ],
+  "unchanged_protocols": [
+    "proportional-controls",
+    "requirement-authority",
+    "package-versioning",
+    "self-adoption"
+  ],
+  "slot_lifecycle": "native install replaces current 1.3.0 slot with 2.0.0; frozen sources retained",
+  "authority": "candidate rules remain proposals; independent review pending"
+}

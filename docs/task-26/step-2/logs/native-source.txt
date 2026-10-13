@@ -1,0 +1,1 @@
+{"distribution": "PASS", "action": "stage-native-source", "source_revision": "9cf4a7712f228de47215f316a5b9309b84dfa0fe", "payload_sha256": "af57199d627887572817c780f7023ead39f115abc5c5c93c3c3ff0a240b01e25", "files": 9, "publication": "this command never publishes; acceptance/remote authority are external"}
