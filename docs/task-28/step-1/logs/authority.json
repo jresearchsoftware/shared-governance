@@ -1,0 +1,18 @@
+{
+  "observed_at": "2026-10-14T09:23:01.947263+00:00",
+  "accepted_source_main": "c3fbc8c2d10982889bea526161f810902def4289",
+  "remote_main": "c3fbc8c2d10982889bea526161f810902def4289",
+  "task": "https://github.com/jresearchsoftware/shared-governance/issues/28",
+  "state": "OPEN",
+  "body_sha256": "e2f52e38843d39fc94b086196856d9d85bd1873adc9e03622efc9789957fe304",
+  "comments": [
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/issues/28#issuecomment-6164723062",
+      "author": "foal",
+      "body_sha256": "cd14c7682cb365011ce00340b4e26f947fb30d0be02cca9000943d787643fc83",
+      "created_at": "2026-10-14T08:59:15Z"
+    }
+  ],
+  "verified_thread_title": "Task 28 — Step 1 — Independent Review Methodology",
+  "publisher": "foal"
+}

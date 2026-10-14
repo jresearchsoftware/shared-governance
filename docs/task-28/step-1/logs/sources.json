@@ -1,0 +1,237 @@
+{
+  "scope": "review-related canonical slices and bounded origin evidence; full-file hashes identify source, not review completeness",
+  "sources": [
+    {
+      "repository": "jresearchsoftware/shared-governance",
+      "revision": "c3fbc8c2d10982889bea526161f810902def4289",
+      "path": "AGENTS.md",
+      "bytes": 5636,
+      "sha256": "d442f8a90ca3afabacea7fe58eb6a3825bc8c80c370f6ef305b88397b64fc83c",
+      "blob": "efad657bea20760c8cb1136bd717890831a86e9b"
+    },
+    {
+      "repository": "jresearchsoftware/shared-governance",
+      "revision": "c3fbc8c2d10982889bea526161f810902def4289",
+      "path": "CONTRIBUTING.md",
+      "bytes": 2524,
+      "sha256": "1324004914e7411f23aeb969855047d3b795d6f3712cce6563567f9488ca2695",
+      "blob": "4a82b44544045d43019819363d4362cc2e9ebef2"
+    },
+    {
+      "repository": "jresearchsoftware/shared-governance",
+      "revision": "c3fbc8c2d10982889bea526161f810902def4289",
+      "path": "docs/authoring.md",
+      "bytes": 7754,
+      "sha256": "2acacdc308fc18009e0dda4a22ab77ff5c1500bee943f795ab3dafab42eb6f64",
+      "blob": "9998bd44d1a4fbb54325a048c48b2e5b41c72988"
+    },
+    {
+      "repository": "jresearchsoftware/shared-governance",
+      "revision": "c3fbc8c2d10982889bea526161f810902def4289",
+      "path": "docs/releases.md",
+      "bytes": 6384,
+      "sha256": "a217a7e9fbb720c06c0d407f5d0a52e254b4e62e82d0763493ea7ccd7ddd7987",
+      "blob": "479a4081ab57dbc40aa5c3ce8e80d4533e47bb0b"
+    },
+    {
+      "repository": "jresearchsoftware/shared-governance",
+      "revision": "c3fbc8c2d10982889bea526161f810902def4289",
+      "path": "docs/manual-task-handoff.md",
+      "bytes": 7212,
+      "sha256": "e3b54b681ff3856788f8fc6906afc7fbd707bf0e7ad47e3da928a644a4c51a6d",
+      "blob": "9f8c164f6c8a58b7cacb431a55d39eb03a21a16e"
+    },
+    {
+      "repository": "jresearchsoftware/shared-governance",
+      "revision": "c3fbc8c2d10982889bea526161f810902def4289",
+      "path": "docs/self-adoption.md",
+      "bytes": 7619,
+      "sha256": "93cc7ec527234aa98e7438e184e001fa351ac5a9a84821067be17ef536c37e50",
+      "blob": "44d119baff90ac711eecb8b487f5c1d6d7cf7189"
+    },
+    {
+      "repository": "jresearchsoftware/shared-governance",
+      "revision": "c3fbc8c2d10982889bea526161f810902def4289",
+      "path": "vibevm/vibespecs/boot/INDEX.md",
+      "bytes": 819,
+      "sha256": "b66a7a4d39ffd1e16dadc313441b35c3c3b6efd4b347f016daac41fcad8fa4f2",
+      "blob": "a886fd508e249f29246ad573e0aacd7d1d2898d7"
+    },
+    {
+      "repository": "jresearchsoftware/shared-governance",
+      "revision": "c3fbc8c2d10982889bea526161f810902def4289",
+      "path": "vibevm/vibespecs/boot/00-authoring.md",
+      "bytes": 825,
+      "sha256": "131ef557d4319530410827479bba308d5f1f1d40cec424e705dbdaf96d2d6a3b",
+      "blob": "03a56a5a29c86de25c9a1c9e6836beb924263ee8"
+    },
+    {
+      "repository": "jresearchsoftware/shared-governance",
+      "revision": "c3fbc8c2d10982889bea526161f810902def4289",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.1.0/vibevm/vibespecs/boot/development-governance.md",
+      "bytes": 2958,
+      "sha256": "8e932a4ae27a9efa440acb59488f3687fa5e2e8f1b9f19cef63e8670b2216e8d",
+      "blob": "d8bb51320ab6cb9aa91aa1bf4eb838acae3efaae"
+    },
+    {
+      "repository": "jresearchsoftware/shared-governance",
+      "revision": "c3fbc8c2d10982889bea526161f810902def4289",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.1.0/vibevm/vibespecs/protocols/proportional-controls.md",
+      "bytes": 6906,
+      "sha256": "6fbd1dc55bd40ee67c442614cd3d71fda45f4ebdba7012b976e72857c0eacfed",
+      "blob": "eab1eba9a7ab2a1a415a8cc89a04a8e5251eb463"
+    },
+    {
+      "repository": "jresearchsoftware/shared-governance",
+      "revision": "c3fbc8c2d10982889bea526161f810902def4289",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.1.0/vibevm/vibespecs/protocols/requirement-authority.md",
+      "bytes": 2453,
+      "sha256": "9e5af613383c2c1492325338d9c37933bc83e1175ae809055718fc354a5532ca",
+      "blob": "e8306782566ade864193f2f6fd8001cf34d639d1"
+    },
+    {
+      "repository": "jresearchsoftware/shared-governance",
+      "revision": "c3fbc8c2d10982889bea526161f810902def4289",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.1.0/vibevm/vibespecs/protocols/package-versioning.md",
+      "bytes": 9152,
+      "sha256": "14c48fcc25bae6c7dee9b0a6c2e6310fa8df2917c6e17c4553fdefb461fec652",
+      "blob": "9c14579e9cb32bf209eb4545661f6c30f9558505"
+    },
+    {
+      "repository": "jresearchsoftware/shared-governance",
+      "revision": "c3fbc8c2d10982889bea526161f810902def4289",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.1.0/vibevm/vibespecs/protocols/task-handoff.md",
+      "bytes": 17634,
+      "sha256": "b3e9058f8ff80bc7c57854ef97a71e57983d4c3f18d538ead66cb8e4ebca9ac2",
+      "blob": "9b69cfc3b4b91e95e67ced6c97aeec4d371811e0"
+    },
+    {
+      "repository": "jresearchsoftware/shared-governance",
+      "revision": "c3fbc8c2d10982889bea526161f810902def4289",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.1.0/vibevm/vibespecs/protocols/self-adoption.md",
+      "bytes": 4587,
+      "sha256": "43d56c78d4d12803ad28eef24afaa809e5941b19727da9f30274600e95d5be53",
+      "blob": "3da59f6c205229c73e0839f9944bd9f3f22570fa"
+    },
+    {
+      "repository": "jresearchsoftware/codex-relay",
+      "revision": "52bebbc9cafc1e82737943a6d37f00945ffadfef",
+      "path": "AGENTS.md",
+      "bytes": 29681,
+      "sha256": "2fa2cd8bead8b18ba8bac78761a5825ded83f502b44bdc84fac20b32b57b930f",
+      "blob": "a034db8fa92f55f9004b3532637662d440307fe7"
+    },
+    {
+      "repository": "jresearchsoftware/codex-relay",
+      "revision": "52bebbc9cafc1e82737943a6d37f00945ffadfef",
+      "path": "reviewer/README.md",
+      "bytes": 35901,
+      "sha256": "ee77937878a75159d4f36870cfcbd72758647e7b8b0acdb2371cff8054001c56",
+      "blob": "e5a2b242936fbedb8e3caaee5891a04f67902658"
+    },
+    {
+      "repository": "jresearchsoftware/codex-relay",
+      "revision": "52bebbc9cafc1e82737943a6d37f00945ffadfef",
+      "path": "docs/task-workflow.md",
+      "bytes": 15148,
+      "sha256": "07b964122246f72e65a0f2a5052d3e8b0d6c1f5b9be0e67c5268f07fe829ad67",
+      "blob": "14bc224c1a07498d0c736e7728a1633627aef840"
+    },
+    {
+      "repository": "jresearchsoftware/codex-relay",
+      "revision": "52bebbc9cafc1e82737943a6d37f00945ffadfef",
+      "path": "docs/execution-policy.md",
+      "bytes": 13817,
+      "sha256": "662a89ffa654726c5d8031504d8a1d74aaf265d605ef018d49401664e1e079b9",
+      "blob": "24bc0d691d477a3ff67d075d64b025301631ac62"
+    },
+    {
+      "repository": "jresearchsoftware/codex-relay",
+      "revision": "66870385a60a787150c9b221bf830c013b2816e7",
+      "path": "docs/task-handoff-methodology-analysis.md",
+      "bytes": 37490,
+      "sha256": "c23fc825ff382cf970f0eada0cb9413c52f5061636445128cb8031e1a6562285",
+      "blob": "1c1b8f0661382b1e91264a6271e00c97a2e3b8e7"
+    },
+    {
+      "repository": "jresearchsoftware/docs-evolution-review",
+      "revision": "e9959091d78a9fb92113f9db086a250688ba2212",
+      "path": "docs-evolution-poc/PROJECT-RULES.md",
+      "bytes": 119447,
+      "sha256": "edb8713200a4805a424251aeaf9b85f3faf2fdbeeb3b9ae84468e11a37e58445",
+      "blob": "c4828dfffbb594bab04dda5b41dac11f4c43012e"
+    },
+    {
+      "repository": "jresearchsoftware/docs-evolution-review",
+      "revision": "e9959091d78a9fb92113f9db086a250688ba2212",
+      "path": "docs-evolution-poc/methodology/relay-consumer-methodology.md",
+      "bytes": 9612,
+      "sha256": "b5d4a1540e83f6fb041cffb95af9ba3e283abea9914c44b3ed59693437b8d4ff",
+      "blob": "384dacf74f3f1007fb83aa290b19e6fc8ae37610"
+    },
+    {
+      "repository": "jresearchsoftware/docs-evolution-review",
+      "revision": "e9959091d78a9fb92113f9db086a250688ba2212",
+      "path": "docs-evolution-poc/methodology/review-finalization-contract.yaml",
+      "bytes": 5167,
+      "sha256": "156f13649416253f113cf38cc440a2cae7537d8788e88fb0fc2d66cf5579e114",
+      "blob": "9ab18176b9cfc7da4736764596ef48d9bd4ec758"
+    },
+    {
+      "repository": "jresearchsoftware/docs-evolution-review",
+      "revision": "e9959091d78a9fb92113f9db086a250688ba2212",
+      "path": "docs-evolution-poc/methodology/historical-review-artifact-compatibility.md",
+      "bytes": 7020,
+      "sha256": "252443b5e4238dca0d98435a8466a7392a471ebc196f0db329f43c87be05bc78",
+      "blob": "efdfb483640ec76df177b1e07c86580180a0ec4f"
+    },
+    {
+      "repository": "jresearchsoftware/docs-evolution-review",
+      "revision": "e9959091d78a9fb92113f9db086a250688ba2212",
+      "path": "docs-evolution-poc/methodology/reader-documentation-gates/README.md",
+      "bytes": 1619,
+      "sha256": "ce57ab26673d5bc82eee8761fe7760344c83e60d578ec764460f21999c92fd8a",
+      "blob": "ed883abe75e47ed8e5205b038db76aa2482f1fcb"
+    },
+    {
+      "repository": "jresearchsoftware/docs-evolution-review",
+      "revision": "e9959091d78a9fb92113f9db086a250688ba2212",
+      "path": "docs-evolution-poc/methodology/reader-documentation-gates/gate-policy.yaml",
+      "bytes": 2382,
+      "sha256": "29258b3d73ae086d0515d6a55dee1eb7ef3369122110a6d99ff5cad39154daae",
+      "blob": "bcdaf07a30da207c9bf975fa5569f1f0ee2ed433"
+    },
+    {
+      "repository": "jresearchsoftware/docs-evolution-review",
+      "revision": "e9959091d78a9fb92113f9db086a250688ba2212",
+      "path": "docs-evolution-poc/methodology/reader-documentation-gates/semantic-review-bundles.yaml",
+      "bytes": 1878,
+      "sha256": "f637399d405466127808b8f253280d4dd1cbeddf0cf3108a5614c97c08cec7b6",
+      "blob": "06a7b6274b2a774f2f7841b5047979bca02e1592"
+    },
+    {
+      "repository": "jresearchsoftware/docs-evolution-review",
+      "revision": "e9959091d78a9fb92113f9db086a250688ba2212",
+      "path": "docs-evolution-poc/experiments/documentation-synthesis/077-independent-review-automation-and-skill-bootstrap-boundary/review-pass-taxonomy.md",
+      "bytes": 5150,
+      "sha256": "5a96043ebe9458374ce978e56ad537a0e178a2587df832fd3eea9c71bfb7219f",
+      "blob": "dd4e9dffe0d2c36ee5af4d0ce8b4d56d29a32163"
+    },
+    {
+      "repository": "jresearchsoftware/docs-evolution-review",
+      "revision": "e9959091d78a9fb92113f9db086a250688ba2212",
+      "path": "docs-evolution-poc/experiments/documentation-synthesis/077-independent-review-automation-and-skill-bootstrap-boundary/independent-review-validity-rules.md",
+      "bytes": 2153,
+      "sha256": "859539851542b9db6a387461431c4cc540dad8a447195db6d6282c95d95d3331",
+      "blob": "86f785d6929dd316e342452d6c004adf427acf3e"
+    },
+    {
+      "repository": "jresearchsoftware/docs-evolution-review",
+      "revision": "e9959091d78a9fb92113f9db086a250688ba2212",
+      "path": "docs-evolution-poc/experiments/documentation-synthesis/077-independent-review-automation-and-skill-bootstrap-boundary/review-pass-automation-boundary.yaml",
+      "bytes": 15157,
+      "sha256": "fab303e69d5636fbdea0b0ac7c0338f57827ae87fddbbc74b06cb3e273256932",
+      "blob": "47cf95def733b40c411c6ec5a4147fa93a6eb4b5"
+    }
+  ]
+}

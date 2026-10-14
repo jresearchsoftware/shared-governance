@@ -5,7 +5,7 @@ The root virtual workspace has one stable member,
 a routine bump changes that value without moving the authoring tree. Frozen
 `0.1.0` remains at its historical path as retained source, outside membership.
 Historical exports discover the path from the selected commit's workspace.
-The current passive flow contains six conditional protocols and no native Skills,
+The current passive flow contains seven conditional protocols and no native Skills,
 capabilities or dependencies. Proportional-controls preserves its accepted
 baseline and adds the scoped Task 19 existing-proof and friction corrections;
 requirement-authority is conditionally read interpretive guidance, while
@@ -18,6 +18,10 @@ publication, with owner-authorized overrides and project extensions.
 Workflow-aware GitHub repository governance is available for explicit adoption;
 its conditional setup, protection and verification guidance neither activates
 against existing local policy nor changes repository settings.
+Independent-review methodology is also available only for explicit topic adoption;
+it adds primary evidence, full-result assessment and finding/rereview obligations
+without activating via the existing Task Handoff route. Product publication and
+specialist review methods remain separately owned.
 
 [Release policy](releases.md) separates this producer's cadence from reusable
 policy and documents automatic publication, exact-source retry and credentials.
