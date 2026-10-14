@@ -49,8 +49,9 @@ semantic-overlap percentage is claimed.
 The read-only [measurement helper](inspect-evidence.py) checks each snapshot
 against the exact API body, character count and ending section. Applying the
 reported `body[:8000]` boundary to the recovered DocReview original removes
-**1,740 characters (17.86%)**. It cuts the legacy remediation launch-profile
-sentence mid-word, then loses the remaining publication/profile clauses and
+**1,740 characters (17.86%)**. It cuts the legacy CR metadata sentence after
+“Reviewed”, losing its head-SHA completion, the entire remediation launch-profile
+rule, the remaining publication/profile clauses and
 the entire Merge and closure section: reviewed-head validation, qualified squash
 conditions, keep-open/closing-reference rules, typed completion/closure,
 protected boundaries and verified native outcome reporting. These are material
@@ -93,6 +94,14 @@ here. [#91](https://github.com/jresearchsoftware/codex-relay/issues/91) was chec
 against its later completion Decision and PR 125 acceptance rather than its
 stale pre-execution body status. Its closed source-development result does not
 prove external VPM publication, live consumer rollout or client activation.
+
+The live [Task 30](https://github.com/jresearchsoftware/shared-governance/issues/30)
+charter remains BACKLOG / not admitted: it owns deliberately initiated general
+governance onboarding and GitHub configuration assessment. It has no execution
+result to import here and this bootstrap research does not trigger its audit.
+The live [Task 15](https://github.com/jresearchsoftware/shared-governance/issues/15)
+accepted principle corroborates the semantic-completeness route already present
+at this effort's frozen source-main; no old admission/profile is reused.
 
 ### Material compatibility and ownership conclusions
 
@@ -322,6 +331,16 @@ inspection and exact-head CI are reported with actual results in the canonical
 Outcome/native records. No failed or unrun check is inferred successful.
 No upstream suite, live settings/Source workflow, native VibeVM execution,
 new ChatGPT model experiment, consumer rollout or deployment was qualified.
+
+Committed local evidence: [source/export qualification](logs/qualification.txt)
+passed at the first research commit; [distribution](logs/distribution.txt)
+passed **32/32**, [release](logs/release.txt) passed **10** with **6** explicit
+optional native resolver/publisher integrations skipped, and
+[self-adoption](logs/self-adoption.txt) passed **12/12**. The unchanged package
+boundary was 2.2.0 to 2.2.0 with no bump. These suites exercise existing producer
+mechanisms, not a proposed ChatGPT implementation. The final report edits add
+upstream context and correct the clipping description; final-head source/export,
+whitespace, scope and native CI evidence remain externally bound to the Outcome.
 
 Material warning dispositions:
 
