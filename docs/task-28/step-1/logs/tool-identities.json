@@ -1,0 +1,13 @@
+{
+  "windows": {
+    "version": "1.0.7",
+    "sha256": "ceb0b8582e059dfab708ee0c5221e700c232c97912bdd5174dc0df1d03011b46",
+    "release_asset_id": 610469042,
+    "verification": "matches live official v1.0.7 GitHub release asset digest and accepted Task24 pin"
+  },
+  "linux_musl": {
+    "version": "1.0.7",
+    "sha256": "20d111df02eb28040ef4cb766bfcb0bde8ff4427b031f88f33eacb3711c3e240",
+    "verification": "both Linux qualification scripts verify executable bytes against accepted toolchain/vibevm.json"
+  }
+}

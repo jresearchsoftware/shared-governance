@@ -154,6 +154,10 @@ stronger Writer/Reviewer/admission/merge guarantees remain intact.
 
 ## Exact result and independent assessment
 
+Where separately adopted, [independent-review methodology](independent-review.md)
+substantiates this assessment. This reference does not activate that topic or
+change the acceptance authority and strategies below.
+
 Publish an attributable result through the project's authorized path, verify the
 published target, and bind claims and evidence to the identifiable artifact or
 immutable result under review. Report accomplished and blocked work, applicable

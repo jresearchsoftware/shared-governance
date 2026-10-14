@@ -43,3 +43,11 @@ only when the owning project explicitly adopts that topic. Preserve its accepted
 PR, direct-main, publication and mixed paths; installing/updating guidance neither
 applies settings nor grants permission to change them. Existing local policy
 remains authoritative until reviewed adoption. Unrelated tasks skip this topic.
+
+For independent assessment, read
+[independent-review methodology](../protocols/independent-review.md) only when
+the owning project explicitly adopts that topic. Inspect the actual result and
+primary evidence; disclose review gaps before a positive verdict. Package updates
+and Task Handoff adoption do not activate this additional topic. Local acceptance
+authority, specialist methods and stronger identity requirements remain intact;
+unrelated tasks skip it.

@@ -21,7 +21,7 @@ EXPORT_SPEC = importlib.util.spec_from_file_location(
 EXPORTER = importlib.util.module_from_spec(EXPORT_SPEC)
 EXPORT_SPEC.loader.exec_module(EXPORTER)
 COORDINATE = "org.jresearch.ai/development-governance"
-SLOT = "vibevm/vibedeps/org.jresearch.ai.development-governance/2.1.0"
+SLOT = "vibevm/vibedeps/org.jresearch.ai.development-governance/2.2.0"
 
 
 class DistributionTests(unittest.TestCase):
@@ -36,7 +36,7 @@ class DistributionTests(unittest.TestCase):
         shutil.copyfile(REPOSITORY / "LICENSE", self.source / "LICENSE")
         manifest_path = self.package / "vibe.toml"
         authored = tomllib.loads(manifest_path.read_text())["package"]["version"]
-        manifest_path.write_text(manifest_path.read_text().replace('version = "' + authored + '"', 'version = "2.1.0"'))
+        manifest_path.write_text(manifest_path.read_text().replace('version = "' + authored + '"', 'version = "2.2.0"'))
         shutil.copyfile(REPOSITORY / "vibe.toml", self.source / "vibe.toml")
         # Windows-mounted files can appear executable; fixture Git modes are explicit.
         for path in self.package.rglob("*"):
@@ -98,11 +98,11 @@ class DistributionTests(unittest.TestCase):
         (consumer / "vibe.toml").write_text(
             '[project]\nname = "disposable-consumer"\nversion = "0.0.0"\nspec_format = "mixed"\n'
             '\n[requires.packages]\n"' + COORDINATE + '" = '
-            '{version = "=2.1.0", git = "file:///disposable/distribution.git", tag = "v2.1.0"}\n')
+            '{version = "=2.2.0", git = "file:///disposable/distribution.git", tag = "v2.2.0"}\n')
         (consumer / "vibe.lock").write_text(
             '[meta]\nschema_version = 7\n\n[[package]]\ngroup = "org.jresearch.ai"\nname = "development-governance"\n'
-            'version = "2.1.0"\nsource_kind = "git"\n'
-            'source_url = "file:///disposable/distribution.git"\nsource_ref = "v2.1.0"\n'
+            'version = "2.2.0"\nsource_kind = "git"\n'
+            'source_url = "file:///disposable/distribution.git"\nsource_ref = "v2.2.0"\n'
             'content_hash = ' + json.dumps(content_hash) + '\n')
         index = consumer / DISTRIBUTION.BOOT_INDEX
         index.parent.mkdir(parents=True)
@@ -144,7 +144,7 @@ class DistributionTests(unittest.TestCase):
             with self.subTest(reference=reference):
                 self.rejected_source(reference)
 
-    def test_current_flow_has_six_protocols_no_native_skill_and_is_frozen(self):
+    def test_current_flow_has_seven_protocols_no_native_skill_and_is_frozen(self):
         manifest = tomllib.loads((self.package / "vibe.toml").read_text())
         self.assertIs(manifest["package"]["frozen"], True)
         self.assertNotIn("skill", manifest)
@@ -156,6 +156,7 @@ class DistributionTests(unittest.TestCase):
         self.assertIn(DISTRIBUTION.HANDOFF, receipt["sha256"])
         self.assertIn(DISTRIBUTION.SELF_ADOPTION, receipt["sha256"])
         self.assertIn(DISTRIBUTION.REPOSITORY_GOVERNANCE, receipt["sha256"])
+        self.assertIn(DISTRIBUTION.INDEPENDENT_REVIEW, receipt["sha256"])
 
     def test_accepted_historical_payload_shapes_remain_exportable(self):
         # The disposable source has no accepted objects; select the real history.
@@ -164,7 +165,8 @@ class DistributionTests(unittest.TestCase):
                 ("3fa243b83a630ccd4973114e5cad12e1351d1558", "0.1.0", 1),
                 ("901186bdd1aabc9b7f1094eeb2cc294f96b688f7", "1.0.0", 2),
                 ("129d452ddfa6b9ac1030ccc7803994793467ab2d", "1.1.0", 3),
-                ("1b97f0aadcc769c04415d8f4855098cee35b9f3a", "2.0.0", 5)):
+                ("1b97f0aadcc769c04415d8f4855098cee35b9f3a", "2.0.0", 5),
+                ("c3fbc8c2d10982889bea526161f810902def4289", "2.1.0", 6)):
             with self.subTest(version=version):
                 files, receipt = DISTRIBUTION.snapshot(revision)
                 self.assertEqual(receipt["version"], version)
@@ -172,13 +174,19 @@ class DistributionTests(unittest.TestCase):
                                      for name in files), count)
                 self.assertEqual(DISTRIBUTION.AUTHORITY in files, count >= 3)
                 self.assertEqual(DISTRIBUTION.HANDOFF in files, count >= 4)
-                self.assertNotIn(DISTRIBUTION.REPOSITORY_GOVERNANCE, files)
+                self.assertEqual(DISTRIBUTION.REPOSITORY_GOVERNANCE in files, count >= 6)
+                self.assertNotIn(DISTRIBUTION.INDEPENDENT_REVIEW, files)
+
+    def test_new_review_topic_cannot_reuse_accepted_six_topic_version(self):
+        manifest = self.package / "vibe.toml"
+        manifest.write_text(manifest.read_text().replace('version = "2.2.0"', 'version = "2.1.0"'))
+        self.rejected_source()
 
     def test_any_skill_declaration_or_dependency_is_rejected(self):
         manifest = self.package / "vibe.toml"
         original = manifest.read_text()
         for extra in ('skill = []\n', '[[skill]]\nname = "proportional-controls"\n',
-                      '[requires.packages]\n"unapproved/package" = "2.1.0"\n',
+                      '[requires.packages]\n"unapproved/package" = "2.2.0"\n',
                       '[tools]\ncommand = "unapproved"\n', '[hooks]\ncommand = "unapproved"\n',
                       '[mcp]\ncommand = "unapproved"\n'):
             with self.subTest(declaration=extra):
@@ -189,7 +197,8 @@ class DistributionTests(unittest.TestCase):
     def test_protocol_must_be_nonempty_utf8(self):
         for name in (DISTRIBUTION.PROTOCOL, DISTRIBUTION.VERSIONING,
                      DISTRIBUTION.AUTHORITY, DISTRIBUTION.HANDOFF,
-                     DISTRIBUTION.SELF_ADOPTION, DISTRIBUTION.REPOSITORY_GOVERNANCE):
+                     DISTRIBUTION.SELF_ADOPTION, DISTRIBUTION.REPOSITORY_GOVERNANCE,
+                     DISTRIBUTION.INDEPENDENT_REVIEW):
             path = self.package / name
             original = path.read_bytes()
             for data in (b"", b" \n", b"\xff\xfe"):
@@ -377,19 +386,20 @@ class DistributionTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     DISTRIBUTION.verify(self.revision, directory, installed=True)
 
-    def test_installed_task_handoff_cannot_be_changed_missing_or_symlinked(self):
-        for corruption in ("changed", "missing", "symlink"):
-            with self.subTest(corruption=corruption):
-                consumer, slot, _ = self.consumer_fixture("handoff-" + corruption)
-                protocol = slot / DISTRIBUTION.HANDOFF
-                if corruption == "changed":
-                    protocol.write_bytes(protocol.read_bytes() + b"Altered\n")
-                else:
-                    protocol.unlink()
-                    if corruption == "symlink":
-                        protocol.symlink_to(self.package / DISTRIBUTION.HANDOFF)
-                with self.assertRaises(ValueError):
-                    DISTRIBUTION.verify_consumer(self.revision, consumer)
+    def test_installed_handoff_and_review_cannot_be_changed_missing_or_symlinked(self):
+        for name in (DISTRIBUTION.HANDOFF, DISTRIBUTION.INDEPENDENT_REVIEW):
+            for corruption in ("changed", "missing", "symlink"):
+                with self.subTest(protocol=name, corruption=corruption):
+                    consumer, slot, _ = self.consumer_fixture(Path(name).stem + "-" + corruption)
+                    protocol = slot / name
+                    if corruption == "changed":
+                        protocol.write_bytes(protocol.read_bytes() + b"Altered\n")
+                    else:
+                        protocol.unlink()
+                        if corruption == "symlink":
+                            protocol.symlink_to(self.package / name)
+                    with self.assertRaises(ValueError):
+                        DISTRIBUTION.verify_consumer(self.revision, consumer)
 
     def test_consumer_lock_and_requirement_must_bind_the_installed_slot(self):
         consumer, slot, receipt = self.consumer_fixture("consumer-lock")
@@ -402,7 +412,7 @@ class DistributionTests(unittest.TestCase):
             (lock_path, original_lock.replace('schema_version = 7', 'schema_version = 999')),
             (lock_path, original_lock.replace('[meta]\nschema_version = 7\n\n', '')),
             (lock_path, original_lock.replace(content_hash, "sha256:" + "0" * 64)),
-            (lock_path, original_lock.replace('source_ref = "v2.1.0"', 'source_ref = "v2.1.1"')),
+            (lock_path, original_lock.replace('source_ref = "v2.2.0"', 'source_ref = "v2.2.1"')),
             (lock_path, original_lock.replace('file:///disposable/distribution.git', 'file:///other.git')),
             (lock_path, original_lock.replace('group = "org.jresearch.ai"',
                                              'group = "org.jresearch.governance"')),
@@ -410,10 +420,10 @@ class DistributionTests(unittest.TestCase):
                                              'name = "proportional-controls"')),
             (manifest_path, original_manifest.replace(COORDINATE,
                                                      "org.jresearch.governance/proportional-controls")),
-            (manifest_path, original_manifest.replace('version = "=2.1.0"', 'version = "*"')),
-            (manifest_path, original_manifest.replace('tag = "v2.1.0"',
-                                                     'tag = "v2.1.0", rev = "' + "a" * 40 + '"')),
-            (manifest_path, original_manifest.replace('tag = "v2.1.0"', 'rev = "abcdef"')),
+            (manifest_path, original_manifest.replace('version = "=2.2.0"', 'version = "*"')),
+            (manifest_path, original_manifest.replace('tag = "v2.2.0"',
+                                                     'tag = "v2.2.0", rev = "' + "a" * 40 + '"')),
+            (manifest_path, original_manifest.replace('tag = "v2.2.0"', 'rev = "abcdef"')),
         ]
         for path, altered in mutations:
             with self.subTest(file=path.name, content=altered[-100:]):
@@ -457,8 +467,8 @@ class DistributionTests(unittest.TestCase):
         original = manifest.read_bytes()
         for before, after in ((b'group = "org.jresearch.ai"', b'group = "org.jresearch.governance"'),
                               (b'name = "development-governance"', b'name = "proportional-controls"'),
-                              (b'version = "2.1.0"', b'version = "invalid"'),
-                              (b'version = "2.1.0"', b'version = "1.1.0"'),
+                              (b'version = "2.2.0"', b'version = "invalid"'),
+                              (b'version = "2.2.0"', b'version = "1.1.0"'),
                               (b'license = "MIT"', b'license = "Unapproved"'),
                               (b'frozen = true', b'frozen = false'),
                               (b'frozen = true', b'frozen = 1'),
@@ -490,7 +500,8 @@ class DistributionTests(unittest.TestCase):
     def test_incomplete_source_package_is_rejected(self):
         for name in (DISTRIBUTION.PROTOCOL, DISTRIBUTION.VERSIONING,
                      DISTRIBUTION.AUTHORITY, DISTRIBUTION.HANDOFF,
-                     DISTRIBUTION.SELF_ADOPTION, DISTRIBUTION.REPOSITORY_GOVERNANCE):
+                     DISTRIBUTION.SELF_ADOPTION, DISTRIBUTION.REPOSITORY_GOVERNANCE,
+                     DISTRIBUTION.INDEPENDENT_REVIEW):
             path = self.package / name
             original = path.read_bytes()
             with self.subTest(protocol=name):

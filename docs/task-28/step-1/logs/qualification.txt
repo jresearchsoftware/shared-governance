@@ -1,0 +1,1 @@
+{"qualification": "PASS", "tracked_files": 308, "local_links": 310, "secret_scan": "bounded markers PASS", "active_protocol": "PASS", "native_projection_source": "bf4e7114e26d10779b4b593a23e8b1d5410d00c1", "native_skill": "absent", "flow_export": "PASS"}

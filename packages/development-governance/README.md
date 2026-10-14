@@ -13,6 +13,13 @@ paths, proportionate protections, a short setup checklist and event-based
 verification. Guidance does not apply GitHub settings or authorize mutation.
 It has no executable capabilities, dependencies or native Codex Skills.
 
+[Independent review methodology](vibevm/vibespecs/protocols/independent-review.md)
+is available for separate explicit topic adoption. It requires primary-result
+and validation evidence, complete first assessment, aggregated material findings,
+finding provenance and risk-directed rereview. Missing sufficient evidence
+prevents unsupported PASS/APPROVE. It preserves manual and non-PR review,
+Task Handoff acceptance strategies, local specialist methods and product identity.
+
 The stable contract preserves the proportional-controls procedure, exceptions
 and applicability. Its existing-proof and self-imposed-friction guidance reuse
 current evidence and project authority without additional operator steps.
@@ -40,6 +47,9 @@ Step interpretations, Outcome publication routing and immediate approval of
 decision-grade results may need migration. This is a MAJOR change, not an additive
 topic or silent consumer update. Version 2.1.0 adds repository-governance as an
 explicitly adopted topic; the five existing protocols remain unchanged.
+Version 2.2.0 adds independent-review as a separately adopted topic. The Task
+Handoff reference is conditional and changes no existing mandatory behavior;
+the other five protocol files retain their 2.1.0 bytes.
 Existing consumers retain their accepted local rules until separately reviewed
 adoption; frozen versions are retained.
 Human-owned project instructions retain task, review, publication and adoption
