@@ -160,6 +160,39 @@ Windows generation/check and disposable musl Linux materialization/distribution
 qualification. Unchanged optional native publisher/resolver integrations and
 actual fresh Codex/client/model review behavior are not claimed as qualified.
 
+Observed primary local results at implementation/materialization head
+`bf4e7114e26d10779b4b593a23e8b1d5410d00c1`:
+
+| Check | Observed result and primary record |
+| --- | --- |
+| Exact source/export/native state | [PASS](logs/qualification.txt): 308 tracked files, 310 local links, bounded credential markers, complete source/registry/slot/lock/routing comparison; native Skill absent. |
+| Distribution/integrity regressions | [32/32 PASS](logs/distribution.txt), including preserved historical 2.1.0 export and new review-topic version/missing/empty/invalid/corrupt/symlink boundaries. |
+| Ordinary release regressions | [10 PASS, 6 optional native integrations skipped](logs/release.txt). Skips are not passes. |
+| Native self-adoption/recovery | [12/12 PASS](logs/self-adoption.txt), including clean committed checkout, canonical mismatch detection and Git recovery. |
+| Package boundary | [MINOR 2.1.0 to 2.2.0 PASS](logs/version-boundary.txt) against the frozen accepted base. |
+| Windows native generation | [Exact authored export](logs/native-source.txt), [native install](logs/native-install.txt), [check](logs/native-check.txt): PASS, zero errors/warnings/findings; one old installed slot normally pruned, retained 2.1.0 registry source untouched. |
+| Linux musl authoring/materialization | [PASS](logs/native-linux.txt): seven commands, full installed-payload comparison, three clean check reports; disposable native filesystem. |
+| Linux local Git distribution/incidents | [PASS](logs/distribution-linux.txt): 21 commands; cold/repeated install, retained-slot/offline rollback, synthetic update and integrity detection. Mutable-tag lock/slot split and cache-only recovery failure are reproduced known limitations, not successful paths. No remote publication or actual consumer mutation. |
+| Source preservation and tool identity | [233 protected canonical Git blobs identical](logs/preservation.json), including five prior protocols, historical package trees/Task evidence, root human routes, license, pin and workflows. [Windows/Linux executable identities](logs/tool-identities.json) bind VibeVM 1.0.7 to official/accepted SHA-256 pins. |
+
+Warning and evidence disposition: the [initial preservation comparison](logs/preservation-initial.txt)
+compared raw Windows checkout logs with canonical Git LF bytes and failed on
+inherited CRLF. No protected source was changed; the corrected Git filter-aware
+comparison passes, with 72 transformed checkout paths explicitly listed.
+Staging new logs also emits CRLF-to-LF notices; canonical Git content is checked.
+These are normalization observations, not introduced policy defects.
+
+Pinned VibeVM retains its static-INDEX/dynamic-link behavior, deliberate mutable-tag
+lock/slot divergence and cache-only offline recovery limitation. Canonical exporter
+and producer verification reject content/routing mismatch; retained slots and
+ordinary Git rollback work. This Step changes no resolver or publication mechanism.
+No fresh model compliance, native reviewer judgment, live identity enforcement,
+client startup or consumer migration is demonstrated. Accepted Task 24's Windows
+CLI startup gap remains disclosed in producer self-adoption; no sandbox/ACL repair
+or generalized UI/runtime warning-absence claim is made. Final-head checks and
+GitHub CI are separately bound by the canonical Outcome, not inferred from this
+implementation-head record.
+
 Deliberative acceptance remains pending. Independent assessment must inspect the
 actual complete candidate/diff, original accepted obligations, primary checks,
 gaps and alternatives; then owner discussion and an explicit subsequent Decision
