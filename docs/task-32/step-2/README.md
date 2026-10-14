@@ -95,6 +95,16 @@ Reproduce local text checks with Python 3.11+ and Git:
 python docs/task-32/step-2/verify-text.py
 ```
 
+Like Step 1's evidence helper, consumer-path checks need the two frozen consumer
+Git objects. They are already present in this research checkout. For a fresh
+clone, obtain them through these ordinary read-only fetches (no consumer checkout,
+remote configuration, credentials change or installation):
+
+```powershell
+git fetch --no-tags https://github.com/jresearchsoftware/codex-relay.git 52bebbc9cafc1e82737943a6d37f00945ffadfef
+git fetch --no-tags https://github.com/jresearchsoftware/docs-evolution-review.git 6014e8e2c20faebfaa656ee1e8e6efb1dcd9d630
+```
+
 Then use the accepted CONTRIBUTING source/export/release/self-adoption checks
 and applicable exact-head candidate CI. Stage new files before qualification,
 commit before exact-commit export. Actual results and warning dispositions are
