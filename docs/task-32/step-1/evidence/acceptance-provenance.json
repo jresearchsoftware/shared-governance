@@ -1,0 +1,150 @@
+{
+  "relay125": {
+    "url": "https://github.com/jresearchsoftware/codex-relay/pull/125",
+    "number": 125,
+    "state": "closed",
+    "merged": true,
+    "mergeable": false,
+    "draft": false,
+    "body": "Relay consumers previously had to reconstruct the product workflow from source documentation. This adds one versioned Relay Skill source and deterministic standalone/native VibeVM artifacts, including exact offline schemas and attributed shared guidance. The standalone projector exposes a reviewable diff and preserves local instructions, Skills and overlays across installation, update, rollback and removal.\n\nThe existing governance dependency moves to accepted/published 2.1.0 with a regenerated immutable native lock and complete provenance. Existing proportional-controls and requirement-authority adoption is preserved. Other bundled topics remain references: new Deliberative verdict prerequisites and multi-result routing require separate owner reconciliation. Repeated progress/review guidance is consolidated without changing Relay runtime authority or actor responsibilities.\n\nVibeVM 1.0.7 qualifies the actual authoring/distribution path. Its resolver ignores transitive Git-table sources, so the package uses an exact native version edge and a small generated consumer manifest explicitly pins both Git source roots. The supported explicit `skill install` path detects drift; `vibe package` lifecycle auto-projection is unsuitable for consumer reconciliation.\n\nValidation at `1c90c98f3df5e4a9bac0669ad4b37bd8d37c998b`:\n\n- Complete required Linux candidate commands: 812 Node tests passed, one skipped; 127 Rust tests passed; formatting/whitespace/candidate scan passed; three-consumer qualification passed.\n- Deployment pytest: 892 passed, 300 skipped, 19 deprecation warnings. Skips require native root/protected ownership, privilege fixtures or a disposable Docker systemd manager; those paths are not qualified by this unprivileged run. Deprecations originate in unchanged passlib/Jinja2 paths.\n- Standalone lifecycle and passive dependency verifier: 13 tests each; standalone passed on Windows and Linux, with deterministic clean-clone generation.\n- Real pinned VibeVM: exact accepted producer/distribution byte comparison, two-root dependency graph, identical standalone/VPM bytes, update/rollback, empty-cache fresh-clone offline reinstall, drift/collision refusal and owned removal.\n- Native Codex 0.162.1 Windows/Linux discovery passed for identical final artifact digest `ff86a651cd5974d63fb8e14cfec3d40b3272e0764af848862c26629768480896`. Eight separate synthetic workflow evaluations preserved authority, retained compatibility, Outcome, independent review and warning boundaries.\n\nNative CI evidence: [exact-head checks](https://github.com/jresearchsoftware/codex-relay/actions/runs/38520671661). Supported check annotations were inspected; no warnings were observed within that API scope. Linux Codex discovery reported bundled bubblewrap fallback: discovery passed, while sandbox execution/isolation remains unqualified. Native discovery and bounded helper evaluation do not establish automatic model selection or native model traversal. Native VibeVM on Windows, broader clients, a live installed Relay upgrade, external package publication and production deployment are outside this qualification. Independent native exact-head review remains pending; Issue #91 remains open.\n\nRelated to #91\nExecution admission digest: aaa4d430c3c157459107a55945c4739078fc9922379c7765d56b980319a70f8f",
+    "title": "Task 91 — Step 1 — Develop and qualify the Relay-owned reusable Skill and standalone/VibeVM distribution together with adopted accepted Shared Governance 2.1.0 in one Task 91 candidate",
+    "base": "main",
+    "base_sha": "4847c368ae5ea956fd6370bee207c8e4a176e8e0",
+    "head": "codex/task-91",
+    "head_sha": "1c90c98f3df5e4a9bac0669ad4b37bd8d37c998b",
+    "head_repo_id": 1374717037,
+    "head_repo_full_name": "jresearchsoftware/codex-relay",
+    "merge_commit_sha": "52bebbc9cafc1e82737943a6d37f00945ffadfef",
+    "user": {
+      "login": "foal",
+      "name": "foal",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/458209?v=4",
+      "id": 458209
+    },
+    "requested_reviewers": null,
+    "requested_team_reviewers": null,
+    "diff": null,
+    "comments": null,
+    "created_at": "2026-10-14T06:10:26Z",
+    "updated_at": "2026-10-14T06:37:27Z",
+    "closed_at": "2026-10-14T06:37:24Z",
+    "merged_at": "2026-10-14T06:37:24Z",
+    "commits": 2,
+    "changed_files": 86,
+    "additions": 18883,
+    "deletions": 198,
+    "display_url": "https://github.com/jresearchsoftware/codex-relay/pull/125",
+    "display_title": "Task 91 — Step 1 — Develop and qualify the Relay-owned reusable Skill and standalone/VibeVM distribution together with adopted accepted Shared Governance 2.1.0 in one Task 91 candidate"
+  },
+  "docreview313": {
+    "url": "https://github.com/jresearchsoftware/docs-evolution-review/pull/313",
+    "number": 313,
+    "state": "closed",
+    "merged": true,
+    "mergeable": false,
+    "draft": false,
+    "body": "Implementation of https://github.com/jresearchsoftware/docs-evolution-review/issues/212\n\nThread: Task 212 — Step 1 — Final active Relay terminology audit and owner-approved guidance reconciliation\nCorrelation: Task 212 · Step 1 · Final active Relay terminology audit and owner-approved guidance reconciliation\nAttempt: run-38250950762\nExecution request native ID: 6124323036\nExecution request digest: ee24a203eebd82a6fe881a78dbc36666f78f49e75c05b7a5ed018d889b317c50\nRequested model: gpt-6.1-sol; effort: xhigh\nStarting head: efcf1768a184586906dfce9d6626c15310ef1902\n\nRelated to #212",
+    "title": "Task 212 · Step 1 · Final active Relay terminology audi…",
+    "base": "main",
+    "base_sha": "efcf1768a184586906dfce9d6626c15310ef1902",
+    "head": "codex/task-212-step-1",
+    "head_sha": "3bb51aa3aa3e0d6b05352a6644f34a59182f5479",
+    "head_repo_id": 1267752151,
+    "head_repo_full_name": "jresearchsoftware/docs-evolution-review",
+    "merge_commit_sha": "6014e8e2c20faebfaa656ee1e8e6efb1dcd9d630",
+    "user": {
+      "login": "jresearchsoftware-codex-writer[bot]",
+      "name": "jresearchsoftware-codex-writer[bot]",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/46644909?v=4",
+      "id": 306851591
+    },
+    "requested_reviewers": null,
+    "requested_team_reviewers": null,
+    "diff": null,
+    "comments": null,
+    "created_at": "2026-10-12T12:57:43Z",
+    "updated_at": "2026-10-12T13:12:52Z",
+    "closed_at": "2026-10-12T13:12:49Z",
+    "merged_at": "2026-10-12T13:12:49Z",
+    "commits": 1,
+    "changed_files": 15,
+    "additions": 301,
+    "deletions": 76,
+    "display_url": "https://github.com/jresearchsoftware/docs-evolution-review/pull/313",
+    "display_title": "Task 212 · Step 1 · Final active Relay terminology audi…"
+  },
+  "relay125Reviews": {
+    "reviews": [
+      {
+        "id": "PRR_kwDOUfCEbc8AAAABSKhmLA",
+        "state": "APPROVED",
+        "body": "Independent exact-head review — Task 91, Step 1\nRepository: jresearchsoftware/codex-relay\nReviewed head: 1c90c98f3df5e4a9bac0669ad4b37bd8d37c998b\nComparison base: 4847c368ae5ea956fd6370bee207c8e4a176e8e0\nVerdict: APPROVE\n\nReviewed the complete 86-file candidate against Issue #91 and its trusted Decision, accepted AGENTS.md and relevant Relay product/reviewer contracts. Inspected authored Skill workflow, compatibility, diagnostics and examples; the standalone projector and its lifecycle/negative tests; generation and provenance; VibeVM package graph, pinned 2.1.0 payload/lock and native qualification; review-policy deduplication; CI, Writer Outcome, head/PR state and review threads. Source and generated artifacts are separated; both deliveries are intentionally byte-identical and require explicit consumer adoption. Existing Relay authority, Writer/Reviewer separation, historical v3 compatibility and the two already-adopted shared topics remain preserved. No material candidate findings or unresolved prior review findings were found.\n\nCheck evidence: Public CI / Candidate checks and Codex CLI compatibility passed on the reviewed SHA. Writer reports 812 Node tests (one skipped), 127 Rust tests, deployment pytest 892 passed / 300 skipped and the focused standalone/VibeVM/client probes. Native review evidence required surfaces are complete, with zero check annotation warnings within API scope.\n\nWarning disposition:\n1. VibeVM 1.0.7 omits transitive Git-table sources and its package lifecycle may overwrite drifted Skill files. Impact: unsafe naive consumer resolution/reconciliation. Resolution: explicit two-root immutable consumer adapter, native exact dependency edge, supported explicit skill install with drift refusal; native graph, offline, rollback and removal qualified. External distribution and Windows-native VibeVM remain unqualified. Does not block this source candidate; separate publication authorization required.\n2. Linux Codex reported bundled bubblewrap fallback. Discovery metadata was qualified; sandbox/process isolation, automatic Skill selection, native model traversal and client settings sync were not. No sandbox or model execution is claimed. No source acceptance blocker within the expressly scoped probe.\n3. Unprivileged deployment pytest skipped 300 root/systemd/privilege-dependent cases and emitted 19 dependency deprecations in unchanged paths. These remain unqualified; no deployment/runtime source was changed and protected PROD qualification is not claimed. Does not block guidance-only source acceptance.\n4. No additional supported GitHub check/controller annotation warnings observed; UI-only service banners are excluded from API completeness, not asserted absent.\n\nA missing PR Step display label was reconciled to the independently verified Issue Step 1, immutable admission, PR title and Writer Outcome. Native Reviewer read-only target then confirmed exact head, matching authority with no drift and proper result identity. This metadata repair created no new execution, Step or authority.\n\nIssue policy is keep-open. Approval authorizes only exact-head governed source integration; it does not authorize external package/tag publication, live consumer rollout, Relay deployment, client settings changes or Task closure.\n\n<!-- jresearchsoftware-reviewer-relay:v1 operation=7617c525a1e10f5faadd37992af14f9c1d80e6683164e8038f73ea77d1261fa4 -->\n<!-- jresearchsoftware-reviewer-acceptance:v1 authority_sha256=c3906429e1825b99e3075df75709b9a344a6e246baec2bfdda922270efc45ec1 -->",
+        "submitted_at": "2026-10-14T06:36:26Z",
+        "author": {
+          "login": "jresearchsoftware-chatgpt-reviewer",
+          "name": "jresearchsoftware-chatgpt-reviewer",
+          "email": null,
+          "avatar_url": "https://avatars.githubusercontent.com/u/46644909?v=4",
+          "id": null
+        }
+      }
+    ]
+  },
+  "docreview313Reviews": {
+    "reviews": [
+      {
+        "id": "PRR_kwDOS5Bc188AAAABR04Otg",
+        "state": "APPROVED",
+        "body": "APPROVE at exact head 3bb51aa3aa3e0d6b05352a6644f34a59182f5479 (Task #212, Step 1).\n\nIndependent review covered the full 15-file bounded active-guidance audit, correctness, architecture/maintainability, realistic regression checks, typed Request opt-in and legacy compatibility, preserved historical Stage A/Phase A usage, and closure boundaries. No material findings. Native exact-head Linux validation and Windows documentation-controller checks passed; the Writer Outcome is bound to this head and the independent warning evidence was complete. Existing link/model warnings are baseline; the upcoming Ubuntu runner-image migration is advisory. No blockers remain for this PR.\n\nIssue #212 has explicit close-authorized owner disposition and a trusted finishing typed Request with continuation {hold:false,task_complete:true,next:null}; closure must still be separately owner-authorized and verified after merge, not inferred from this approval. Keep #181, #208 and parent #270 open. No production, credentials, Relay deployment, history migration, or unrelated Task/Issue changes are authorized by this review.\n\n<!-- jresearchsoftware-reviewer-relay:v1 operation=3408909b334bd205332284c4308417dfa6c640c97b6aa949e23a52ed88d9268d -->",
+        "submitted_at": "2026-10-12T13:12:00Z",
+        "author": {
+          "login": "jresearchsoftware-chatgpt-reviewer",
+          "name": "jresearchsoftware-chatgpt-reviewer",
+          "email": null,
+          "avatar_url": "https://avatars.githubusercontent.com/u/46644909?v=4",
+          "id": null
+        }
+      }
+    ]
+  },
+  "shared31": {
+    "url": "https://github.com/jresearchsoftware/shared-governance/pull/31",
+    "number": 31,
+    "state": "closed",
+    "merged": true,
+    "mergeable": false,
+    "draft": false,
+    "body": "Task #28 addresses review verdicts that are attributable and bound to an exact result but lack substantive primary evidence. This proposal adds a separately adopted Independent Review Methodology contract: inspect the actual complete result and relevant checks, reconcile canonical requirements and omissions, aggregate material findings, classify their provenance, assess coupled risks on rereview, and leave insufficient evidence pending/inconclusive instead of publishing unsupported PASS/APPROVE.\n\nPackage bump: minor\n\nDevelopment Governance 2.1.0 → 2.2.0. The new topic requires separate explicit adoption. Boot routing and a short Task Handoff reference do not activate it through an existing adoption or change existing mandatory behavior. Task Handoff retains authority, Step/Decision, Outcome routing and Direct/Deliberative semantics; five other protocols preserve accepted bytes. The native source/slot/lock/boot candidate is committed together. Historical sources and published versions are preserved.\n\nThe [reconstruction and ownership assessment](https://github.com/jresearchsoftware/shared-governance/blob/dfc5ad3e98ad71a8f58df750aad376f4cd652274/docs/task-28/step-1/README.md) pins accepted Relay and DocReview sources and relevant correction history, maps every material review obligation to shared or justified local ownership, and compares a separate contract with enlarging Task Handoff or adding a publication preflight. Relay Reviewer/Writer, schemas, identities and gates stay product-owned. DocReview reader/source/rendering/confirmation methods stay local. No mandatory Relay, universal checklist, service or consumer migration is introduced.\n\nValidation includes 18 desk-based acceptance walks, exact source/export/native consistency, distribution integrity and historical export tests, release/self-adoption regressions, package boundary and pinned Windows/Linux VibeVM qualification. Primary observed results and limitations are recorded in the committed report/logs and canonical Step Outcome. Desk walks do not establish model enforcement; unchanged optional native publisher/resolver integrations and fresh client/model behavior remain unqualified.\n\nRelated to #28 and its [Step 1 Owner Decision](https://github.com/jresearchsoftware/shared-governance/issues/28#issuecomment-6164723062). Deliberative: stop for independent substantive exact-head non-approving assessment, then owner discussion and a subsequent Decision before formal APPROVE. This candidate authorizes no merge, release, external consumer adoption or Task closure. The single canonical terminal Codex Outcome belongs on this result PR.\n",
+    "title": "Add independently evidenced review methodology as a separately adopted topic",
+    "base": "main",
+    "base_sha": "c3fbc8c2d10982889bea526161f810902def4289",
+    "head": "codex/task-28-step-1-review-methodology",
+    "head_sha": "dfc5ad3e98ad71a8f58df750aad376f4cd652274",
+    "head_repo_id": 1408747561,
+    "head_repo_full_name": "jresearchsoftware/shared-governance",
+    "merge_commit_sha": "15e8191435a126e54b4d1739a73fab112e01c081",
+    "user": {
+      "login": "foal",
+      "name": "foal",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/458209?v=4",
+      "id": 458209
+    },
+    "requested_reviewers": null,
+    "requested_team_reviewers": null,
+    "diff": null,
+    "comments": null,
+    "created_at": "2026-10-14T12:50:37Z",
+    "updated_at": "2026-10-14T13:38:33Z",
+    "closed_at": "2026-10-14T13:38:30Z",
+    "merged_at": "2026-10-14T13:38:30Z",
+    "commits": 3,
+    "changed_files": 51,
+    "additions": 3876,
+    "deletions": 47,
+    "display_url": "https://github.com/jresearchsoftware/shared-governance/pull/31",
+    "display_title": "Add independently evidenced review methodology as a separately adopted topic"
+  }
+}
