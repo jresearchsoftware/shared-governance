@@ -1,0 +1,23 @@
+{
+  "scope": "local text/source facts only; no settings or model qualification",
+  "static_full_text": "PASS",
+  "unicode_characters_inside_fence": 6742,
+  "characters_below_8000_limit": 1258,
+  "utf8_sha256_inside_fence": "300ba225a6e68d5ccdccbfb180d4be815bec2b1ae59a7c7803e6154479e2e82d",
+  "unchanged_inputs_reproduce_identical_output": "PASS",
+  "accepted_connector_content_and_routes": "PASS",
+  "active_binding_identity_routes_and_topic_boundary": "PASS",
+  "frozen_consumer_route_existence_only": "PASS",
+  "step_1_step_2_history_and_package_native_preservation": "PASS",
+  "step_3_tracked_staged_and_untracked_scope": "PASS",
+  "negative_static_probes": {
+    "composition_mismatch": "REJECTED AS EXPECTED",
+    "unresolved_placeholder": "REJECTED AS EXPECTED",
+    "oversize": "REJECTED AS EXPECTED",
+    "headroom": "REJECTED AS EXPECTED",
+    "step_1_history": "REJECTED AS EXPECTED",
+    "step_2_history": "REJECTED AS EXPECTED",
+    "protected_new_path": "REJECTED AS EXPECTED"
+  },
+  "model_behavior": "NOT QUALIFIED; owner-reported trials recorded separately in Step 3"
+}
