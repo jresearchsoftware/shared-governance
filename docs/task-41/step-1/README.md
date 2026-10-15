@@ -66,4 +66,4 @@ No FPF corpus, server/client installation or external mutation occurred.
 
 These are contributor reasoning walks over the installed/static contract, not
 executed model behavior or independent acceptance. Required validation and its
-limits are recorded in the accompanying qualification evidence and final PR Outcome.
+limits are recorded in [qualification](validation.md) and the final PR Outcome.
