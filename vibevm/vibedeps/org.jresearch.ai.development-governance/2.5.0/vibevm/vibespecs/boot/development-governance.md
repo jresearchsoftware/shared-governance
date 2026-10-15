@@ -58,3 +58,12 @@ affected workflow documentation, read
 only when the owning project explicitly adopts this topic. Existing local rules
 and the other topics' applicability remain intact; installation/update does not
 activate it. Unrelated tasks skip it.
+
+For selecting, loading or refreshing work context, read
+[context loading and JIT discipline](../protocols/context-loading.md) only when
+the owning project explicitly adopts this topic. Start with decision-relevant
+authority, load canonical detail when triggered and refresh affected mutable
+facts without weakening required completeness. Existing topic adoption,
+entrypoints, contributor paths and client instruction hierarchy remain intact;
+installation/update does not activate it. It adds no runtime retrieval or boot
+command and grants no new authority.

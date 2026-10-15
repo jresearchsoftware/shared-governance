@@ -1,5 +1,5 @@
 schema = 1
-source_hash = "sha256:35cdd59a666aac36d35e957cdcc527d03971c7fde9cacb2dd24d378a139ec10e"
+source_hash = "sha256:d76eaa8072c792b5de312a8043c281c846e2a9656adad295b0a1dedae83514a2"
 spec_format = "mixed"
 
 [[file]]
@@ -8,7 +8,7 @@ sha256 = "89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853"
 
 [[file]]
 path = "README.md"
-sha256 = "1925ab2c68d3ea0f9f2d18c00616384ed795238d25eb9f38c4c6690f85b28fc0"
+sha256 = "3faed8a2442ca870e5d2979bab196934dacfc6f436131f3178b807d68d5af956"
 
 [[file]]
 path = "tools/chatgpt/README.md"
@@ -24,11 +24,15 @@ sha256 = "12bef6998acb7f2215b6b23f44dd2e9549e5bc9d49bce88af9d2da248c4f00cb"
 
 [[file]]
 path = "vibe.toml"
-sha256 = "e8fd256df89cee5ae90bfdee8f992cbdfa21aaff4753b7dbcd52ddcecba6b067"
+sha256 = "39c5b4120a38a99a221e6c3a131d0e766b73f92ba49bfd831e54c13a779f8150"
 
 [[file]]
 path = "vibevm/vibespecs/boot/development-governance.md"
-sha256 = "abf5c36bf87be8a80119f06a38415d66e5bd378193e88e6e90b3afb305183cf5"
+sha256 = "5a0acbc8691d360a19e230d1d268ec1ed46b99e9038ac074e6d194cfa86d5acc"
+
+[[file]]
+path = "vibevm/vibespecs/protocols/context-loading.md"
+sha256 = "d84f4bb050913e3d98e65d8657748ab74e641f56e7dda7f54eb66beb56caaa04"
 
 [[file]]
 path = "vibevm/vibespecs/protocols/contract-and-decision-maintenance.md"
