@@ -24,8 +24,42 @@ def module(name, path):
 
 projection = module("projection", TOOL)
 preparation = module("preparation", ROOT / "scripts/prepare-distribution.py")
-ACCEPTED = "15e8191435a126e54b4d1739a73fab112e01c081"
-ANCHOR = "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6193249773"
+
+
+def preservation_failures(root, baseline):
+    """Check retained source without requiring pre-squash Git objects.
+
+    This bounded Task 32/35 fixture protects history and unchanged protocols;
+    it does not freeze every future authorized edit or prevent new topics.
+    """
+    failures = []
+    expected = baseline["preserved_blobs"]
+    present = []
+    for path in expected:
+        if (root / path).is_file():
+            present.append(path)
+        else:
+            failures.append(f"Missing preserved source: {path}")
+    # Git applies the checkout's attributes, so ordinary Windows CRLF and LF
+    # checkouts compare against the same accepted blob identities.
+    actual = subprocess.check_output(
+        ["git", "hash-object", "--stdin-paths"], cwd=root,
+        input=("\n".join(present) + "\n").encode()
+    ).decode().splitlines()
+    for path, blob in zip(present, actual, strict=True):
+        if blob != expected[path]:
+            failures.append(f"Changed preserved source: {path}")
+    for directory in baseline["historical_roots"]:
+        actual_paths = {path.relative_to(root).as_posix()
+                        for path in (root / directory).rglob("*") if path.is_file()}
+        original = {path for path in expected if path.startswith(directory + "/")}
+        if actual_paths != original:
+            failures.append(f"Changed historical file set: {directory}")
+    boot = baseline["boot"]
+    content = (root / boot["path"]).read_bytes().replace(b"\r\n", b"\n")
+    if not content.startswith(boot["accepted_prefix"].encode()):
+        failures.append(f"Changed accepted boot routes: {boot['path']}")
+    return failures
 
 
 class ProjectionTests(unittest.TestCase):
@@ -208,9 +242,15 @@ class ProjectionTests(unittest.TestCase):
 
     def test_real_producer_output_and_accepted_workflow_routing(self):
         binding = json.loads((ROOT / "chatgpt/binding.json").read_text())
-        artifacts, receipt = projection.project(ROOT, binding, (ROOT / "chatgpt/custom.md").read_text(), ACCEPTED, ANCHOR)
+        recorded = json.loads((ROOT / "chatgpt/receipt.json").read_text())
+        # Reproduce the recorded maintenance inputs. Receipt consistency proves
+        # no owner acceptance: that authority still requires external evidence.
+        artifacts, receipt = projection.project(
+            ROOT, binding, (ROOT / "chatgpt/custom.md").read_text(),
+            recorded["accepted_sha"], recorded["authority_anchor"]
+        )
         self.assertEqual(artifacts["instructions.md"], (ROOT / "chatgpt/instructions.md").read_bytes())
-        self.assertEqual(receipt, json.loads((ROOT / "chatgpt/receipt.json").read_text()))
+        self.assertEqual(receipt, recorded)
         for text in ("accepted manual client binding", "BLOCKED", "Deliberative", "self-checks"):
             self.assertIn(text, artifacts["instructions.md"].decode())
         self.assertLess(receipt["unicode_characters"], 7000)
@@ -394,11 +434,45 @@ class ProjectionTests(unittest.TestCase):
         self.assertEqual(self.tree(), before)
 
     def test_prior_history_and_protocols_preserved(self):
-        paths = ["docs/task-32/step-1", "docs/task-32/step-2", "docs/task-32/step-3", "docs/task-32/step-4",
-                 "AGENTS.md", "packages/development-governance/vibevm/vibespecs/protocols",
-                 "packages/development-governance/vibevm/vibespecs/boot/development-governance.md"]
-        delta = subprocess.check_output(["git", "diff", "c7003e8fdd57e796f6aec4daffe5d946e4792250", "--", *paths], cwd=ROOT)
-        self.assertEqual(delta, b"")
+        baseline = json.loads((ROOT / "scripts/fixtures/chatgpt-preserved-sources.json").read_text())
+        self.assertEqual(preservation_failures(ROOT, baseline), [])
+
+    def test_preservation_in_squash_checkout_rejects_source_mutations(self):
+        baseline = json.loads((ROOT / "scripts/fixtures/chatgpt-preserved-sources.json").read_text())
+        self.write(".gitattributes", "* text=auto eol=lf\n")
+        for path in baseline["preserved_blobs"]:
+            target = self.repo / path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / path, target)
+        boot = baseline["boot"]
+        self.write(boot["path"], boot["accepted_prefix"] + "\nNew conditional route.\n")
+        # Added protocols and appended routing are allowed by the bounded baseline.
+        self.write("packages/development-governance/vibevm/vibespecs/protocols/new-topic.md",
+                   "# New independently authorized topic\n")
+        # This disposable repository has only its synthetic initial commit: neither
+        # the accepted source revision nor any PR-only ancestor was copied.
+        missing = subprocess.run(["git", "cat-file", "-e", baseline["source_revision"]],
+                                 cwd=self.repo, capture_output=True)
+        self.assertNotEqual(missing.returncode, 0)
+        self.assertEqual(preservation_failures(self.repo, baseline), [])
+        protocol = next(path for path in baseline["preserved_blobs"]
+                        if "/protocols/" in path)
+        for path in ("docs/task-32/step-1/README.md", protocol, boot["path"]):
+            with self.subTest(path=path):
+                target = self.repo / path
+                before = target.read_bytes()
+                target.write_bytes(b"Removed accepted source.\n")
+                self.assertTrue(any(path in failure
+                                    for failure in preservation_failures(self.repo, baseline)))
+                target.write_bytes(before)
+        added_history = "docs/task-32/step-1/rewritten-history.md"
+        self.write(added_history, "New retroactive claim.\n")
+        self.assertIn("Changed historical file set: docs/task-32/step-1",
+                      preservation_failures(self.repo, baseline))
+        (self.repo / added_history).unlink()
+        (self.repo / protocol).unlink()
+        self.assertIn(f"Missing preserved source: {protocol}",
+                      preservation_failures(self.repo, baseline))
 
 
 if __name__ == "__main__":
