@@ -48,7 +48,7 @@ def main():
         "qualification": "PASS", "source_revision": receipt["source_revision"],
         "version": receipt["version"], "payload_sha256": receipt["payload_sha256"],
         "consumer": str(args.consumer), "initial_index_entries": index["entry"],
-        "conditional_boot_excerpt": text.split("For proposed security", 1)[0].strip(),
+        "conditional_boot_excerpt": text[text.index("When a person explicitly"):].strip(),
         "explicit_onboarding_route": ["AGENTS.md", distribution.BOOT_INDEX,
                                       boot.relative_to(args.consumer).as_posix(),
                                       guide.relative_to(args.consumer).as_posix()],

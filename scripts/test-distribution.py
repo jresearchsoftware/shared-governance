@@ -336,7 +336,8 @@ class DistributionTests(unittest.TestCase):
 
     def test_current_onboarding_export_preserves_protocols_and_client_tools(self):
         DISTRIBUTION.ROOT = REPOSITORY
-        files, receipt = DISTRIBUTION.snapshot("HEAD")
+        revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPOSITORY).decode().strip()
+        files, receipt = DISTRIBUTION.snapshot(revision)
         accepted, _ = DISTRIBUTION.snapshot("88a95f7604b2d81d7a3dd3f76f095beddb71bdab")
         self.assertEqual(receipt["version"], "2.6.0")
         self.assertEqual({name: data for name, data in files.items()
@@ -347,7 +348,7 @@ class DistributionTests(unittest.TestCase):
                          {DISTRIBUTION.ONBOARDING, DISTRIBUTION.ONBOARDING_EXAMPLES})
         # The complete package works outside the producer's README/instructions.
         destination = self.directory / "onboarding-export"
-        DISTRIBUTION.prepare("HEAD", destination)
+        DISTRIBUTION.prepare(revision, destination)
         self.assertEqual((destination / DISTRIBUTION.ONBOARDING).read_bytes(),
                          files[DISTRIBUTION.ONBOARDING])
 
