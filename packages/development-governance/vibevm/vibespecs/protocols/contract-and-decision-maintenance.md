@@ -41,14 +41,14 @@ remediation mechanisms remain local.
 
 An owner-accepted reusable architecture, process, governance, security,
 qualification or operational decision that affects later execution must not
-remain chat-only. Before related implementation, carry any change to executable
-Task authority into its canonical owner Decision through the project's existing
+remain chat-only. Before related work relying on changed executable Task
+authority, carry that change into its canonical owner Decision through the project's existing
 mechanism. Promote an independently reusable rule into the appropriate existing
 policy, architecture, runbook or component contract through a suitable authorized
 bounded change. A bounded reusable correction need not wait for the unrelated
 remainder of a backlog item.
 
-Distinguish accepted durable policy from task-local exceptions, temporary or
+Distinguish accepted durable policy from task-local choices or exceptions, temporary or
 experimental choices and rejected ideas when later execution depends on that
 distinction. Do not promote casual observations, unaccepted speculation or
 one-off diagnostic facts. Promotion creates no authority by itself: retain the
@@ -60,7 +60,7 @@ to record the decision.
 
 When a change or remediation actually changes user/operator-visible behavior or a
 Task/review/authorization workflow, update affected human guidance and examples
-in the same Task/PR (or equivalent project change), or explain there why none
+in the same Task and PR where applicable (or equivalent project change), or explain there why none
 needs updating. Check instructions against implementation and governing
 contracts, including supported legacy behavior and local policy boundaries.
 Use the existing change and review process; no separate documentation approval
