@@ -1,0 +1,14 @@
+test_index_slot_route_requires_own_receipt_file (__main__.ProjectionTests.test_index_slot_route_requires_own_receipt_file) ... FAIL
+
+======================================================================
+FAIL: test_index_slot_route_requires_own_receipt_file (__main__.ProjectionTests.test_index_slot_route_requires_own_receipt_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "Q:\work\repo\github\jresearchsoftware\shared-governance\scripts\test-chatgpt-projection.py", line 350, in test_index_slot_route_requires_own_receipt_file
+    self.assertNotEqual(negative.returncode, 0)
+AssertionError: 0 == 0
+
+----------------------------------------------------------------------
+Ran 1 test in 4.680s
+
+FAILED (failures=1)

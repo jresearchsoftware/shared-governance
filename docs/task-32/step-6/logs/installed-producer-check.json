@@ -1,0 +1,11 @@
+{
+  "schema": 2,
+  "effective_content": "NO_OP",
+  "instructions": "NO_OP",
+  "sources": "DISABLED",
+  "maintenance_evidence": "NO_OP",
+  "source_changes": [],
+  "diffs": {},
+  "live_settings_verified": false,
+  "application": "owner reviews/applies/readbacks; preserve unknown live rules"
+}

@@ -1,0 +1,81 @@
+{
+  "observed_date": "2026-10-14",
+  "surface": "Codex local chat; not a fresh ChatGPT Project",
+  "repository": "jresearchsoftware/shared-governance",
+  "task": 32,
+  "step": 2,
+  "accepted_source_main": "15e8191435a126e54b4d1739a73fab112e01c081",
+  "remote_main_observed": "15e8191435a126e54b4d1739a73fab112e01c081",
+  "starting_candidate_head": "bae27d667e953e9d4fa0da17cdc51860d13efbf4",
+  "starting_remote_pr_head": "bae27d667e953e9d4fa0da17cdc51860d13efbf4",
+  "branch": "codex/task-32-step-1-chatgpt-bootstrap",
+  "result_pr": 33,
+  "accepted_provenance": {
+    "owner_decision_url": "https://github.com/jresearchsoftware/shared-governance/issues/28#issuecomment-6169665115",
+    "merged_pr": 31,
+    "merge_commit_sha": "15e8191435a126e54b4d1739a73fab112e01c081",
+    "reviewed_head": "dfc5ad3e98ad71a8f58df750aad376f4cd652274",
+    "independent_assessment_id": 5518773275
+  },
+  "step_2_decision_url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6173878844",
+  "step_2_decision_body": "## Owner Decision — Admit Task #32 Step 2: prepare a controlled ChatGPT bootstrap experiment\n\nFollowing the Step 1 research in [PR #33](https://github.com/jresearchsoftware/shared-governance/pull/33) at exact head `bae27d667e953e9d4fa0da17cdc51860d13efbf4` and the [independent non-approving assessment](https://github.com/jresearchsoftware/shared-governance/pull/33#pullrequestreview-5521478376), the owner agrees to **test the minimal direct-GitHub bootstrap direction in practice before deciding on the architecture**. The research is sufficient to motivate this bounded experiment; that does **not** formally approve/merge PR #33, adopt a package topic or select a production solution.\n\n**Admit one manual Codex execution: Step 2 — Prepare a controlled ChatGPT bootstrap experiment.** Independently accepted source-main/start binding for this execution is `15e8191435a126e54b4d1739a73fab112e01c081`, which remains separate from the unaccepted Step 1 candidate. Verify its currentness/acceptance before changing the branch; if source-main has advanced or authority is inconsistent, stop for reconciliation rather than silently rebasing onto a new authority. Read the complete current Task chronology, accepted AGENTS/manual Task Handoff and the Step 1 report, semantic map and independent assessment as **research evidence, not newly adopted policy**.\n\n### Step 2 deliverables\n\n1. Prepare the **smallest reusable static bootstrap prototype** with a clear Shared Governance-specific binding/overlay and a full ready-to-paste experimental Project Instructions text. Route at substantive task boundaries through the actual supported GitHub connector to accepted repository guidance, explicitly adopted VibeVM materialization and relevant live Task/PR/diff/CI evidence. Do not replace project-owned permissions, topic adoption or acceptance provenance with a moving link or copied candidate rules.\n2. Prepare a reproducible, **one-action-at-a-time owner-facing setup and trial runbook**. The owner, not Codex, will later create/configure any temporary ChatGPT test projects. Compare a clean control with the experimental bootstrap, while keeping model/tool access and other context comparable; avoid hidden prior-chat/project memory bias where supported.\n3. Prepare bounded **read-only behavioral cases**: routine discussion, Issue with body/comments/Decisions, a Codex Outcome link requiring independent substantive exact-head review, PR #27/#31 negative cases (Outcome/green checks alone must never justify positive review), adequate positive review with primary source/diff/check/warning evidence, stale/missing source and unsupported GitHub-access boundaries. Preserve Relay-v4 versus DocReview-v3/legacy and specialist permissions as distinct example bindings; do not activate either consumer. Favor small representative tests over a large new suite.\n4. Define observable success/failure and an evidence capture sheet: distinguish actual connector/file/CI reads and correctness of decision from polished prose; include unqualified, partial and failed outcomes. Clearly separate local text/test validation from **future real ChatGPT model observations** and state what would or would not justify adopting the design.\n5. Make the candidate and verification artifacts reviewable in this repository (ideally separately under `docs/task-32/step-2/`), with proportionate local checks and applicable exact-head CI. Reuse rather than duplicate the Step 1 research inventory.\n\n### Authorization and stop boundary\n\nThis Step authorizes **repository-local experimental bootstrap and trial preparation only**. It does **not** authorize creation or modification of live ChatGPT projects/settings/Sources, external consumer repository edits, package release/publication, merging PR #33, changing accepted shared topics, production/credential access, approving this Deliberative result or closing Task #32. A generator, Skill, synchronized service or extra mandatory review/preflight control is **not** preselected or required; research alternatives remain open.\n\nPublish the one canonical attributable English terminal Outcome according to the accepted manual Task Handoff, bound to exact result SHA(s), substantive evidence, CI, warnings and unqualified real-client cases. Stop for independent substantive **non-approving Deliberative review** and the owner's next Decision before any practical settings application, formal positive acceptance, merge or follow-on launch. **Task #32 stays OPEN.**",
+  "step_1_independent_assessment": {
+    "url": "https://github.com/jresearchsoftware/shared-governance/pull/33#pullrequestreview-5521478376",
+    "state": "COMMENTED",
+    "head": "bae27d667e953e9d4fa0da17cdc51860d13efbf4",
+    "read": "full body via GitHub reviews API; non-approving"
+  },
+  "connector": {
+    "file_tool": "github.fetch_file",
+    "file_path": "AGENTS.md",
+    "ref": "15e8191435a126e54b4d1739a73fab112e01c081",
+    "git_blob_sha": "efad657bea20760c8cb1136bd717890831a86e9b",
+    "issue_comments_tool": "github.fetch_issue_comments",
+    "comment_count": 4,
+    "comments": [
+      {
+        "id": 6172309309,
+        "url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6172309309",
+        "characters": 9740,
+        "ending": " review ID/URL, actor, SHA/verdict and verify merge/Issue outcome. No unobserved success; minimum proportional ceremony.",
+        "body_utf8_sha256": "2fb978486a24a78db47be25b50da8b9cd7099461f2e8043399ef3c07e42d726c"
+      },
+      {
+        "id": 6172323060,
+        "url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6172323060",
+        "characters": 7884,
+        "ending": "ty, exact-head independence and owner control. Continue automatically when authorized without crossing owner boundaries.",
+        "body_utf8_sha256": "ec8353d9d83cef791124370d6a3c77405af9599401915e58aed6db7890dd11ab"
+      },
+      {
+        "id": 6172393644,
+        "url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6172393644",
+        "characters": 2652,
+        "ending": "package or closing Task #32. Implementation remains follow-on, to be admitted after evaluating research. Keep Task OPEN.",
+        "body_utf8_sha256": "d141b1f05b3d3e7cfc343993b31beb7f286b03a936960bada062aca60bfc9643"
+      },
+      {
+        "id": 6173878844,
+        "url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6173878844",
+        "characters": 4487,
+        "ending": "fore any practical settings application, formal positive acceptance, merge or follow-on launch. **Task #32 stays OPEN.**",
+        "body_utf8_sha256": "537fcc3043c27cb298d46669e4fefde41183f9f848b80b1e0fda2a0891e2e8d8"
+      }
+    ],
+    "content_sha256": "d442f8a90ca3afabacea7fe58eb6a3825bc8c80c370f6ef305b88397b64fc83c",
+    "exact_accepted_blob_content_match_observed": true,
+    "supplied_comment_snapshot_equality_observed": true
+  },
+  "live_settings_state": "No UI readback or mutation; Step 1 owner said no separate Shared Governance field",
+  "real_client_results": "All C1-C8 NOT RUN / UNQUALIFIED",
+  "title": {
+    "requested": "Task 32 — Step 2 — Prepare controlled ChatGPT bootstrap experiment",
+    "set_calls": 1,
+    "set_response_full_title_matches": true,
+    "persisted_readback": "Navigation APIs show Task 32 — Step 2 — Prepare controlled ChatGPT bootstrap exp…; display is truncated, exact full persisted title not independently exposed"
+  },
+  "docs_sources": [
+    "https://learn.chatgpt.com/docs/projects",
+    "https://learn.chatgpt.com/docs/personalize"
+  ]
+}

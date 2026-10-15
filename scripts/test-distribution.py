@@ -32,7 +32,13 @@ class DistributionTests(unittest.TestCase):
         self.source = self.directory / "source"
         self.source.mkdir()
         self.package = self.source / DISTRIBUTION.PACKAGE
-        shutil.copytree(REPOSITORY / DISTRIBUTION.PACKAGE, self.package)
+        # Keep historical negative fixtures truthful instead of relabelling newer assets 2.2.0.
+        baseline, _ = DISTRIBUTION.snapshot("15e8191435a126e54b4d1739a73fab112e01c081")
+        for name, data in baseline.items():
+            if name != DISTRIBUTION.RECEIPT:
+                target = self.package / name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(data)
         shutil.copyfile(REPOSITORY / "LICENSE", self.source / "LICENSE")
         manifest_path = self.package / "vibe.toml"
         authored = tomllib.loads(manifest_path.read_text())["package"]["version"]
@@ -181,6 +187,19 @@ class DistributionTests(unittest.TestCase):
         manifest = self.package / "vibe.toml"
         manifest.write_text(manifest.read_text().replace('version = "2.2.0"', 'version = "2.1.0"'))
         self.rejected_source()
+
+    def test_optional_chatgpt_assets_require_new_whole_package_version(self):
+        for name in ("project.py", "base.md", "README.md"):
+            target = self.package / "tools/chatgpt" / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(REPOSITORY / DISTRIBUTION.PACKAGE / "tools/chatgpt" / name, target)
+        self.rejected_source()  # Frozen 2.2.0 cannot acquire new maintenance files.
+        manifest = self.package / "vibe.toml"
+        manifest.write_text(manifest.read_text().replace('version = "2.2.0"', 'version = "2.3.0"'))
+        files, receipt = DISTRIBUTION.snapshot(self.commit())
+        self.assertEqual(receipt["version"], "2.3.0")
+        self.assertIn("tools/chatgpt/project.py", files)
+        self.assertNotIn("hooks", tomllib.loads(files["vibe.toml"].decode()))
 
     def test_any_skill_declaration_or_dependency_is_rejected(self):
         manifest = self.package / "vibe.toml"

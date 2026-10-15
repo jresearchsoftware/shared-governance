@@ -1,0 +1,11 @@
+{
+  "scope": "local text/source facts only; no settings or model qualification",
+  "static_full_text": "PASS",
+  "unicode_characters_inside_fence": 4305,
+  "utf8_sha256_inside_fence": "ce83d7fd5e12ee34a3b2c4e8afbd3ad83610f6016eae9cb0a98594f8e8c387ac",
+  "unchanged_inputs_reproduce_identical_output": "PASS",
+  "accepted_connector_content_and_routes": "PASS",
+  "frozen_consumer_route_existence_only": "PASS",
+  "step_1_and_package_native_preservation": "PASS",
+  "real_chatgpt_cases": "NOT RUN / UNQUALIFIED"
+}

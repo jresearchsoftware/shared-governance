@@ -11,7 +11,12 @@ It also offers [workflow-aware GitHub repository governance](vibevm/vibespecs/pr
 for explicit topic adoption: conditional PR, direct-main, publication and mixed
 paths, proportionate protections, a short setup checklist and event-based
 verification. Guidance does not apply GitHub settings or authorize mutation.
-It has no executable capabilities, dependencies or native Codex Skills.
+It has no boot hooks, executable capability declarations, dependencies or native Codex Skills.
+Version 2.3.0 adds optional manually invoked [ChatGPT maintenance assets](tools/chatgpt/README.md):
+one governance-neutral base and projector, delivered in the ordinary materialized
+slot. Consumers own custom Markdown and the complete source-controlled generated
+Instructions. This compatible MINOR addition changes no protocol, boot, existing
+mandatory workflow or topic adoption. Ordinary chats need no Python or VibeVM.
 
 [Independent review methodology](vibevm/vibespecs/protocols/independent-review.md)
 is available for separate explicit topic adoption. It requires primary-result

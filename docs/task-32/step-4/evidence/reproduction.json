@@ -1,0 +1,48 @@
+{
+  "shared-governance": {
+    "accepted_sha": "15e8191435a126e54b4d1739a73fab112e01c081",
+    "unicode_characters": 7040,
+    "template_sha256": "cfc6e105febb52f97d26bcedd6641c5473cbdb9703f04f1951c4875c659b020c",
+    "source_file_count": 18,
+    "native_entry_count": 2,
+    "reproduced_payloads": [
+      "instructions.md",
+      "receipt.json"
+    ],
+    "candidate_reproduction": "PASS",
+    "settings_comparison": {
+      "schema": 1,
+      "baseline_kind": "candidate",
+      "settings_text": "NO_OP",
+      "live_settings_verified": false,
+      "baseline_provenance": "unverified candidate",
+      "application": "owner applies/readbacks; preserve unknown live rules",
+      "source_changes": []
+    },
+    "live_behavior": "UNQUALIFIED"
+  },
+  "relay-preview": {
+    "accepted_sha": "52bebbc9cafc1e82737943a6d37f00945ffadfef",
+    "unicode_characters": 6962,
+    "template_sha256": "cfc6e105febb52f97d26bcedd6641c5473cbdb9703f04f1951c4875c659b020c",
+    "source_file_count": 19,
+    "native_entry_count": 3,
+    "reproduced_payloads": [
+      "instructions.md",
+      "receipt.json",
+      "sources-manifest.json",
+      "sources.md"
+    ],
+    "candidate_reproduction": "PASS",
+    "settings_comparison": {
+      "schema": 1,
+      "baseline_kind": "candidate",
+      "settings_text": "NO_OP",
+      "live_settings_verified": false,
+      "baseline_provenance": "unverified candidate",
+      "application": "owner applies/readbacks; preserve unknown live rules",
+      "source_changes": []
+    },
+    "live_behavior": "UNQUALIFIED"
+  }
+}

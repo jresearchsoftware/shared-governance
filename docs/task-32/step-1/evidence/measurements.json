@@ -1,0 +1,395 @@
+{
+  "scope": "deterministic text/source observations only, not semantic equivalence or model compliance",
+  "sources": [
+    {
+      "comment": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6172309309",
+      "unicode_characters": 9740,
+      "utf8_sha256": "2fb978486a24a78db47be25b50da8b9cd7099461f2e8043399ef3c07e42d726c",
+      "headroom_to_8000": -1740,
+      "clipped_characters": 1740,
+      "clipped_last_180": "nd outcome.\n- For a manually authored legacy CR, start with `## Change Request metadata`: Change Request ID, Target repository, Target pull request and exact 40-character Reviewed ",
+      "removed_suffix": "head SHA.\n- Every executable legacy remediation CR also includes `## Required remediation launch profile`: exact Step-containing thread name, resolved Codex model/effort/Subagents, native PR Change Request source authority and required reviewed starting head.\n- Typed CRs use the qualified schema-v3 trusted Reviewer publication path; do not substitute legacy prose or handcrafted JSON for native authority.\n- No placeholders, guessed/substituted profiles or review-model metadata.\n\n## Merge and closure\n\n- Remediation starts at reviewed SHA after normalization; targeted checks plus final exact-head CI. Tokens authorize no production/review/merge/closure.\n- Native `APPROVE` permits immediate owner-channel **squash** absent hold, multi-PR sequencing, pre-merge conditions or protected boundary. Recheck SHA, checks, readiness, mergeability; bind head. Squash failure stops; non-native fallback requires explicit merge authorization.\n- Invalid/missing/conflicting Issue closure => warned `keep-open`; `close-authorized` needs owner authority. Legacy PR `Related to #N` for keep-open, `Closes #N` only if authorized; typed PR always `Related to #N`.\n- Typed Issue closure is separate from PR merge. It requires owner-authorized `close-authorized`, independent acceptance of the full result, trusted Task-complete continuation, verification that no work remains and an authorized owner-channel closure. A CR cannot override the Issue's closure decision. Reviewer never merges/closes.\n- Protect production, credentials, privileged diagnostics, publication, history and release; fail closed on uncertainty.\n- Report native review ID/URL, actor, SHA/verdict and verify merge/Issue outcome. No unobserved success; minimum proportional ceremony.",
+      "sections": [
+        {
+          "line": 3,
+          "section": "Language and editing"
+        },
+        {
+          "line": 9,
+          "section": "Authority"
+        },
+        {
+          "line": 20,
+          "section": "Codex defaults"
+        },
+        {
+          "line": 25,
+          "section": "Task, Step and launch"
+        },
+        {
+          "line": 32,
+          "section": "Commands and Git"
+        },
+        {
+          "line": 39,
+          "section": "Continuation and handoff"
+        },
+        {
+          "line": 46,
+          "section": "Review"
+        },
+        {
+          "line": 53,
+          "section": "Publication and Change Requests"
+        },
+        {
+          "line": 64,
+          "section": "Merge and closure"
+        }
+      ]
+    },
+    {
+      "comment": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6172323060",
+      "unicode_characters": 7884,
+      "utf8_sha256": "ec8353d9d83cef791124370d6a3c77405af9599401915e58aed6db7890dd11ab",
+      "headroom_to_8000": 116,
+      "clipped_characters": 0,
+      "clipped_last_180": "y preserving authority, security, correctness, reproducibility, exact-head independence and owner control. Continue automatically when authorized without crossing owner boundaries.",
+      "removed_suffix": "",
+      "sections": [
+        {
+          "line": 3,
+          "section": "Editing"
+        },
+        {
+          "line": 6,
+          "section": "Communication"
+        },
+        {
+          "line": 9,
+          "section": "Governance and authority"
+        },
+        {
+          "line": 16,
+          "section": "GitHub evidence"
+        },
+        {
+          "line": 19,
+          "section": "Steps and handoffs"
+        },
+        {
+          "line": 42,
+          "section": "Codex output handoff"
+        },
+        {
+          "line": 53,
+          "section": "Independent review gate"
+        },
+        {
+          "line": 60,
+          "section": "Review publication"
+        },
+        {
+          "line": 74,
+          "section": "Approval, merge, closure and continuation"
+        },
+        {
+          "line": 91,
+          "section": "Continuation"
+        },
+        {
+          "line": 94,
+          "section": "Process-failure feedback"
+        },
+        {
+          "line": 97,
+          "section": "Boundaries and profile"
+        }
+      ]
+    }
+  ],
+  "character_sequence_similarity": 0.16307308216068997,
+  "similarity_limit": "textual diagnostic only; not a percentage of shared obligations",
+  "connector_exact_source_match": true,
+  "inspected_git_sources": [
+    {
+      "revision": "15e8191435a126e54b4d1739a73fab112e01c081",
+      "path": "AGENTS.md",
+      "inspection": "full",
+      "bytes": 5636,
+      "blob": "efad657bea20760c8cb1136bd717890831a86e9b",
+      "sha256": "d442f8a90ca3afabacea7fe58eb6a3825bc8c80c370f6ef305b88397b64fc83c"
+    },
+    {
+      "revision": "15e8191435a126e54b4d1739a73fab112e01c081",
+      "path": "vibevm/vibespecs/boot/INDEX.md",
+      "inspection": "full; STATIC.md absent",
+      "bytes": 819,
+      "blob": "7ac236f37e0da6bc4e0b07013d33603e27f18baa",
+      "sha256": "a763b163053455c508daf3d55f481b013bd6e6272b4a2d26fec75cda2747462d"
+    },
+    {
+      "revision": "15e8191435a126e54b4d1739a73fab112e01c081",
+      "path": "vibevm/vibespecs/boot/00-authoring.md",
+      "inspection": "full",
+      "bytes": 825,
+      "blob": "03a56a5a29c86de25c9a1c9e6836beb924263ee8",
+      "sha256": "131ef557d4319530410827479bba308d5f1f1d40cec424e705dbdaf96d2d6a3b"
+    },
+    {
+      "revision": "15e8191435a126e54b4d1739a73fab112e01c081",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.2.0/vibevm/vibespecs/boot/development-governance.md",
+      "inspection": "full",
+      "bytes": 3419,
+      "blob": "333a75f26a300157c2c53d8e2d604d3aaa131247",
+      "sha256": "05456be13b5fed7b9e26f332d3225ba73159a24ed567a249d1f12aa25a065ef3"
+    },
+    {
+      "revision": "15e8191435a126e54b4d1739a73fab112e01c081",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.2.0/vibevm/vibespecs/protocols/task-handoff.md",
+      "inspection": "full",
+      "bytes": 17849,
+      "blob": "b5f3e75ecc8a69823b889d26c9560f89e6959bf5",
+      "sha256": "3a24dff258f183a7b81b5a22583653908c200362cbf524636937c30736b1f073"
+    },
+    {
+      "revision": "15e8191435a126e54b4d1739a73fab112e01c081",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.2.0/vibevm/vibespecs/protocols/proportional-controls.md",
+      "inspection": "full",
+      "bytes": 6906,
+      "blob": "eab1eba9a7ab2a1a415a8cc89a04a8e5251eb463",
+      "sha256": "6fbd1dc55bd40ee67c442614cd3d71fda45f4ebdba7012b976e72857c0eacfed"
+    },
+    {
+      "revision": "15e8191435a126e54b4d1739a73fab112e01c081",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.2.0/vibevm/vibespecs/protocols/requirement-authority.md",
+      "inspection": "full",
+      "bytes": 2453,
+      "blob": "e8306782566ade864193f2f6fd8001cf34d639d1",
+      "sha256": "9e5af613383c2c1492325338d9c37933bc83e1175ae809055718fc354a5532ca"
+    },
+    {
+      "revision": "15e8191435a126e54b4d1739a73fab112e01c081",
+      "path": "packages/development-governance/vibevm/vibespecs/protocols/independent-review.md",
+      "inspection": "full as research source; not newly adopted",
+      "bytes": 10127,
+      "blob": "166a7becf83c31c1f08fc6745ec9093ddf5c9f49",
+      "sha256": "b9ebfca34c6278ed858701772de3520e0ca7ad7fe224d79d6885d2ab55e785bf"
+    },
+    {
+      "revision": "15e8191435a126e54b4d1739a73fab112e01c081",
+      "path": "docs/manual-task-handoff.md",
+      "inspection": "full",
+      "bytes": 7212,
+      "blob": "9f8c164f6c8a58b7cacb431a55d39eb03a21a16e",
+      "sha256": "e3b54b681ff3856788f8fc6906afc7fbd707bf0e7ad47e3da928a644a4c51a6d"
+    },
+    {
+      "revision": "15e8191435a126e54b4d1739a73fab112e01c081",
+      "path": "docs/authoring.md",
+      "inspection": "full",
+      "bytes": 8052,
+      "blob": "2567f06a1c8ab0fd4dc410338f28c260b59aa698",
+      "sha256": "73839719c527ecc20b97041758fbff6551856e1ff35feba8d1dffbf968a9e0e7"
+    },
+    {
+      "revision": "15e8191435a126e54b4d1739a73fab112e01c081",
+      "path": "docs/self-adoption.md",
+      "inspection": "full",
+      "bytes": 7619,
+      "blob": "44d119baff90ac711eecb8b487f5c1d6d7cf7189",
+      "sha256": "93cc7ec527234aa98e7438e184e001fa351ac5a9a84821067be17ef536c37e50"
+    },
+    {
+      "revision": "15e8191435a126e54b4d1739a73fab112e01c081",
+      "path": "CONTRIBUTING.md",
+      "inspection": "full",
+      "bytes": 2524,
+      "blob": "4a82b44544045d43019819363d4362cc2e9ebef2",
+      "sha256": "1324004914e7411f23aeb969855047d3b795d6f3712cce6563567f9488ca2695"
+    },
+    {
+      "revision": "15e8191435a126e54b4d1739a73fab112e01c081",
+      "path": "vibe.lock",
+      "inspection": "full",
+      "bytes": 574,
+      "blob": "2028c04fb58ac88d406605fc40f87cc7ce05a03a",
+      "sha256": "d01e7fe501624eec4e5bd8d051d412679179d03e8b153d1494391415cfa78f89"
+    },
+    {
+      "revision": "15e8191435a126e54b4d1739a73fab112e01c081",
+      "path": "vibe.toml",
+      "inspection": "full",
+      "bytes": 240,
+      "blob": "319e9b199d6fcff5b0bc0736ba1aa3bd6e47fc33",
+      "sha256": "01bba0be54ab08a764c8aa37211d4bba186de845a6a06258b24faaea271c9c74"
+    },
+    {
+      "revision": "15e8191435a126e54b4d1739a73fab112e01c081",
+      "path": "toolchain/vibevm.json",
+      "inspection": "full",
+      "bytes": 941,
+      "blob": "8921b29915f71e782375510199b982d15503fe29",
+      "sha256": "b9f8721f80e50b99bf57db619e79f44fe1f6fd2febb418b99acfe03ac91593c7"
+    },
+    {
+      "revision": "52bebbc9cafc1e82737943a6d37f00945ffadfef",
+      "path": "AGENTS.md",
+      "inspection": "full",
+      "bytes": 29681,
+      "blob": "a034db8fa92f55f9004b3532637662d440307fe7",
+      "sha256": "2fa2cd8bead8b18ba8bac78761a5825ded83f502b44bdc84fac20b32b57b930f"
+    },
+    {
+      "revision": "52bebbc9cafc1e82737943a6d37f00945ffadfef",
+      "path": "packages/codex-relay/skill/SKILL.md",
+      "inspection": "full",
+      "bytes": 3588,
+      "blob": "955886c329e7a7921f2c8ceccb780b0b65876430",
+      "sha256": "5ea2928ab771422d908acfae582ada5b030028bab2875556f23ea6a7d1ca7064"
+    },
+    {
+      "revision": "52bebbc9cafc1e82737943a6d37f00945ffadfef",
+      "path": "packages/codex-relay/skill/references/workflow.md",
+      "inspection": "full",
+      "bytes": 11915,
+      "blob": "8f5000a03eac5fbe4f08622976d75732fd39b5c1",
+      "sha256": "399e1a93e969203d0b39d0a9f2c7046f90718698a17a292af7210c2e9abd1903"
+    },
+    {
+      "revision": "52bebbc9cafc1e82737943a6d37f00945ffadfef",
+      "path": "packages/codex-relay/skill/references/compatibility.md",
+      "inspection": "full",
+      "bytes": 5232,
+      "blob": "6f15eb3271e29c8551edba2b75efc38d34eff31f",
+      "sha256": "9ec1edfa25860db5ec2380a25329460bcdf67e7064aa8d7a7d6a4feb21acae82"
+    },
+    {
+      "revision": "52bebbc9cafc1e82737943a6d37f00945ffadfef",
+      "path": "docs/relay-guidance-ownership.md",
+      "inspection": "full",
+      "bytes": 12918,
+      "blob": "8b647fe7f7a01fad11bd1e0310bef883161fdafc",
+      "sha256": "9e06ed03d601ee6bf281d396dbafd16b34fb3fa397bbde293299a12899f1ccad"
+    },
+    {
+      "revision": "52bebbc9cafc1e82737943a6d37f00945ffadfef",
+      "path": "vibe.lock",
+      "inspection": "full",
+      "bytes": 559,
+      "blob": "43ce7bf26b81f104266c15202856d87e1e875252",
+      "sha256": "c664a2a0f66dced132d484b0e35fbd86308fb994a9c890e9d6d3fdd1b03e6a81"
+    },
+    {
+      "revision": "52bebbc9cafc1e82737943a6d37f00945ffadfef",
+      "path": "vibevm/vibespecs/boot/INDEX.md",
+      "inspection": "full",
+      "bytes": 883,
+      "blob": "7cb354ff5c7d251ed0b68122ab7c2d38f8405f38",
+      "sha256": "3090d5708f35483d6b9482f43dd95625b262accc1b0b7f77c0a5f8e74e6aa020"
+    },
+    {
+      "revision": "52bebbc9cafc1e82737943a6d37f00945ffadfef",
+      "path": "guidance/artifacts/vpm/vibe.toml",
+      "inspection": "full",
+      "bytes": 474,
+      "blob": "dd12ef98240d5a9d00d16588c5d403c5e36f99c6",
+      "sha256": "844f3c8b07566e75cdb26d74cfd41f44f375d7fabe69639553e05bb6f71a283f"
+    },
+    {
+      "revision": "6014e8e2c20faebfaa656ee1e8e6efb1dcd9d630",
+      "path": "AGENTS.md",
+      "inspection": "full",
+      "bytes": 7863,
+      "blob": "d4cd0e568ed700fbcde288412b984e100f20a9ff",
+      "sha256": "354be6e0c8d3687a87446206114465ab4ae02dd06381d7c215f55bcf3e272cf5"
+    },
+    {
+      "revision": "6014e8e2c20faebfaa656ee1e8e6efb1dcd9d630",
+      "path": "docs-evolution-poc/methodology/relay-consumer-methodology.md",
+      "inspection": "full",
+      "bytes": 9612,
+      "blob": "384dacf74f3f1007fb83aa290b19e6fc8ae37610",
+      "sha256": "b5d4a1540e83f6fb041cffb95af9ba3e283abea9914c44b3ed59693437b8d4ff"
+    },
+    {
+      "revision": "6014e8e2c20faebfaa656ee1e8e6efb1dcd9d630",
+      "path": "docs-evolution-poc/PROJECT-RULES.md",
+      "inspection": "bounded slices: 1-95, 598-681, 682-692, 725-735, 780-822, 1062-1082; headings scanned",
+      "bytes": 119447,
+      "blob": "c4828dfffbb594bab04dda5b41dac11f4c43012e",
+      "sha256": "edb8713200a4805a424251aeaf9b85f3faf2fdbeeb3b9ae84468e11a37e58445"
+    },
+    {
+      "revision": "6014e8e2c20faebfaa656ee1e8e6efb1dcd9d630",
+      "path": "docs-evolution-poc/methodology/reader-documentation-gates/gate-policy.yaml",
+      "inspection": "full",
+      "bytes": 2382,
+      "blob": "bcdaf07a30da207c9bf975fa5569f1f0ee2ed433",
+      "sha256": "29258b3d73ae086d0515d6a55dee1eb7ef3369122110a6d99ff5cad39154daae"
+    },
+    {
+      "revision": "6014e8e2c20faebfaa656ee1e8e6efb1dcd9d630",
+      "path": "docs-evolution-poc/methodology/review-finalization-contract.yaml",
+      "inspection": "full",
+      "bytes": 5167,
+      "blob": "9ab18176b9cfc7da4736764596ef48d9bd4ec758",
+      "sha256": "156f13649416253f113cf38cc440a2cae7537d8788e88fb0fc2d66cf5579e114"
+    },
+    {
+      "revision": "b6659978453f50e6d1d4d99626d70b980a2c5847",
+      "path": "crates/vibe-agent-projection/src/agents.rs",
+      "inspection": "1-190: complete Agent enum; scope/What definitions",
+      "bytes": 14897,
+      "blob": "d48378d3684ab0014f0bedae29a426e4989512bb",
+      "sha256": "feba74de71ca49c4060f373ff1efa5c7cb8e9e4e31fb110015dfc37069c23b6a"
+    },
+    {
+      "revision": "b6659978453f50e6d1d4d99626d70b980a2c5847",
+      "path": "crates/vibe-core/src/manifest/package/when.rs",
+      "inspection": "full: enum, parser and test source; tests not executed",
+      "bytes": 7931,
+      "blob": "ca2f887f44931bddce7ec590d0b2e9b1048ece18",
+      "sha256": "296d8627688866f6fbd3f555efb9973246ea4b57a3b8677aed9831861c65ec33"
+    },
+    {
+      "revision": "b6659978453f50e6d1d4d99626d70b980a2c5847",
+      "path": "crates/vibe-workspace/src/boot.rs",
+      "inspection": "bounded when/boot-entry/ordering sections",
+      "bytes": 22181,
+      "blob": "8b23393396a54128cc0bc03bf935457220911c58",
+      "sha256": "6ee4cc5c5eb15a9176a953c283a31418f6f49dacaa7a6d0fbf1d14358991d88c"
+    },
+    {
+      "revision": "b6659978453f50e6d1d4d99626d70b980a2c5847",
+      "path": "crates/vibe-workspace/src/boot/hybrid.rs",
+      "inspection": "bounded conditional/static-zone sections",
+      "bytes": 15088,
+      "blob": "3e7f84b6dc527c11421e1444857d0dc0da46243c",
+      "sha256": "acdd636fbac0779188b926c47672a81b9a874d0ac5b6d524a11439d1901c2cef"
+    }
+  ],
+  "currentness_comparisons": [
+    {
+      "accepted": "52bebbc9cafc1e82737943a6d37f00945ffadfef",
+      "observed_remote_main": "ed2ec60e8096bd2a7477e9eac9e9f9d2603c0f20",
+      "paths": [
+        "AGENTS.md",
+        "packages/codex-relay/skill",
+        "vibe.lock",
+        "vibevm/vibespecs/boot/INDEX.md"
+      ],
+      "changed_paths": []
+    },
+    {
+      "accepted": "6014e8e2c20faebfaa656ee1e8e6efb1dcd9d630",
+      "observed_remote_main": "fd6b0c4eda5c6b5390cbdcdb8a26820f0e5d45c2",
+      "paths": [
+        "AGENTS.md",
+        "docs-evolution-poc/PROJECT-RULES.md",
+        "docs-evolution-poc/methodology/relay-consumer-methodology.md"
+      ],
+      "changed_paths": []
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "kind": "optional-source-cache",
+  "repository": "jresearchsoftware/codex-relay",
+  "accepted_sha": "52bebbc9cafc1e82737943a6d37f00945ffadfef",
+  "authority_anchor": "https://github.com/jresearchsoftware/codex-relay/pull/125",
+  "files": {
+    "vibevm/vibespecs/boot/00-core.md": "2251ff094522c58cfbfd1fc6833286c0eb02bc52eb35e3057e49b5709d6a2157",
+    "vibevm/vibespecs/boot/90-user.md": "e16f3ed8c04e6f0c6804cb849fe8a0a95e8b4e59445023d73289c0200f930956"
+  },
+  "limitations": "snapshot only; upload/addressability/freshness/activation unverified"
+}

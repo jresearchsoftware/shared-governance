@@ -1,0 +1,28 @@
+test_absent_native_supported_and_cannot_hide_present (__main__.ProjectionTests.test_absent_native_supported_and_cannot_hide_present) ... ok
+test_all_outputs_validated_before_any_write (__main__.ProjectionTests.test_all_outputs_validated_before_any_write) ... ok
+test_candidate_source_is_not_active_policy (__main__.ProjectionTests.test_candidate_source_is_not_active_policy) ... ok
+test_changed_binding_changes_only_reviewed_client_routing (__main__.ProjectionTests.test_changed_binding_changes_only_reviewed_client_routing) ... ok
+test_changed_custom_stale_detection_safe_update (__main__.ProjectionTests.test_changed_custom_stale_detection_safe_update) ... ok
+test_changed_distributed_base_uses_same_interface (__main__.ProjectionTests.test_changed_distributed_base_uses_same_interface) ... ok
+test_conditions_order_preserved_without_adoption (__main__.ProjectionTests.test_conditions_order_preserved_without_adoption) ... ok
+test_corrupt_slot_and_lock_and_unlocked_route_fail (__main__.ProjectionTests.test_corrupt_slot_and_lock_and_unlocked_route_fail) ... ok
+test_distributed_update_check_noop_and_custom_preservation (__main__.ProjectionTests.test_distributed_update_check_noop_and_custom_preservation) ... ok
+test_index_slot_route_requires_own_receipt_file (__main__.ProjectionTests.test_index_slot_route_requires_own_receipt_file) ... ok
+test_live_export_exact_diff_and_noop_with_unknown_rules (__main__.ProjectionTests.test_live_export_exact_diff_and_noop_with_unknown_rules) ... ok
+test_missing_generated_check_is_read_only_and_stale (__main__.ProjectionTests.test_missing_generated_check_is_read_only_and_stale) ... ok
+test_missing_optional_cache_only_fails_when_enabled (__main__.ProjectionTests.test_missing_optional_cache_only_fails_when_enabled) ... ok
+test_missing_sources_unsupported_formats_and_unknown_conditions (__main__.ProjectionTests.test_missing_sources_unsupported_formats_and_unknown_conditions) ... ok
+test_no_governance_injected_into_non_adopting_consumer (__main__.ProjectionTests.test_no_governance_injected_into_non_adopting_consumer) ... ok
+test_optional_sources_selection_changes_noop_and_disable (__main__.ProjectionTests.test_optional_sources_selection_changes_noop_and_disable) ... ok
+test_prior_history_and_protocols_preserved (__main__.ProjectionTests.test_prior_history_and_protocols_preserved) ... ok
+test_real_producer_output_and_accepted_workflow_routing (__main__.ProjectionTests.test_real_producer_output_and_accepted_workflow_routing) ... ok
+test_relevant_route_and_dependency_changes_are_reported_without_sha_in_settings (__main__.ProjectionTests.test_relevant_route_and_dependency_changes_are_reported_without_sha_in_settings) ... ok
+test_role_boundary_invalid_binding_paths_budget_and_sha (__main__.ProjectionTests.test_role_boundary_invalid_binding_paths_budget_and_sha) ... ok
+test_unknown_and_modified_generated_files_preserved (__main__.ProjectionTests.test_unknown_and_modified_generated_files_preserved) ... ok
+test_unrelated_accepted_commit_needs_no_settings_update (__main__.ProjectionTests.test_unrelated_accepted_commit_needs_no_settings_update) ... ok
+test_unsupported_actions_do_not_write (__main__.ProjectionTests.test_unsupported_actions_do_not_write) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 54.196s
+
+OK

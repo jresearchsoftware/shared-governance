@@ -1,0 +1,123 @@
+{
+  "schema": 1,
+  "execution": "Task 32 — Step 6 — Validate locked-slot INDEX membership",
+  "repository": "jresearchsoftware/shared-governance",
+  "issue": "https://github.com/jresearchsoftware/shared-governance/issues/32",
+  "result_pr": "https://github.com/jresearchsoftware/shared-governance/pull/33",
+  "starting_head": "d560862527859144d69bddd89db51a7882f87517",
+  "accepted_source_main": "15e8191435a126e54b4d1739a73fab112e01c081",
+  "decision": {
+    "id": "IC_kwDOU_fIKc8AAAABcSV97Q",
+    "author": {
+      "login": "foal"
+    },
+    "authorAssociation": "MEMBER",
+    "body": "## Owner Decision — Admit Task #32 Step 6: validate locked-slot INDEX membership\n\nFollowing the [canonical Step 5 Outcome](https://github.com/jresearchsoftware/shared-governance/pull/33#issuecomment-6188592353), its [independent exact-head NON-APPROVING assessment](https://github.com/jresearchsoftware/shared-governance/pull/33#pullrequestreview-5531720879), and owner discussion, **authorize one narrowly scoped owner-launched Manual Codex Step 6**. The owner accepts the review's specific native-route correctness finding as a defect to correct, **not** Step 5's complete candidate architecture as formally approved. No additional design selection is needed for this correction.\n\n**Execution identity:** `Task 32 — Step 6 — Validate locked-slot INDEX membership`.\n\n**Repository/Task:** `jresearchsoftware/shared-governance`, [Issue #32](https://github.com/jresearchsoftware/shared-governance/issues/32). Continue the existing [PR #33](https://github.com/jresearchsoftware/shared-governance/pull/33) from exact candidate head **`d560862527859144d69bddd89db51a7882f87517`**. The independently accepted producer source-main remains **`15e8191435a126e54b4d1739a73fab112e01c081`**, as verified against live `main` when admitting this Step. Before editing, read the complete Task chronology, prior Outcomes and independent reviews, applicable accepted guidance, remote PR head, current accepted main and merge base. Stop for reconciliation if a material authority/source/head divergence is found; no silent rebase or repin.\n\n### Admitted correction\n\n1. Fix the bounded finding in [`packages/development-governance/tools/chatgpt/project.py::native_inventory()`](https://github.com/jresearchsoftware/shared-governance/blob/d560862527859144d69bddd89db51a7882f87517/packages/development-governance/tools/chatgpt/project.py#L80-L93). It currently verifies hashes for files declared in each locked slot's `.vibe-slot.toml` but permits an INDEX route if its path merely begins with any locked slot prefix. Require every INDEX-referenced file **within a materialized locked slot** to be explicitly declared as a file by **that exact slot's receipt**, in addition to existing lock identity, ordinary-blob and hash validation. Do not accept an unreceipted extra file merely because it is committed inside the locked slot. Maintain INDEX order and condition handling; do not implement dependency resolution or infer topic adoption.\n2. Add a focused regression negative case in the existing real-Git/exported-tool suite: a valid locked slot and receipt, an extra committed file **inside the same locked slot**, and an INDEX entry referencing that extra file which is **not** in the slot's receipt. The projection must refuse it. Preserve/test the positive accepted receipt-declared route and existing unlocked-slot, corrupt-file, lock/slot mismatch and conditional-route cases. Apply proportional additional tests only if necessary to substantiate the actual invariant.\n3. Preserve the accepted three-layer source-controlled Instructions lifecycle, common governance-neutral base, consumer custom/binding, safe `check/update/compare`, optional Sources and owner-only live application. This Step is **not** a redesign, new consumer onboarding, an acceptance-oracle project, a new resolver, or a fresh package release. Version **2.3.0 remains an unaccepted candidate**; a bounded fix within this unpublished candidate does not require a gratuitous further SemVer bump. Preserve all prior Step history and the independent finding's provenance.\n4. Inspect the actual changed source/diff, semantic integrity, source/export/native consistency and test realism; run proportionate local validation plus **exact-head CI** and inspect primary job/check/warning evidence. Disclose genuinely unqualified or skipped surfaces instead of reporting them as PASS. Preserve unknown settings, unrelated work and credentials.\n\n**Protected boundaries:** No live ChatGPT Project Instructions/Sources edits or upload; no changes to Relay/DocReview/external consumers or Relay #101; no unadmitted topic adoption, workflow/profile change, deployment, credentials, publication/release of package 2.3.0, PR merge, Task closure or later Step launch. Do not treat static tests as proof of live ChatGPT behavior, real Sources addressability or owner readback.\n\nCommit and non-force push the correction on the existing PR #33; confirm exact remote head; publish **one canonical attributable English Step 6 Outcome on PR #33** with first-hand implementation, source, tests, CI and warning evidence. Then **stop for independent substantive NON-APPROVING Deliberative review and owner disposition**. Keep Issue #32 and PR #33 **OPEN**.",
+    "createdAt": "2026-10-15T13:29:37Z",
+    "includesCreatedEdit": false,
+    "isMinimized": false,
+    "minimizedReason": "",
+    "reactionGroups": [],
+    "url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6193249773",
+    "viewerDidAuthor": true
+  },
+  "chronology": [
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6172309309",
+      "createdAt": "2026-10-14T15:46:54Z"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6172323060",
+      "createdAt": "2026-10-14T15:47:35Z"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6172393644",
+      "createdAt": "2026-10-14T15:50:59Z"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6173878844",
+      "createdAt": "2026-10-14T17:06:37Z"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6177571849",
+      "createdAt": "2026-10-14T20:21:01Z"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6186228339",
+      "createdAt": "2026-10-15T06:46:39Z"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6187417393",
+      "createdAt": "2026-10-15T08:01:58Z"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6193249773",
+      "createdAt": "2026-10-15T13:29:37Z"
+    }
+  ],
+  "prior_outcomes": [
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/pull/33#issuecomment-6172944905",
+      "createdAt": "2026-10-14T16:18:39Z"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/pull/33#issuecomment-6174326091",
+      "createdAt": "2026-10-14T17:30:10Z"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/pull/33#issuecomment-6178058649",
+      "createdAt": "2026-10-14T20:45:11Z"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/pull/33#issuecomment-6186716656",
+      "createdAt": "2026-10-15T07:18:26Z"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/pull/33#issuecomment-6188592353",
+      "createdAt": "2026-10-15T09:10:50Z"
+    }
+  ],
+  "independent_review_ids": [
+    {
+      "id": "PRR_kwDOU_fIKc8AAAABSRsS6A",
+      "state": "COMMENTED",
+      "submittedAt": "2026-10-14T16:50:19Z",
+      "commit": {
+        "oid": "bae27d667e953e9d4fa0da17cdc51860d13efbf4"
+      }
+    },
+    {
+      "id": "PRR_kwDOU_fIKc8AAAABSTExBw",
+      "state": "COMMENTED",
+      "submittedAt": "2026-10-14T18:42:46Z",
+      "commit": {
+        "oid": "981ca259fab7e533653a7efc8aef8acfad95d4e9"
+      }
+    },
+    {
+      "id": "PRR_kwDOU_fIKc8AAAABSYWnww",
+      "state": "COMMENTED",
+      "submittedAt": "2026-10-15T05:16:12Z",
+      "commit": {
+        "oid": "24e1c3e76e172b033d157ef7a2ff7d20f6789d93"
+      }
+    },
+    {
+      "id": "PRR_kwDOU_fIKc8AAAABSZfQBg",
+      "state": "COMMENTED",
+      "submittedAt": "2026-10-15T07:33:18Z",
+      "commit": {
+        "oid": "c7003e8fdd57e796f6aec4daffe5d946e4792250"
+      }
+    },
+    {
+      "id": "PRR_kwDOU_fIKc8AAAABSbdcrw",
+      "state": "COMMENTED",
+      "submittedAt": "2026-10-15T10:30:05Z",
+      "commit": {
+        "oid": "d560862527859144d69bddd89db51a7882f87517"
+      }
+    }
+  ],
+  "inspection": "Full Issue body and all eight comments, all five prior Outcomes and independent reviews; accepted AGENTS/native routes and applicable protocols read before editing."
+}
