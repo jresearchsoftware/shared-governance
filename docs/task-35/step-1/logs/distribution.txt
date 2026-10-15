@@ -1,0 +1,20 @@
+Task 35 — Step 1 — Distribution implementation self-check
+Command: python scripts/test-distribution.py
+Environment: native Windows PowerShell / Python 3.12
+Result: exit code 0; 35 tests passed; no skips reported.
+Capture scope: terminal completion excerpt from the full run. Earlier progress was read live, not saved as a complete transcript. The initial 'ok' completes test_undeclared_skill_and_extra_passive_payload_are_rejected.
+
+ok
+test_verification_rejects_corruption_missing_extra_and_symlink_files (__main__.DistributionTests.test_verification_rejects_corruption_missing_extra_and_symlink_files) ... ok
+test_verification_rejects_symlink_directory (__main__.DistributionTests.test_verification_rejects_symlink_directory) ... ok
+
+----------------------------------------------------------------------
+Ran 35 tests in 255.487s
+
+OK
+
+Focused changed-case command:
+python scripts/test-distribution.py DistributionTests.test_contract_maintenance_requires_new_whole_package_version DistributionTests.test_contract_maintenance_missing_empty_or_escaping_payload_is_rejected DistributionTests.test_accepted_historical_payload_shapes_remain_exportable DistributionTests.test_historical_22_flow_has_seven_protocols_no_native_skill_and_is_frozen
+Observed focused result: 4 tests passed in 26.348s, exit code 0.
+
+Qualification: helper implementation/self-check evidence, not independent substantive acceptance or publication qualification. The accepted 2.2 and 2.3 fixtures retain their original protocol/package bytes; the new-topic cases use a disposable accepted-2.3 snapshot and validate refusal under 2.3, export under 2.4 with eight protocols/three existing tools, and missing/empty/non-UTF-8/escaping-path refusal before destination creation.

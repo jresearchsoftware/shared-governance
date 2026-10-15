@@ -93,11 +93,43 @@ adopts only the new topic and uses its own owner/change/review mechanisms.
 
 The regression repair uses a source-grounded preservation baseline rather than
 requiring a transient PR commit to survive squash. It retains historical Task 32
-evidence and accepted protocol invariants. Existing distribution checks exercise
+evidence and accepted protocol invariants: 73 Git-normalized blobs (66 historical
+Step 1-4 files and seven existing protocols), plus the accepted boot prefix.
+New topics/appended conditional routing remain possible; a future authorized
+protocol change can revise its bounded fixture with source/authority evidence.
+The real-producer test reproduces the receipt's recorded maintenance inputs;
+receipt consistency is not an acceptance oracle. Existing distribution checks exercise
 the eight-topic export, historical shapes, version boundary and malformed payload
 rejection. Existing source/export/native checks bind generated registry, locked
 slot, boot and tools to the exact candidate. Materialized outputs use the accepted
 pinned VibeVM workflow, not hand-edited source URLs or a new validator.
+
+| Local check | Primary result and limits |
+| --- | --- |
+| `python scripts/qualify.py --export-ref HEAD` | [Source/export/native PASS](logs/source-export.txt); also passed after the integrated test commits. Final exact-head CI rechecks the whole tracked tree. |
+| `python scripts/test-distribution.py` | [35 PASS](logs/distribution.txt), including new-topic version/export rejection and accepted historical shapes; log explicitly distinguishes retained terminal output from a full transcript. |
+| `python scripts/test-release.py` | [10 PASS, six SKIP](logs/release.txt). Optional native publisher/resolver integration is not rerun; skips are not passes or live publication proof. |
+| `python scripts/test-self-adoption.py` | [12 PASS](logs/self-adoption.txt), including source/slot/index corruption and Git recovery. |
+| `python scripts/test-chatgpt-projection.py` | [24 PASS](logs/projection.txt), including unchanged generated Instructions and the corrected maintenance-input test. |
+| Clean synthetic squash-compatible source | [Two preservation tests PASS](logs/squash-safe-projection.txt); one clean commit, both the transient and accepted source objects absent. Historical rewrite/addition, protocol rewrite/deletion and boot replacement are detected. |
+| Pinned Linux `qualify-vibevm.py --materialize` | [PASS, seven commands](logs/native-linux.txt), zero check findings; disposable native Linux fixture, exact 1.0.7 musl SHA-256 verified against toolchain pin. |
+| Package transition | [2.3.0 → 2.4.0 minor](logs/package-boundary.txt), no existing tag reuse; source acceptance/publication remain distinct. |
+| Instructions maintenance | [Effective text and receipt now NO_OP](logs/instructions-check.json), 5,132 characters. The intentional receipt refresh binds frozen accepted `bff65a38…` and this Task's Decision; it does not apply live settings. |
+| Preservation/whitespace | `git diff --check` passes; diff from accepted source leaves root AGENTS, custom/binding/Instructions, all Task 32 history, frozen historical registry and old seven source protocols unchanged. Native install prunes only the obsolete current slot, retaining registry/history. |
+
+Local suites ran on Windows Python 3.12.4; Linux materialization used Debian
+Python and the pinned musl binary. Earlier local source/export results identify
+their checked commit; subsequent changes only integrated tests/evidence and are
+qualified at the final remote head by CI. During correction the old receipt-input
+assumption failed and was repaired before the final 24-test PASS. No failed check
+is being represented as passed. The native generated Windows file URL and
+timestamp are location metadata, checked against canonical content by the existing
+verifier. Six optional native integration skips remain unqualified here.
+
+The title tool accepted the full requested navigation title; the supported
+readback truncates it to `Task 35 — Step 1 — Extract shared contract and decision rul…`.
+Exact full persistence is unverified, a nonblocking client/navigation limit.
+No Task/Step or permission is inferred from that display.
 
 Final validation, clean/squash-compatible regression evidence, exact PR head/CI,
 annotations and material warnings are recorded in the canonical PR Outcome.
