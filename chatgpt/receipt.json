@@ -1,0 +1,53 @@
+{
+  "acceptance_verification": "external owner/review evidence required; consistency only",
+  "accepted_sha": "15e8191435a126e54b4d1739a73fab112e01c081",
+  "artifacts": {
+    "instructions.md": "848b800d2d0fc49ea27f79343e2c9c437b9a61179d53b5dd7f355ed3bf96613c"
+  },
+  "authority_anchor": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6187417393",
+  "binding_sha256": "e4888c30ad58ca4bdb6db749af29dc686566b6284ed71cd589ee84f510ecc991",
+  "condition_disposition": "preserved, not evaluated or adopted by projector",
+  "custom_sha256": "af7a116203322ea2f0a2de68043ddc20b0e0e3d11e0a538f24ef2d1328590780",
+  "generator": "shared-governance/chatgpt",
+  "native_entries": [
+    {
+      "kind": "static",
+      "path": "vibevm/vibespecs/boot/00-authoring.md"
+    },
+    {
+      "kind": "static",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.2.0/vibevm/vibespecs/boot/development-governance.md"
+    }
+  ],
+  "repository": "jresearchsoftware/shared-governance",
+  "schema": 2,
+  "source_files": {
+    "AGENTS.md": "d442f8a90ca3afabacea7fe58eb6a3825bc8c80c370f6ef305b88397b64fc83c",
+    "docs/manual-task-handoff.md": "e3b54b681ff3856788f8fc6906afc7fbd707bf0e7ad47e3da928a644a4c51a6d",
+    "docs/self-adoption.md": "93cc7ec527234aa98e7438e184e001fa351ac5a9a84821067be17ef536c37e50",
+    "vibe.lock": "d01e7fe501624eec4e5bd8d051d412679179d03e8b153d1494391415cfa78f89",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.2.0/.vibe-slot.toml": "5d2e6069e2b051b016d17d9a24508d9a7a42547d447e29903aa5a0a04537c1bf",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.2.0/LICENSE": "89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.2.0/README.md": "f8bcbe04b966187fa09e98cc1727ff732db7165b8e21501e8e31c376d3177f8a",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.2.0/vibe.toml": "9fabaa32f3d1a9fb6849044a47bff2e5673c675ff26be848e12ad744c89323ac",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.2.0/vibevm/vibespecs/boot/development-governance.md": "05456be13b5fed7b9e26f332d3225ba73159a24ed567a249d1f12aa25a065ef3",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.2.0/vibevm/vibespecs/protocols/github-repository-governance.md": "335cbc73ecb355919d5ca5bd8d4a525d8371aedaf92381e6c8244f41ebe5d45b",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.2.0/vibevm/vibespecs/protocols/independent-review.md": "b9ebfca34c6278ed858701772de3520e0ca7ad7fe224d79d6885d2ab55e785bf",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.2.0/vibevm/vibespecs/protocols/package-versioning.md": "14c48fcc25bae6c7dee9b0a6c2e6310fa8df2917c6e17c4553fdefb461fec652",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.2.0/vibevm/vibespecs/protocols/proportional-controls.md": "6fbd1dc55bd40ee67c442614cd3d71fda45f4ebdba7012b976e72857c0eacfed",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.2.0/vibevm/vibespecs/protocols/requirement-authority.md": "9e5af613383c2c1492325338d9c37933bc83e1175ae809055718fc354a5532ca",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.2.0/vibevm/vibespecs/protocols/self-adoption.md": "43d56c78d4d12803ad28eef24afaa809e5941b19727da9f30274600e95d5be53",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.2.0/vibevm/vibespecs/protocols/task-handoff.md": "3a24dff258f183a7b81b5a22583653908c200362cbf524636937c30736b1f073",
+    "vibevm/vibespecs/boot/00-authoring.md": "131ef557d4319530410827479bba308d5f1f1d40cec424e705dbdaf96d2d6a3b",
+    "vibevm/vibespecs/boot/INDEX.md": "a763b163053455c508daf3d55f481b013bd6e6272b4a2d26fec75cda2747462d"
+  },
+  "tool": {
+    "files": {
+      "base.md": "54ce6885766a45f3fea4d058a9b5ac38f28fd73f59bcd9303ec69aeb2fdd2bbc",
+      "project.py": "fdfa088a53ca1c54b5432472776dacacb71dd8cca68bdaa0416bd1b74eacba15"
+    },
+    "package": "org.jresearch.ai/development-governance",
+    "version": "2.3.0"
+  },
+  "unicode_characters": 5132
+}

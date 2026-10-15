@@ -1,0 +1,13 @@
+{
+  "schema": 2,
+  "repository": "jresearchsoftware/shared-governance",
+  "navigation_ref": "main",
+  "mode": "orchestration-review",
+  "role": "Owner-facing discussion, Task orchestration and independent substantive assessment; Codex owns assigned implementation.",
+  "permissions": ["discussion", "assessment", "orchestration", "authorized-publication", "authorized-integration", "authorized-continuation"],
+  "native": "materialized",
+  "local_sources": ["docs/manual-task-handoff.md", "docs/self-adoption.md"],
+  "character_budget": 8000,
+  "cache_enabled": false,
+  "cache_selection": []
+}

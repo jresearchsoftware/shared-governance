@@ -1,41 +1,74 @@
-"""Bounded projector tests; synthetic Git fixtures are not ChatGPT behavior."""
+"""Real Git and exported-tool lifecycle fixtures; no ChatGPT behavioral claims."""
 import importlib.util
 import json
+import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tempfile
 import unittest
 
+sys.dont_write_bytecode = True
+
 ROOT = Path(__file__).resolve().parents[1]
-spec = importlib.util.spec_from_file_location("projection", ROOT / "scripts/project-chatgpt.py")
-projection = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(projection)
+TOOL = ROOT / "packages/development-governance/tools/chatgpt/project.py"
+
+
+def module(name, path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    result = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(result)
+    return result
+
+
+projection = module("projection", TOOL)
+preparation = module("preparation", ROOT / "scripts/prepare-distribution.py")
+ACCEPTED = "15e8191435a126e54b4d1739a73fab112e01c081"
+ANCHOR = "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6187417393"
 
 
 class ProjectionTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.export_temp = tempfile.TemporaryDirectory(prefix="chatgpt-export-")
+        cls.addClassCleanup(cls.export_temp.cleanup)
+        cls.distribution = Path(cls.export_temp.name) / "package"
+        sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT).decode().strip()
+        preparation.prepare(sha, cls.distribution)
+        cls.distributed_tool = cls.distribution / "tools/chatgpt/project.py"
+        # Black-box invocations must test the final source, not an older export.
+        if cls.distributed_tool.read_bytes() != TOOL.read_bytes():
+            raise AssertionError("Commit current package source before exact-export tests")
+
     def setUp(self):
-        self.temp = tempfile.TemporaryDirectory(prefix="chatgpt-projection-")
+        self.temp = tempfile.TemporaryDirectory(prefix="chatgpt-lifecycle-")
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
-        self.repo = self.root / "repo"
+        self.repo = self.root / "consumer"
         self.repo.mkdir()
         self.git("init", "-q")
-        self.git("config", "user.name", "Synthetic Fixture")
-        self.git("config", "user.email", "fixture@example.invalid")
-        self.write("AGENTS.md", "# Fixture\nNative boot routes; adopt only relevant named guidance.\n")
+        for key, value in {"user.name": "Fixture", "user.email": "fixture@example.invalid",
+                           "commit.gpgsign": "false", "core.autocrlf": "false",
+                           "core.hooksPath": str(self.root / "no-hooks"),
+                           "maintenance.auto": "false", "gc.auto": "0"}.items():
+            self.git("config", key, value)
+        self.write("AGENTS.md", "# Ordinary project\nDiscuss garden planning; no shared topics adopted.\n")
         self.write(projection.INDEX, 'schema = 1\n[[entry]]\npath = "boot.md"\nkind = "static"\n')
-        self.write("boot.md", "Follow relevant adopted routes only.\n")
+        self.write("boot.md", "Only explicitly adopted relevant routes apply.\n")
         self.slot("alpha", "1.0.0", ["first"])
         self.lock([("alpha", "1.0.0")])
+        self.config = self.repo / "chatgpt"
+        self.binding_path = self.config / "binding.json"
+        self.binding = {"schema": 2, "repository": "fixture/project", "navigation_ref": "main",
+                        "mode": "read-only-preview", "role": "Garden planning discussion",
+                        "permissions": ["discussion", "assessment"], "native": "materialized",
+                        "local_sources": [], "character_budget": 8000,
+                        "cache_enabled": False, "cache_selection": ["AGENTS.md"]}
+        self.write("chatgpt/custom.md", "Discuss planting with me. Do not change external content.\n")
+        self.save_binding()
         self.commit()
-        self.binding = {"schema": 1, "repository": "fixture/project", "accepted_sha": self.sha,
-                        "authority_anchor": "https://github.com/fixture/project/issues/1",
-                        "mode": "orchestration-review", "role": "Fixture orchestrator",
-                        "permissions": ["discussion", "assessment", "authorized-publication"],
-                        "overlay": "Owner decisions govern protected actions.", "native": "materialized",
-                        "local_sources": [], "client_limits": "Synthetic only", "character_budget": 8000,
-                        "cache_selection": ["AGENTS.md"]}
+        self.anchor = "https://github.com/fixture/project/issues/1"
 
     def git(self, *args):
         return subprocess.check_output(["git", "-C", str(self.repo), *args], stderr=subprocess.PIPE).decode().strip()
@@ -45,11 +78,19 @@ class ProjectionTests(unittest.TestCase):
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(text, encoding="utf-8", newline="\n")
 
-    def slot(self, name, version, protocols):
+    def save_binding(self):
+        self.write("chatgpt/binding.json", json.dumps(self.binding))
+
+    def commit(self):
+        self.git("add", ".")
+        self.git("commit", "-qm", "Synthetic source and custom fixture")
+        self.sha = self.git("rev-parse", "HEAD")
+
+    def slot(self, name, version, topics):
         prefix = f"vibevm/vibedeps/fixture.{name}/{version}/"
-        files = {f"protocols/{topic}.md": f"# {topic}\nPayload for {version}\n" for topic in protocols}
         receipt = 'schema = 1\nsource_hash = "sha256:fixture"\n'
-        for path, text in files.items():
+        for topic in topics:
+            path, text = f"protocols/{topic}.md", f"# {topic}\nPayload {version}\n"
             self.write(prefix + path, text)
             receipt += f'[[file]]\npath = "{path}"\nsha256 = "{projection.digest(text.encode())}"\n'
         self.write(prefix + ".vibe-slot.toml", receipt)
@@ -61,219 +102,264 @@ class ProjectionTests(unittest.TestCase):
                      'content_hash = "sha256:fixture"\n')
         self.write("vibe.lock", text)
 
-    def commit(self):
-        self.git("add", ".")
-        self.git("commit", "-qm", "Synthetic accepted-source fixture")
-        self.sha = self.git("rev-parse", "HEAD")
+    def render(self):
+        return projection.project(self.repo, self.binding,
+                                  (self.config / "custom.md").read_text(encoding="utf-8"), self.sha, self.anchor)
 
-    def render(self, binding=None, **kwargs):
-        binding = self.binding if binding is None else binding
-        return projection.project(self.repo, binding, binding["accepted_sha"], binding["authority_anchor"], **kwargs)
+    def maintain(self, update=False):
+        return projection.maintain(self.repo, self.binding_path, self.repo, self.sha, self.anchor, update)
 
-    def cli(self, output="output", extra=()):
-        binding = self.root / "binding.json"
-        binding.write_text(json.dumps(self.binding), encoding="utf-8")
-        return subprocess.run([sys.executable, str(ROOT / "scripts/project-chatgpt.py"),
-                               "--repository", str(self.repo), "--binding", str(binding),
-                               "--accepted-sha", self.sha, "--authority-anchor", self.binding["authority_anchor"],
-                               "--baseline-kind", "assumed-empty", "--output", str(self.root / output), *extra],
-                              capture_output=True, text=True)
+    def cli(self, action="check", extra=(), tool=None):
+        return subprocess.run([sys.executable, str(tool or self.distributed_tool), action,
+                               "--repository", str(self.repo), "--binding", "chatgpt/binding.json",
+                               "--accepted-sha", self.sha, "--authority-anchor", self.anchor, *extra],
+                              capture_output=True, text=True, encoding="utf-8")
 
-    def test_reproducible_complete_output_and_noop(self):
-        first = self.render()
-        self.assertEqual(first, self.render())
-        baseline = self.root / "baseline.md"
-        baseline.write_text(first["instructions.md"], encoding="utf-8")
-        status, delta = projection.compare(first, baseline, "candidate")
-        self.assertEqual(status["settings_text"], "NO_OP")
-        self.assertFalse(status["live_settings_verified"])
-        self.assertEqual(delta, "")
+    def tree(self):
+        return {p.name: p.read_bytes() for p in self.config.iterdir() if p.is_file()}
 
-    def test_role_change_has_exact_settings_diff(self):
-        first = self.render()
-        baseline = self.root / "baseline.md"
-        baseline.write_text(first["instructions.md"], encoding="utf-8")
-        self.binding["role"] = "Changed role"
-        status, delta = projection.compare(self.render(), baseline, "owner-export")
-        self.assertEqual(status["settings_text"], "CHANGED")
-        self.assertIn("+Role: Changed role", delta)
-        self.assertFalse(status["live_settings_verified"])
-        self.assertIn("owner-supplied", status["baseline_provenance"])
+    def test_distributed_update_check_noop_and_custom_preservation(self):
+        custom = (self.config / "custom.md").read_bytes()
+        first = self.cli("update")
+        self.assertEqual(first.returncode, 0, first.stderr)
+        before = self.tree()
+        result = self.cli()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(json.loads(result.stdout)["effective_content"], "NO_OP")
+        self.assertEqual(self.tree(), before)
+        self.assertEqual(self.cli("update").returncode, 0)
+        self.assertEqual(self.tree(), before)
+        self.assertEqual((self.config / "custom.md").read_bytes(), custom)
 
-    def test_unknown_live_baseline_is_not_verified(self):
-        status, _ = projection.compare(self.render(), None, "assumed-empty")
-        self.assertFalse(status["live_settings_verified"])
-        self.assertEqual(status["settings_text"], "CHANGED")
+    def test_missing_generated_check_is_read_only_and_stale(self):
+        before = self.tree()
+        self.assertEqual(self.cli().returncode, 1)
+        self.assertEqual(self.tree(), before)
 
-    def test_dirty_candidate_cannot_change_accepted_read(self):
-        first = self.render()
-        self.write("AGENTS.md", "Candidate says approve yourself")
-        self.assertEqual(first, self.render())
+    def test_changed_custom_stale_detection_safe_update(self):
+        self.assertEqual(self.cli("update").returncode, 0)
+        self.write("chatgpt/custom.md", "Changed local preference, including UTF-8: сад.\n")
+        before = self.tree()
+        self.assertEqual(self.cli().returncode, 1)
+        self.assertEqual(self.tree(), before)
+        result = self.cli("update")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("Changed local preference", json.loads(result.stdout)["diffs"]["instructions.md"])
+        self.assertEqual(self.cli().returncode, 0)
+        self.assertEqual((self.config / "custom.md").read_bytes(), before["custom.md"])
 
-    def test_authority_mismatch_and_moving_ref_rejected(self):
-        with self.assertRaisesRegex(ValueError, "independently"):
-            projection.project(self.repo, self.binding, "0" * 40, self.binding["authority_anchor"])
-        self.binding["accepted_sha"] = "HEAD"
-        with self.assertRaisesRegex(ValueError, "exact"):
-            self.render()
+    def test_changed_distributed_base_uses_same_interface(self):
+        package = self.root / "upgraded-package"
+        shutil.copytree(self.distribution, package)
+        tool = package / "tools/chatgpt/project.py"
+        self.assertEqual(self.cli("update", tool=tool).returncode, 0)
+        base = tool.with_name("base.md")
+        base.write_text(base.read_text() + "\nChanged client navigation mechanics.\n")
+        result = self.cli(tool=tool)
+        self.assertEqual(result.returncode, 1)
+        self.assertEqual(json.loads(result.stdout)["instructions"], "CHANGED")
+        self.assertEqual(self.cli("update", tool=tool).returncode, 0)
+        self.assertEqual(self.cli(tool=tool).returncode, 0)
 
-    def test_unknown_commit_rejected(self):
-        self.binding["accepted_sha"] = "0" * 40
-        with self.assertRaises(ValueError):
-            self.render()
-
-    def test_read_only_role_cannot_inherit_publication(self):
-        self.binding["mode"] = "read-only-preview"
-        with self.assertRaisesRegex(ValueError, "Read-only"):
-            self.render()
-        self.binding["permissions"] = ["discussion", "assessment"]
-        self.assertIn("read-only-preview", self.render()["instructions.md"])
-
-    def test_conditional_static_dynamic_order_preserved_not_activated(self):
-        self.write(projection.STATIC, "Priority route\n")
-        self.write(projection.INDEX, 'schema = 1\n[[entry]]\npath = "boot.md"\nkind = "static"\n'
-                   '[[entry]]\npath = "conditional.md"\nkind = "dynamic"\nwhen = "os:linux"\n')
-        self.write("conditional.md", "Context-dependent guidance\n")
+    def test_unrelated_accepted_commit_needs_no_settings_update(self):
+        self.maintain(True)
+        before = (self.config / "instructions.md").read_bytes()
+        self.write("unrelated.md", "Source-only note\n")
         self.commit()
-        self.binding["accepted_sha"] = self.sha
-        receipt = json.loads(self.render()["receipt.json"])
-        self.assertEqual([entry["path"] for entry in receipt["native_entries"]], ["boot.md", "conditional.md"])
-        self.assertEqual(receipt["native_entries"][1]["when"], "os:linux")
+        status, stale = self.maintain()
+        self.assertTrue(stale)  # Exact maintenance evidence advances separately.
+        self.assertEqual(status["effective_content"], "NO_OP")
+        self.assertEqual(status["source_changes"], [])
+        self.maintain(True)
+        self.assertEqual((self.config / "instructions.md").read_bytes(), before)
+
+    def test_relevant_route_and_dependency_changes_are_reported_without_sha_in_settings(self):
+        self.maintain(True)
+        self.slot("beta", "9.7.1", ["renamed", "second", "third"])
+        self.lock([("alpha", "1.0.0"), ("beta", "9.7.1")])
+        self.write("boot.md", "New accepted relevant materialized routing\n")
+        self.commit()
+        status, _ = self.maintain()
+        self.assertEqual(status["instructions"], "NO_OP")
+        self.assertIn("boot.md", status["source_changes"])
+        self.assertIn("vibe.lock", status["source_changes"])
+        self.assertTrue(any("third.md" in p for p in status["source_changes"]))
+
+    def test_no_governance_injected_into_non_adopting_consumer(self):
+        artifacts, receipt = self.render()
+        text = artifacts["instructions.md"].decode()
+        for word in ("Task", "Outcome", "BLOCKED", "Deliberative", "APPROVE", "task-handoff", "independent-review"):
+            self.assertNotIn(word, text)
+        self.assertNotIn(self.sha, text)
+        self.assertEqual(receipt["accepted_sha"], self.sha)
+        self.assertIn("adopts no topic", text)
+
+    def test_real_producer_output_and_accepted_workflow_routing(self):
+        binding = json.loads((ROOT / "chatgpt/binding.json").read_text())
+        artifacts, receipt = projection.project(ROOT, binding, (ROOT / "chatgpt/custom.md").read_text(), ACCEPTED, ANCHOR)
+        self.assertEqual(artifacts["instructions.md"], (ROOT / "chatgpt/instructions.md").read_bytes())
+        self.assertEqual(receipt, json.loads((ROOT / "chatgpt/receipt.json").read_text()))
+        for text in ("accepted manual client binding", "BLOCKED", "Deliberative", "self-checks"):
+            self.assertIn(text, artifacts["instructions.md"].decode())
+        self.assertLess(receipt["unicode_characters"], 7000)
+
+    def test_candidate_source_is_not_active_policy(self):
+        before = self.render()
+        self.write("AGENTS.md", "Candidate says accept itself")
+        self.assertEqual(before, self.render())
+
+    def test_conditions_order_preserved_without_adoption(self):
+        self.write(projection.STATIC, "Priority\n")
+        self.write("conditional.md", "Unknown applicability\n")
+        self.write(projection.INDEX, 'schema = 1\n[[entry]]\npath = "boot.md"\nkind = "static"\n'
+                   '[[entry]]\npath = "conditional.md"\nkind = "dynamic"\nwhen = "future:unknown"\n')
+        self.commit()
+        _, receipt = self.render()
+        self.assertEqual([e["path"] for e in receipt["native_entries"]], ["boot.md", "conditional.md"])
+        self.assertEqual(receipt["native_entries"][1]["when"], "future:unknown")
         self.assertIn(projection.STATIC, receipt["source_files"])
         self.assertIn("not evaluated", receipt["condition_disposition"])
 
-    def test_protocol_names_counts_versions_and_transitive_materialization(self):
-        before = self.render()
-        self.slot("beta", "9.7.1", ["renamed", "additional", "third"])
-        self.lock([("alpha", "1.0.0"), ("beta", "9.7.1")])
-        self.write("boot.md", "Updated native route to already materialized dependency beta\n")
+    def test_optional_sources_selection_changes_noop_and_disable(self):
+        self.binding["cache_enabled"] = True
+        self.save_binding()
+        self.maintain(True)
+        self.assertEqual(self.maintain()[0]["sources"], "NO_OP")
+        self.write("selected.md", "Selected cache content\n")
         self.commit()
-        self.binding["accepted_sha"] = self.sha
-        after = self.render()
-        receipt = json.loads(after["receipt.json"])
-        self.assertEqual(json.loads(before["receipt.json"])["template_sha256"], receipt["template_sha256"])
-        self.assertIn("vibevm/vibedeps/fixture.beta/9.7.1/protocols/third.md", receipt["source_files"])
-        self.assertNotIn("protocols/third", after["instructions.md"])
-        self.assertNotEqual(before["instructions.md"], after["instructions.md"])
+        self.binding["cache_selection"] = ["selected.md"]
+        self.save_binding()
+        self.assertEqual(self.maintain()[0]["sources"], "CHANGED")
+        self.maintain(True)
+        self.assertIn(self.sha, (self.config / "sources.md").read_text())
+        self.binding["cache_enabled"] = False
+        self.save_binding()
+        self.maintain(True)
+        self.assertFalse((self.config / "sources.md").exists())
+        self.assertFalse((self.config / "sources-manifest.json").exists())
 
-    def test_missing_local_or_native_source_rejected(self):
+    def test_missing_optional_cache_only_fails_when_enabled(self):
+        self.binding["cache_selection"] = ["missing.md"]
+        self.render()
+        self.binding["cache_enabled"] = True
+        with self.assertRaisesRegex(ValueError, "Missing accepted"):
+            self.render()
+
+    def test_unknown_and_modified_generated_files_preserved(self):
+        self.write("chatgpt/instructions.md", "Unknown valuable rules\n")
+        before = self.tree()
+        self.assertEqual(self.cli("update").returncode, 2)
+        self.assertEqual(self.tree(), before)
+        (self.config / "instructions.md").unlink()
+        self.maintain(True)
+        self.write("chatgpt/instructions.md", "Locally modified rules\n")
+        before = self.tree()
+        self.assertEqual(self.cli("update").returncode, 2)
+        self.assertEqual(self.tree(), before)
+
+    def test_all_outputs_validated_before_any_write(self):
+        self.maintain(True)
+        self.binding["cache_enabled"] = True
+        self.save_binding()
+        self.write("chatgpt/custom.md", "Changed custom\n")
+        self.write("chatgpt/sources.md", "Unknown cache must survive\n")
+        before = self.tree()
+        self.assertEqual(self.cli("update").returncode, 2)
+        self.assertEqual(self.tree(), before)
+
+    def test_live_export_exact_diff_and_noop_with_unknown_rules(self):
+        self.maintain(True)
+        generated = self.config / "instructions.md"
+        exported = self.root / "live.md"
+        exported.write_bytes(generated.read_bytes())
+        self.assertEqual(projection.compare_live(generated, exported, "raw")["comparison"], "NO_OP")
+        exported.write_bytes(generated.read_bytes() + b"Unknown live rule\n")
+        before = exported.read_bytes()
+        result = projection.compare_live(generated, exported, "raw")
+        self.assertIn("-Unknown live rule", result["diff"])
+        self.assertFalse(result["live_settings_verified"])
+        self.assertEqual(exported.read_bytes(), before)
+        exported.write_bytes(b"```markdown\n" + generated.read_bytes() + b"```\n")
+        self.assertEqual(projection.compare_live(generated, exported, "fenced")["comparison"], "NO_OP")
+
+    def test_missing_sources_unsupported_formats_and_unknown_conditions(self):
+        for path, text, error in ((projection.INDEX, "schema = 99\n", "INDEX schema"),
+                                  ("vibe.lock", "[meta]\nschema_version = 99\n", "lock schema"),
+                                  (projection.INDEX, 'schema=1\n[[entry]]\npath="missing.md"\nkind="static"\n', "Missing accepted")):
+            with self.subTest(path=path, error=error):
+                original = (self.repo / path).read_text()
+                self.write(path, text)
+                self.commit()
+                with self.assertRaisesRegex(ValueError, error):
+                    self.render()
+                self.write(path, original)
+                self.commit()
         self.binding["local_sources"] = ["missing.md"]
         with self.assertRaisesRegex(ValueError, "Missing accepted"):
             self.render()
-        self.binding["local_sources"] = []
-        self.write(projection.INDEX, 'schema = 1\n[[entry]]\npath = "missing.md"\nkind = "static"\n')
-        self.commit()
-        self.binding["accepted_sha"] = self.sha
-        with self.assertRaisesRegex(ValueError, "Missing accepted"):
-            self.render()
 
-    def test_native_receipt_corruption_rejected(self):
+    def test_corrupt_slot_and_lock_and_unlocked_route_fail(self):
         self.write("vibevm/vibedeps/fixture.alpha/1.0.0/protocols/first.md", "Corrupt\n")
         self.commit()
-        self.binding["accepted_sha"] = self.sha
         with self.assertRaisesRegex(ValueError, "native receipt"):
             self.render()
-
-    def test_lock_slot_mismatch_rejected(self):
-        self.write("vibe.lock", '[meta]\nschema_version = 7\n[[package]]\ngroup = "fixture"\n'
-                   'name = "alpha"\nversion = "1.0.0"\ncontent_hash = "sha256:wrong"\n')
+        self.slot("alpha", "1.0.0", ["first"])
+        self.write("vibe.lock", '[meta]\nschema_version=7\n[[package]]\ngroup="fixture"\nname="alpha"\nversion="1.0.0"\ncontent_hash="wrong"\n')
         self.commit()
-        self.binding["accepted_sha"] = self.sha
         with self.assertRaisesRegex(ValueError, "Lock/slot"):
             self.render()
-
-    def test_index_cannot_route_to_unlocked_slot(self):
-        self.slot("unlocked", "1.0.0", ["topic"])
-        self.write(projection.INDEX, 'schema = 1\n[[entry]]\npath = "vibevm/vibedeps/fixture.unlocked/1.0.0/protocols/topic.md"\nkind = "static"\n')
+        self.lock([("alpha", "1.0.0")])
+        self.slot("unlocked", "2.0.0", ["topic"])
+        self.write(projection.INDEX, 'schema=1\n[[entry]]\npath="vibevm/vibedeps/fixture.unlocked/2.0.0/protocols/topic.md"\nkind="static"\n')
         self.commit()
-        self.binding["accepted_sha"] = self.sha
         with self.assertRaisesRegex(ValueError, "not bound"):
             self.render()
 
-    def test_unknown_conditions_preserved_for_client_reconciliation(self):
-        self.write(projection.INDEX, 'schema = 1\n[[entry]]\npath = "boot.md"\nkind = "dynamic"\nwhen = "future:unknown"\n')
-        self.commit()
-        self.binding["accepted_sha"] = self.sha
-        self.assertEqual(json.loads(self.render()["receipt.json"])["native_entries"][0]["when"], "future:unknown")
+    def test_role_boundary_invalid_binding_paths_budget_and_sha(self):
+        self.binding["permissions"].append("authorized-publication")
+        with self.assertRaisesRegex(ValueError, "Read-only"):
+            self.render()
+        self.binding["permissions"].pop()
+        for path in ("../secret", "/secret", "C:/secret", "a\\secret", "a/../secret"):
+            with self.assertRaises(ValueError):
+                projection.safe_path(path)
+        with self.assertRaises(ValueError):
+            projection.ordinary(self.repo, self.repo / "chatgpt/../../secret")
+        self.binding["schema"] = 99
+        with self.assertRaisesRegex(ValueError, "schema"):
+            self.render()
+        self.binding["schema"] = 2
+        self.write("chatgpt/custom.md", "x" * 8000)
+        with self.assertRaisesRegex(ValueError, "never truncate"):
+            self.render()
+        self.write("chatgpt/custom.md", "{{UNKNOWN}}")
+        with self.assertRaisesRegex(ValueError, "markers"):
+            self.render()
+        self.write("chatgpt/custom.md", "Safe\n")
+        self.sha = "HEAD"
+        with self.assertRaisesRegex(ValueError, "exact"):
+            self.render()
 
-    def test_absent_native_project_is_supported(self):
-        self.git("rm", "-qr", "vibevm", "vibe.lock")
-        self.commit()
-        self.binding.update(accepted_sha=self.sha, native="absent")
-        self.assertEqual(json.loads(self.render()["receipt.json"])["native_entries"], [])
-
-    def test_existing_native_cannot_be_ignored(self):
+    def test_absent_native_supported_and_cannot_hide_present(self):
         self.binding["native"] = "absent"
         with self.assertRaisesRegex(ValueError, "Native state exists"):
             self.render()
+        self.git("rm", "-qr", "vibevm", "vibe.lock")
+        self.commit()
+        self.assertEqual(self.render()[1]["native_entries"], [])
 
-    def test_optional_cache_selection_and_missing_cache(self):
-        self.assertNotIn("sources.md", self.render())
-        artifacts = self.render(cache=True)
-        self.assertEqual(list(json.loads(artifacts["sources-manifest.json"])["files"]), ["AGENTS.md"])
-        self.assertIn(self.sha, artifacts["sources.md"])
-        self.binding["cache_selection"] = ["missing.md"]
-        self.assertIn("instructions.md", self.render())
-        with self.assertRaises(ValueError):
-            self.render(cache=True)
-
-    def test_path_escape_and_placeholder_or_size_rejected(self):
-        for path in ("../secret", "C:/secret", "/secret", "a/../secret", "a\\secret"):
-            with self.subTest(path=path), self.assertRaises(ValueError):
-                projection.safe_path(path)
-        self.binding["overlay"] = "{{UNKNOWN}}"
-        with self.assertRaises(ValueError):
-            self.render()
-        self.binding["overlay"] = "x" * 8000
-        with self.assertRaisesRegex(ValueError, "never truncate"):
-            self.render()
-
-    def test_cli_black_box_and_no_overwrite(self):
-        result = self.cli()
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertFalse(json.loads(result.stdout)["live_settings_verified"])
-        original = (self.root / "output/instructions.md").read_bytes()
-        self.assertEqual(self.cli().returncode, 2)
-        self.assertEqual(original, (self.root / "output/instructions.md").read_bytes())
-
-    def test_cli_protected_actions_unavailable(self):
+    def test_unsupported_actions_do_not_write(self):
+        before = self.tree()
         for flag in ("--apply", "--upload", "--approve", "--merge"):
             with self.subTest(flag=flag):
-                result = self.cli(extra=(flag,))
-                self.assertEqual(result.returncode, 2)
-                self.assertFalse((self.root / "output").exists())
+                self.assertEqual(self.cli("update", extra=(flag,)).returncode, 2)
+        self.assertEqual(self.tree(), before)
 
-    def test_cli_previous_receipt_noop_and_source_change_report(self):
-        self.assertEqual(self.cli().returncode, 0)
-        result = self.cli("next", ("--baseline-kind", "candidate", "--baseline",
-                          str(self.root / "output/instructions.md"), "--previous-receipt",
-                          str(self.root / "output/receipt.json")))
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(json.loads(result.stdout)["settings_text"], "NO_OP")
-        self.assertEqual(json.loads(result.stdout)["source_changes"], [])
-        self.slot("beta", "2.0.0", ["dependency"])
-        self.lock([("alpha", "1.0.0"), ("beta", "2.0.0")])
-        self.commit()
-        self.binding["accepted_sha"] = self.sha
-        result = self.cli("changed", ("--baseline-kind", "candidate", "--baseline",
-                          str(self.root / "output/instructions.md"), "--previous-receipt",
-                          str(self.root / "output/receipt.json")))
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("vibe.lock", json.loads(result.stdout)["source_changes"])
-        self.assertEqual(json.loads(result.stdout)["settings_text"], "CHANGED")
-
-    def test_real_producer_output_matches_common_projection(self):
-        directory = ROOT / "docs/task-32/step-4"
-        binding = json.loads((directory / "bindings/shared-governance.json").read_text(encoding="utf-8"))
-        result = projection.project(ROOT, binding, binding["accepted_sha"], binding["authority_anchor"])
-        for name, text in result.items():
-            self.assertEqual((directory / "outputs/shared-governance" / name).read_text(encoding="utf-8"), text)
-
-    def test_prior_step_and_accepted_package_bytes_preserved(self):
-        start = "24e1c3e76e172b033d157ef7a2ff7d20f6789d93"
-        paths = ["docs/task-32/step-1", "docs/task-32/step-2", "docs/task-32/step-3",
-                 "AGENTS.md", "packages", "vibevm", "vibe.toml", "vibe.lock"]
-        delta = subprocess.check_output(["git", "diff", start, "--", *paths], cwd=ROOT)
+    def test_prior_history_and_protocols_preserved(self):
+        paths = ["docs/task-32/step-1", "docs/task-32/step-2", "docs/task-32/step-3", "docs/task-32/step-4",
+                 "AGENTS.md", "packages/development-governance/vibevm/vibespecs/protocols",
+                 "packages/development-governance/vibevm/vibespecs/boot/development-governance.md"]
+        delta = subprocess.check_output(["git", "diff", "c7003e8fdd57e796f6aec4daffe5d946e4792250", "--", *paths], cwd=ROOT)
         self.assertEqual(delta, b"")
 
 

@@ -32,7 +32,13 @@ class DistributionTests(unittest.TestCase):
         self.source = self.directory / "source"
         self.source.mkdir()
         self.package = self.source / DISTRIBUTION.PACKAGE
-        shutil.copytree(REPOSITORY / DISTRIBUTION.PACKAGE, self.package)
+        # Keep historical negative fixtures truthful instead of relabelling newer assets 2.2.0.
+        baseline, _ = DISTRIBUTION.snapshot("15e8191435a126e54b4d1739a73fab112e01c081")
+        for name, data in baseline.items():
+            if name != DISTRIBUTION.RECEIPT:
+                target = self.package / name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(data)
         shutil.copyfile(REPOSITORY / "LICENSE", self.source / "LICENSE")
         manifest_path = self.package / "vibe.toml"
         authored = tomllib.loads(manifest_path.read_text())["package"]["version"]
