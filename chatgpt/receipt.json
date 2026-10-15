@@ -1,10 +1,10 @@
 {
   "acceptance_verification": "external owner/review evidence required; consistency only",
-  "accepted_sha": "9bd05c89f15e6c83a3d84f68368d7a8ef50f3119",
+  "accepted_sha": "88a95f7604b2d81d7a3dd3f76f095beddb71bdab",
   "artifacts": {
     "instructions.md": "848b800d2d0fc49ea27f79343e2c9c437b9a61179d53b5dd7f355ed3bf96613c"
   },
-  "authority_anchor": "https://github.com/jresearchsoftware/shared-governance/issues/37#issuecomment-6197249315",
+  "authority_anchor": "https://github.com/jresearchsoftware/shared-governance/issues/30#issuecomment-6202646716",
   "binding_sha256": "e4888c30ad58ca4bdb6db749af29dc686566b6284ed71cd589ee84f510ecc991",
   "condition_disposition": "preserved, not evaluated or adopted by projector",
   "custom_sha256": "af7a116203322ea2f0a2de68043ddc20b0e0e3d11e0a538f24ef2d1328590780",
@@ -16,7 +16,7 @@
     },
     {
       "kind": "static",
-      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.4.0/vibevm/vibespecs/boot/development-governance.md"
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0/vibevm/vibespecs/boot/development-governance.md"
     }
   ],
   "repository": "jresearchsoftware/shared-governance",
@@ -25,25 +25,26 @@
     "AGENTS.md": "d442f8a90ca3afabacea7fe58eb6a3825bc8c80c370f6ef305b88397b64fc83c",
     "docs/manual-task-handoff.md": "e3b54b681ff3856788f8fc6906afc7fbd707bf0e7ad47e3da928a644a4c51a6d",
     "docs/self-adoption.md": "93cc7ec527234aa98e7438e184e001fa351ac5a9a84821067be17ef536c37e50",
-    "vibe.lock": "4853554017f76ff7b2d3ddc51e077dbe8cbbff01d179151337c492aafa200999",
-    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.4.0/.vibe-slot.toml": "ebc54a74bf6cfc0d59890ccbed592a61e7a34598c1c4fdaaa398eb0b390384fd",
-    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.4.0/LICENSE": "89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853",
-    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.4.0/README.md": "1925ab2c68d3ea0f9f2d18c00616384ed795238d25eb9f38c4c6690f85b28fc0",
-    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.4.0/tools/chatgpt/README.md": "3298d623b620cd06549baa0efa4d3feeb916aafa8648182e147c14f62ad5bd55",
-    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.4.0/tools/chatgpt/base.md": "54ce6885766a45f3fea4d058a9b5ac38f28fd73f59bcd9303ec69aeb2fdd2bbc",
-    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.4.0/tools/chatgpt/project.py": "12bef6998acb7f2215b6b23f44dd2e9549e5bc9d49bce88af9d2da248c4f00cb",
-    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.4.0/vibe.toml": "e8fd256df89cee5ae90bfdee8f992cbdfa21aaff4753b7dbcd52ddcecba6b067",
-    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.4.0/vibevm/vibespecs/boot/development-governance.md": "abf5c36bf87be8a80119f06a38415d66e5bd378193e88e6e90b3afb305183cf5",
-    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.4.0/vibevm/vibespecs/protocols/contract-and-decision-maintenance.md": "14f6e45261cab6cc0cac0afd10c5e52ac1ce4bdd2b5b8f27d90dfd1d952cbbf4",
-    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.4.0/vibevm/vibespecs/protocols/github-repository-governance.md": "335cbc73ecb355919d5ca5bd8d4a525d8371aedaf92381e6c8244f41ebe5d45b",
-    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.4.0/vibevm/vibespecs/protocols/independent-review.md": "b9ebfca34c6278ed858701772de3520e0ca7ad7fe224d79d6885d2ab55e785bf",
-    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.4.0/vibevm/vibespecs/protocols/package-versioning.md": "14c48fcc25bae6c7dee9b0a6c2e6310fa8df2917c6e17c4553fdefb461fec652",
-    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.4.0/vibevm/vibespecs/protocols/proportional-controls.md": "6fbd1dc55bd40ee67c442614cd3d71fda45f4ebdba7012b976e72857c0eacfed",
-    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.4.0/vibevm/vibespecs/protocols/requirement-authority.md": "9e5af613383c2c1492325338d9c37933bc83e1175ae809055718fc354a5532ca",
-    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.4.0/vibevm/vibespecs/protocols/self-adoption.md": "43d56c78d4d12803ad28eef24afaa809e5941b19727da9f30274600e95d5be53",
-    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.4.0/vibevm/vibespecs/protocols/task-handoff.md": "3a24dff258f183a7b81b5a22583653908c200362cbf524636937c30736b1f073",
+    "vibe.lock": "bb99da86ec9629ce09dae995b42ab4f0b9f88caa4941568ac1f915dc0d0f8fe8",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0/.vibe-slot.toml": "eacb4e7144347f1d4507807fb96736c6c2df04e809d0d536b836ecacf06ccd1e",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0/LICENSE": "89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0/README.md": "3faed8a2442ca870e5d2979bab196934dacfc6f436131f3178b807d68d5af956",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0/tools/chatgpt/README.md": "3298d623b620cd06549baa0efa4d3feeb916aafa8648182e147c14f62ad5bd55",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0/tools/chatgpt/base.md": "54ce6885766a45f3fea4d058a9b5ac38f28fd73f59bcd9303ec69aeb2fdd2bbc",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0/tools/chatgpt/project.py": "12bef6998acb7f2215b6b23f44dd2e9549e5bc9d49bce88af9d2da248c4f00cb",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0/vibe.toml": "39c5b4120a38a99a221e6c3a131d0e766b73f92ba49bfd831e54c13a779f8150",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0/vibevm/vibespecs/boot/development-governance.md": "5a0acbc8691d360a19e230d1d268ec1ed46b99e9038ac074e6d194cfa86d5acc",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0/vibevm/vibespecs/protocols/context-loading.md": "d84f4bb050913e3d98e65d8657748ab74e641f56e7dda7f54eb66beb56caaa04",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0/vibevm/vibespecs/protocols/contract-and-decision-maintenance.md": "14f6e45261cab6cc0cac0afd10c5e52ac1ce4bdd2b5b8f27d90dfd1d952cbbf4",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0/vibevm/vibespecs/protocols/github-repository-governance.md": "335cbc73ecb355919d5ca5bd8d4a525d8371aedaf92381e6c8244f41ebe5d45b",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0/vibevm/vibespecs/protocols/independent-review.md": "b9ebfca34c6278ed858701772de3520e0ca7ad7fe224d79d6885d2ab55e785bf",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0/vibevm/vibespecs/protocols/package-versioning.md": "14c48fcc25bae6c7dee9b0a6c2e6310fa8df2917c6e17c4553fdefb461fec652",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0/vibevm/vibespecs/protocols/proportional-controls.md": "6fbd1dc55bd40ee67c442614cd3d71fda45f4ebdba7012b976e72857c0eacfed",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0/vibevm/vibespecs/protocols/requirement-authority.md": "9e5af613383c2c1492325338d9c37933bc83e1175ae809055718fc354a5532ca",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0/vibevm/vibespecs/protocols/self-adoption.md": "43d56c78d4d12803ad28eef24afaa809e5941b19727da9f30274600e95d5be53",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0/vibevm/vibespecs/protocols/task-handoff.md": "3a24dff258f183a7b81b5a22583653908c200362cbf524636937c30736b1f073",
     "vibevm/vibespecs/boot/00-authoring.md": "131ef557d4319530410827479bba308d5f1f1d40cec424e705dbdaf96d2d6a3b",
-    "vibevm/vibespecs/boot/INDEX.md": "1e33f257ae96a68512fc93f4098ad3194b300dd79e1376dc63c41a30dc345d12"
+    "vibevm/vibespecs/boot/INDEX.md": "1913151361e4ab11c521d31a3340d172a7bbaebdc30eb310c2daa7b72ae3e7a2"
   },
   "tool": {
     "files": {
@@ -51,7 +52,7 @@
       "project.py": "12bef6998acb7f2215b6b23f44dd2e9549e5bc9d49bce88af9d2da248c4f00cb"
     },
     "package": "org.jresearch.ai/development-governance",
-    "version": "2.5.0"
+    "version": "2.6.0"
   },
   "unicode_characters": 5132
 }
