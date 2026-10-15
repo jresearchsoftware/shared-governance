@@ -25,6 +25,15 @@ finding provenance and risk-directed rereview. Missing sufficient evidence
 prevents unsupported PASS/APPROVE. It preserves manual and non-PR review,
 Task Handoff acceptance strategies, local specialist methods and product identity.
 
+Version 2.4.0 adds [contract and decision maintenance](vibevm/vibespecs/protocols/contract-and-decision-maintenance.md)
+as a separately adopted conditional topic: explicit authority for material
+supported-contract changes, durable accepted reusable decisions and affected
+human guidance in the same change. It routes to existing semantic owners without
+duplicating their procedures. All seven prior protocols and ChatGPT maintenance
+tools retain their 2.3.0 bytes. This compatible MINOR addition changes no existing
+consumer's mandatory behavior, topic adoption or local authority. Producers and
+consumers separately decide adoption; a package update does not activate it.
+
 The stable contract preserves the proportional-controls procedure, exceptions
 and applicability. Its existing-proof and self-imposed-friction guidance reuse
 current evidence and project authority without additional operator steps.
