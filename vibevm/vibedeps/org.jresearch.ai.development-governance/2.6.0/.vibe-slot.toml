@@ -1,5 +1,5 @@
 schema = 1
-source_hash = "sha256:fe4814214f3a78b944ef6b178f6fc7b680e9032e344e74ae2c29d5370ea2ae31"
+source_hash = "sha256:3e98bdcdd711ffaa2225a9d242dfbb224818e7e8b1790803335e79bf0a6323f4"
 spec_format = "mixed"
 
 [[file]]
@@ -28,7 +28,7 @@ sha256 = "6733c3e46d06e56f855fb69d94c92d3e01fea26e6b7c68a976bbf8d4b7f7b621"
 
 [[file]]
 path = "vibevm/vibespecs/boot/development-governance.md"
-sha256 = "d6c0b8a8c97b365358e70b6a95f9535f1c7f21f7034c1cc49902e027c8b8e8bf"
+sha256 = "30902bc0eb7524b0fbe919f721ef2901fe9200d0543eae0e1343351535ba5fa4"
 
 [[file]]
 path = "vibevm/vibespecs/guides/onboarding-examples.md"
