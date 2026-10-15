@@ -27,6 +27,7 @@ CONTRACT_MAINTENANCE = "vibevm/vibespecs/protocols/contract-and-decision-mainten
 CONTEXT_LOADING = "vibevm/vibespecs/protocols/context-loading.md"
 ONBOARDING = "vibevm/vibespecs/guides/onboarding.md"
 ONBOARDING_EXAMPLES = "vibevm/vibespecs/guides/onboarding-examples.md"
+ENGINEERING_METHODS = "vibevm/vibespecs/guides/engineering-methods.md"
 BOOT_INDEX = "vibevm/vibespecs/boot/INDEX.md"
 # Producer-only native routing is committed alongside authored source, not exported.
 SOURCE_ARTIFACTS = {"AGENTS.md", "CLAUDE.md", "GEMINI.md", BOOT_INDEX,
@@ -144,6 +145,8 @@ def validate_payload(files, license_bytes, historical=False):
         allowed.add(CONTEXT_LOADING)
     if tuple(map(int, version.split("."))) >= (2, 6, 0):
         allowed.update({ONBOARDING, ONBOARDING_EXAMPLES})
+    if tuple(map(int, version.split("."))) >= (2, 7, 0):
+        allowed.add(ENGINEERING_METHODS)
     if set(files) != allowed:
         raise ValueError("source package file set differs from declared passive payload")
     if files["LICENSE"] != license_bytes:
@@ -154,7 +157,8 @@ def validate_payload(files, license_bytes, historical=False):
                            CONTEXT_LOADING}
     if any(not files[name].strip() for name in protocols):
         raise ValueError("canonical protocol is empty")
-    if any(not files[name].strip() for name in allowed & {ONBOARDING, ONBOARDING_EXAMPLES}):
+    if any(not files[name].strip() for name in allowed & {ONBOARDING, ONBOARDING_EXAMPLES,
+                                                       ENGINEERING_METHODS}):
         raise ValueError("operator guide is empty")
     return manifest
 

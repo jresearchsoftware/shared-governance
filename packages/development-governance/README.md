@@ -51,6 +51,12 @@ a tenth protocol, adoption mechanism or settings command. This compatible MINOR
 addition preserves all nine protocol files, existing topic choices, local
 bindings, ordinary-session reading and ChatGPT maintenance tools.
 
+Version 2.7.0 adds an [optional engineering-methods guide](vibevm/vibespecs/guides/engineering-methods.md)
+and a small conditional boot pointer to FPF as an external advisory resource.
+Consult relevant patterns only when useful; no MCP access or FPF installation is
+required. This compatible MINOR addition preserves all nine normative topics,
+local authority and adoption choices, with no added mandatory work or dependency.
+
 The stable contract preserves the proportional-controls procedure, exceptions
 and applicability. Its existing-proof and self-imposed-friction guidance reuse
 current evidence and project authority without additional operator steps.

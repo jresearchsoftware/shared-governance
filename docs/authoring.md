@@ -53,6 +53,8 @@ explicit human request. Guides connect the nine canonical topics without adding
 a normative topic or changing adoption. Relative links stay inside the exported
 payload; producer-only entry pages link to that single copy. See
 [Task 30 Step 2](task-30/step-2/README.md) for delivery and qualification.
+The optional engineering-methods guide in the same directory exposes FPF as
+external advice only; its conditional boot pointer adds no topic or prerequisite.
 
 ## Semantic completeness
 

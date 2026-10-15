@@ -334,15 +334,13 @@ class DistributionTests(unittest.TestCase):
                 protocol.chmod(0o644)
                 self.rejected_source()
 
-    def test_current_onboarding_export_preserves_protocols_and_client_tools(self):
+    def test_historical_26_onboarding_export_preserves_25_protocols_and_client_tools(self):
+        # This frozen 2.6 assertion must not constrain future protocol revisions.
         DISTRIBUTION.ROOT = REPOSITORY
-        revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPOSITORY).decode().strip()
+        revision = "f67a29aeac6defef7220a169962bac611b6f8c79"
         files, receipt = DISTRIBUTION.snapshot(revision)
         accepted, _ = DISTRIBUTION.snapshot("88a95f7604b2d81d7a3dd3f76f095beddb71bdab")
-        source_version = tomllib.loads((REPOSITORY / DISTRIBUTION.PACKAGE /
-                                       "vibe.toml").read_text())["package"]["version"]
-        self.assertEqual(receipt["version"], source_version)
-        self.assertGreaterEqual(tuple(map(int, source_version.split("."))), (2, 6, 0))
+        self.assertEqual(receipt["version"], "2.6.0")
         self.assertEqual({name: data for name, data in files.items()
                           if name.startswith(("vibevm/vibespecs/protocols/", "tools/"))},
                          {name: data for name, data in accepted.items()
@@ -379,6 +377,51 @@ class DistributionTests(unittest.TestCase):
                     with self.assertRaises(ValueError):
                         DISTRIBUTION.validate_payload(files, files["LICENSE"])
             files[name] = original
+
+    def test_current_engineering_methods_export_and_27_preservation(self):
+        DISTRIBUTION.ROOT = REPOSITORY
+        revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPOSITORY).decode().strip()
+        files, receipt = DISTRIBUTION.snapshot(revision)
+        accepted, _ = DISTRIBUTION.snapshot("f67a29aeac6defef7220a169962bac611b6f8c79")
+        self.assertGreaterEqual(tuple(map(int, receipt["version"].split("."))), (2, 7, 0))
+        if receipt["version"] == "2.7.0":
+            # Task 41 preserves these bytes; later versions may revise them.
+            self.assertEqual({name: data for name, data in files.items()
+                              if name.startswith(("vibevm/vibespecs/protocols/", "tools/"))},
+                             {name: data for name, data in accepted.items()
+                              if name.startswith(("vibevm/vibespecs/protocols/", "tools/"))})
+            self.assertEqual(sum(name.startswith("vibevm/vibespecs/protocols/")
+                                 for name in files), 9)
+        self.assertEqual({name for name in files if name.startswith("vibevm/vibespecs/guides/")},
+                         {DISTRIBUTION.ONBOARDING, DISTRIBUTION.ONBOARDING_EXAMPLES,
+                          DISTRIBUTION.ENGINEERING_METHODS})
+        destination = self.directory / "engineering-methods-export"
+        DISTRIBUTION.prepare(revision, destination)
+        self.assertEqual((destination / DISTRIBUTION.ENGINEERING_METHODS).read_bytes(),
+                         files[DISTRIBUTION.ENGINEERING_METHODS])
+
+    def test_engineering_methods_requires_new_version_and_complete_contained_guide(self):
+        DISTRIBUTION.ROOT = REPOSITORY
+        files, _ = DISTRIBUTION.snapshot("f67a29aeac6defef7220a169962bac611b6f8c79")
+        files.pop(DISTRIBUTION.RECEIPT)
+        name = DISTRIBUTION.ENGINEERING_METHODS
+        original = (REPOSITORY / DISTRIBUTION.PACKAGE / name).read_bytes()
+        files[name] = original
+        with self.assertRaises(ValueError):
+            DISTRIBUTION.validate_payload(files, files["LICENSE"])
+        files["vibe.toml"] = files["vibe.toml"].replace(b'"2.6.0"', b'"2.7.0"')
+        DISTRIBUTION.validate_payload(files, files["LICENSE"])
+        del files[name]
+        with self.assertRaises(ValueError):
+            DISTRIBUTION.validate_payload(files, files["LICENSE"])
+        for invalid in (b"", b" \n", b"\xff\xfe",
+                        original + b"\n[Missing](missing.md)\n",
+                        original + b"\n[Escape](../../../../README.md)\n",
+                        original + b"\n[Encoded](%2e%2e/%2e%2e/%2e%2e/%2e%2e/README.md)\n"):
+            with self.subTest(data=invalid[-80:]):
+                files[name] = invalid
+                with self.assertRaises(ValueError):
+                    DISTRIBUTION.validate_payload(files, files["LICENSE"])
 
     def test_any_skill_declaration_or_dependency_is_rejected(self):
         manifest = self.package / "vibe.toml"
