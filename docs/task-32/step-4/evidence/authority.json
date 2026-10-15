@@ -1,0 +1,105 @@
+{
+  "task": 32,
+  "step": 4,
+  "issue": "https://github.com/jresearchsoftware/shared-governance/issues/32",
+  "issue_state": "open",
+  "charter_sha256": "07ecb1a1bccf1cd701335dedb19ad6fe6f205f4bb3bfd23eab4ebf258b6d58c9",
+  "accepted_source_main": "15e8191435a126e54b4d1739a73fab112e01c081",
+  "starting_candidate": "24e1c3e76e172b033d157ef7a2ff7d20f6789d93",
+  "decision": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6186228339",
+  "comments": [
+    {
+      "id": 6172309309,
+      "author": "foal",
+      "created_at": "2026-10-14T15:46:54Z",
+      "characters": 9740,
+      "body_sha256": "2fb978486a24a78db47be25b50da8b9cd7099461f2e8043399ef3c07e42d726c"
+    },
+    {
+      "id": 6172323060,
+      "author": "foal",
+      "created_at": "2026-10-14T15:47:35Z",
+      "characters": 7884,
+      "body_sha256": "ec8353d9d83cef791124370d6a3c77405af9599401915e58aed6db7890dd11ab"
+    },
+    {
+      "id": 6172393644,
+      "author": "foal",
+      "created_at": "2026-10-14T15:50:59Z",
+      "characters": 2652,
+      "body_sha256": "d141b1f05b3d3e7cfc343993b31beb7f286b03a936960bada062aca60bfc9643"
+    },
+    {
+      "id": 6173878844,
+      "author": "foal",
+      "created_at": "2026-10-14T17:06:37Z",
+      "characters": 4487,
+      "body_sha256": "537fcc3043c27cb298d46669e4fefde41183f9f848b80b1e0fda2a0891e2e8d8"
+    },
+    {
+      "id": 6177571849,
+      "author": "foal",
+      "created_at": "2026-10-14T20:21:01Z",
+      "characters": 7151,
+      "body_sha256": "1f117026c191ff309a78e45574d724223f12ba4842f6ee6e96478e638d38350d"
+    },
+    {
+      "id": 6186228339,
+      "author": "foal",
+      "created_at": "2026-10-15T06:46:39Z",
+      "characters": 7473,
+      "body_sha256": "0d561b3f3ee2d470bb2804c1723dc29e6c5b82a280595ec0e3671f34361dc2aa"
+    }
+  ],
+  "prior_outcomes": [
+    {
+      "id": 6172944905,
+      "author": "foal",
+      "body_sha256": "167fb9aabec84f058f8b368ea884f2ef3beacceda77c2608b3fee97e02737fb4"
+    },
+    {
+      "id": 6174326091,
+      "author": "foal",
+      "body_sha256": "869f021f7c1537d6914a9e4b487135f00c8a605b182ca6860a8cb8747150c43c"
+    },
+    {
+      "id": 6178058649,
+      "author": "foal",
+      "body_sha256": "e4d2065df23355139effea5d68fe355e62f2dd00ff346c335f40062088f30d8e"
+    }
+  ],
+  "prior_reviews": [
+    {
+      "id": 5521478376,
+      "state": "COMMENTED",
+      "head": "bae27d667e953e9d4fa0da17cdc51860d13efbf4",
+      "author": "foal",
+      "body_sha256": "6bb93e178111e42bf3ad18fd87e64a556566ccbc745135e8a4d89fa350e6a20e"
+    },
+    {
+      "id": 5522927879,
+      "state": "COMMENTED",
+      "head": "981ca259fab7e533653a7efc8aef8acfad95d4e9",
+      "author": "foal",
+      "body_sha256": "bc6ec320dcb5cd87f5eb54aa3e39a18120170e1ad32193b157ee759de56d2144"
+    },
+    {
+      "id": 5528463299,
+      "state": "COMMENTED",
+      "head": "24e1c3e76e172b033d157ef7a2ff7d20f6789d93",
+      "author": "foal",
+      "body_sha256": "3b4bdbf158f0ae0364298a48d59d32c0f7560f64df603aadc1ace439d1f9678c"
+    }
+  ],
+  "acceptance_provenance": [
+    "https://github.com/jresearchsoftware/shared-governance/issues/28#issuecomment-6169665115",
+    "https://github.com/jresearchsoftware/shared-governance/pull/31"
+  ],
+  "historical_consumer_acceptance": [
+    "https://github.com/jresearchsoftware/codex-relay/pull/125",
+    "https://github.com/jresearchsoftware/codex-relay/issues/91#issuecomment-6162533671"
+  ],
+  "publication": "one English PR 33 conversation Outcome via accepted ordinary owner channel; no Relay Writer required",
+  "live_settings_baseline": "UNKNOWN; assumed-empty proposal is unverified",
+  "source_comments": "full live bodies match byte-preserved historical snapshots"
+}
