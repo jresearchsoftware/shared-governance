@@ -1,0 +1,6 @@
+test_index_slot_route_requires_own_receipt_file (__main__.ProjectionTests.test_index_slot_route_requires_own_receipt_file) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 4.625s
+
+OK

@@ -93,7 +93,10 @@ rewritten. Do not poll each message, add periodic live checks, or use an old
 receipt as today's authority. Active efforts retain their frozen binding.
 
 Native support is bounded to INDEX schema 1, lock schema 7 and slot receipt
-schema 1. Original order/conditions remain unevaluated; OS/package predicates
+schema 1. Each INDEX path inside a materialized locked slot must be declared
+by that exact slot's receipt, with the existing lock identity, ordinary committed
+file and hash checks. This does not require receipts to list unreferenced extra
+files throughout the slot. Original order/conditions remain unevaluated; OS/package predicates
 do not choose client roles or topic adoption. Missing indexed files fail
 maintenance even if condition applicability is unknown. Use VibeVM to resolve
 unsupported formats; this tool neither solves ranges/edges nor installs files.
