@@ -174,7 +174,8 @@ class DistributionTests(unittest.TestCase):
                 ("1b97f0aadcc769c04415d8f4855098cee35b9f3a", "2.0.0", 5),
                 ("c3fbc8c2d10982889bea526161f810902def4289", "2.1.0", 6),
                 ("15e8191435a126e54b4d1739a73fab112e01c081", "2.2.0", 7),
-                ("bff65a38f61e7fc618ef86260a291637bf3477d1", "2.3.0", 7)):
+                ("bff65a38f61e7fc618ef86260a291637bf3477d1", "2.3.0", 7),
+                ("9bd05c89f15e6c83a3d84f68368d7a8ef50f3119", "2.4.0", 8)):
             with self.subTest(version=version):
                 files, receipt = DISTRIBUTION.snapshot(revision)
                 self.assertEqual(receipt["version"], version)
@@ -184,8 +185,9 @@ class DistributionTests(unittest.TestCase):
                 self.assertEqual(DISTRIBUTION.HANDOFF in files, count >= 4)
                 self.assertEqual(DISTRIBUTION.REPOSITORY_GOVERNANCE in files, count >= 6)
                 self.assertEqual(DISTRIBUTION.INDEPENDENT_REVIEW in files, count >= 7)
-                self.assertEqual("tools/chatgpt/project.py" in files, version == "2.3.0")
-                self.assertNotIn(DISTRIBUTION.CONTRACT_MAINTENANCE, files)
+                self.assertEqual("tools/chatgpt/project.py" in files, version in ("2.3.0", "2.4.0"))
+                self.assertEqual(DISTRIBUTION.CONTRACT_MAINTENANCE in files, count >= 8)
+                self.assertNotIn(DISTRIBUTION.CONTEXT_LOADING, files)
 
     def test_new_review_topic_cannot_reuse_accepted_six_topic_version(self):
         manifest = self.package / "vibe.toml"
@@ -249,6 +251,76 @@ class DistributionTests(unittest.TestCase):
         original = protocol.read_bytes()
         manifest = self.package / "vibe.toml"
         manifest.write_text(manifest.read_text().replace('version = "2.3.0"', 'version = "2.4.0"'))
+        DISTRIBUTION.snapshot(self.commit())
+        protocol.unlink()
+        self.rejected_source()
+        for invalid in (b"", b" \n", b"\xff\xfe",
+                        original + b"\n[Escape](../../../../README.md)\n",
+                        original + b"\n[Encoded](%2e%2e/%2e%2e/%2e%2e/%2e%2e/README.md)\n"):
+            with self.subTest(data=invalid[-80:]):
+                protocol.write_bytes(invalid)
+                protocol.chmod(0o644)
+                self.rejected_source()
+
+    def accepted_24_fixture(self):
+        # Retain genuine accepted eight-topic bytes when testing the next addition.
+        DISTRIBUTION.ROOT = REPOSITORY
+        try:
+            files, _ = DISTRIBUTION.snapshot("9bd05c89f15e6c83a3d84f68368d7a8ef50f3119")
+        finally:
+            DISTRIBUTION.ROOT = self.source
+        for name, data in files.items():
+            if name != DISTRIBUTION.RECEIPT:
+                target = self.package / name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(data)
+                target.chmod(0o644)
+        self.revision = self.commit()
+        return self.package / DISTRIBUTION.CONTEXT_LOADING
+
+    def test_current_context_loading_flow_exports_nine_protocols(self):
+        # Exercise the actual committed candidate, not a relabelled older payload.
+        DISTRIBUTION.ROOT = REPOSITORY
+        revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPOSITORY).decode().strip()
+        destination = self.directory / "current-context-flow"
+        receipt = DISTRIBUTION.prepare(revision, destination)
+        files = self.payload(destination)
+        source_version = tomllib.loads((REPOSITORY / DISTRIBUTION.PACKAGE /
+                                       "vibe.toml").read_text())["package"]["version"]
+        self.assertEqual(receipt["version"], source_version)
+        self.assertGreaterEqual(tuple(map(int, source_version.split("."))), (2, 5, 0))
+        self.assertEqual(sum(name.startswith("vibevm/vibespecs/protocols/") for name in files), 9)
+        self.assertEqual(files[DISTRIBUTION.CONTEXT_LOADING],
+                         (REPOSITORY / DISTRIBUTION.PACKAGE / DISTRIBUTION.CONTEXT_LOADING).read_bytes())
+        self.assertEqual({name for name in files if name.startswith("tools/")},
+                         {"tools/chatgpt/project.py", "tools/chatgpt/base.md", "tools/chatgpt/README.md"})
+        metadata = tomllib.loads(files["vibe.toml"].decode())
+        self.assertIs(metadata["package"]["frozen"], True)
+        self.assertEqual(set(metadata), {"package", "boot_snippet"})
+
+    def test_context_loading_requires_new_whole_package_version(self):
+        protocol = self.accepted_24_fixture()
+        shutil.copyfile(REPOSITORY / DISTRIBUTION.PACKAGE / DISTRIBUTION.CONTEXT_LOADING,
+                        protocol)
+        protocol.chmod(0o644)
+        self.rejected_source()  # Frozen accepted 2.4 cannot acquire the ninth protocol.
+        manifest = self.package / "vibe.toml"
+        manifest.write_text(manifest.read_text().replace('version = "2.4.0"', 'version = "2.5.0"'))
+        destination = self.directory / "context-flow"
+        receipt = DISTRIBUTION.prepare(self.commit(), destination)
+        files = self.payload(destination)
+        self.assertEqual(receipt["version"], "2.5.0")
+        self.assertEqual(files[DISTRIBUTION.CONTEXT_LOADING], protocol.read_bytes())
+        self.assertEqual(sum(name.startswith("vibevm/vibespecs/protocols/") for name in files), 9)
+
+    def test_context_loading_missing_empty_or_escaping_payload_is_rejected(self):
+        protocol = self.accepted_24_fixture()
+        shutil.copyfile(REPOSITORY / DISTRIBUTION.PACKAGE / DISTRIBUTION.CONTEXT_LOADING,
+                        protocol)
+        protocol.chmod(0o644)
+        original = protocol.read_bytes()
+        manifest = self.package / "vibe.toml"
+        manifest.write_text(manifest.read_text().replace('version = "2.4.0"', 'version = "2.5.0"'))
         DISTRIBUTION.snapshot(self.commit())
         protocol.unlink()
         self.rejected_source()

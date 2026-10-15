@@ -1,0 +1,36 @@
+{
+  "command": "install:plan",
+  "packages": [
+    {
+      "package": "org.jresearch.ai/development-governance",
+      "version": "2.5.0"
+    }
+  ]
+}
+{
+  "command": "install:closure-diff",
+  "added": [],
+  "removed": [],
+  "changed": [
+    "org.jresearch.ai/development-governance 2.4.0 -> 2.5.0"
+  ],
+  "lanes": []
+}
+{
+  "command": "install",
+  "complete": true,
+  "materialised": [
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0"
+  ],
+  "nodes_regenerated": [
+    ".",
+    "packages/development-governance"
+  ],
+  "ok": true,
+  "project": "/mnt/q/work/repo/github/jresearchsoftware/shared-governance",
+  "pruned": [
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.4.0"
+  ],
+  "skipped": [],
+  "unchanged": false
+}

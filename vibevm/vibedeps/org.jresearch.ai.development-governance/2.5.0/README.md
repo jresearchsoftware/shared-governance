@@ -34,6 +34,15 @@ tools retain their 2.3.0 bytes. This compatible MINOR addition changes no existi
 consumer's mandatory behavior, topic adoption or local authority. Producers and
 consumers separately decide adoption; a package update does not activate it.
 
+Version 2.5.0 adds [context loading and JIT discipline](vibevm/vibespecs/protocols/context-loading.md)
+as a separately adopted conditional topic: decision-relevant initial authority,
+triggered canonical detail, durable instruction routing and targeted mutable
+refresh. Required full source, chronology and primary review evidence keep
+their existing owners. All eight prior protocols and ChatGPT maintenance tools
+retain their 2.4.0 bytes. This compatible MINOR addition changes no existing
+consumer obligations, topic adoption, local bindings or client hierarchy. It
+requires no cache, parser, runtime service, context quota or new approval gate.
+
 The stable contract preserves the proportional-controls procedure, exceptions
 and applicability. Its existing-proof and self-imposed-friction guidance reuse
 current evidence and project authority without additional operator steps.

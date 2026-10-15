@@ -24,6 +24,7 @@ SELF_ADOPTION = "vibevm/vibespecs/protocols/self-adoption.md"
 REPOSITORY_GOVERNANCE = "vibevm/vibespecs/protocols/github-repository-governance.md"
 INDEPENDENT_REVIEW = "vibevm/vibespecs/protocols/independent-review.md"
 CONTRACT_MAINTENANCE = "vibevm/vibespecs/protocols/contract-and-decision-maintenance.md"
+CONTEXT_LOADING = "vibevm/vibespecs/protocols/context-loading.md"
 BOOT_INDEX = "vibevm/vibespecs/boot/INDEX.md"
 # Producer-only native routing is committed alongside authored source, not exported.
 SOURCE_ARTIFACTS = {"AGENTS.md", "CLAUDE.md", "GEMINI.md", BOOT_INDEX,
@@ -137,13 +138,16 @@ def validate_payload(files, license_bytes, historical=False):
         allowed.update({"tools/chatgpt/project.py", "tools/chatgpt/base.md", "tools/chatgpt/README.md"})
     if tuple(map(int, version.split("."))) >= (2, 4, 0):
         allowed.add(CONTRACT_MAINTENANCE)
+    if tuple(map(int, version.split("."))) >= (2, 5, 0):
+        allowed.add(CONTEXT_LOADING)
     if set(files) != allowed:
         raise ValueError("source package file set differs from declared passive payload")
     if files["LICENSE"] != license_bytes:
         raise ValueError("source/package license notices differ")
     validate_skill_links(files, "vibevm/vibespecs")
     protocols = allowed & {PROTOCOL, VERSIONING, AUTHORITY, HANDOFF, SELF_ADOPTION,
-                           REPOSITORY_GOVERNANCE, INDEPENDENT_REVIEW, CONTRACT_MAINTENANCE}
+                           REPOSITORY_GOVERNANCE, INDEPENDENT_REVIEW, CONTRACT_MAINTENANCE,
+                           CONTEXT_LOADING}
     if any(not files[name].strip() for name in protocols):
         raise ValueError("canonical protocol is empty")
     return manifest

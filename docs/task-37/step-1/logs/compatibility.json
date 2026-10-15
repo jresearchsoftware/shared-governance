@@ -1,0 +1,119 @@
+{
+  "accepted_source": "9bd05c89f15e6c83a3d84f68368d7a8ef50f3119",
+  "protected_files": 17,
+  "protocols": 8,
+  "all_protected_unchanged": true,
+  "instructions": "NO_OP",
+  "instructions_characters": 5132,
+  "method": "Git-normalized blob identity; structural evidence, not live settings or topic adoption",
+  "maintenance_receipt": {
+    "path": "chatgpt/receipt.json",
+    "disposition": "supported evidence-only refresh at frozen accepted source and current Task Decision; Instructions unchanged",
+    "accepted_blob": "2dd9b7145e2c7e8817d96f24ed185194fbbca333",
+    "candidate_blob": "71276926d3d727a81f86e1ef726a417e21ee5255"
+  },
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "accepted_blob": "efad657bea20760c8cb1136bd717890831a86e9b",
+      "candidate_blob": "efad657bea20760c8cb1136bd717890831a86e9b",
+      "unchanged": true
+    },
+    {
+      "path": "chatgpt/binding.json",
+      "accepted_blob": "f2475695091a36b7f5ee4ff177176daffc5b9816",
+      "candidate_blob": "f2475695091a36b7f5ee4ff177176daffc5b9816",
+      "unchanged": true
+    },
+    {
+      "path": "chatgpt/custom.md",
+      "accepted_blob": "a81398b863614cdf1ec68e56b13710e2ae0f4662",
+      "candidate_blob": "a81398b863614cdf1ec68e56b13710e2ae0f4662",
+      "unchanged": true
+    },
+    {
+      "path": "chatgpt/instructions.md",
+      "accepted_blob": "6f29bd5261e2c5d2d119f37ec6ca738b79eb93fb",
+      "candidate_blob": "6f29bd5261e2c5d2d119f37ec6ca738b79eb93fb",
+      "unchanged": true
+    },
+    {
+      "path": "docs/manual-task-handoff.md",
+      "accepted_blob": "9f8c164f6c8a58b7cacb431a55d39eb03a21a16e",
+      "candidate_blob": "9f8c164f6c8a58b7cacb431a55d39eb03a21a16e",
+      "unchanged": true
+    },
+    {
+      "path": "packages/development-governance/tools/chatgpt/README.md",
+      "accepted_blob": "4f6ea1bea14311908003367dc2833cd944c7b0e4",
+      "candidate_blob": "4f6ea1bea14311908003367dc2833cd944c7b0e4",
+      "unchanged": true
+    },
+    {
+      "path": "packages/development-governance/tools/chatgpt/base.md",
+      "accepted_blob": "bb505de05b6fdae0b423d44cdd80eb5bf2ebddcb",
+      "candidate_blob": "bb505de05b6fdae0b423d44cdd80eb5bf2ebddcb",
+      "unchanged": true
+    },
+    {
+      "path": "packages/development-governance/tools/chatgpt/project.py",
+      "accepted_blob": "0d20c48bb6cf2f63bd8c0c70d4337581cd598955",
+      "candidate_blob": "0d20c48bb6cf2f63bd8c0c70d4337581cd598955",
+      "unchanged": true
+    },
+    {
+      "path": "packages/development-governance/vibevm/vibespecs/protocols/contract-and-decision-maintenance.md",
+      "accepted_blob": "41adaa8c51e8e52f0b42c859cce30bf899b92d77",
+      "candidate_blob": "41adaa8c51e8e52f0b42c859cce30bf899b92d77",
+      "unchanged": true
+    },
+    {
+      "path": "packages/development-governance/vibevm/vibespecs/protocols/github-repository-governance.md",
+      "accepted_blob": "1ed982b293d7feda69cf6638fbca9e45394364b8",
+      "candidate_blob": "1ed982b293d7feda69cf6638fbca9e45394364b8",
+      "unchanged": true
+    },
+    {
+      "path": "packages/development-governance/vibevm/vibespecs/protocols/independent-review.md",
+      "accepted_blob": "166a7becf83c31c1f08fc6745ec9093ddf5c9f49",
+      "candidate_blob": "166a7becf83c31c1f08fc6745ec9093ddf5c9f49",
+      "unchanged": true
+    },
+    {
+      "path": "packages/development-governance/vibevm/vibespecs/protocols/package-versioning.md",
+      "accepted_blob": "9c14579e9cb32bf209eb4545661f6c30f9558505",
+      "candidate_blob": "9c14579e9cb32bf209eb4545661f6c30f9558505",
+      "unchanged": true
+    },
+    {
+      "path": "packages/development-governance/vibevm/vibespecs/protocols/proportional-controls.md",
+      "accepted_blob": "eab1eba9a7ab2a1a415a8cc89a04a8e5251eb463",
+      "candidate_blob": "eab1eba9a7ab2a1a415a8cc89a04a8e5251eb463",
+      "unchanged": true
+    },
+    {
+      "path": "packages/development-governance/vibevm/vibespecs/protocols/requirement-authority.md",
+      "accepted_blob": "e8306782566ade864193f2f6fd8001cf34d639d1",
+      "candidate_blob": "e8306782566ade864193f2f6fd8001cf34d639d1",
+      "unchanged": true
+    },
+    {
+      "path": "packages/development-governance/vibevm/vibespecs/protocols/self-adoption.md",
+      "accepted_blob": "3da59f6c205229c73e0839f9944bd9f3f22570fa",
+      "candidate_blob": "3da59f6c205229c73e0839f9944bd9f3f22570fa",
+      "unchanged": true
+    },
+    {
+      "path": "packages/development-governance/vibevm/vibespecs/protocols/task-handoff.md",
+      "accepted_blob": "b5f3e75ecc8a69823b889d26c9560f89e6959bf5",
+      "candidate_blob": "b5f3e75ecc8a69823b889d26c9560f89e6959bf5",
+      "unchanged": true
+    },
+    {
+      "path": "vibevm/vibespecs/boot/00-authoring.md",
+      "accepted_blob": "03a56a5a29c86de25c9a1c9e6836beb924263ee8",
+      "candidate_blob": "03a56a5a29c86de25c9a1c9e6836beb924263ee8",
+      "unchanged": true
+    }
+  ]
+}

@@ -5,7 +5,7 @@ The root virtual workspace has one stable member,
 a routine bump changes that value without moving the authoring tree. Frozen
 `0.1.0` remains at its historical path as retained source, outside membership.
 Historical exports discover the path from the selected commit's workspace.
-The current flow contains eight conditional protocols and optional manually invoked
+The current flow contains nine conditional protocols and optional manually invoked
 ChatGPT maintenance files, with no boot hooks, native Skills, capability declarations
 or dependencies. Proportional-controls preserves its accepted
 baseline and adds the scoped Task 19 existing-proof and friction corrections;
@@ -29,6 +29,14 @@ guidance. Existing authority/control/handoff/review procedures remain with their
 owners; the seven earlier protocols are unchanged. This producer's existing
 conditional adoption set remains unchanged. See the bounded
 [Task 35 coverage and scenarios](task-35/step-1/README.md).
+
+Context loading and JIT discipline is a separately adopted conditional topic for
+decision-relevant startup, triggered canonical detail and selective freshness.
+It preserves the completeness duties of existing semantic owners and adds no
+runtime retrieval, context ledger or client boot command. All eight earlier
+protocols, ChatGPT maintenance tools and this producer's existing topic adoptions
+remain unchanged. See the bounded
+[Task 37 coverage and scenarios](task-37/step-1/README.md).
 
 [Release policy](releases.md) separates this producer's cadence from reusable
 policy and documents automatic publication, exact-source retry and credentials.
