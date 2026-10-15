@@ -1,0 +1,12 @@
+Command: python scripts/test-chatgpt-projection.py
+Source HEAD at start: eb36854ae7e65630d6781e88bf4676bb4563e364
+Repaired test/fixture are worktree changes awaiting the integrated commit.
+Scope: source/export lifecycle and preservation tests; no live ChatGPT behavior claim.
+
+........................
+----------------------------------------------------------------------
+Ran 24 tests in 63.442s
+
+OK
+
+Exit code: 0

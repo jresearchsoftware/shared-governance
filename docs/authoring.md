@@ -5,7 +5,7 @@ The root virtual workspace has one stable member,
 a routine bump changes that value without moving the authoring tree. Frozen
 `0.1.0` remains at its historical path as retained source, outside membership.
 Historical exports discover the path from the selected commit's workspace.
-The current flow contains seven conditional protocols and optional manually invoked
+The current flow contains eight conditional protocols and optional manually invoked
 ChatGPT maintenance files, with no boot hooks, native Skills, capability declarations
 or dependencies. Proportional-controls preserves its accepted
 baseline and adds the scoped Task 19 existing-proof and friction corrections;
@@ -23,6 +23,12 @@ Independent-review methodology is also available only for explicit topic adoptio
 it adds primary evidence, full-result assessment and finding/rereview obligations
 without activating via the existing Task Handoff route. Product publication and
 specialist review methods remain separately owned.
+Contract and decision maintenance is a separate opt-in lifecycle topic for material
+supported-contract changes, accepted reusable decisions and same-change human
+guidance. Existing authority/control/handoff/review procedures remain with their
+owners; the seven earlier protocols are unchanged. This producer's existing
+conditional adoption set remains unchanged. See the bounded
+[Task 35 coverage and scenarios](task-35/step-1/README.md).
 
 [Release policy](releases.md) separates this producer's cadence from reusable
 policy and documents automatic publication, exact-source retry and credentials.

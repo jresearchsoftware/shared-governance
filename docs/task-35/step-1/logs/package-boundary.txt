@@ -1,0 +1,1 @@
+{"changed": true, "before": "2.3.0", "version": "2.4.0", "source_revision": "eb36854ae7e65630d6781e88bf4676bb4563e364", "bump": "minor"}

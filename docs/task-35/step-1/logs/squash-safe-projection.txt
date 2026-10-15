@@ -1,0 +1,31 @@
+Archive source: bff65a38f61e7fc618ef86260a291637bf3477d1
+Command: git archive bff65a38f61e7fc618ef86260a291637bf3477d1
+Overlay: scripts/test-chatgpt-projection.py
+Overlay: scripts/fixtures/chatgpt-preserved-sources.json
+git init -q
+git config user.name Fixture
+git config user.email fixture@example.invalid
+git config commit.gpgsign false
+git config core.autocrlf false
+git config core.hooksPath C:\Users\horto\AppData\Local\Temp\task35-squash-proof-rbm46m6o\no-hooks
+git config maintenance.auto false
+git config gc.auto 0
+git add .
+git commit -qm Synthetic squash-compatible source
+git rev-parse HEAD
+Synthetic HEAD: b7216f14b02b13cf52d57dd1ce43dc3d1901e35d
+git rev-list --count HEAD
+Commit count: 1
+git status --porcelain
+Working tree clean: True
+git cat-file -e c7003e8fdd57e796f6aec4daffe5d946e4792250
+Expected absent object, return code: 1
+git cat-file -e bff65a38f61e7fc618ef86260a291637bf3477d1
+Expected absent object, return code: 1
+Test command: C:\Users\horto\AppData\Local\Programs\Python\Python312\python.exe scripts/test-chatgpt-projection.py ProjectionTests.test_prior_history_and_protocols_preserved ProjectionTests.test_preservation_in_squash_checkout_rejects_source_mutations
+..
+----------------------------------------------------------------------
+Ran 2 tests in 3.987s
+
+OK
+Exit code: 0

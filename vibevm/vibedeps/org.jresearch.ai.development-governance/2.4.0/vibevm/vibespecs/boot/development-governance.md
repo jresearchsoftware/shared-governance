@@ -51,3 +51,10 @@ primary evidence; disclose review gaps before a positive verdict. Package update
 and Task Handoff adoption do not activate this additional topic. Local acceptance
 authority, specialist methods and stronger identity requirements remain intact;
 unrelated tasks skip it.
+
+For material user/operator contract changes, accepted decision promotion or
+affected workflow documentation, read
+[contract and decision maintenance](../protocols/contract-and-decision-maintenance.md)
+only when the owning project explicitly adopts this topic. Existing local rules
+and the other topics' applicability remain intact; installation/update does not
+activate it. Unrelated tasks skip it.

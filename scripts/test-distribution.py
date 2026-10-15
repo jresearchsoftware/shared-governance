@@ -150,7 +150,7 @@ class DistributionTests(unittest.TestCase):
             with self.subTest(reference=reference):
                 self.rejected_source(reference)
 
-    def test_current_flow_has_seven_protocols_no_native_skill_and_is_frozen(self):
+    def test_historical_22_flow_has_seven_protocols_no_native_skill_and_is_frozen(self):
         manifest = tomllib.loads((self.package / "vibe.toml").read_text())
         self.assertIs(manifest["package"]["frozen"], True)
         self.assertNotIn("skill", manifest)
@@ -172,7 +172,9 @@ class DistributionTests(unittest.TestCase):
                 ("901186bdd1aabc9b7f1094eeb2cc294f96b688f7", "1.0.0", 2),
                 ("129d452ddfa6b9ac1030ccc7803994793467ab2d", "1.1.0", 3),
                 ("1b97f0aadcc769c04415d8f4855098cee35b9f3a", "2.0.0", 5),
-                ("c3fbc8c2d10982889bea526161f810902def4289", "2.1.0", 6)):
+                ("c3fbc8c2d10982889bea526161f810902def4289", "2.1.0", 6),
+                ("15e8191435a126e54b4d1739a73fab112e01c081", "2.2.0", 7),
+                ("bff65a38f61e7fc618ef86260a291637bf3477d1", "2.3.0", 7)):
             with self.subTest(version=version):
                 files, receipt = DISTRIBUTION.snapshot(revision)
                 self.assertEqual(receipt["version"], version)
@@ -181,7 +183,9 @@ class DistributionTests(unittest.TestCase):
                 self.assertEqual(DISTRIBUTION.AUTHORITY in files, count >= 3)
                 self.assertEqual(DISTRIBUTION.HANDOFF in files, count >= 4)
                 self.assertEqual(DISTRIBUTION.REPOSITORY_GOVERNANCE in files, count >= 6)
-                self.assertNotIn(DISTRIBUTION.INDEPENDENT_REVIEW, files)
+                self.assertEqual(DISTRIBUTION.INDEPENDENT_REVIEW in files, count >= 7)
+                self.assertEqual("tools/chatgpt/project.py" in files, version == "2.3.0")
+                self.assertNotIn(DISTRIBUTION.CONTRACT_MAINTENANCE, files)
 
     def test_new_review_topic_cannot_reuse_accepted_six_topic_version(self):
         manifest = self.package / "vibe.toml"
@@ -200,6 +204,61 @@ class DistributionTests(unittest.TestCase):
         self.assertEqual(receipt["version"], "2.3.0")
         self.assertIn("tools/chatgpt/project.py", files)
         self.assertNotIn("hooks", tomllib.loads(files["vibe.toml"].decode()))
+
+    def accepted_23_fixture(self):
+        # New-topic tests start from genuine accepted 2.3 bytes, not a relabelled current package.
+        DISTRIBUTION.ROOT = REPOSITORY
+        try:
+            files, _ = DISTRIBUTION.snapshot("bff65a38f61e7fc618ef86260a291637bf3477d1")
+        finally:
+            DISTRIBUTION.ROOT = self.source
+        for name, data in files.items():
+            if name != DISTRIBUTION.RECEIPT:
+                target = self.package / name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(data)
+                target.chmod(0o644)
+        self.revision = self.commit()
+        return self.package / DISTRIBUTION.CONTRACT_MAINTENANCE
+
+    def test_contract_maintenance_requires_new_whole_package_version(self):
+        protocol = self.accepted_23_fixture()
+        shutil.copyfile(REPOSITORY / DISTRIBUTION.PACKAGE / DISTRIBUTION.CONTRACT_MAINTENANCE,
+                        protocol)
+        protocol.chmod(0o644)
+        self.rejected_source()  # Frozen accepted 2.3 cannot acquire the eighth protocol.
+        manifest = self.package / "vibe.toml"
+        manifest.write_text(manifest.read_text().replace('version = "2.3.0"', 'version = "2.4.0"'))
+        destination = self.directory / "contract-flow"
+        receipt = DISTRIBUTION.prepare(self.commit(), destination)
+        files = self.payload(destination)
+        self.assertEqual(receipt["version"], "2.4.0")
+        self.assertEqual(files[DISTRIBUTION.CONTRACT_MAINTENANCE], protocol.read_bytes())
+        self.assertEqual(sum(name.startswith("vibevm/vibespecs/protocols/") for name in files), 8)
+        self.assertEqual({name for name in files if name.startswith("tools/")},
+                         {"tools/chatgpt/project.py", "tools/chatgpt/base.md", "tools/chatgpt/README.md"})
+        metadata = tomllib.loads(files["vibe.toml"].decode())
+        self.assertIs(metadata["package"]["frozen"], True)
+        self.assertEqual(set(metadata), {"package", "boot_snippet"})
+
+    def test_contract_maintenance_missing_empty_or_escaping_payload_is_rejected(self):
+        protocol = self.accepted_23_fixture()
+        shutil.copyfile(REPOSITORY / DISTRIBUTION.PACKAGE / DISTRIBUTION.CONTRACT_MAINTENANCE,
+                        protocol)
+        protocol.chmod(0o644)
+        original = protocol.read_bytes()
+        manifest = self.package / "vibe.toml"
+        manifest.write_text(manifest.read_text().replace('version = "2.3.0"', 'version = "2.4.0"'))
+        DISTRIBUTION.snapshot(self.commit())
+        protocol.unlink()
+        self.rejected_source()
+        for invalid in (b"", b" \n", b"\xff\xfe",
+                        original + b"\n[Escape](../../../../README.md)\n",
+                        original + b"\n[Encoded](%2e%2e/%2e%2e/%2e%2e/%2e%2e/README.md)\n"):
+            with self.subTest(data=invalid[-80:]):
+                protocol.write_bytes(invalid)
+                protocol.chmod(0o644)
+                self.rejected_source()
 
     def test_any_skill_declaration_or_dependency_is_rejected(self):
         manifest = self.package / "vibe.toml"
