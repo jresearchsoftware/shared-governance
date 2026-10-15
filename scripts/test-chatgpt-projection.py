@@ -25,7 +25,7 @@ def module(name, path):
 projection = module("projection", TOOL)
 preparation = module("preparation", ROOT / "scripts/prepare-distribution.py")
 ACCEPTED = "15e8191435a126e54b4d1739a73fab112e01c081"
-ANCHOR = "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6187417393"
+ANCHOR = "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6193249773"
 
 
 class ProjectionTests(unittest.TestCase):
@@ -325,6 +325,32 @@ class ProjectionTests(unittest.TestCase):
         self.write(projection.INDEX, 'schema=1\n[[entry]]\npath="vibevm/vibedeps/fixture.unlocked/2.0.0/protocols/topic.md"\nkind="static"\n')
         self.commit()
         with self.assertRaisesRegex(ValueError, "not bound"):
+            self.render()
+
+    def test_index_slot_route_requires_own_receipt_file(self):
+        prefix = "vibevm/vibedeps/fixture.alpha/1.0.0/"
+        declared = prefix + "protocols/first.md"
+        extra = prefix + "protocols/extra.md"
+        # Another locked slot declaring the same relative path cannot authorize it.
+        self.slot("beta", "2.0.0", ["extra"])
+        self.lock([("alpha", "1.0.0"), ("beta", "2.0.0")])
+        index = f'schema=1\n[[entry]]\npath="{declared}"\nkind="static"\n'
+        self.write(projection.INDEX, index)
+        self.commit()
+        positive = self.cli("update")
+        self.assertEqual(positive.returncode, 0, positive.stderr)
+        _, receipt = self.render()
+        self.assertEqual(receipt["native_entries"], [{"path": declared, "kind": "static"}])
+        self.write(extra, "Committed extra file outside alpha's receipt\n")
+        self.write(projection.INDEX, index + f'[[entry]]\npath="{extra}"\nkind="dynamic"\n'
+                   'when="future:unknown"\n')
+        self.commit()
+        before = self.tree()
+        negative = self.cli("update")
+        self.assertNotEqual(negative.returncode, 0)
+        self.assertIn("not declared by its native slot receipt", negative.stderr)
+        self.assertEqual(self.tree(), before)
+        with self.assertRaisesRegex(ValueError, "not declared by its native slot receipt"):
             self.render()
 
     def test_role_boundary_invalid_binding_paths_budget_and_sha(self):

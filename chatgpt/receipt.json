@@ -4,7 +4,7 @@
   "artifacts": {
     "instructions.md": "848b800d2d0fc49ea27f79343e2c9c437b9a61179d53b5dd7f355ed3bf96613c"
   },
-  "authority_anchor": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6187417393",
+  "authority_anchor": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6193249773",
   "binding_sha256": "e4888c30ad58ca4bdb6db749af29dc686566b6284ed71cd589ee84f510ecc991",
   "condition_disposition": "preserved, not evaluated or adopted by projector",
   "custom_sha256": "af7a116203322ea2f0a2de68043ddc20b0e0e3d11e0a538f24ef2d1328590780",
@@ -44,7 +44,7 @@
   "tool": {
     "files": {
       "base.md": "54ce6885766a45f3fea4d058a9b5ac38f28fd73f59bcd9303ec69aeb2fdd2bbc",
-      "project.py": "fdfa088a53ca1c54b5432472776dacacb71dd8cca68bdaa0416bd1b74eacba15"
+      "project.py": "12bef6998acb7f2215b6b23f44dd2e9549e5bc9d49bce88af9d2da248c4f00cb"
     },
     "package": "org.jresearch.ai/development-governance",
     "version": "2.3.0"

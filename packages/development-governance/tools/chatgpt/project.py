@@ -75,22 +75,27 @@ def native_inventory(source):
         require("when" not in entry or isinstance(entry["when"], str), "Invalid condition")
     lock = tomllib.loads(source.read("vibe.lock").decode())
     # Verify the materializer's own receipts, not package ranges or dependency edges.
-    slots = []
+    slots = {}
     require(lock.get("meta", {}).get("schema_version") == 7, "Unsupported native lock schema")
     for package in lock.get("package", []):
         slot = ("vibevm/vibedeps/" + package["group"] + "." + package["name"]
                 + "/" + package["version"] + "/")
-        slots.append(slot)
         receipt = tomllib.loads(source.read(slot + ".vibe-slot.toml").decode())
         require(receipt.get("schema") == 1, "Unsupported native slot receipt")
         require(receipt["source_hash"] == package["content_hash"], "Lock/slot identity mismatch")
+        slots[slot] = set()
         for item in receipt.get("file", []):
-            require(digest(source.read(slot + safe_path(item["path"]))) == item["sha256"],
+            path = slot + safe_path(item["path"])
+            require(digest(source.read(path)) == item["sha256"],
                     "Materialized file differs from native receipt")
+            slots[slot].add(path)
     for entry in entries:
         if entry["path"].startswith("vibevm/vibedeps/"):
-            require(any(entry["path"].startswith(slot) for slot in slots),
+            slot = next((slot for slot in slots if entry["path"].startswith(slot)), None)
+            require(slot is not None,
                     "INDEX route is not bound by the native lock")
+            require(entry["path"] in slots[slot],
+                    "INDEX route is not declared by its native slot receipt")
     paths = {INDEX, "vibe.lock"}
     paths.update(entry["path"] for entry in entries)
     paths.update(path for path in source.files if path.startswith("vibevm/vibedeps/"))
