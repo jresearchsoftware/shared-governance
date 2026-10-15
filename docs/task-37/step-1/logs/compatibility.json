@@ -1,11 +1,17 @@
 {
   "accepted_source": "9bd05c89f15e6c83a3d84f68368d7a8ef50f3119",
-  "protected_files": 18,
+  "protected_files": 17,
   "protocols": 8,
-  "all_unchanged": true,
+  "all_protected_unchanged": true,
   "instructions": "NO_OP",
   "instructions_characters": 5132,
   "method": "Git-normalized blob identity; structural evidence, not live settings or topic adoption",
+  "maintenance_receipt": {
+    "path": "chatgpt/receipt.json",
+    "disposition": "supported evidence-only refresh at frozen accepted source and current Task Decision; Instructions unchanged",
+    "accepted_blob": "2dd9b7145e2c7e8817d96f24ed185194fbbca333",
+    "candidate_blob": "71276926d3d727a81f86e1ef726a417e21ee5255"
+  },
   "files": [
     {
       "path": "AGENTS.md",
@@ -29,12 +35,6 @@
       "path": "chatgpt/instructions.md",
       "accepted_blob": "6f29bd5261e2c5d2d119f37ec6ca738b79eb93fb",
       "candidate_blob": "6f29bd5261e2c5d2d119f37ec6ca738b79eb93fb",
-      "unchanged": true
-    },
-    {
-      "path": "chatgpt/receipt.json",
-      "accepted_blob": "2dd9b7145e2c7e8817d96f24ed185194fbbca333",
-      "candidate_blob": "2dd9b7145e2c7e8817d96f24ed185194fbbca333",
       "unchanged": true
     },
     {

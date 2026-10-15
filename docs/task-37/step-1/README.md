@@ -160,6 +160,55 @@ apply live Instructions or access Sources reliably.
 
 ## Qualification and review boundary
 
+Retained [primary local logs](logs) identify the pre-handoff candidate. Source,
+export and native integration checks ran at
+`dea17f3b3346eed5eba2cdec6dc494a2cf3e3c8b`; the earlier native-source preparation
+log identifies authored `906ff0b288587f928622bca05622255f4370832f`. The passive
+payload is unchanged between them and the final evidence-only commit; the PR
+Outcome binds the complete final head and its current CI separately.
+
+| Local check | Retained result |
+| --- | --- |
+| [Source/export/native integrity](logs/source-export.txt) | PASS, 487 tracked files and 587 local links at the recorded candidate; credential scan covers bounded markers only |
+| [Distribution regressions](logs/distribution.txt) | 38 PASS, including real nine-topic export, retained 2.4.0 shape, version reuse refusal and missing/empty/invalid/escaping payload rejection |
+| [Release boundary and recovery](logs/release.txt) | 10 PASS, six optional native SKIP in this default invocation; all six separately pass below |
+| [Self-adoption and recovery](logs/self-adoption.txt) | 12 PASS |
+| [Projection lifecycle/preservation](logs/projection.txt) | 24 PASS after the supported receipt refresh |
+| [Whole-package transition](logs/package-boundary.txt) | 2.4.0 to 2.5.0 MINOR PASS against the frozen accepted main |
+
+- [Compatibility evidence](logs/compatibility.json) compares Git-normalized
+  identities: all eight existing protocols and the other protected source,
+  root/manual/custom/Instructions/tool files are unchanged. Instructions remain
+  5,132 characters. The maintenance receipt is identified separately as changed.
+- [Instructions maintenance](logs/instructions-update.json) used the supported
+  native 2.5.0 tool with frozen accepted source `9bd05c89f...` and Task 37's
+  admission. It reports effective content and Instructions **NO_OP**, Sources
+  disabled and maintenance evidence changed. The receipt records accepted 2.4.0
+  sources, not candidate policy. The [initial projection failure](logs/projection-before-receipt-refresh.txt)
+  detected the old receipt's generator-version mismatch; refreshing only that
+  supported evidence resolves it. The [final projection suite](logs/projection.txt)
+  passes all 24 tests; no test was weakened or skipped to hide the mismatch.
+- [Native materialization](logs/native-linux.txt) uses the pinned musl VibeVM
+  1.0.7 in a disposable native Linux filesystem: seven commands, zero findings,
+  no declared/projected native Skills and exact installed payload comparison.
+- [Distribution integration](logs/native-distribution.txt) runs 21 disposable
+  local-Git publisher/consumer commands, including cold/repeat install, deliberate
+  tag drift, retained-slot offline use, synthetic update and full Git rollback.
+  [Native release/dependency tests](logs/native-release.txt) pass all six tests:
+  concurrent-tag protection, exact-source retry, repeat publication, lower-version
+  publication, frozen closure, diamond conflict and intentional lock update.
+  These are local fixtures, not public publication or real consumer migration.
+
+The native distribution log deliberately reproduces existing upstream failures:
+arbitrary full-SHA remote archive acquisition and cache-only missing-slot
+recovery fail; mutable-tag drift can split lock/slot identity, which canonical
+verification rejects. Retained-slot offline operation and ordinary complete Git
+rollback pass. INDEX remains static despite authored dynamic linkage; the compact
+boot owns conditional reading. These are retained tool limitations, not new
+runtime retrieval, live-model JIT or general platform/reliability qualification.
+The six optional integrations are skipped by the default release suite but were
+separately executed here; they are not silently counted as default-suite passes.
+
 Source/export, native routing/slot integrity, distribution, release/version,
 self-adoption and affected regression checks bind their results to the actual
 candidate. Use the accepted disposable workflow to qualify pinned VibeVM
