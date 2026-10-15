@@ -1,7 +1,8 @@
 # Contract changes and durable decisions
 
-Apply when materially changing a supported user/operator contract or carrying
-accepted decisions into later work, only where the owning project explicitly
+Apply when materially changing a supported user/operator contract, carrying
+accepted decisions into later work, or changing user/operator-visible behavior
+or a Task/review/authorization workflow, only where the owning project explicitly
 adopts this topic. Installation, update or a reference does not activate it.
 Use the project's existing owner authority, Task/change and review mechanisms;
 this guidance grants no execution, approval, merge, release or adoption authority.
@@ -57,7 +58,7 @@ to record the decision.
 
 ## Keep human guidance consistent
 
-When a change or remediation actually changes user-visible behavior or a
+When a change or remediation actually changes user/operator-visible behavior or a
 Task/review/authorization workflow, update affected human guidance and examples
 in the same Task/PR (or equivalent project change), or explain there why none
 needs updating. Check instructions against implementation and governing
