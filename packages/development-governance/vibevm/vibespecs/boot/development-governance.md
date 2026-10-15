@@ -1,5 +1,10 @@
 # Development governance
 
+When a person explicitly requests project onboarding, for example “Onboard this
+project to Shared Governance,” read the [onboarding procedure](../guides/onboarding.md).
+Skip that detail in ordinary sessions and on package install/update alone.
+This operator aid adopts no topic and grants no configuration-change authority.
+
 For proposed security, validation or operator controls, read the full
 [proportional-controls protocol](../protocols/proportional-controls.md),
 including when assessing behaviorally free security hardening. Unrelated tasks

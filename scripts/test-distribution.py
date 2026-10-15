@@ -175,7 +175,8 @@ class DistributionTests(unittest.TestCase):
                 ("c3fbc8c2d10982889bea526161f810902def4289", "2.1.0", 6),
                 ("15e8191435a126e54b4d1739a73fab112e01c081", "2.2.0", 7),
                 ("bff65a38f61e7fc618ef86260a291637bf3477d1", "2.3.0", 7),
-                ("9bd05c89f15e6c83a3d84f68368d7a8ef50f3119", "2.4.0", 8)):
+                ("9bd05c89f15e6c83a3d84f68368d7a8ef50f3119", "2.4.0", 8),
+                ("88a95f7604b2d81d7a3dd3f76f095beddb71bdab", "2.5.0", 9)):
             with self.subTest(version=version):
                 files, receipt = DISTRIBUTION.snapshot(revision)
                 self.assertEqual(receipt["version"], version)
@@ -185,9 +186,10 @@ class DistributionTests(unittest.TestCase):
                 self.assertEqual(DISTRIBUTION.HANDOFF in files, count >= 4)
                 self.assertEqual(DISTRIBUTION.REPOSITORY_GOVERNANCE in files, count >= 6)
                 self.assertEqual(DISTRIBUTION.INDEPENDENT_REVIEW in files, count >= 7)
-                self.assertEqual("tools/chatgpt/project.py" in files, version in ("2.3.0", "2.4.0"))
+                self.assertEqual("tools/chatgpt/project.py" in files, version in ("2.3.0", "2.4.0", "2.5.0"))
                 self.assertEqual(DISTRIBUTION.CONTRACT_MAINTENANCE in files, count >= 8)
-                self.assertNotIn(DISTRIBUTION.CONTEXT_LOADING, files)
+                self.assertEqual(DISTRIBUTION.CONTEXT_LOADING in files, count >= 9)
+                self.assertNotIn(DISTRIBUTION.ONBOARDING, files)
 
     def test_new_review_topic_cannot_reuse_accepted_six_topic_version(self):
         manifest = self.package / "vibe.toml"
@@ -331,6 +333,48 @@ class DistributionTests(unittest.TestCase):
                 protocol.write_bytes(invalid)
                 protocol.chmod(0o644)
                 self.rejected_source()
+
+    def test_current_onboarding_export_preserves_protocols_and_client_tools(self):
+        DISTRIBUTION.ROOT = REPOSITORY
+        files, receipt = DISTRIBUTION.snapshot("HEAD")
+        accepted, _ = DISTRIBUTION.snapshot("88a95f7604b2d81d7a3dd3f76f095beddb71bdab")
+        self.assertEqual(receipt["version"], "2.6.0")
+        self.assertEqual({name: data for name, data in files.items()
+                          if name.startswith(("vibevm/vibespecs/protocols/", "tools/"))},
+                         {name: data for name, data in accepted.items()
+                          if name.startswith(("vibevm/vibespecs/protocols/", "tools/"))})
+        self.assertEqual({name for name in files if name.startswith("vibevm/vibespecs/guides/")},
+                         {DISTRIBUTION.ONBOARDING, DISTRIBUTION.ONBOARDING_EXAMPLES})
+        # The complete package works outside the producer's README/instructions.
+        destination = self.directory / "onboarding-export"
+        DISTRIBUTION.prepare("HEAD", destination)
+        self.assertEqual((destination / DISTRIBUTION.ONBOARDING).read_bytes(),
+                         files[DISTRIBUTION.ONBOARDING])
+
+    def test_onboarding_requires_new_version_and_complete_contained_guides(self):
+        DISTRIBUTION.ROOT = REPOSITORY
+        files, _ = DISTRIBUTION.snapshot("88a95f7604b2d81d7a3dd3f76f095beddb71bdab")
+        files.pop(DISTRIBUTION.RECEIPT)
+        for name in (DISTRIBUTION.ONBOARDING, DISTRIBUTION.ONBOARDING_EXAMPLES):
+            files[name] = (REPOSITORY / DISTRIBUTION.PACKAGE / name).read_bytes()
+        with self.assertRaises(ValueError):
+            DISTRIBUTION.validate_payload(files, files["LICENSE"])
+        files["vibe.toml"] = files["vibe.toml"].replace(b'"2.5.0"', b'"2.6.0"')
+        DISTRIBUTION.validate_payload(files, files["LICENSE"])
+        for name in (DISTRIBUTION.ONBOARDING, DISTRIBUTION.ONBOARDING_EXAMPLES):
+            original = files[name]
+            del files[name]
+            with self.assertRaises(ValueError):
+                DISTRIBUTION.validate_payload(files, files["LICENSE"])
+            for invalid in (b"", b" \n", b"\xff\xfe",
+                            original + b"\n[Missing](missing.md)\n",
+                            original + b"\n[Escape](../../../../README.md)\n",
+                            original + b"\n[Encoded](%2e%2e/%2e%2e/%2e%2e/%2e%2e/README.md)\n"):
+                with self.subTest(guide=name, data=invalid[-80:]):
+                    files[name] = invalid
+                    with self.assertRaises(ValueError):
+                        DISTRIBUTION.validate_payload(files, files["LICENSE"])
+            files[name] = original
 
     def test_any_skill_declaration_or_dependency_is_rejected(self):
         manifest = self.package / "vibe.toml"

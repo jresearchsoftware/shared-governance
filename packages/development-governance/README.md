@@ -43,6 +43,14 @@ retain their 2.4.0 bytes. This compatible MINOR addition changes no existing
 consumer obligations, topic adoption, local bindings or client hierarchy. It
 requires no cache, parser, runtime service, context quota or new approval gate.
 
+Version 2.6.0 adds the human-initiated [project onboarding procedure](vibevm/vibespecs/guides/onboarding.md)
+and [worked examples](vibevm/vibespecs/guides/onboarding-examples.md) to the installed
+payload. The compact boot points to the detail only on an explicit onboarding
+request. These operator guides connect the existing nine topics; they are not
+a tenth protocol, adoption mechanism or settings command. This compatible MINOR
+addition preserves all nine protocol files, existing topic choices, local
+bindings, ordinary-session reading and ChatGPT maintenance tools.
+
 The stable contract preserves the proportional-controls procedure, exceptions
 and applicability. Its existing-proof and self-imposed-friction guidance reuse
 current evidence and project authority without additional operator steps.
