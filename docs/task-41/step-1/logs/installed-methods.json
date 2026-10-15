@@ -1,0 +1,30 @@
+{
+  "qualification": "PASS",
+  "source_revision": "226b88ab8b465e9edd509d2b7795cc2b68ada43b",
+  "version": "2.7.0",
+  "payload_sha256": "4e3ca1fb4093bc14136c323deff7bfd64584159e6202470773bcde38f7e1d047",
+  "initial_index_entries": [
+    {
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.7.0/vibevm/vibespecs/boot/development-governance.md",
+      "kind": "static"
+    }
+  ],
+  "discovery_route": [
+    "AGENTS.md",
+    "vibevm/vibespecs/boot/INDEX.md",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.7.0/vibevm/vibespecs/boot/development-governance.md",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.7.0/vibevm/vibespecs/guides/engineering-methods.md"
+  ],
+  "boot_discovery_excerpt": "When external engineering or reasoning methods would materially help the current\nwork, you may consult the [optional FPF guide](../guides/engineering-methods.md).\nSkip it when existing methods/evidence suffice; startup or install/update alone\nnever require the guide, FPF access or MCP. FPF advice grants no project authority.",
+  "installed_protocols": 9,
+  "manifest_tables": [
+    "boot_snippet",
+    "package"
+  ],
+  "human_overlay": "Human-owned fixture instructions.",
+  "producer_docs_required": false,
+  "fpf_mcp_calls_or_configuration": 0,
+  "ordinary_task_or_review": "Static route leaves guide optional; no eager guide INDEX entry",
+  "no_mcp": "Native install, export/integrity checks and file route work without an FPF client/server",
+  "scope": "Installed files and static reading contract; no model obedience, live review behavior or consumer adoption claim"
+}
