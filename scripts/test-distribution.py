@@ -339,7 +339,10 @@ class DistributionTests(unittest.TestCase):
         revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPOSITORY).decode().strip()
         files, receipt = DISTRIBUTION.snapshot(revision)
         accepted, _ = DISTRIBUTION.snapshot("88a95f7604b2d81d7a3dd3f76f095beddb71bdab")
-        self.assertEqual(receipt["version"], "2.6.0")
+        source_version = tomllib.loads((REPOSITORY / DISTRIBUTION.PACKAGE /
+                                       "vibe.toml").read_text())["package"]["version"]
+        self.assertEqual(receipt["version"], source_version)
+        self.assertGreaterEqual(tuple(map(int, source_version.split("."))), (2, 6, 0))
         self.assertEqual({name: data for name, data in files.items()
                           if name.startswith(("vibevm/vibespecs/protocols/", "tools/"))},
                          {name: data for name, data in accepted.items()

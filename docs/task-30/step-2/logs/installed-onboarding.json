@@ -1,0 +1,25 @@
+{
+  "qualification": "PASS",
+  "source_revision": "9cb8421bf2ac6b292b4cb374e453b30718954286",
+  "version": "2.6.0",
+  "payload_sha256": "92d36c21e74fbfc44cffa72e7270bc3eb13fc03cc4db7d72e66c5802e8301c14",
+  "consumer": "/tmp/task30-step2-hz3o1bpb/fresh-consumer",
+  "initial_index_entries": [
+    {
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0/vibevm/vibespecs/boot/development-governance.md",
+      "kind": "static"
+    }
+  ],
+  "conditional_boot_excerpt": "When a person explicitly requests project onboarding, for example \u201cOnboard this\nproject to Shared Governance,\u201d read the [onboarding procedure](../guides/onboarding.md).\nSkip that detail in ordinary sessions and on package install/update alone.\nThis operator aid adopts no topic and grants no configuration-change authority.",
+  "explicit_onboarding_route": [
+    "AGENTS.md",
+    "vibevm/vibespecs/boot/INDEX.md",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0/vibevm/vibespecs/boot/development-governance.md",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0/vibevm/vibespecs/guides/onboarding.md"
+  ],
+  "ordinary_session": "INDEX reads only compact boot; guide/examples are conditional links, not eager entries",
+  "producer_readme_or_local_instructions_required": false,
+  "installed_protocols": 9,
+  "human_overlay": "Human-owned fixture instructions.",
+  "scope": "real native-installed files and static reading contract; no live agent/model execution or adoption/settings action"
+}

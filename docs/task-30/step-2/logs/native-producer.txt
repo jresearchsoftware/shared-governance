@@ -1,0 +1,54 @@
+{"argv": ["python3", "scripts/prepare-distribution.py", "--source-ref", "9cb8421bf2ac6b292b4cb374e453b30718954286", "--producer-source"], "exit": 0}
+{"distribution": "PASS", "action": "stage-native-source", "source_revision": "9cb8421bf2ac6b292b4cb374e453b30718954286", "payload_sha256": "92d36c21e74fbfc44cffa72e7270bc3eb13fc03cc4db7d72e66c5802e8301c14", "files": 18, "publication": "this command never publishes; acceptance/remote authority are external"}
+Fresh resolution: preserved and discarded only the cloned unaccepted candidate lock; no URL edits.
+{"argv": ["/tmp/shared-governance-step3-preparation.Tg2JmPIU/vibe", "--json", "install", "--path", "/tmp/task30-step2-hz3o1bpb/producer", "--offline", "--registry", "/tmp/task30-step2-hz3o1bpb/producer/vibevm/vibepacks", "--no-default-registry", "--assume-yes"], "exit": 0}
+{
+  "command": "install:plan",
+  "packages": [
+    {
+      "package": "org.jresearch.ai/development-governance",
+      "version": "2.6.0"
+    }
+  ]
+}
+{
+  "command": "install:closure-diff",
+  "added": [
+    "org.jresearch.ai/development-governance@2.6.0 (root-edge)"
+  ],
+  "removed": [],
+  "changed": [],
+  "lanes": []
+}
+{
+  "command": "install",
+  "complete": true,
+  "materialised": [
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0"
+  ],
+  "nodes_regenerated": [
+    ".",
+    "packages/development-governance"
+  ],
+  "ok": true,
+  "project": "/tmp/task30-step2-hz3o1bpb/producer",
+  "pruned": [
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0"
+  ],
+  "skipped": [],
+  "unchanged": false
+}
+{"argv": ["/tmp/shared-governance-step3-preparation.Tg2JmPIU/vibe", "--json", "check", "--path", "/tmp/task30-step2-hz3o1bpb/producer"], "exit": 0}
+{
+  "ok": true,
+  "command": "check",
+  "project": "/tmp/task30-step2-hz3o1bpb/producer",
+  "summary": {
+    "error": 0,
+    "warning": 0,
+    "info": 0
+  },
+  "findings": []
+}
+{"argv": ["python3", "scripts/prepare-distribution.py", "--source-ref", "9cb8421bf2ac6b292b4cb374e453b30718954286", "--verify-producer"], "exit": 0}
+{"distribution": "PASS", "action": "verify", "source_revision": "9cb8421bf2ac6b292b4cb374e453b30718954286", "payload_sha256": "92d36c21e74fbfc44cffa72e7270bc3eb13fc03cc4db7d72e66c5802e8301c14", "files": 18, "publication": "this command never publishes; acceptance/remote authority are external"}

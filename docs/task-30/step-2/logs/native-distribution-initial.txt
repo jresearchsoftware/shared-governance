@@ -1,0 +1,363 @@
+{
+  "ok": true,
+  "command": "registry:publish",
+  "mode": "direct-git",
+  "host": "git",
+  "repo_url": "file:///tmp/shared-governance-distribution-c57s5oz5/distribution.git",
+  "repo_name": "org.jresearch.ai.development-governance",
+  "tag": "v2.6.0",
+  "dry_run": true,
+  "submodules": []
+}
+{
+  "ok": true,
+  "command": "registry:publish",
+  "mode": "direct-git",
+  "host": "git",
+  "repo_url": "file:///tmp/shared-governance-distribution-c57s5oz5/distribution.git",
+  "repo_name": "org.jresearch.ai.development-governance",
+  "tag": "v2.6.0",
+  "dry_run": false,
+  "submodules": []
+}
+{
+  "ok": true,
+  "command": "registry:publish",
+  "mode": "direct-git",
+  "host": "git",
+  "repo_url": "file:///tmp/shared-governance-distribution-c57s5oz5/distribution.git",
+  "repo_name": "org.jresearch.ai.development-governance",
+  "tag": "v2.6.0",
+  "dry_run": false,
+  "submodules": []
+}
+{
+  "command": "install:plan",
+  "packages": [
+    {
+      "package": "org.jresearch.ai/development-governance",
+      "version": "2.6.0"
+    }
+  ]
+}
+{
+  "command": "install:closure-diff",
+  "added": [
+    "org.jresearch.ai/development-governance@2.6.0 (root-edge)"
+  ],
+  "removed": [],
+  "changed": [],
+  "lanes": [
+    {
+      "lane": "vibevm/vibespecs/boot/INDEX.md",
+      "before": null,
+      "after": 745
+    }
+  ]
+}
+{
+  "command": "install",
+  "complete": true,
+  "materialised": [
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0"
+  ],
+  "nodes_regenerated": [
+    "."
+  ],
+  "ok": true,
+  "project": "/tmp/shared-governance-distribution-c57s5oz5/consumer",
+  "pruned": [],
+  "skipped": [],
+  "unchanged": false
+}
+{
+  "command": "install:plan",
+  "packages": [
+    {
+      "package": "org.jresearch.ai/development-governance",
+      "version": "2.6.0"
+    }
+  ]
+}
+{
+  "command": "install:closure-diff",
+  "unchanged": true,
+  "packages": 1
+}
+{
+  "command": "install",
+  "complete": true,
+  "materialised": [],
+  "nodes_regenerated": [
+    "."
+  ],
+  "ok": true,
+  "project": "/tmp/shared-governance-distribution-c57s5oz5/consumer",
+  "pruned": [],
+  "skipped": [
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0"
+  ],
+  "unchanged": false
+}
+{
+  "ok": true,
+  "command": "skill:list",
+  "project": "/tmp/shared-governance-distribution-c57s5oz5/consumer",
+  "count": 0,
+  "skills": []
+}
+{
+  "ok": true,
+  "command": "check",
+  "project": "/tmp/shared-governance-distribution-c57s5oz5/consumer",
+  "summary": {
+    "error": 0,
+    "warning": 0,
+    "info": 0
+  },
+  "findings": []
+}
+{
+  "command": "install:plan",
+  "packages": [
+    {
+      "package": "org.jresearch.ai/development-governance",
+      "version": "2.6.0"
+    }
+  ]
+}
+{
+  "command": "install:closure-diff",
+  "added": [
+    "org.jresearch.ai/development-governance@2.6.0 (root-edge)"
+  ],
+  "removed": [],
+  "changed": [],
+  "lanes": [
+    {
+      "lane": "vibevm/vibespecs/boot/INDEX.md",
+      "before": null,
+      "after": 745
+    }
+  ]
+}
+{
+  "command": "install",
+  "complete": true,
+  "materialised": [
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0"
+  ],
+  "nodes_regenerated": [
+    "."
+  ],
+  "ok": true,
+  "project": "/tmp/shared-governance-distribution-c57s5oz5/independent-consumer",
+  "pruned": [],
+  "skipped": [],
+  "unchanged": false
+}
+
+{"ok":false,"error":"git operation failed (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#backend-trait; fix: act on the wrapped git error): git `git archive --remote=file:///tmp/shared-governance-distribution-c57s5oz5/distribution.git --format=tar f96c7d7c071438ff48f114988e12cc9be86771a0 -- vibe.toml` exited with status 1 (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#windows-ux; fix: re-run the command by hand and read the stderr below):\nremote: fatal: no such ref: f96c7d7c071438ff48f114988e12cc9be86771a0        \nfatal: sent error to the client: git upload-archive: archiver died with error\nremote: git upload-archive: archiver died with error (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; fix: act on the underlying provider failure named in the message)"}
+{
+  "command": "reinstall",
+  "complete": true,
+  "forced": false,
+  "materialised": [],
+  "nodes_regenerated": [
+    "."
+  ],
+  "ok": true,
+  "project": "/tmp/shared-governance-distribution-c57s5oz5/consumer",
+  "pruned": [],
+  "skipped": [],
+  "unchanged": false,
+  "hooks": []
+}
+
+{"ok":false,"error":"git operation failed (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#backend-trait; fix: act on the wrapped git error): remote repository `vibe.toml` not found (does it exist? is access granted?) (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; fix: verify the repo URL and your read access) (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; fix: act on the underlying provider failure named in the message)"}
+{
+  "chain": [
+    "clean"
+  ],
+  "command": "lifecycle:plan",
+  "contributions": [],
+  "notices": [],
+  "requested": "clean"
+}
+{
+  "chain": [
+    "clean"
+  ],
+  "command": "lifecycle",
+  "contributions": [],
+  "notices": [],
+  "ok": true,
+  "requested": "clean",
+  "steps": [
+    {
+      "phase": "clean",
+      "status": "ok"
+    }
+  ]
+}
+
+{"ok":false,"error":"the materialised `vibedeps/` tree is incomplete — 1 slot missing:\n  vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0\nRun `vibe reinstall --force` to re-fetch the content from source."}
+
+{"ok":false,"error":"re-fetching `org.jresearch.ai/development-governance@2.6.0` from source: git operation failed (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#backend-trait; fix: act on the wrapped git error): remote repository `vibe.toml` not found (does it exist? is access granted?) (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; fix: verify the repo URL and your read access): remote repository `vibe.toml` not found (does it exist? is access granted?) (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; fix: verify the repo URL and your read access)"}
+{
+  "ok": true,
+  "command": "registry:publish",
+  "mode": "direct-git",
+  "host": "git",
+  "repo_url": "file:///tmp/shared-governance-distribution-c57s5oz5/distribution.git",
+  "repo_name": "org.jresearch.ai.development-governance",
+  "tag": "v2.6.0",
+  "dry_run": false,
+  "submodules": []
+}
+{
+  "command": "install:plan",
+  "packages": [
+    {
+      "package": "org.jresearch.ai/development-governance",
+      "version": "2.6.0"
+    }
+  ]
+}
+{
+  "command": "install:closure-diff",
+  "unchanged": true,
+  "packages": 1
+}
+{
+  "command": "install",
+  "complete": true,
+  "materialised": [],
+  "nodes_regenerated": [
+    "."
+  ],
+  "ok": true,
+  "project": "/tmp/shared-governance-distribution-c57s5oz5/consumer",
+  "pruned": [],
+  "skipped": [
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0"
+  ],
+  "unchanged": false
+}
+{
+  "ok": true,
+  "command": "check",
+  "project": "/tmp/shared-governance-distribution-c57s5oz5/consumer",
+  "summary": {
+    "error": 0,
+    "warning": 0,
+    "info": 0
+  },
+  "findings": []
+}
+{
+  "command": "install:plan",
+  "packages": [
+    {
+      "package": "org.jresearch.ai/development-governance",
+      "version": "2.6.0"
+    }
+  ]
+}
+{
+  "command": "install:closure-diff",
+  "added": [
+    "org.jresearch.ai/development-governance@2.6.0 (root-edge)"
+  ],
+  "removed": [],
+  "changed": [],
+  "lanes": [
+    {
+      "lane": "vibevm/vibespecs/boot/INDEX.md",
+      "before": null,
+      "after": 745
+    }
+  ]
+}
+{
+  "command": "install",
+  "complete": true,
+  "materialised": [
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0"
+  ],
+  "nodes_regenerated": [
+    "."
+  ],
+  "ok": true,
+  "project": "/tmp/shared-governance-distribution-c57s5oz5/drifted-consumer",
+  "pruned": [],
+  "skipped": [],
+  "unchanged": false
+}
+{
+  "ok": true,
+  "command": "registry:publish",
+  "mode": "direct-git",
+  "host": "git",
+  "repo_url": "file:///tmp/shared-governance-distribution-c57s5oz5/distribution.git",
+  "repo_name": "org.jresearch.ai.development-governance",
+  "tag": "v2.6.1",
+  "dry_run": false,
+  "submodules": []
+}
+{
+  "command": "install:plan",
+  "packages": [
+    {
+      "package": "org.jresearch.ai/development-governance",
+      "version": "2.6.1"
+    }
+  ]
+}
+{
+  "command": "install:closure-diff",
+  "added": [],
+  "removed": [],
+  "changed": [
+    "org.jresearch.ai/development-governance 2.6.0 -> 2.6.1"
+  ],
+  "lanes": []
+}
+{
+  "command": "update",
+  "complete": true,
+  "materialised": [
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.1"
+  ],
+  "nodes_regenerated": [
+    "."
+  ],
+  "ok": true,
+  "packages": [],
+  "packages_resolved": 1,
+  "project": "/tmp/shared-governance-distribution-c57s5oz5/consumer",
+  "pruned": [
+    "vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0"
+  ],
+  "scope": "all",
+  "skipped": [],
+  "unchanged": false,
+  "version_bumps": [],
+  "hooks": []
+}
+{
+  "command": "reinstall",
+  "complete": true,
+  "forced": false,
+  "materialised": [],
+  "nodes_regenerated": [
+    "."
+  ],
+  "ok": true,
+  "project": "/tmp/shared-governance-distribution-c57s5oz5/consumer",
+  "pruned": [],
+  "skipped": [],
+  "unchanged": false,
+  "hooks": []
+}
+{"distribution_qualification": "PASS", "source_revision": "24628cb0155bb8d3f2ac9ab5b6527acc10288622", "payload_sha256": "dfe073d18fb153c886d1b4b93330db7029803e475b8a3c9e8d129ab4b0813ee8", "distribution_revision": "f96c7d7c071438ff48f114988e12cc9be86771a0", "vibevm_content_hash": "sha256:e0ce0584ecfe863f54db33eae154fed2ba49eb63eba8b9255aac99af7270f021", "commands": 21, "native_skills": "none declared/projected", "protocol_source": "exact canonical source commit; independent acceptance is separate", "local_publish_and_idempotence": "PASS", "independent_cold_consumer": "PASS", "tag_drift": "upstream lock/slot split reproduced; canonical verifier rejects", "offline": "existing slots and complete Git rollback PASS; cache-only recovery FAIL", "update": "synthetic version-only declaration change PASS", "boot_index": "static package entry despite authored dynamic link", "scope": "disposable local Git transport; remote publication not qualified"}
