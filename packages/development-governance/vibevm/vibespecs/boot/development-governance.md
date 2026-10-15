@@ -67,3 +67,8 @@ facts without weakening required completeness. Existing topic adoption,
 entrypoints, contributor paths and client instruction hierarchy remain intact;
 installation/update does not activate it. It adds no runtime retrieval or boot
 command and grants no new authority.
+
+When a person explicitly requests project onboarding, for example “Onboard this
+project to Shared Governance,” read the [onboarding procedure](../guides/onboarding.md).
+Skip that detail in ordinary sessions and on package install/update alone.
+This operator aid adopts no topic and grants no configuration-change authority.

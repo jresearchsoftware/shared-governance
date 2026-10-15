@@ -28,6 +28,8 @@ corrections use later versions. Source acceptance and publication never migrate
 Relay, Documentation, Model Landscape or other consumers automatically.
 
 - [Repository instructions](AGENTS.md) and [contributing](CONTRIBUTING.md).
+- [Onboard a new or existing project](docs/onboarding.md): human-initiated discovery,
+  topic choices, authorized setup and evidence-backed readiness.
 - [Authoring](docs/authoring.md), including semantic completeness and pinned-tool probes.
 - [Distribution](docs/distribution.md) and [release policy](docs/releases.md).
 - [Provenance](docs/provenance.md) and [active self-adoption](docs/self-adoption.md).

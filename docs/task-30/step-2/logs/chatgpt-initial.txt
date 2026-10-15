@@ -1,0 +1,30 @@
+.................FF.....
+======================================================================
+FAIL: test_prior_history_and_protocols_preserved (__main__.ProjectionTests.test_prior_history_and_protocols_preserved)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "Q:\work\repo\github\jresearchsoftware\shared-governance\scripts\test-chatgpt-projection.py", line 438, in test_prior_history_and_protocols_preserved
+    self.assertEqual(preservation_failures(ROOT, baseline), [])
+AssertionError: Lists differ: ['Changed accepted boot routes: packages/d[66 chars].md'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'Changed accepted boot routes: packages/development-governance/vibevm/vibespecs/boot/development-governance.md'
+
++ []
+- ['Changed accepted boot routes: '
+-  'packages/development-governance/vibevm/vibespecs/boot/development-governance.md']
+
+======================================================================
+FAIL: test_real_producer_output_and_accepted_workflow_routing (__main__.ProjectionTests.test_real_producer_output_and_accepted_workflow_routing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "Q:\work\repo\github\jresearchsoftware\shared-governance\scripts\test-chatgpt-projection.py", line 253, in test_real_producer_output_and_accepted_workflow_routing
+    self.assertEqual(receipt, recorded)
+AssertionError: {'schema': 2, 'generator': 'shared-governan[4470 chars]3c'}} != {'acceptance_verification': 'external owner[4470 chars]5132}
+Diff is 5218 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 24 tests in 63.894s
+
+FAILED (failures=2)

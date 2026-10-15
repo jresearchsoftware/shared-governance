@@ -1,0 +1,8 @@
+{
+  "disposition": "Ignored pre-existing bytecode preserved outside installed slot; no tracked content changed",
+  "sha256": "53107E88DB07BE3A21A8590692F0102AF7C41834CDB9DB321998DCCE29C00761",
+  "length": 25982,
+  "preserved_path": "Q:\\work\\repo\\github\\jresearchsoftware\\shared-governance\\.vibe\\task30-preserved\\project.cpython-312.pyc",
+  "source_path": "Q:\\work\\repo\\github\\jresearchsoftware\\shared-governance\\vibevm\\vibedeps\\org.jresearch.ai.development-governance\\2.5.0\\tools\\chatgpt\\__pycache__\\project.cpython-312.pyc",
+  "last_write_utc": "2026-10-15T17:42:19.5187658Z"
+}

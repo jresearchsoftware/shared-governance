@@ -47,6 +47,13 @@ from a frozen independently accepted source-main commit as described in
 [self-adoption](self-adoption.md). Native generated source/slot/boot files are
 committed alongside authoring; candidate instructions remain proposal data.
 
+The package also carries an operator procedure and examples under
+`vibevm/vibespecs/guides/`. The compact boot links to onboarding only for an
+explicit human request. Guides connect the nine canonical topics without adding
+a normative topic or changing adoption. Relative links stay inside the exported
+payload; producer-only entry pages link to that single copy. See
+[Task 30 Step 2](task-30/step-2/README.md) for delivery and qualification.
+
 ## Semantic completeness
 
 [Task 15](https://github.com/jresearchsoftware/shared-governance/issues/15)

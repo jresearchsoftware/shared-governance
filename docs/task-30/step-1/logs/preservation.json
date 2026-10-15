@@ -1,0 +1,19 @@
+{
+  "package_payload": "unchanged",
+  "chatgpt_custom_generated": "unchanged",
+  "native_source_slots_lock_boot": "unchanged",
+  "candidate_source": "b8a31422105c70a6945ebdfe09d57b59e76ca4fb",
+  "changed_paths": [
+    "README.md",
+    "docs/onboarding.md",
+    "docs/task-30/step-1/README.md",
+    "docs/task-30/step-1/scenarios.md",
+    "docs/task-30/step-1/validation.md"
+  ],
+  "agent_instructions": "unchanged",
+  "package_version": "2.5.0",
+  "unexpected_paths": [],
+  "accepted_source": "88a95f7604b2d81d7a3dd3f76f095beddb71bdab",
+  "toolchain_workflows_scripts": "unchanged",
+  "evidence": "complete git diff against independently bound accepted commit"
+}
