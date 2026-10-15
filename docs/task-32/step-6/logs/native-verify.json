@@ -1,0 +1,1 @@
+{"distribution": "PASS", "action": "verify", "source_revision": "fcd33517fe8e61493149a8931cbe144b2f8ae1a0", "payload_sha256": "af6980cc5d6b0fae5d699bdb10603407fc63b9318aeb5cfbc92dddeb4fe0156b", "files": 14, "publication": "this command never publishes; acceptance/remote authority are external"}

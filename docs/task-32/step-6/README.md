@@ -10,7 +10,7 @@ is correction evidence, not acceptance of the candidate architecture.
 
 ## Correction and bounded semantics
 
-The shared [projector](../../../../packages/development-governance/tools/chatgpt/project.py)
+The shared [projector](../../../packages/development-governance/tools/chatgpt/project.py)
 previously verified receipt-declared hashes but accepted an INDEX path based on
 its locked directory prefix alone. A committed extra file inside that slot could
 therefore become a route despite being absent from its receipt. This was a
@@ -33,7 +33,7 @@ Accepted 2.2.0 guidance continues to govern this execution.
 
 ## Regression and preservation
 
-The focused [real-Git/exported-tool test](../../../../scripts/test-chatgpt-projection.py)
+The focused [real-Git/exported-tool test](../../../scripts/test-chatgpt-projection.py)
 first accepts a receipt-declared route. It then commits an extra file inside the
 same locked slot and references it from a conditional INDEX entry. Another
 locked slot declares the same relative filename, proving that its receipt cannot
