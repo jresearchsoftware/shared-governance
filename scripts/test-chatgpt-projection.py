@@ -161,6 +161,18 @@ class ProjectionTests(unittest.TestCase):
         self.assertEqual(self.cli("update", tool=tool).returncode, 0)
         self.assertEqual(self.cli(tool=tool).returncode, 0)
 
+    def test_changed_binding_changes_only_reviewed_client_routing(self):
+        self.maintain(True)
+        self.binding["role"] = "Changed owner-selected discussion role"
+        self.binding["navigation_ref"] = "accepted-source"
+        self.save_binding()
+        status, stale = self.maintain()
+        self.assertTrue(stale)
+        self.assertEqual(status["instructions"], "CHANGED")
+        self.assertIn("Changed owner-selected", status["diffs"]["instructions.md"])
+        self.maintain(True)
+        self.assertEqual(self.maintain()[0]["effective_content"], "NO_OP")
+
     def test_unrelated_accepted_commit_needs_no_settings_update(self):
         self.maintain(True)
         before = (self.config / "instructions.md").read_bytes()

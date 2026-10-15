@@ -1,0 +1,22 @@
+{
+  "repository": "jresearchsoftware/codex-relay",
+  "mode": "read-only-preview",
+  "role": "Read-only migration demonstration from a historical independently accepted source, not a live Relay configuration or complete consumer replacement.",
+  "permissions": [
+    "discussion",
+    "assessment"
+  ],
+  "native": "materialized",
+  "local_sources": [
+    "packages/codex-relay/skill/SKILL.md",
+    "packages/codex-relay/skill/references/compatibility.md"
+  ],
+  "character_budget": 8000,
+  "cache_selection": [
+    "vibevm/vibespecs/boot/00-core.md",
+    "vibevm/vibespecs/boot/90-user.md"
+  ],
+  "schema": 2,
+  "navigation_ref": "main",
+  "cache_enabled": true
+}

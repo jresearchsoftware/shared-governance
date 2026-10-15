@@ -1,0 +1,104 @@
+{
+  "task": "https://github.com/jresearchsoftware/shared-governance/issues/32",
+  "charter_status": "body remains historical; chronological owner Decisions admit Steps",
+  "starting_candidate": "c7003e8fdd57e796f6aec4daffe5d946e4792250",
+  "frozen_accepted_source_main": "15e8191435a126e54b4d1739a73fab112e01c081",
+  "source_acceptance": "Task 28 Owner Decision 6169665115 plus PR 31 merged squash; live main and merge-base match",
+  "chronology": [
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6172309309",
+      "actor": "foal",
+      "unicode_characters": 9740,
+      "title": "# Software project incremental model — ChatGPT project rules"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6172323060",
+      "actor": "foal",
+      "unicode_characters": 7884,
+      "title": "# Codex Relay — ChatGPT project rules"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6172393644",
+      "actor": "foal",
+      "unicode_characters": 2652,
+      "title": "## Owner Decision — Admit Task #32 Step 1 (research and design)"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6173878844",
+      "actor": "foal",
+      "unicode_characters": 4487,
+      "title": "## Owner Decision — Admit Task #32 Step 2: prepare a controlled ChatGPT bootstrap experiment"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6177571849",
+      "actor": "foal",
+      "unicode_characters": 7151,
+      "title": "## Owner Decision — Admit Task #32 Step 3: outcome-aware bootstrap refinement"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6186228339",
+      "actor": "foal",
+      "unicode_characters": 7473,
+      "title": "## Owner Decision — Admit Task #32 Step 4: universal content-agnostic ChatGPT bootstrap"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6187417393",
+      "actor": "foal",
+      "unicode_characters": 10013,
+      "title": "## Owner Decision — Admit Task #32 Step 5: source-controlled ChatGPT Instructions lifecycle and governance-neutral bootstrap"
+    }
+  ],
+  "result_records": [
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/pull/33#issuecomment-6172944905",
+      "actor": "foal",
+      "title": "## Codex Outcome — Task 32, Step 1"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/pull/33#pullrequestreview-5521478376",
+      "actor": "foal",
+      "title": "Independent Deliberative research assessment — Task #32, Step 1 (NON-APPROVING)"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/pull/33#issuecomment-6174326091",
+      "actor": "foal",
+      "title": "## Codex Outcome — Task 32, Step 2"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/pull/33#pullrequestreview-5522927879",
+      "actor": "foal",
+      "title": "Independent Deliberative assessment — Task #32, Step 2 (NON-APPROVING)"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/pull/33#issuecomment-6178058649",
+      "actor": "foal",
+      "title": "## Codex Outcome — Task 32, Step 3"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/pull/33#pullrequestreview-5528463299",
+      "actor": "foal",
+      "title": "## Independent Deliberative assessment — Task #32, Step 3 (NON-APPROVING)"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/pull/33#issuecomment-6186716656",
+      "actor": "foal",
+      "title": "## Codex Outcome — Task 32, Step 4"
+    },
+    {
+      "url": "https://github.com/jresearchsoftware/shared-governance/pull/33#pullrequestreview-5529653254",
+      "actor": "foal",
+      "title": "## Independent Deliberative assessment — Task #32, Step 4 (NON-APPROVING)"
+    }
+  ],
+  "step5_decision": {
+    "url": "https://github.com/jresearchsoftware/shared-governance/issues/32#issuecomment-6187417393",
+    "actor": "foal",
+    "body": "## Owner Decision — Admit Task #32 Step 5: source-controlled ChatGPT Instructions lifecycle and governance-neutral bootstrap\n\nFollowing the [canonical Step 4 Outcome](https://github.com/jresearchsoftware/shared-governance/pull/33#issuecomment-6186716656), [independent exact-head non-approving assessment](https://github.com/jresearchsoftware/shared-governance/pull/33#pullrequestreview-5529653254), and subsequent owner discussion, **authorize one owner-launched Manual Codex Step 5** in this producer repository. The owner accepts the review's *finding as work to correct*, **not** Step 4's candidate as an accepted architecture or a GitHub APPROVE.\n\n**Goal:** complete a *single, reusable, source-controlled ChatGPT Project Instructions production/maintenance mechanism* supplied by Shared Governance and consumable by projects without copied generators, bespoke per-project maintenance procedures, implicit governance adoption, or live settings synchronization. Address the Step 4 review's unconditional-policy issue within the same Step.\n\n**Execution identity:** `Task 32 — Step 5 — Source-controlled ChatGPT Instructions lifecycle`. Continue the existing [PR #33](https://github.com/jresearchsoftware/shared-governance/pull/33) from exact candidate head `c7003e8fdd57e796f6aec4daffe5d946e4792250`. The independently accepted producer source-main remains `15e8191435a126e54b4d1739a73fab112e01c081` at this Decision. Before edits, reconcile live Task/Decision chronology, remote PR head, accepted main/merge base and safe local work; stop on meaningful divergence. Do not rebase, silently repin accepted governance or treat Step 1–4 candidate text as governing policy.\n\n### Required lifecycle and ownership\n\n1. **Three source-controlled layers.** The shared **base ChatGPT client/bootstrap template plus common projection/maintenance implementation** have one versioned producer-owned source. Each consuming project owns a *small, reviewed, human-editable* project-specific **custom Instructions Markdown** (and only necessary configuration/binding data) in its repository. A single common projection combines the selected versioned shared base and that local custom data into **one complete canonical generated Project Instructions Markdown file in the consuming project's source control**. Do not maintain the resulting live text or project-local policy only in a transient output directory or opaque JSON free-text field. Keep the source/custom/generated ownership and edit-versus-generated boundaries explicit.\n2. **A practical, distributable common mechanism.** Step 4's projector currently lives only in this producer's `scripts/`. Make the same projector/template accessible to consuming repositories via one documented, versioned distribution/installation route compatible with their already pinned VibeVM materialization/dependency workflow, without copying/editing generic implementation for each consumer. VibeVM continues to own dependency resolution, lock, versions, direct/transitive closure and materialization. Choose the least complex supported distribution form, demonstrate exactly how a consumer invokes it after dependency update, and avoid a second resolver, standing service, one-off custom export script per project, or required VibeVM executable during ordinary ChatGPT chats. If package bytes genuinely change to deliver this, make the honest **whole-package SemVer change** with source/export/native consistency and applicable release qualification; **do not publish/release or adopt a new package in other projects** under this Step.\n3. **Deterministic regeneration, comparison and no-op.** Supply one reproducible update/check interface usable when (a) the shared bootstrap/projection dependency or its accepted materialization changes, (b) project custom Markdown, binding or relevant accepted local guidance changes, or (c) the selected optional Sources cache changes. Regeneration updates the project-owned canonical generated file and any enabled, explicitly selected versioned cache artifacts; unchanged effective content is `NO_OP`. Support a proportionate read-only stale-generated-file check suitable for opt-in project CI and a safe intentional write/update path. The dependency-upgrade workflow should make it straightforward to regenerate and review generated changes **in the same consumer PR**, with no per-message polling or mandatory periodic live-settings checks. No covert overwrite of unknown non-generated files or project custom text.\n4. **Do not force live-settings updates merely because unrelated Git commits advance.** Step 4 embeds an immutable source-main SHA in the actual 7,040-character Instructions, causing otherwise unnecessary settings changes. Separate stable bootstrap navigation/authority-discovery instructions from the *exact accepted Git/revision pin selected and frozen for an individual effort*. Retain auditable exact hashes/revisions in maintenance evidence or receipts where useful, and require independent acceptance verification for each effort, but do not chase a moving `main` or let a candidate become policy. New source-only commits unrelated to effective Instructions should not require re-pasting ChatGPT Project Instructions; actual base/custom/client-routing changes should produce reviewable changes.\n5. **Fix the material Step 4 finding: client boot is not a governance protocol.** Common mandatory instructions may describe universally necessary client mechanics (how to discover accepted project source and native routes, application precedence/boundaries, JIT read, source authority, and unsupported surfaces). They **must not unconditionally impose Task/Outcome/BLOCKED/Deliberative/review procedures** or treat package/INDEX presence as topic adoption. Derive such semantics from the particular project's *accepted* AGENTS/local/project product guidance and explicit project custom config, with applicable/conditional routing. Preserve the Shared Governance owner's accepted continuation/review flow through *its* existing accepted routes; retain Relay's distinct historical product authority in a read-only projection without silently adopting shared `task-handoff` or `independent-review`. The same core must also work for an ordinary non-adopting project. Keep the short usable bootstrap; do not merely migrate a hard-coded shared rule list into every consumer overlay.\n6. **Optional GitHub-file Sources cache stays in scope, but optional.** Keep one shared selection/manifest/snapshot/export and changed/no-op mechanism. If a project elects to cache specific accepted GitHub/materialized files, generated cache artifacts may be source-controlled and refreshed alongside Instructions; selected content must be explicit/versioned with canonical provenance. No automatic Sources upload, complete UI enumeration, Git-to-Sources sync or unconditional cache requirement. Live Sources access, addressability, freshness and model behavior remain unqualified until actually observed.\n7. **Manual live application and occasional reconciliation.** The source-controlled generated Instructions represent desired state, **not** proof of installed ChatGPT Project settings. The owner reviews and manually applies/reads back changed text, can on demand export the actual live field and request an exact diff/no-op versus the generated source-controlled version, and preserves unknown live rules. No automated/settings mutation, background comparison, per-task preflight or repetitive installation ritual.\n\n### Acceptance evidence for this Step\n\n- One **producer-owned** canonical generated Shared Governance Instructions file, checked into this candidate PR alongside project custom Markdown/binding and a documented common generation/check/update path. Show exact generated bytes, semantic coverage, maintenance/no-op and owner handoff without editing live ChatGPT.\n- A **disposable, realistic external-consumer fixture** or read-only historical Relay example using the very same *distributed* mechanism and a different custom binding, not a hardcoded producer-only Python invocation. Prove changed base, changed custom, changed relevant materialized dependency/route, unchanged and unrelated source changes, no-op, stale generated detection, safe rewrite and preserved custom data. Include a **non-adopting consumer negative case** (no injected Task Handoff/review obligations), and producer positive case retaining accepted workflow semantics. Verify conditions, role/permission boundaries, missing sources and realistic unsupported-format failures.\n- Verify optional Sources selection/cache-diff behavior without representing its export as a successful upload. Avoid manufacturing live ChatGPT compliance evidence, a fake GitHub role or consumer migration.\n- Review technical correctness, architecture/maintainability, source authority, product/local semantic preservation, accepted adoption conditions, test realism and CI/check warnings. Preserve prior Step 1–4 evidence and their limitations. Document any genuine unresolved decisions rather than silently broadening scope.\n- Commit/push the bounded change on existing PR #33; run proportional local tests and applicable exact-head GitHub CI; publish **one attributable canonical English Step 5 Outcome** on that sole result PR and stop for **independent substantive NON-APPROVING Deliberative review** and owner disposition. An implementer's checks are not acceptance.\n\n### Protected boundaries\n\nNo changes to Relay #101, DocReview or any external consumer repository; their migrations/rollout and adopted policy remain separately owned. No live ChatGPT Instructions/Sources edit or upload, no product Relay runtime/Writer/Reviewer changes, no new shared-topic adoption, credential/production/deployment changes, unexpected destructive Git changes, self-approval, merge, package publication, consumer version upgrade, subsequent Step launch or Task closure. **Task #32 and PR #33 remain OPEN**. The issue's existing closure/real-client qualification limits remain binding."
+  },
+  "attribution": "Owner-launched Manual Codex implementation; all checks here are self-checks, not independent acceptance",
+  "publication": "One English canonical Outcome on sole result PR 33 through authorized ordinary GitHub owner channel; no Relay Writer required",
+  "title": "One set-title call returned requested title; persisted readback exposes an ellipsized title, full exact persistence unavailable",
+  "model_effort_telemetry": "UNAVAILABLE",
+  "task_and_pr_closure": "KEEP OPEN",
+  "limitations": "Current tool retrieval lists all seven Issue comments and eight PR Outcome/review records; source text is evidence, not independent client behavior proof"
+}

@@ -188,6 +188,19 @@ class DistributionTests(unittest.TestCase):
         manifest.write_text(manifest.read_text().replace('version = "2.2.0"', 'version = "2.1.0"'))
         self.rejected_source()
 
+    def test_optional_chatgpt_assets_require_new_whole_package_version(self):
+        for name in ("project.py", "base.md", "README.md"):
+            target = self.package / "tools/chatgpt" / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(REPOSITORY / DISTRIBUTION.PACKAGE / "tools/chatgpt" / name, target)
+        self.rejected_source()  # Frozen 2.2.0 cannot acquire new maintenance files.
+        manifest = self.package / "vibe.toml"
+        manifest.write_text(manifest.read_text().replace('version = "2.2.0"', 'version = "2.3.0"'))
+        files, receipt = DISTRIBUTION.snapshot(self.commit())
+        self.assertEqual(receipt["version"], "2.3.0")
+        self.assertIn("tools/chatgpt/project.py", files)
+        self.assertNotIn("hooks", tomllib.loads(files["vibe.toml"].decode()))
+
     def test_any_skill_declaration_or_dependency_is_rejected(self):
         manifest = self.package / "vibe.toml"
         original = manifest.read_text()
