@@ -72,3 +72,8 @@ When a person explicitly requests project onboarding, for example “Onboard thi
 project to Shared Governance,” read the [onboarding procedure](../guides/onboarding.md).
 Skip that detail in ordinary sessions and on package install/update alone.
 This operator aid adopts no topic and grants no configuration-change authority.
+
+When external engineering or reasoning methods would materially help the current
+work, you may consult the [optional FPF guide](../guides/engineering-methods.md).
+Skip it when existing methods/evidence suffice; startup or install/update alone
+never require the guide, FPF access or MCP. FPF advice grants no project authority.
