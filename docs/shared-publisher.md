@@ -141,9 +141,10 @@ both outcomes and retry **the same source, policy and publisher SHAs**: A skips 
 tag; B resumes. An implementation-pin change for recovery needs a separately
 accepted correction. The producer caller owns trigger/retry and concurrency;
 use producer/source/coordinate groups with `cancel-in-progress: false`, not a
-global group that can replace pending releases. For `workflow_run`, the caller
-must validate the triggering run identity against its configured push CI; the
-core independently acquires successful exact-source push evidence on every run.
+global group that can replace pending releases. For `workflow_run`, the core
+reads the actual event's triggering run ID, retrieves that run through the API
+and checks the configured push CI and source. It also acquires successful
+exact-source push evidence on every run.
 No new owner approval is required after an eligible accepted merge.
 
 ## Focused qualification and rollout

@@ -88,6 +88,11 @@ jobs:
       - name: Unprivileged integration fixture
         if: inputs.mode == 'fixture'
         run: python3 publisher/tooling/vibe-publisher/test_publisher.py
+      - name: Read-only primary GitHub acceptance and CI probe
+        if: inputs.mode == 'fixture'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 publisher/tooling/vibe-publisher/probe_github.py
       - name: Check named-secret isolation with a synthetic value
         if: inputs.mode == 'fixture'
         env:
@@ -165,6 +170,8 @@ jobs:
           python3 publisher/tooling/vibe-publisher/publisher.py finalize --report "$RUNNER_TEMP/publication.json"
       - name: Visible per-package result and same-source recovery
         if: always() && inputs.mode != 'fixture'
+        env:
+          PUBLICATION_JOB_STATUS: ${{ job.status }}
         run: |
           python3 - <<'PY'
           import json, os, pathlib
@@ -172,7 +179,10 @@ jobs:
           with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
               if path.exists():
                   for package in json.loads(path.read_text())['packages']:
-                      summary.write(f"{package['package']}: **{package['status']}**\n\n")
+                      status = package['status']
+                      if status in ('READY', 'STAGED') and os.environ['PUBLICATION_JOB_STATUS'] != 'success':
+                          status = 'FAILED_OR_PENDING'
+                      summary.write(f"{package['package']}: **{status}**\n\n")
               else:
                   summary.write('FAILED_OR_PENDING: evidence / preparation unavailable.\n\n')
               summary.write('On failure, retry the same source, policy and publisher SHAs. Existing tags are retained.\n')

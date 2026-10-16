@@ -15,8 +15,8 @@ permissions:
 
 jobs:
   fixture:
-    # Bounded unprivileged qualification of an explicit immutable implementation pin.
-    uses: jresearchsoftware/shared-governance/.github/workflows/vibe-publisher.yml@de60311f768986530e8a161d7cee9f7dcd76dac0
+    # Local call follows candidate changes; the explicit full-SHA call was also qualified.
+    uses: ./.github/workflows/vibe-publisher.yml
     with:
       mode: fixture
       source_sha: ${{ github.event.pull_request.head.sha }}

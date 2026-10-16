@@ -98,7 +98,7 @@ class GitHub:
             headers = {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"}
             if self.token:
                 headers["Authorization"] = "Bearer " + self.token
-            request = urllib.request.Request("https://api.github.com/repos/" + self.repository + "/" + path,
+            request = urllib.request.Request("https://api.github.com/repos/" + self.repository + ("/" + path if path else ""),
                                              headers=headers)
             try:
                 with urllib.request.urlopen(request, timeout=60) as response:
@@ -176,6 +176,8 @@ def snapshot(root, revision, package):
         spec.loader.exec_module(exporter)
         exporter.ROOT = Path(root)
         files, receipt = exporter.snapshot(revision)
+        if receipt["package"] != package["coordinate"]:
+            raise ValueError("governance adapter coordinate differs from binding")
         return files, receipt
     entries = git(root, "ls-tree", "-rz", revision, "--", package["root"]).split(b"\0")
     blobs = {}
@@ -242,10 +244,14 @@ def plan(root, source_sha, main, binding, api, publisher_sha):
                 result["status"] = "NO_PACKAGE_CHANGE"
             else:
                 baseline = package["baseline"]
-                if baseline not in chain or chain.index(baseline) <= chain.index(source_sha):
-                    raise ValueError("accepted package baseline must precede source on first-parent main")
+                if baseline not in chain or chain.index(baseline) < chain.index(source_sha):
+                    raise ValueError("accepted package baseline must be at or before source on first-parent main")
                 history = list(reversed(chain[chain.index(source_sha):chain.index(baseline)]))
                 prior = export(baseline, package)
+                if baseline == source_sha:
+                    # The explicitly accepted baseline is retryable with its own
+                    # exact integration/CI and immediate version boundary checked.
+                    history, prior = [source_sha], previous
                 accepted = []
                 for revision in history:
                     next_value = export(revision, package)

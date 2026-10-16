@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Focused disposable fixtures. All distribution writes use local bare repos."""
 import argparse
+import io
 import importlib.util
 import json
 import os
@@ -127,6 +128,11 @@ class PlanningTests(Fixture):
         self.assertEqual([row["status"] for row in self.plan(changed)["packages"]],
                          ["READY", "NO_PACKAGE_CHANGE"])
 
+    def test_exact_accepted_baseline_can_be_retried(self):
+        for package in self.packages:
+            package["baseline"] = self.revision
+        self.assertEqual([row["status"] for row in self.plan()["packages"]], ["READY", "READY"])
+
     def test_factual_direct_main_noop_without_api(self):
         (self.source / "research.txt").write_text("Ordinary direct-main research")
         revision = self.commit()
@@ -232,6 +238,11 @@ class PlanningTests(Fixture):
             self.assertEqual(len(api.pages("commits/sha/pulls")), 101)
         self.assertIn("page=2", get.call_args.args[0])
 
+    def test_repository_api_endpoint_has_no_trailing_slash(self):
+        with patch.object(P.urllib.request, "urlopen", return_value=io.BytesIO(b'{"id":123}')) as open_url:
+            self.assertEqual(P.GitHub("fixture/source").get("")["id"], 123)
+        self.assertEqual(open_url.call_args.args[0].full_url, "https://api.github.com/repos/fixture/source")
+
     def test_native_environment_has_no_tokens_or_askpass(self):
         with patch.dict(os.environ, GH_TOKEN="api-sentinel", PUBLISH_TOKEN="publish-sentinel",
                         GIT_ASKPASS="credential-helper"):
@@ -261,8 +272,11 @@ class PlanningTests(Fixture):
         spec.loader.exec_module(old)
         accepted = "ec048fb39ae28cf2d747101466a603ddd062b1b0"
         expected = old.snapshot(accepted)
-        actual = P.snapshot(P.ROOT, accepted, {"adapter": "shared-governance-v1"})
+        actual = P.snapshot(P.ROOT, accepted, {"adapter": "shared-governance-v1",
+                                             "coordinate": "org.jresearch.ai/development-governance"})
         self.assertEqual(actual, expected)
+        with self.assertRaisesRegex(ValueError, "coordinate"):
+            P.snapshot(P.ROOT, accepted, {"adapter": "shared-governance-v1", "coordinate": "org.fixture/wrong"})
 
 
 class PublicationTests(Fixture):
