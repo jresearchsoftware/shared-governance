@@ -1,0 +1,179 @@
+name: Shared VibeVM publisher
+
+on:
+  workflow_call:
+    inputs:
+      mode:
+        description: plan, publish, or unprivileged fixture
+        type: string
+        default: plan
+      source_sha:
+        description: Exact producer source-main commit, never moving main
+        required: true
+        type: string
+      policy_sha:
+        description: Independently accepted producer binding commit
+        type: string
+        default: ''
+      binding:
+        description: Binding path in the pinned producer policy commit
+        type: string
+        default: ''
+      package:
+        description: One coordinate / destination per named-secret call
+        type: string
+        default: ''
+    secrets:
+      publish_token:
+        description: Contents-write credential for this one destination only
+        required: false
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+jobs:
+  publisher:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      SOURCE_SHA: ${{ inputs.source_sha }}
+      POLICY_SHA: ${{ inputs.policy_sha }}
+      BINDING: ${{ inputs.binding }}
+      PACKAGE: ${{ inputs.package }}
+      MODE: ${{ inputs.mode }}
+    steps:
+      - name: Check immutable execution inputs
+        env:
+          PUBLISHER_SHA: ${{ job.workflow_sha }}
+          PUBLISHER_REPOSITORY: ${{ job.workflow_repository }}
+          PUBLISHER_REF: ${{ job.workflow_ref }}
+        run: |
+          [[ "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$PUBLISHER_SHA" =~ ^[0-9a-f]{40}$ ]]
+          case "$MODE" in
+            fixture) ;;
+            plan|publish)
+              [[ "$POLICY_SHA" =~ ^[0-9a-f]{40}$ ]]
+              [[ "$PUBLISHER_REF" == *@"$PUBLISHER_SHA" ]]
+              test -n "$BINDING"
+              test -n "$PACKAGE"
+              ;;
+            *) exit 1 ;;
+          esac
+          printf 'PUBLISHER_SHA=%s\nPUBLISHER_REPOSITORY=%s\n' "$PUBLISHER_SHA" "$PUBLISHER_REPOSITORY" >> "$GITHUB_ENV"
+      - name: Check out the called workflow's own implementation
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: publisher
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Check out exact producer source independently
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.source_sha }}
+          path: producer
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify the two source identities and secret-free preparation
+        run: |
+          test "$(git -C publisher rev-parse HEAD)" = "$PUBLISHER_SHA"
+          test "$(git -C producer rev-parse HEAD)" = "$SOURCE_SHA"
+          test -z "${PUBLISH_TOKEN:-}"
+          test -z "${GH_TOKEN:-}"
+          printf 'Publisher `%s@%s`; producer source `%s`.\n' "$PUBLISHER_REPOSITORY" "$PUBLISHER_SHA" "$SOURCE_SHA" >> "$GITHUB_STEP_SUMMARY"
+      - name: Unprivileged integration fixture
+        if: inputs.mode == 'fixture'
+        run: python3 publisher/tooling/vibe-publisher/test_publisher.py
+      - name: Check named-secret isolation with a synthetic value
+        if: inputs.mode == 'fixture'
+        env:
+          PUBLISH_TOKEN: ${{ secrets.publish_token }}
+        run: test "$PUBLISH_TOKEN" = 'task45-fixture-sentinel'
+      - name: Check out pinned accepted producer policy
+        if: inputs.mode != 'fixture'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.policy_sha }}
+          path: policy
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Plan using actual GitHub source / PR / CI evidence
+        id: plan
+        if: inputs.mode != 'fixture'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 publisher/tooling/vibe-publisher/publisher.py plan \
+            --source producer --source-sha "$SOURCE_SHA" \
+            --policy policy --policy-sha "$POLICY_SHA" --binding "$BINDING" \
+            --publisher-sha "$PUBLISHER_SHA" --package "$PACKAGE" --report "$RUNNER_TEMP/publication.json"
+          python3 - <<'PY'
+          import json, os, pathlib
+          report = json.loads((pathlib.Path(os.environ['RUNNER_TEMP']) / 'publication.json').read_text())
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('ready=' + str(any(p['status'] == 'READY' for p in report['packages'])).lower() + '\n')
+          PY
+      - name: Prepare pinned native tool without destination credentials
+        if: inputs.mode == 'publish' && steps.plan.outputs.ready == 'true'
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, urllib.request
+          pin = json.loads(pathlib.Path('publisher/toolchain/vibevm.json').read_text())['linux_x86_64_musl_binary']
+          binary = pathlib.Path(os.environ['RUNNER_TEMP']) / 'vibe'
+          urllib.request.urlretrieve(pin['url'], binary)
+          assert hashlib.sha256(binary.read_bytes()).hexdigest() == pin['sha256']
+          binary.chmod(0o700)
+          PY
+      - name: Stage the selected package without publication credentials
+        id: stage
+        if: inputs.mode == 'publish' && steps.plan.outputs.ready == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 publisher/tooling/vibe-publisher/publisher.py stage \
+            --source producer --source-sha "$SOURCE_SHA" \
+            --policy policy --policy-sha "$POLICY_SHA" --binding "$BINDING" \
+            --publisher-sha "$PUBLISHER_SHA" --package "$PACKAGE" \
+            --vibe "$RUNNER_TEMP/vibe" --directory "$RUNNER_TEMP/staged" \
+            --report "$RUNNER_TEMP/publication.json"
+          python3 - <<'PY'
+          import json, os, pathlib
+          report = json.loads((pathlib.Path(os.environ['RUNNER_TEMP']) / 'publication.json').read_text())
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('staged=' + str(any(p['status'] == 'STAGED' for p in report['packages'])).lower() + '\n')
+          PY
+      - name: Atomic non-force publication to one bound destination
+        if: inputs.mode == 'publish' && steps.stage.outputs.staged == 'true'
+        env:
+          PUBLISH_TOKEN: ${{ secrets.publish_token }}
+        run: |
+          test -n "$PUBLISH_TOKEN"
+          cat > "$RUNNER_TEMP/publisher-askpass" <<'SH'
+          #!/bin/sh
+          case "$1" in
+            *Username*) printf '%s\n' 'x-access-token' ;;
+            *Password*) printf '%s\n' "$PUBLISH_TOKEN" ;;
+          esac
+          SH
+          chmod 700 "$RUNNER_TEMP/publisher-askpass"
+          export GIT_ASKPASS="$RUNNER_TEMP/publisher-askpass" GIT_TERMINAL_PROMPT=0
+          trap 'rm -f "$RUNNER_TEMP/publisher-askpass"' EXIT
+          python3 publisher/tooling/vibe-publisher/publisher.py finalize --report "$RUNNER_TEMP/publication.json"
+      - name: Visible per-package result and same-source recovery
+        if: always() && inputs.mode != 'fixture'
+        run: |
+          python3 - <<'PY'
+          import json, os, pathlib
+          path = pathlib.Path(os.environ['RUNNER_TEMP']) / 'publication.json'
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              if path.exists():
+                  for package in json.loads(path.read_text())['packages']:
+                      summary.write(f"{package['package']}: **{package['status']}**\n\n")
+              else:
+                  summary.write('FAILED_OR_PENDING: evidence / preparation unavailable.\n\n')
+              summary.write('On failure, retry the same source, policy and publisher SHAs. Existing tags are retained.\n')
+          PY

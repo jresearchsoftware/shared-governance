@@ -1,0 +1,25 @@
+name: Shared publisher qualification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - tooling/vibe-publisher/**
+      - .github/workflows/vibe-publisher.yml
+      - .github/workflows/publisher-fixture.yml
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+jobs:
+  fixture:
+    # Local call qualifies this candidate workflow; production callers use a full SHA.
+    uses: ./.github/workflows/vibe-publisher.yml
+    with:
+      mode: fixture
+      source_sha: ${{ github.event.pull_request.head.sha }}
+    secrets:
+      # Public synthetic marker; no repository secret or destination credential.
+      publish_token: task45-fixture-sentinel
