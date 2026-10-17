@@ -56,6 +56,24 @@ payload; producer-only entry pages link to that single copy. See
 The optional engineering-methods guide in the same directory exposes FPF as
 external advice only; its conditional boot pointer adds no topic or prerequisite.
 
+## Frozen-package preparation and 3.0.0
+
+For adopted package lifecycle work, complete the public `LICENSE`, applicable
+manifest/license metadata, approved redistribution rights, intended export file
+set and source checks before accepting frozen source into main. This repository
+already carries its accepted MIT notices. Legal uncertainty needs its owner's
+decision; neither an exporter nor transport can grant rights or repair accepted
+bytes in place. First accepted source freezes the identity even without a remote
+tag. Candidate branches may refine a new version before acceptance; later accepted
+content repairs require a new version.
+
+Task 45 prepares 3.0.0 MAJOR because these are material mandatory pre-merge
+obligations under the accepted classification. Only package-versioning and its
+version-scoped README change semantically; the other eight protocols and tooling
+payload retain their 2.7.0 bytes. Generated 3.0.0 source/slots/lock/routes accompany
+the candidate. Retained 2.7.0 source and slots are historical and untouched.
+This does not adopt any new topic or change other consumers' local policies.
+
 ## Semantic completeness
 
 [Task 15](https://github.com/jresearchsoftware/shared-governance/issues/15)

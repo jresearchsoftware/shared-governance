@@ -10,6 +10,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import textwrap
 import unittest
 from unittest.mock import patch
 
@@ -48,6 +49,7 @@ class Evidence:
         revision = path.split("head_sha=")[1].split("&")[0]
         return [self.alter_run({"head_sha": revision, "event": "push", "head_branch": "main",
                  "status": "completed", "conclusion": "success", "workflow_id": 456,
+                 "path": ".github/workflows/check.yml",
                  "head_repository": {"id": 123}, "repository": {"id": 123},
                  "html_url": "https://github.com/fixture/private-source/actions/runs/1"})]
 
@@ -75,19 +77,29 @@ class Fixture(unittest.TestCase):
             self.packages.append({"coordinate": "org.fixture/" + name, "root": root,
                 "baseline": self.baseline, "adapter": "tree-v1", "disclosure": "opaque",
                 "files": ["vibe.toml", "LICENSE", "README.md"],
-                "destination": (self.directory / (name + ".git")).as_uri()})
-            target = self.source / root
-            target.mkdir(parents=True)
-            (target / "vibe.toml").write_text('[package]\ngroup = "org.fixture"\nname = "' + name +
-                '"\nversion = "1.0.0"\nkind = "flow"\nfrozen = true\npublish = false\n')
-            (target / "README.md").write_text("Approved public guidance.\n")
-            (target / "LICENSE").write_text("MIT\nPublic synthetic fixture.\n")
-            (target / "private.txt").write_text("PRIVATE_PACKAGE_SENTINEL")
-        self.revision = self.commit()
+                "redistribution": {"status": "approved", "license": "MIT",
+                                   "approval": "https://github.com/fixture/private-source/issues/1"},
+                "destination": ("https://github.com/fixture/" + name + ".git" if getattr(self, "public_destinations", False)
+                                else (self.directory / (name + ".git")).as_uri())})
         self.binding = {"schema": 1, "repository": "fixture/private-source", "repository_id": 123,
             "branch": "main", "ci_workflow": ".github/workflows/check.yml",
             "acceptance": "owner-squash-attestation-v1", "authorized_integrators": ["owner"],
             "packages": self.packages}
+        self.save_binding()
+        self.baseline = self.commit()
+        for package in self.packages:
+            package["baseline"] = self.baseline
+            name = package["coordinate"].split("/")[1]
+            root = package["root"]
+            target = self.source / root
+            target.mkdir(parents=True)
+            (target / "vibe.toml").write_text('[package]\ngroup = "org.fixture"\nname = "' + name +
+                '"\nversion = "1.0.0"\nkind = "flow"\nfrozen = true\npublish = false\nlicense = "MIT"\n')
+            (target / "README.md").write_text("Approved public guidance.\n")
+            (target / "LICENSE").write_text("MIT\nPublic synthetic fixture.\n")
+            (target / "private.txt").write_text("PRIVATE_PACKAGE_SENTINEL")
+        self.save_binding()
+        self.revision = self.commit()
         self.api = Evidence(self.binding, [self.revision])
 
     def git(self, *args, cwd=None):
@@ -99,6 +111,9 @@ class Fixture(unittest.TestCase):
         self.git("commit", "-qm", "Disposable source")
         return self.git("rev-parse", "HEAD")
 
+    def save_binding(self):
+        (self.source / "binding.json").write_text(json.dumps(self.binding))
+
     def change(self, number=0, version="1.0.1"):
         manifest = self.source / self.packages[number]["root"] / "vibe.toml"
         manifest.write_text(re.sub(r'version = "[^"]+"', 'version = "' + version + '"', manifest.read_text()))
@@ -107,7 +122,7 @@ class Fixture(unittest.TestCase):
         return self.commit()
 
     def plan(self, revision=None):
-        return P.plan(self.source, revision or self.revision, "main", self.binding, self.api, CODE_SHA)
+        return P.plan(self.source, revision or self.revision, "main", self.binding, self.api, CODE_SHA, "binding.json")
 
     def remote(self, number):
         destination = self.directory / (self.packages[number]["coordinate"].split("/")[1] + ".git")
@@ -183,7 +198,7 @@ class PlanningTests(Fixture):
 
     def test_ci_identity_failures_are_pending(self):
         for values in ({"event": "pull_request"}, {"head_sha": "c" * 40},
-                       {"workflow_id": 999}, {"head_branch": "side"},
+                       {"path": ".github/workflows/wrong.yml"}, {"head_branch": "side"},
                        {"conclusion": "failure"}, {"repository": {"id": 999}},
                        {"head_repository": {"id": 999}}):
             with self.subTest(values=values):
@@ -279,6 +294,163 @@ class PlanningTests(Fixture):
             P.snapshot(P.ROOT, accepted, {"adapter": "shared-governance-v1", "coordinate": "org.fixture/wrong"})
 
 
+class TemporalTests(Fixture):
+    def candidate(self, revision, base=None):
+        with patch.object(self.api, "get", side_effect=AssertionError("source checks do not grant acceptance")):
+            return P.plan(self.source, revision, "main", self.binding, self.api, CODE_SHA,
+                          "binding.json", base or self.revision)["packages"][0]
+
+    def reset_fixture(self):
+        self.git("reset", "--hard", self.revision)
+        self.binding = json.loads((self.source / "binding.json").read_text())
+        self.packages = self.binding["packages"]
+        self.api = Evidence(self.binding, [self.revision])
+
+    def test_revision_appropriate_add_delete_rename_and_binding_only_inventory(self):
+        for operation in ("add", "delete", "rename", "binding-only"):
+            for version in ("1.0.0", "1.0.1"):
+                with self.subTest(operation=operation, version=version):
+                    self.reset_fixture()
+                    package = self.packages[0]
+                    root = self.source / package["root"]
+                    if operation == "add":
+                        (root / "guide.md").write_text("Approved new public guide")
+                        package["files"].append("guide.md")
+                    else:
+                        package["files"].remove("README.md")
+                        if operation == "delete":
+                            (root / "README.md").unlink()
+                        elif operation == "rename":
+                            (root / "README.md").rename(root / "guide.md")
+                            package["files"].append("guide.md")
+                    manifest = root / "vibe.toml"
+                    manifest.write_text(manifest.read_text().replace('"1.0.0"', '"' + version + '"'))
+                    self.save_binding()
+                    changed = self.commit()
+                    self.api.revisions.append(changed)
+                    result = self.plan(changed)["packages"][0]
+                    self.assertEqual(result["status"], "READY" if version == "1.0.1" else "AUTHORIZATION_PENDING")
+                    candidate = self.candidate(changed)
+                    self.assertEqual(candidate["status"], "CANDIDATE_VALID" if version == "1.0.1" else "AUTHORIZATION_PENDING")
+                    files = P.snapshot(self.source, changed, package)[0]
+                    self.assertNotIn("private.txt", files)
+                    self.assertNotIn(b"PRIVATE_SENTINEL", b"".join(files.values()))
+
+    def test_unapproved_and_missing_public_files_never_export(self):
+        package = self.packages[0]
+        (self.source / package["root"] / "unapproved.md").write_text("PRIVATE_SENTINEL")
+        changed = self.commit()
+        self.assertEqual(self.plan(changed)["packages"][0]["status"], "NO_PACKAGE_CHANGE")
+        package["files"].append("missing.md")
+        self.save_binding()
+        self.assertEqual(self.candidate(self.commit())["status"], "AUTHORIZATION_PENDING")
+
+    def test_disclosure_change_requires_new_version_but_source_sha_alone_does_not(self):
+        self.packages[0]["disclosure"] = "public-source"
+        self.save_binding()
+        changed = self.commit()
+        self.assertEqual(self.candidate(changed)["reason_code"], "PACKAGE_VERSION_REUSE")
+        changed = self.change()
+        self.assertEqual(self.candidate(changed)["status"], "CANDIDATE_VALID")
+
+    def test_owner_addition_does_not_reauthorize_historical_package_bytes(self):
+        rejected = self.change()
+        self.binding["authorized_integrators"].append("new-owner")
+        self.save_binding()
+        rotation = self.commit()
+        changed = self.change(version="1.0.2")
+        self.api.revisions.extend([rejected, rotation, changed])
+        self.api.alter_pr = lambda pr: dict(pr, merged_by={"login": "new-owner" if pr["merge_commit_sha"] == rejected else "owner"})
+        self.assertEqual(self.plan(changed)["packages"][0]["status"], "AUTHORIZATION_PENDING")
+        # Explicit owner disposition of the accumulated delta is a distinct pin,
+        # not a side effect of adding an integrator.
+        self.packages[0]["baseline"] = rejected
+        self.packages[0]["baseline_disposition"] = "https://github.com/fixture/private-source/issues/2"
+        self.assertEqual(self.plan(changed)["packages"][0]["status"], "READY")
+
+    def test_historical_workflow_and_owner_survive_rotation_and_deletion(self):
+        self.binding["ci_workflow"] = ".github/workflows/replacement.yml"
+        self.binding["authorized_integrators"] = ["new-owner"]
+        self.save_binding()
+        rotation = self.commit()
+        changed = self.change()
+        self.api.revisions.extend([rotation, changed])
+        self.api.alter_pr = lambda pr: dict(pr, merged_by={"login": "new-owner" if pr["merge_commit_sha"] == changed else "owner"})
+        self.api.alter_run = lambda run: dict(run, path=(".github/workflows/check.yml" if run["head_sha"] == self.revision
+                                                        else self.binding["ci_workflow"]))
+        original = self.api.get
+        def get(path):
+            self.assertFalse(path.startswith("actions/workflows/"), "deleted historical workflows need no current lookup")
+            return original(path)
+        with patch.object(self.api, "get", side_effect=get):
+            result = self.plan(changed)["packages"][0]
+        self.assertEqual(result["status"], "READY")
+        self.assertEqual(result["acceptance"][0]["ci_workflow"], ".github/workflows/check.yml")
+
+    def test_new_integrator_cannot_self_authorize_policy_rotation(self):
+        self.binding["authorized_integrators"] = ["new-owner"]
+        self.save_binding()
+        changed = self.change()
+        self.api.revisions.append(changed)
+        self.api.alter_pr = lambda pr: dict(pr, merged_by={"login": "new-owner" if pr["merge_commit_sha"] == changed else "owner"})
+        self.assertEqual(self.plan(changed)["packages"][0]["status"], "AUTHORIZATION_PENDING")
+
+    def test_premerge_license_readiness_and_unresolved_rights(self):
+        for defect in ("missing", "empty", "metadata", "rights"):
+            with self.subTest(defect=defect):
+                self.reset_fixture()
+                root = self.source / self.packages[0]["root"]
+                if defect == "missing":
+                    (root / "LICENSE").unlink()
+                elif defect == "empty":
+                    (root / "LICENSE").write_text("  \n")
+                elif defect == "metadata":
+                    path = root / "vibe.toml"
+                    path.write_text(path.read_text().replace('license = "MIT"', 'license = "UNRESOLVED"'))
+                else:
+                    self.packages[0]["redistribution"]["status"] = "unresolved"
+                    self.save_binding()
+                changed = self.change()
+                self.assertEqual(self.candidate(changed)["status"], "AUTHORIZATION_PENDING")
+
+    def test_unpublished_accepted_identity_cannot_be_completed_in_place(self):
+        root = self.source / self.packages[0]["root"]
+        (root / "LICENSE").unlink()
+        incomplete_main = self.commit()
+        self.assertEqual(self.git("tag"), "")
+        self.git("switch", "-qc", "candidate")
+        (root / "LICENSE").write_text("MIT\nPublic synthetic fixture.\n")
+        repair = self.commit()
+        self.assertEqual(self.candidate(repair, incomplete_main)["status"], "AUTHORIZATION_PENDING")
+        repair = self.change(version="1.0.1")
+        self.assertEqual(self.candidate(repair, incomplete_main)["status"], "CANDIDATE_VALID")
+
+    def test_candidate_branch_can_refine_new_version_before_acceptance(self):
+        self.git("switch", "-qc", "candidate")
+        self.change()
+        revised = self.change(version="1.0.1")
+        self.assertEqual(self.candidate(revised)["status"], "CANDIDATE_VALID")
+
+
+class SourceCliTests(Fixture):
+    public_destinations = True
+
+    def test_source_time_cli_validates_a_candidate_without_api_or_distribution(self):
+        self.git("switch", "-qc", "candidate")
+        changed = self.change()
+        code_sha = P.git(P.ROOT, "rev-parse", "HEAD").decode().strip()
+        report = self.directory / "candidate.json"
+        result = subprocess.run([sys.executable, str(Path(P.__file__)), "check",
+            "--source", str(self.source), "--source-sha", changed, "--main", "main",
+            "--base", self.revision, "--policy", str(self.source), "--policy-sha", changed,
+            "--binding", "binding.json", "--publisher-sha", code_sha, "--report", str(report)],
+            env=dict(self.env, GH_TOKEN="", GITHUB_EVENT_NAME="pull_request"), capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual([p["status"] for p in json.loads(report.read_text())["packages"]],
+                         ["CANDIDATE_VALID", "NO_PACKAGE_CHANGE"])
+        self.assertIn("independent acceptance and publication remain pending", result.stdout)
+
+
 class PublicationTests(Fixture):
     def test_existing_tag_skips_before_binary_or_native_invocation(self):
         remote = self.remote(0)
@@ -296,10 +468,35 @@ class PublicationTests(Fixture):
 
 
 class DiagnosticsTests(unittest.TestCase):
+    @unittest.skipIf(sys.platform == "win32", "workflow shell qualification runs on supported Linux")
+    def test_real_no_checkout_shell_fallback_after_input_failure(self):
+        workflow = (P.ROOT / ".github/workflows/vibe-publisher.yml").read_text()
+        validation = textwrap.dedent(workflow.split("        run: |\n", 1)[1].split("      - name:", 1)[0])
+        summary = textwrap.dedent(workflow.split("      - name: Visible per-package result", 1)[1].split("        run: |\n", 1)[1])
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "summary.md"
+            env = dict(os.environ, SOURCE_SHA="invalid-private-sentinel", PUBLISHER_SHA="a" * 40,
+                       PUBLISHER_REPOSITORY="fixture/publisher", MODE="plan",
+                       GITHUB_STEP_SUMMARY=str(output))
+            self.assertNotEqual(subprocess.run(["bash", "-e", "-c", validation], cwd=temporary, env=env,
+                                               capture_output=True).returncode, 0)
+            for inputs, checkout, expected in (("failure", "skipped", "INPUT_VALIDATION_FAILED"),
+                                               ("cancelled", "skipped", "INPUT_VALIDATION_FAILED"),
+                                               ("success", "failure", "PUBLISHER_CHECKOUT_FAILED")):
+                env.update(INPUTS_OUTCOME=inputs, PUBLISHER_CHECKOUT_OUTCOME=checkout)
+                output.write_text("")
+                subprocess.run(["bash", "-e", "-c", summary], cwd=temporary, env=env, check=True)
+                text = output.read_text()
+                self.assertIn(expected, text)
+                self.assertNotIn("invalid-private-sentinel", text)
+                if inputs != "success":
+                    self.assertNotIn("PUBLISHER_CHECKOUT_FAILED", text)
+
     def test_report_and_actions_summary_show_safe_reasons_and_warnings(self):
         report = {"packages": [
             {"package": "org.fixture/pending", "status": "AUTHORIZATION_PENDING",
-             "reason": "no unambiguous authorized owner squash integration"},
+             "reason": "no unambiguous authorized owner squash integration",
+             "reason_code": "OWNER_ACCEPTANCE_NOT_ESTABLISHED"},
             {"package": "org.fixture/readback", "status": "FAILED_OR_PENDING",
              "reason": "Publication readback unavailable; inspect and retry the same source and publisher SHA."},
             {"package": "org.fixture/competing", "status": "ALREADY_PUBLISHED",

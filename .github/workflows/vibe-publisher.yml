@@ -193,5 +193,12 @@ jobs:
             python3 publisher/tooling/vibe-publisher/publisher.py summary \
               --report "$RUNNER_TEMP/publication.json" --summary "$GITHUB_STEP_SUMMARY"
           else
-            printf '## Shared publisher result\n\nPublisher result unavailable: FAILED_OR_PENDING — PUBLISHER_CHECKOUT_FAILED. The pinned reusable workflow code could not be checked out; no package result or destination write was produced.\n' >> "$GITHUB_STEP_SUMMARY"
+            case "$INPUTS_OUTCOME" in
+              failure|cancelled)
+                printf '## Shared publisher result\n\nPublisher result unavailable: FAILED_OR_PENDING — INPUT_VALIDATION_FAILED. Immutable workflow inputs or publisher identity did not validate; correct the caller pins before retrying.\n' >> "$GITHUB_STEP_SUMMARY"
+                ;;
+              *)
+                printf '## Shared publisher result\n\nPublisher result unavailable: FAILED_OR_PENDING — PUBLISHER_CHECKOUT_FAILED. The pinned reusable workflow code could not be checked out; no package result or destination write was produced.\n' >> "$GITHUB_STEP_SUMMARY"
+                ;;
+            esac
           fi

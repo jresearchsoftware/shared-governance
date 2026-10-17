@@ -6,6 +6,9 @@ Development Governance package. These are candidate tooling; no producer is
 integrated by this change. The current [release entrypoint](releases.md) remains
 in service. Source acceptance, remote publication and consumer adoption are
 separate. Installing a flow neither executes this tool nor adopts release policy.
+Preparation precedes source acceptance: a producer must deliberately adopt and
+meet this publisher's readiness contract in its own accepted policy. That does
+not require adopting every optional package-versioning topic.
 
 ## Producer-owned contract
 
@@ -57,6 +60,26 @@ binding revision. Do not advance the baseline automatically or infer that the
 later PR accepted the inherited delta. This uses Git/PR/CI records, no standing
 ledger. A source-only commit never opportunistically releases earlier changes.
 
+The binding path is also source-controlled historical policy. Start from an
+explicitly accepted baseline containing the initial binding, before package
+creation if necessary. Each snapshot uses that revision's approved file inventory;
+each transition uses its source-time CI path and the preceding binding's authorized
+integrators. A binding rotation needs the preceding owner's integration; a new
+integrator cannot self-authorize. Older merges are checked against their own
+owner/CI evidence, never today's owner list. CI is resolved from exact-source run
+records (including the recorded workflow path/ID), so later workflow deletion or
+renaming does not require today's workflow-name lookup. Missing historic bindings,
+unsupported identity/destination changes or unavailable evidence stay pending.
+The caller's separately accepted policy pin must match the final source binding.
+No policy history is inferred from current allowlists or an approval boolean.
+
+When earlier package bytes lack eligible acceptance, adding an integrator or
+renaming CI is not disposition. An owner may explicitly reconcile the accumulated
+delta and pin a new `baseline`, recording its existing Decision URL in
+`baseline_disposition`; the pin's external independent acceptance remains required.
+That starts a bounded audit, without pretending to prove earlier eligibility.
+It does not authorize same-version repairs of already accepted frozen content.
+
 ## Export adapters
 
 `shared-governance-v1` invokes the existing governance exporter from the **same
@@ -75,6 +98,11 @@ root. Example package fields for a synthetic second producer:
   "baseline": "0000000000000000000000000000000000000000",
   "adapter": "tree-v1",
   "files": ["vibe.toml", "README.md", "LICENSE"],
+  "redistribution": {
+    "status": "approved",
+    "license": "MIT",
+    "approval": "https://github.com/fixture/producer/issues/1#issuecomment-1"
+  },
   "disclosure": "opaque",
   "destination": "https://github.com/fixture/landscape-subagents.git"
 }
@@ -90,6 +118,25 @@ are excluded from payload selection. `opaque` omits repository/path/source SHA;
 `public-source` deliberately includes path/SHA. Private/public licensing, notices,
 source disclosure and approved files are producer decisions before real release.
 No source history, sibling, root notes or worktree files are copied implicitly.
+
+Before accepting frozen source into main, complete the actual public `LICENSE`,
+applicable manifest/license metadata, approved redistribution rights, intended
+export inventory and relevant source checks. The illustrative MIT value above
+does not choose a license for a real producer. `redistribution` records the
+owner-approved license and rights Decision; unresolved/missing approval, blank or
+missing notices and mismatching metadata block readiness. The tool cannot decide
+whether arbitrary legal text grants sufficient rights: owner review of the actual
+notices remains necessary. A publisher may verify readiness, never invent rights
+or add missing files after merge. Historic incomplete exports may be compared for
+a forward source repair, but cannot be silently published as ready releases.
+
+An accepted frozen `(group, name, version)` is immutable at its first main
+integration even if no remote tag exists. Add/delete/rename of approved files,
+binding-only inventory changes, notice or manifest corrections require a new
+version. Candidate branches may refine a new version before acceptance. The
+already merged Landscape 1.0.0 packages therefore cannot receive missing licenses
+under 1.0.0; preparing new versions, rights and first-release CI belongs to
+separately authorized Landscape work. This PR changes no Landscape source or policy.
 
 Both initial adapters support **empty included dependency closure**. The existing
 governance exporter enforces this; tree-v1 rejects dependency sections. A later
@@ -109,6 +156,17 @@ python3 tooling/vibe-publisher/publisher.py plan \
   --publisher-sha FULL_CODE_SHA --package org.fixture/landscape-subagents \
   --report /tmp/publication.json
 ```
+
+For source-time candidate CI, use `check` with those same source/code/binding
+arguments plus `--base FULL_ACCEPTED_MAIN_SHA`. The policy checkout/pin for this
+operation contains the proposed binding; it is validation data. `--main` still
+identifies accepted source main. The check compares the final candidate export
+against accepted main and its bounded frozen-version history, including inventory
+changes and unpublished accepted identities. It permits candidate refinements of
+a new version, performs no acceptance API calls or distribution reads/writes and
+reports `CANDIDATE_VALID` or a safe pending reason. It grants no merge/publication
+authority. Producer candidate CI must invoke this check or its qualified equivalent
+(Shared Governance retains its existing exporter and release-transition checks).
 
 `GH_TOKEN` grants read access to the producer's API evidence; it is not a
 distribution credential. A `stage` invocation with the same pins additionally
@@ -182,10 +240,15 @@ It does not qualify private caller access, actual cross-repository credentials o
 real publication. Exact run evidence and remaining limits belong in the result PR
 and [Step 2 evidence](task-45/step-2/validation.md) or
 [Step 3 diagnostics evidence](task-45/step-3/validation.md), as applicable.
+[Step 4 evidence](task-45/step-4/validation.md) records evolving file inventories,
+temporal policy, source-time readiness and the real no-checkout shell fallback.
 
 After independent acceptance, production integration still needs separate owner
 authority in each producer, approved destinations/visibility, public payload
-license/disclosure, credential provisioning and an admitted first publication.
+license/disclosure and credential provisioning. A producer's accepted integration
+may authorize its automatic release; add no redundant manual permission where
+that authority already exists. Shared Governance's existing post-merge automation
+remains in service; this PR prepares 3.0.0 without cutting over to the shared tool.
 Keep existing entrypoints until that replacement is qualified. Landscape #3/#4
 content tasks and consumer adoption keep their separate authority. Roll back an
 integration through ordinary Git; never move/delete a frozen release to recover.

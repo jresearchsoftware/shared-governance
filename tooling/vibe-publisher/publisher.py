@@ -19,49 +19,21 @@ SHA = re.compile(r"[0-9a-f]{40}")
 VERSION = re.compile(r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)")
 RECEIPT = "DISTRIBUTION.json"
 
-AUTHORIZATION_DIAGNOSTICS = {
-    "source is not on first-parent source main": (
-        "SOURCE_NOT_ON_MAIN",
-        "This source is not on accepted first-parent main; do not publish this commit."),
-    "accepted package baseline must be at or before source on first-parent main": (
-        "PACKAGE_BASELINE_UNRESOLVED",
-        "The accepted package baseline is not verifiably on first-parent main at or before this source; correct the bound baseline before retrying."),
-    "package removal requires owner disposition": (
-        "OWNER_DISPOSITION_REQUIRED",
-        "This package removal needs an explicit owner disposition before publication."),
-    "package payload changed without a new version": (
-        "PACKAGE_VERSION_REUSE",
-        "Package bytes changed without a new package version; correct the version under the producer's release policy."),
-    "source repository identity differs": (
-        "SOURCE_REPOSITORY_MISMATCH",
-        "The checked source repository does not match the accepted producer binding; correct the binding or source checkout."),
-    "initial integration supports squash commits only": (
-        "UNSUPPORTED_MERGE_ROUTE",
-        "This binding supports squash integration only; another merge route needs producer-specific qualification and owner disposition."),
-    "no unambiguous authorized owner squash integration": (
-        "OWNER_ACCEPTANCE_NOT_ESTABLISHED",
-        "No unique authorized owner squash merge was found; resolve the owner and PR acceptance evidence before retrying."),
-    "qualifying CI workflow identity differs": (
-        "QUALIFYING_CI_MISMATCH",
-        "The configured qualifying CI workflow identity does not match; correct the trusted producer binding."),
-    "no successful matching source-main push CI": (
-        "MATCHING_SOURCE_CI_MISSING",
-        "No successful push CI run for this exact source commit was found; resolve that CI result before retrying."),
-    "automatic trigger is not the bound successful exact-source push run": (
-        "TRIGGER_RUN_MISMATCH",
-        "The triggering run is not the bound successful push run for this exact source commit; do not publish from it."),
-    "GitHub evidence unavailable": (
-        "ACCEPTANCE_EVIDENCE_UNAVAILABLE",
-        "Required GitHub acceptance or CI evidence could not be read; restore read access and verify the exact source before retrying."),
-    "unsupported producer binding / acceptance rule": (
-        "PRODUCER_BINDING_UNSUPPORTED",
-        "The accepted producer binding uses an unsupported schema or acceptance rule; resolve it in the producer's authority."),
-    "canonical frozen package identity differs": (
-        "PACKAGE_IDENTITY_MISMATCH",
-        "The package identity or frozen version does not match its accepted binding; correct the package under its owner's release policy."),
-    "tree-v1 supports an empty dependency closure only": (
-        "DEPENDENCY_CLOSURE_UNQUALIFIED",
-        "This export adapter has not qualified included dependencies; owner-authorized adapter evidence is required before publication."),
+AUTHORIZATION_MESSAGES = {
+    'SOURCE_NOT_ON_MAIN': 'This source is not on accepted first-parent main; do not publish this commit.',
+    'PACKAGE_BASELINE_UNRESOLVED': 'The accepted package baseline is not verifiably on first-parent main at or before this source; correct the bound baseline before retrying.',
+    'OWNER_DISPOSITION_REQUIRED': 'This package removal needs an explicit owner disposition before publication.',
+    'PACKAGE_VERSION_REUSE': "Package bytes changed without a new package version; correct the version under the producer's release policy.",
+    'SOURCE_REPOSITORY_MISMATCH': 'The checked source repository does not match the accepted producer binding; correct the binding or source checkout.',
+    'UNSUPPORTED_MERGE_ROUTE': 'This binding supports squash integration only; another merge route needs producer-specific qualification and owner disposition.',
+    'OWNER_ACCEPTANCE_NOT_ESTABLISHED': 'No unique authorized owner squash merge was found; resolve the owner and PR acceptance evidence before retrying.',
+    'QUALIFYING_CI_MISMATCH': 'The configured qualifying CI workflow identity does not match; correct the trusted producer binding.',
+    'MATCHING_SOURCE_CI_MISSING': 'No successful push CI run for this exact source commit was found; resolve that CI result before retrying.',
+    'TRIGGER_RUN_MISMATCH': 'The triggering run is not the bound successful push run for this exact source commit; do not publish from it.',
+    'ACCEPTANCE_EVIDENCE_UNAVAILABLE': 'Required GitHub acceptance or CI evidence could not be read; restore read access and verify the exact source before retrying.',
+    'PRODUCER_BINDING_UNSUPPORTED': "The accepted producer binding uses an unsupported schema or acceptance rule; resolve it in the producer's authority.",
+    'PACKAGE_IDENTITY_MISMATCH': "The package identity or frozen version does not match its accepted binding; correct the package under its owner's release policy.",
+    'DEPENDENCY_CLOSURE_UNQUALIFIED': 'This export adapter has not qualified included dependencies; owner-authorized adapter evidence is required before publication.',
 }
 
 AUTHORIZATION_FALLBACK = (
@@ -129,6 +101,20 @@ SUMMARY_PHASES = (
 )
 
 
+class AuthorizationError(ValueError):
+    def __init__(self, code, message):
+        super().__init__(message)
+        self.code = code
+
+
+AUTHORIZATION_MESSAGES.update({
+    "HISTORICAL_BINDING_UNRESOLVED": "Historical export or acceptance policy is unavailable or incompatible; obtain explicit owner disposition of the affected baseline before publication.",
+    "POLICY_PIN_MISMATCH": "The source-time binding differs from the independently accepted policy pin; reconcile the exact producer pins before publication.",
+    "PUBLIC_EXPORT_INCOMPLETE": "Approved public package files or license are missing or invalid; prepare a new version before source acceptance.",
+    "REDISTRIBUTION_UNRESOLVED": "License metadata does not match an explicit redistribution approval; resolve rights and notices with the owner before accepting package source.",
+})
+
+
 def operator_diagnostic(result, status=None):
     """Return a safe allowlisted category and message; never echo report details."""
     status = status or result.get("status", "")
@@ -136,12 +122,15 @@ def operator_diagnostic(result, status=None):
         return "NO_PACKAGE_CHANGE", DIAGNOSTIC_MESSAGES["NO_PACKAGE_CHANGE"]
     if status == "READY":
         return "ELIGIBLE_NOT_PUBLISHED", DIAGNOSTIC_MESSAGES["ELIGIBLE_NOT_PUBLISHED"]
+    if status == "CANDIDATE_VALID":
+        return "CANDIDATE_VALID", "Source-time package checks passed; independent acceptance and publication remain pending."
     if status == "STAGED":
         return "STAGED_NOT_PUBLISHED", DIAGNOSTIC_MESSAGES["STAGED_NOT_PUBLISHED"]
     if status == "PUBLISHED":
         return "PUBLISHED_CONFIRMED", DIAGNOSTIC_MESSAGES["PUBLISHED_CONFIRMED"]
     if status == "AUTHORIZATION_PENDING":
-        return AUTHORIZATION_DIAGNOSTICS.get(result.get("reason"), AUTHORIZATION_FALLBACK)
+        code = result.get("reason_code")
+        return (code, AUTHORIZATION_MESSAGES[code]) if code in AUTHORIZATION_MESSAGES else AUTHORIZATION_FALLBACK
     if status == "ALREADY_PUBLISHED":
         code = WARNING_CODES.get(result.get("warning"), "EXISTING_TAG_UNVERIFIED")
         return code, DIAGNOSTIC_MESSAGES[code]
@@ -255,7 +244,7 @@ def binding_at(policy_root, policy_sha, path, allow_local=False):
     exact(policy_root, policy_sha)
     binding = json.loads(git(policy_root, "show", policy_sha + ":" + safe_path(path)))
     if binding.get("schema") != 1 or binding.get("acceptance") != "owner-squash-attestation-v1":
-        raise ValueError("unsupported producer binding / acceptance rule")
+        raise AuthorizationError("PRODUCER_BINDING_UNSUPPORTED", "unsupported producer binding / acceptance rule")
     if not re.fullmatch(r"[\w.-]+/[\w.-]+", binding["repository"]):
         raise ValueError("invalid source repository")
     if not isinstance(binding["repository_id"], int) or not binding["authorized_integrators"]:
@@ -292,6 +281,29 @@ def binding_at(policy_root, policy_sha, path, allow_local=False):
     return binding
 
 
+def package_binding(binding, coordinate):
+    matches = [p for p in binding["packages"] if p["coordinate"] == coordinate]
+    if len(matches) != 1:
+        raise AuthorizationError("HISTORICAL_BINDING_UNRESOLVED", "historical package binding requires owner disposition")
+    return matches[0]
+
+
+def revision_binding(root, revision, path):
+    """Git owns the policy chronology; today's pin cannot rewrite old rules."""
+    try:
+        return binding_at(root, revision, path, allow_local=True)
+    except (ValueError, KeyError, TypeError) as error:
+        raise AuthorizationError("HISTORICAL_BINDING_UNRESOLVED", "historical producer binding is unavailable") from error
+
+
+def policy_identity(binding):
+    # Baseline changes are explicit dispositions in the independently accepted
+    # policy pin. They do not change the export or authorize integrators by magic.
+    return {k: v for k, v in binding.items() if k != "packages"} | {
+        "packages": [{k: v for k, v in p.items() if k not in ("baseline", "baseline_disposition")}
+                     for p in binding["packages"]]}
+
+
 class GitHub:
     """Read GitHub API evidence, following all result pages; never execute API text."""
     def __init__(self, repository, token=None):
@@ -310,7 +322,7 @@ class GitHub:
                 with urllib.request.urlopen(request, timeout=60) as response:
                     self.cache[path] = json.load(response)
             except Exception:
-                raise ValueError("GitHub evidence unavailable") from None
+                raise AuthorizationError("ACCEPTANCE_EVIDENCE_UNAVAILABLE", "GitHub evidence unavailable") from None
         return self.cache[path]
 
     def pages(self, path, key=None):
@@ -324,10 +336,12 @@ class GitHub:
             page += 1
 
 
-def valid_ci(run, binding, revision, workflow_id):
+def valid_ci(run, binding, revision, workflow_id=None):
     return (run["head_sha"] == revision and run["event"] == "push"
             and run["head_branch"] == binding["branch"] and run["status"] == "completed"
-            and run["conclusion"] == "success" and run["workflow_id"] == workflow_id
+            and run["conclusion"] == "success"
+            and run.get("path") == binding["ci_workflow"]
+            and (workflow_id is None or run["workflow_id"] == workflow_id)
             and run["head_repository"]["id"] == binding["repository_id"]
             and run["repository"]["id"] == binding["repository_id"])
 
@@ -337,18 +351,17 @@ def verify_trigger(api, binding, source_sha):
         return
     event = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text())
     run = api.get("actions/runs/" + str(int(event["workflow_run"]["id"])))
-    workflow = api.get("actions/workflows/" + binding["ci_workflow"].rsplit("/", 1)[1])
-    if workflow["path"] != binding["ci_workflow"] or not valid_ci(run, binding, source_sha, workflow["id"]):
-        raise ValueError("automatic trigger is not the bound successful exact-source push run")
+    if not valid_ci(run, binding, source_sha):
+        raise AuthorizationError("TRIGGER_RUN_MISMATCH", "automatic trigger is not the bound successful exact-source push run")
 
 
 def eligible(api, binding, revision, parents):
     """Owner integration attests review; it does not prove independent review identity."""
     repository = api.get("")
     if (repository["id"], repository["full_name"]) != (binding["repository_id"], binding["repository"]):
-        raise ValueError("source repository identity differs")
+        raise AuthorizationError("SOURCE_REPOSITORY_MISMATCH", "source repository identity differs")
     if len(parents) != 1:
-        raise ValueError("initial integration supports squash commits only")
+        raise AuthorizationError("UNSUPPORTED_MERGE_ROUTE", "initial integration supports squash commits only")
     pulls = api.pages(f"commits/{revision}/pulls")
     matches = []
     for associated in pulls:
@@ -360,21 +373,22 @@ def eligible(api, binding, revision, parents):
                 and pr["head"]["sha"] != revision):
             matches.append(pr)
     if len(matches) != 1:
-        raise ValueError("no unambiguous authorized owner squash integration")
-    workflow = api.get("actions/workflows/" + binding["ci_workflow"].rsplit("/", 1)[1])
-    if workflow["path"] != binding["ci_workflow"]:
-        raise ValueError("qualifying CI workflow identity differs")
-    runs = api.pages(f"actions/workflows/{workflow['id']}/runs?head_sha={revision}&event=push", "workflow_runs")
-    runs = [run for run in runs if valid_ci(run, binding, revision, workflow["id"])]
+        raise AuthorizationError("OWNER_ACCEPTANCE_NOT_ESTABLISHED", "no unambiguous authorized owner squash integration")
+    # Run records retain the workflow path used at this source revision, even
+    # after a workflow is renamed/deleted. Never resolve yesterday via today's
+    # workflow-name endpoint.
+    runs = api.pages(f"actions/runs?head_sha={revision}&event=push", "workflow_runs")
+    runs = [run for run in runs if valid_ci(run, binding, revision)]
     if not runs:
-        raise ValueError("no successful matching source-main push CI")
+        raise AuthorizationError("MATCHING_SOURCE_CI_MISSING", "no successful matching source-main push CI")
     pr = matches[0]
     return {"pr": pr["html_url"], "reviewed_head": pr["head"]["sha"],
             "integrator": pr["merged_by"]["login"], "ci_run": runs[0]["html_url"],
-            "source_sha": revision, "attestation": binding["acceptance"]}
+            "source_sha": revision, "attestation": binding["acceptance"],
+            "ci_workflow": binding["ci_workflow"], "ci_workflow_id": runs[0]["workflow_id"]}
 
 
-def snapshot(root, revision, package):
+def snapshot(root, revision, package, require_ready=True):
     """Export only Git blobs, never worktree files, caches, or live observations."""
     if package["adapter"] == "shared-governance-v1":
         spec = importlib.util.spec_from_file_location("governance_export", ROOT / "scripts/prepare-distribution.py")
@@ -398,22 +412,27 @@ def snapshot(root, revision, package):
         blobs[relative] = git(root, "cat-file", "blob", oid)
     if not blobs:
         return None
-    if set(blobs) != set(package["files"]) or RECEIPT in blobs:
-        raise ValueError("approved public export files missing or reserved receipt supplied")
+    if (require_ready and set(blobs) != set(package["files"])) or RECEIPT in blobs:
+        raise AuthorizationError("PUBLIC_EXPORT_INCOMPLETE", "approved public export files missing or reserved receipt supplied")
     manifest = tomllib.loads(blobs["vibe.toml"].decode())
     metadata = manifest["package"]
     if (metadata["group"] + "/" + metadata["name"] != package["coordinate"]
             or not VERSION.fullmatch(metadata["version"]) or metadata.get("frozen") is not True):
-        raise ValueError("canonical frozen package identity differs")
+        raise AuthorizationError("PACKAGE_IDENTITY_MISMATCH", "canonical frozen package identity differs")
     if manifest.get("requires") or manifest.get("dev-requires"):
         # The adapter contract must be extended with actual lock/slot closure
         # evidence before admitting dependencies. Do not implement a resolver.
-        raise ValueError("tree-v1 supports an empty dependency closure only")
-    if not blobs["LICENSE"].strip():
-        raise ValueError("public package license is empty")
+        raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "tree-v1 supports an empty dependency closure only")
+    if require_ready and not blobs["LICENSE"].strip():
+        raise AuthorizationError("PUBLIC_EXPORT_INCOMPLETE", "public package license is empty")
+    rights = package.get("redistribution", {})
+    if require_ready and not (rights.get("status") == "approved" and rights.get("approval", "").startswith("https://")
+            and rights.get("license") and rights["license"] == metadata.get("license")):
+        raise AuthorizationError("REDISTRIBUTION_UNRESOLVED", "package license metadata or redistribution approval is unresolved")
     hashes = {name: hashlib.sha256(data).hexdigest() for name, data in sorted(blobs.items())}
     digest = hashlib.sha256(json.dumps(hashes, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     receipt = {"schema": 1, "package": package["coordinate"], "version": metadata["version"],
+               "disclosure": package["disclosure"],
                "payload_sha256": digest, "sha256": hashes}
     if package["disclosure"] == "public-source":
         receipt.update(source_revision=revision, source_path=package["root"])
@@ -422,21 +441,45 @@ def snapshot(root, revision, package):
 
 
 def payload(snapshot_value):
-    return None if snapshot_value is None else snapshot_value[1]["payload_sha256"]
+    if snapshot_value is None:
+        return None
+    receipt = snapshot_value[1]
+    # Source SHA changes alone are not releases; deliberate disclosure changes
+    # are versioned export content. The governance adapter keeps its own schema.
+    return receipt["payload_sha256"], receipt.get("disclosure")
 
 
-def plan(root, source_sha, main, binding, api, publisher_sha):
+def plan(root, source_sha, main, binding, api, publisher_sha, binding_path=None, candidate_base=None):
     exact(root, source_sha)
     if not SHA.fullmatch(publisher_sha):
         raise ValueError("a full called-workflow publisher SHA is required")
     chain = git(root, "rev-list", "--first-parent", main).decode().splitlines()
-    if source_sha not in chain:
-        raise ValueError("source is not on first-parent source main")
-    evidence_cache, snapshots = {}, {}
+    if source_sha not in chain and candidate_base is None:
+        raise AuthorizationError("SOURCE_NOT_ON_MAIN", "source is not on first-parent source main")
+    if candidate_base is not None:
+        exact(root, candidate_base)
+        if candidate_base not in chain:
+            raise ValueError("candidate base is not on first-parent source main")
+    evidence_cache, snapshots, policies = {}, {}, {}
+    def policy(revision):
+        if revision not in policies:
+            if binding_path is None:
+                # Governance export owns its historical inventory. Generic
+                # exports must supply the source-controlled binding path.
+                if any(p["adapter"] == "tree-v1" for p in binding["packages"]):
+                    raise AuthorizationError("HISTORICAL_BINDING_UNRESOLVED", "historical producer binding path is required")
+                policies[revision] = binding
+            else:
+                policies[revision] = revision_binding(root, revision, binding_path)
+        return policies[revision]
     def export(revision, package):
         key = revision, package["coordinate"]
         if key not in snapshots:
-            snapshots[key] = snapshot(root, revision, package)
+            historical = package_binding(policy(revision), package["coordinate"])
+            if (historical["root"], historical["adapter"], historical["destination"]) != (
+                    package["root"], package["adapter"], package["destination"]):
+                raise AuthorizationError("HISTORICAL_BINDING_UNRESOLVED", "historical package identity or destination requires owner disposition")
+            snapshots[key] = snapshot(root, revision, historical, require_ready=False)
         return snapshots[key]
     results = []
     for package in binding["packages"]:
@@ -444,37 +487,64 @@ def plan(root, source_sha, main, binding, api, publisher_sha):
                   "publisher_sha": publisher_sha, "destination": package["destination"]}
         try:
             parents = git(root, "show", "-s", "--format=%P", source_sha).decode().split()
+            if policy_identity(policy(source_sha)) != policy_identity(binding):
+                raise AuthorizationError("POLICY_PIN_MISMATCH", "source policy differs from the independently accepted policy pin")
             current = export(source_sha, package)
-            previous = export(parents[0], package) if parents else None
+            # Readiness gates the proposed export, not the ability to compare a
+            # historically incomplete frozen identity for a forward repair.
+            snapshot(root, source_sha, package)
+            previous = export(candidate_base or parents[0], package) if parents else None
             if payload(current) == payload(previous):
                 result["status"] = "NO_PACKAGE_CHANGE"
             else:
                 baseline = package["baseline"]
-                if baseline not in chain or chain.index(baseline) < chain.index(source_sha):
-                    raise ValueError("accepted package baseline must be at or before source on first-parent main")
-                history = list(reversed(chain[chain.index(source_sha):chain.index(baseline)]))
+                boundary = candidate_base or source_sha
+                if baseline not in chain or chain.index(baseline) < chain.index(boundary):
+                    raise AuthorizationError("PACKAGE_BASELINE_UNRESOLVED", "accepted package baseline must be at or before source on first-parent main")
+                history = list(reversed(chain[chain.index(boundary):chain.index(baseline)]))
+                if candidate_base is not None:
+                    history.append(source_sha)
                 prior = export(baseline, package)
-                if baseline == source_sha:
+                if baseline == source_sha and candidate_base is None:
                     # The explicitly accepted baseline is retryable with its own
                     # exact integration/CI and immediate version boundary checked.
                     history, prior = [source_sha], previous
                 accepted = []
+                versions = {prior[1]["version"]: payload(prior)} if prior else {}
                 for revision in history:
                     next_value = export(revision, package)
+                    revision_parents = git(root, "show", "-s", "--format=%P", revision).decode().split()
+                    before_policy = policy(revision_parents[0])
+                    after_policy = policy(revision)
+                    if any(before_policy[k] != after_policy[k] for k in ("repository", "repository_id", "branch", "acceptance")):
+                        raise AuthorizationError("HISTORICAL_BINDING_UNRESOLVED", "source identity policy changes require owner disposition")
+                    # A policy rotation is accepted by the previous owners,
+                    # with CI from its source-time workflow. New owners cannot
+                    # self-authorize or retroactively cleanse earlier changes.
+                    authority = dict(after_policy, authorized_integrators=before_policy["authorized_integrators"])
+                    policy_changed = policy_identity(before_policy) != policy_identity(after_policy)
+                    if policy_changed and candidate_base is None:
+                        evidence_cache[revision] = eligible(api, authority, revision, revision_parents)
                     if payload(prior) != payload(next_value):
                         if next_value is None:
-                            raise ValueError("package removal requires owner disposition")
-                        if prior and prior[1]["version"] == next_value[1]["version"]:
-                            raise ValueError("package payload changed without a new version")
-                        if revision not in evidence_cache:
-                            revision_parents = git(root, "show", "-s", "--format=%P", revision).decode().split()
-                            evidence_cache[revision] = eligible(api, binding, revision, revision_parents)
-                        accepted.append(evidence_cache[revision])
+                            raise AuthorizationError("OWNER_DISPOSITION_REQUIRED", "package removal requires owner disposition")
+                        version = next_value[1]["version"]
+                        if (candidate_base is None or revision == source_sha) and (
+                                (prior and prior[1]["version"] == version)
+                                or (version in versions and versions[version] != payload(next_value))):
+                            raise AuthorizationError("PACKAGE_VERSION_REUSE", "package payload changed without a new version")
+                        versions.setdefault(version, payload(next_value))
+                        if candidate_base is None:
+                            snapshot(root, revision, package_binding(after_policy, package["coordinate"]))
+                            if revision not in evidence_cache:
+                                evidence_cache[revision] = eligible(api, authority, revision, revision_parents)
+                            accepted.append(evidence_cache[revision])
                     prior = next_value
-                result.update(status="READY", version=current[1]["version"],
+                result.update(status="CANDIDATE_VALID" if candidate_base is not None else "READY", version=current[1]["version"],
                               payload_sha256=current[1]["payload_sha256"], acceptance=accepted)
         except (ValueError, KeyError, TypeError) as error:
-            result.update(status="AUTHORIZATION_PENDING", reason=str(error))
+            result.update(status="AUTHORIZATION_PENDING", reason=str(error),
+                          reason_code=error.code if isinstance(error, AuthorizationError) else "ACCEPTANCE_OR_OWNER_DISPOSITION_UNRESOLVED")
         results.append(result)
     return {"source_sha": source_sha, "publisher_sha": publisher_sha, "packages": results}
 
@@ -603,7 +673,8 @@ def write_report(report, path):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("operation", choices=("plan", "stage", "finalize", "summary"))
+    parser.add_argument("operation", choices=("check", "plan", "stage", "finalize", "summary"))
+    parser.add_argument("--base", help="Exact accepted main for source-time candidate checks")
     parser.add_argument("--source", type=Path)
     parser.add_argument("--source-sha")
     parser.add_argument("--main", default="origin/main")
@@ -636,8 +707,12 @@ def main():
             raise ValueError("CLI code checkout differs from publisher pin")
         binding = binding_at(args.policy, args.policy_sha, args.binding)
         api = GitHub(binding["repository"], os.environ.get("GH_TOKEN"))
-        verify_trigger(api, binding, args.source_sha)
-        report = plan(args.source, args.source_sha, args.main, binding, api, args.publisher_sha)
+        if args.operation != "check":
+            verify_trigger(api, binding, args.source_sha)
+        elif not args.base:
+            raise ValueError("candidate check requires an exact accepted base")
+        report = plan(args.source, args.source_sha, args.main, binding, api, args.publisher_sha,
+                      args.binding, args.base if args.operation == "check" else None)
         if args.operation == "stage":
             report = stage_all(args.source, binding, report, args.vibe, args.directory, args.package)
         elif args.package:

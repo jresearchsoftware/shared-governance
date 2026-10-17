@@ -44,6 +44,30 @@ are different events. The producer owns its release cadence: per-PR bumping or
 release-boundary bumping can both be legitimate. A dependency on this package
 does not impose this repository's cadence, PR process or automation on consumers.
 
+Complete a package intended as a frozen, publication-ready release **before its
+package source is independently accepted into main**. Establish the applicable
+license and approved redistribution rights; include the actual public `LICENSE`
+payload and aligned manifest/license metadata. Prepare the complete intended
+public file set, canonical identity/version and relevant source-time checks.
+Unresolved rights require the owner's decision, never an invented license.
+The publishing transport may verify readiness, but is not its sole policy owner
+and must not silently complete or repair the package after source acceptance.
+
+For a frozen package, `(group, name, version)` identifies immutable payload bytes,
+manifest metadata, license and export inventory from its **first independently
+accepted main integration**, even when publication infrastructure, credentials
+or remote tags do not yet exist. Candidate branches may evolve normally before
+that first acceptance. Later content changes, including adding a missing license,
+correcting metadata or changing the public file set, require an appropriately
+incremented new version, independent acceptance and normal source/release checks.
+Absence of a remote release does not make the accepted version editable.
+
+This preserves producer-owned per-PR or release-boundary cadence: a producer may
+develop explicitly non-frozen snapshots until its chosen release boundary, or
+use an explicit owner-decided exception under its own authority. Do not treat a
+frozen manifest already accepted into main as an unaccepted candidate. Preserve
+the producer's review authority and allowed direct-main non-package changes.
+
 Use a stable version-independent authoring root, with the authored version in
 its manifest. Routine bumps do not copy/rename entire source trees. Distribution
 tags and installed versioned slots are separate layouts. Parallel PR numbers
@@ -65,7 +89,7 @@ changes cannot reuse a frozen version: detect this before integration and retain
 the release-boundary check. Other producers may use separately admitted release
 decisions; this protocol grants neither model by itself.
 
-Published `(group, name, version)` content is immutable. Publish frozen releases
+Published tags retain the same immutable `(group, name, version)` content. Publish frozen releases
 to new version tags. If that tag already exists, skip the publisher and report
 a successful repeat without changing any ref, even if a retry's source differs.
 That no-op is not proof that changed source was published; the source reuse check

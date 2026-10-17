@@ -57,6 +57,16 @@ Consult relevant patterns only when useful; no MCP access or FPF installation is
 required. This compatible MINOR addition preserves all nine normative topics,
 local authority and adoption choices, with no added mandatory work or dependency.
 
+Version 3.0.0 clarifies and strengthens the adopted package lifecycle contract:
+prepare the actual public license, approved redistribution rights, aligned
+metadata and complete export before accepting frozen package source into main.
+The first accepted `(group, name, version)` is immutable even before remote
+publication; subsequent repairs require a new version. These mandatory pre-merge
+operator obligations make this a MAJOR change from 2.7.0. All other protocol and
+tool bytes remain unchanged. Existing topic adoption, producer release cadence,
+owner exceptions and separate consumer authority remain intact; updating the
+package does not activate package-versioning in another project.
+
 The stable contract preserves the proportional-controls procedure, exceptions
 and applicability. Its existing-proof and self-imposed-friction guidance reuse
 current evidence and project authority without additional operator steps.

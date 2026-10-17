@@ -35,6 +35,27 @@ patch from `1.95.0` yields `2.0.0` then `2.0.1`; two majors yield `2.0.0` then
 CI is evidence; the owner's independently reviewed merge is the publication
 authorization for the version-bearing PR, never self-approval or consumer adoption.
 
+## Frozen-package preparation
+
+Before accepting a frozen package-source PR into main, prepare its actual public
+`LICENSE`, aligned manifest metadata, approved redistribution rights, complete
+public export inventory and source-time qualification. This producer retains its
+accepted MIT license and notices; Task 45 makes no new rights decision. Export
+qualification and the release-transition check run before merge. The publisher
+verifies prepared source; it must not silently add missing files after merge.
+
+The first independently accepted main integration freezes this identity and its
+payload, even if there is no distribution tag, credential or publication service.
+A later license, inventory, metadata or content correction needs a new version.
+Candidate 3.0.0 adds these mandatory obligations under `Package bump: major`,
+compared with accepted 2.7.0; its source and native projection are proposals until
+independently accepted. Historical accepted source, receipts and tags stay intact.
+
+An independently reviewed package-changing owner merge plus successful main push
+CI continues to authorize the existing automatic publication below. Preparing
+this candidate grants no merge or manual publication authority and adds no
+second release permission. The shared publisher remains an unactivated alternative.
+
 ## Automatic publication and recovery
 
 [Publish accepted package](../.github/workflows/publish.yml) runs after successful
