@@ -19,6 +19,212 @@ SHA = re.compile(r"[0-9a-f]{40}")
 VERSION = re.compile(r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)")
 RECEIPT = "DISTRIBUTION.json"
 
+AUTHORIZATION_DIAGNOSTICS = {
+    "source is not on first-parent source main": (
+        "SOURCE_NOT_ON_MAIN",
+        "This source is not on accepted first-parent main; do not publish this commit."),
+    "accepted package baseline must be at or before source on first-parent main": (
+        "PACKAGE_BASELINE_UNRESOLVED",
+        "The accepted package baseline is not verifiably on first-parent main at or before this source; correct the bound baseline before retrying."),
+    "package removal requires owner disposition": (
+        "OWNER_DISPOSITION_REQUIRED",
+        "This package removal needs an explicit owner disposition before publication."),
+    "package payload changed without a new version": (
+        "PACKAGE_VERSION_REUSE",
+        "Package bytes changed without a new package version; correct the version under the producer's release policy."),
+    "source repository identity differs": (
+        "SOURCE_REPOSITORY_MISMATCH",
+        "The checked source repository does not match the accepted producer binding; correct the binding or source checkout."),
+    "initial integration supports squash commits only": (
+        "UNSUPPORTED_MERGE_ROUTE",
+        "This binding supports squash integration only; another merge route needs producer-specific qualification and owner disposition."),
+    "no unambiguous authorized owner squash integration": (
+        "OWNER_ACCEPTANCE_NOT_ESTABLISHED",
+        "No unique authorized owner squash merge was found; resolve the owner and PR acceptance evidence before retrying."),
+    "qualifying CI workflow identity differs": (
+        "QUALIFYING_CI_MISMATCH",
+        "The configured qualifying CI workflow identity does not match; correct the trusted producer binding."),
+    "no successful matching source-main push CI": (
+        "MATCHING_SOURCE_CI_MISSING",
+        "No successful push CI run for this exact source commit was found; resolve that CI result before retrying."),
+    "automatic trigger is not the bound successful exact-source push run": (
+        "TRIGGER_RUN_MISMATCH",
+        "The triggering run is not the bound successful push run for this exact source commit; do not publish from it."),
+    "GitHub evidence unavailable": (
+        "ACCEPTANCE_EVIDENCE_UNAVAILABLE",
+        "Required GitHub acceptance or CI evidence could not be read; restore read access and verify the exact source before retrying."),
+    "unsupported producer binding / acceptance rule": (
+        "PRODUCER_BINDING_UNSUPPORTED",
+        "The accepted producer binding uses an unsupported schema or acceptance rule; resolve it in the producer's authority."),
+    "canonical frozen package identity differs": (
+        "PACKAGE_IDENTITY_MISMATCH",
+        "The package identity or frozen version does not match its accepted binding; correct the package under its owner's release policy."),
+    "tree-v1 supports an empty dependency closure only": (
+        "DEPENDENCY_CLOSURE_UNQUALIFIED",
+        "This export adapter has not qualified included dependencies; owner-authorized adapter evidence is required before publication."),
+}
+
+AUTHORIZATION_FALLBACK = (
+    "ACCEPTANCE_OR_OWNER_DISPOSITION_UNRESOLVED",
+    "The publisher could not establish package, source, owner or CI eligibility. Resolve the trusted evidence or owner disposition before retrying.")
+
+DIAGNOSTIC_MESSAGES = {
+    "NO_PACKAGE_CHANGE": "No approved package payload changed; no publication was attempted.",
+    "ELIGIBLE_NOT_PUBLISHED": "Eligibility checks passed, but publication has not run.",
+    "STAGED_NOT_PUBLISHED": "The native release is staged locally; destination publication is not confirmed.",
+    "PUBLISHED_CONFIRMED": "The exact staged tag object was read back from the destination; publication is confirmed.",
+    "EXISTING_TAG_UNVERIFIED": "An existing release tag was retained. Its presence does not prove this exact source was published; compare trusted tag provenance before claiming success.",
+    "COMPETING_TAG_RETAINED": "A competing release identity was retained and this exact source was not published; resolve its provenance before any retry.",
+    "ATOMIC_PUSH_UNCERTAIN": "The atomic push result is uncertain. Inspect exact destination tag and main refs before retrying with the same source, policy and publisher SHAs.",
+    "RELEASE_TAG_NOT_OBSERVED": "No release tag was observed. Recover the credential, network or concurrency issue, then retry with the same source, policy and publisher SHAs.",
+    "PUBLICATION_READBACK_UNAVAILABLE": "Destination readback was unavailable; do not claim publication. Restore read access and inspect the exact tag and branch before retrying with the same pins.",
+    "UNCLASSIFIED_PUBLICATION_FAILURE": "Publication failed or remains unverified. Inspect the failed step and exact destination refs before retrying with the same source, policy and publisher SHAs.",
+    "PINNED_TOOL_MISMATCH": "The pinned VibeVM binary check failed; restore the recorded tool before retrying the same source and publisher pins.",
+    "STAGED_PAYLOAD_MISMATCH": "The staged package payload differs from the plan; discard this attempt and investigate the exact source and export before retrying.",
+    "NATIVE_PUBLISHER_FAILED": "Credential-free native staging failed; inspect the pinned publisher and local staging inputs. No destination write was attempted.",
+    "NATIVE_PUBLISHER_NO_TAG": "Native staging produced no release tag; inspect the pinned publisher output before retrying. No destination write was attempted.",
+    "DISTRIBUTION_CLONE_FAILED": "The destination repository could not be cloned for credential-free staging; restore read access and retry the same pins.",
+    "DISTRIBUTION_REF_READ_FAILED": "Destination refs could not be read during credential-free staging; restore read access and retry the same pins.",
+    "NATIVE_STAGING_TIMEOUT": "Pinned native staging timed out; inspect the local staging environment before retrying the same pins.",
+    "LOCAL_STAGING_FAILED": "Local credential-free staging failed; inspect the failed preparation step. No destination write was attempted.",
+    "STAGING_VALIDATION_FAILED": "Package or staging validation failed; review the accepted source and binding before retrying.",
+    "STAGING_SUBPROCESS_FAILED": "A local staging process failed; inspect the failed preparation step. No destination write was attempted.",
+    "STAGING_PREPARATION_FAILED": "Credential-free preparation failed; inspect the failed preparation step. No destination write was attempted.",
+    "WORKFLOW_INTERRUPTED_BEFORE_CONFIRMATION": "The workflow stopped before a final package result was confirmed. Inspect destination refs before retrying with the same source, policy and publisher SHAs.",
+    "PUBLISHER_REPORT_UNREADABLE": "The package report could not be read. Do not infer publication; inspect the failed workflow step and exact destination refs.",
+}
+
+FAILURE_REASON_CODES = {
+    "Atomic publication failed or transport result is ambiguous; retry the same source and publisher SHA.": "ATOMIC_PUSH_UNCERTAIN",
+    "No release tag observed; retry the same source and publisher SHA.": "RELEASE_TAG_NOT_OBSERVED",
+    "Publication readback unavailable; inspect and retry the same source and publisher SHA.": "PUBLICATION_READBACK_UNAVAILABLE",
+}
+
+WARNING_CODES = {
+    "Existing identity retained; this does not prove this retry source was published.": "EXISTING_TAG_UNVERIFIED",
+    "Existing identity retained; compare its original provenance if recovery differs.": "EXISTING_TAG_UNVERIFIED",
+    "Existing identity retained; the retry source has not been proven published.": "EXISTING_TAG_UNVERIFIED",
+    "A competing identity exists and was retained; this source was not published.": "COMPETING_TAG_RETAINED",
+}
+
+STAGING_ERROR_CODES = {
+    "publisher must use the pinned VibeVM musl binary": "PINNED_TOOL_MISMATCH",
+    "planned and staged payload differ": "STAGED_PAYLOAD_MISMATCH",
+    "native staging failed; recover and retry the same source SHA": "NATIVE_PUBLISHER_FAILED",
+    "native staging produced no release tag": "NATIVE_PUBLISHER_NO_TAG",
+    "Git operation failed: clone": "DISTRIBUTION_CLONE_FAILED",
+    "Git operation failed: ls-remote": "DISTRIBUTION_REF_READ_FAILED",
+}
+
+SUMMARY_PHASES = (
+    ("inputs", "INPUT_VALIDATION_FAILED", "Immutable workflow inputs or publisher identity did not validate; correct the caller pins before retrying."),
+    ("publisher_checkout", "PUBLISHER_CHECKOUT_FAILED", "The pinned reusable workflow code could not be checked out; no package result or destination write was produced."),
+    ("producer_checkout", "PRODUCER_CHECKOUT_FAILED", "The exact producer source could not be checked out; no package result or destination write was produced."),
+    ("source_identity", "SOURCE_IDENTITY_VERIFICATION_FAILED", "The checked-out publisher or producer SHA did not match its bound identity; correct the exact pins before retrying."),
+    ("policy_checkout", "POLICY_CHECKOUT_FAILED", "The accepted producer policy could not be checked out; no package result or destination write was produced."),
+    ("plan", "SOURCE_ACCEPTANCE_OR_CI_CHECK_FAILED", "The publisher did not produce a package report during planning. Resolve the source, binding, owner acceptance or exact CI evidence before retrying."),
+    ("tool", "PINNED_TOOL_PREPARATION_FAILED", "The pinned VibeVM tool could not be prepared; no destination write was attempted. Recover the download or digest issue before retrying."),
+    ("stage", "CREDENTIAL_FREE_STAGING_FAILED", "Credential-free staging did not produce a package report; no final publication result is available. Recover the failed staging step before retrying."),
+    ("finalize", "PUBLICATION_RESULT_UNCONFIRMED", "Finalization did not produce a package report. Read the exact destination tag and main refs before claiming publication or retrying."),
+)
+
+
+def operator_diagnostic(result, status=None):
+    """Return a safe allowlisted category and message; never echo report details."""
+    status = status or result.get("status", "")
+    if status == "NO_PACKAGE_CHANGE":
+        return "NO_PACKAGE_CHANGE", DIAGNOSTIC_MESSAGES["NO_PACKAGE_CHANGE"]
+    if status == "READY":
+        return "ELIGIBLE_NOT_PUBLISHED", DIAGNOSTIC_MESSAGES["ELIGIBLE_NOT_PUBLISHED"]
+    if status == "STAGED":
+        return "STAGED_NOT_PUBLISHED", DIAGNOSTIC_MESSAGES["STAGED_NOT_PUBLISHED"]
+    if status == "PUBLISHED":
+        return "PUBLISHED_CONFIRMED", DIAGNOSTIC_MESSAGES["PUBLISHED_CONFIRMED"]
+    if status == "AUTHORIZATION_PENDING":
+        return AUTHORIZATION_DIAGNOSTICS.get(result.get("reason"), AUTHORIZATION_FALLBACK)
+    if status == "ALREADY_PUBLISHED":
+        code = WARNING_CODES.get(result.get("warning"), "EXISTING_TAG_UNVERIFIED")
+        return code, DIAGNOSTIC_MESSAGES[code]
+    if status == "FAILED_OR_PENDING":
+        code = result.get("failure_code") or FAILURE_REASON_CODES.get(result.get("reason"))
+        if code not in DIAGNOSTIC_MESSAGES:
+            code = "STAGING_PREPARATION_FAILED" if "failure_code" in result else "UNCLASSIFIED_PUBLICATION_FAILURE"
+        return code, DIAGNOSTIC_MESSAGES[code]
+    return "OPERATOR_REVIEW_REQUIRED", "The publisher returned an unrecognized state. Inspect trusted evidence; do not infer publication."
+
+
+def staging_failure_code(error):
+    if isinstance(error, subprocess.TimeoutExpired):
+        return "NATIVE_STAGING_TIMEOUT"
+    code = STAGING_ERROR_CODES.get(str(error))
+    if code:
+        return code
+    if isinstance(error, OSError):
+        return "LOCAL_STAGING_FAILED"
+    if isinstance(error, subprocess.SubprocessError):
+        return "STAGING_SUBPROCESS_FAILED"
+    if isinstance(error, ValueError):
+        return "STAGING_VALIDATION_FAILED"
+    return "STAGING_PREPARATION_FAILED"
+
+
+def failed_workflow_phase(outcomes):
+    for phase, code, message in SUMMARY_PHASES:
+        if outcomes.get(phase) in ("failure", "cancelled"):
+            return code, message
+    return None
+
+
+def missing_report_diagnostic(outcomes):
+    failed_phase = failed_workflow_phase(outcomes)
+    if failed_phase:
+        return failed_phase
+    return "PUBLISHER_REPORT_MISSING", "No package report was produced. Inspect the first failed workflow step; do not infer publication."
+
+
+def append_actions_summary(report_path, summary_path, job_status, outcomes):
+    """Append only safe status and diagnostic text to the durable Actions summary."""
+    report_path, summary_path = Path(report_path), Path(summary_path)
+    rows = []
+    pending_authorization = False
+    failed = False
+    if not report_path.exists():
+        code, message = missing_report_diagnostic(outcomes)
+        rows.append(f"Publisher result unavailable: **FAILED_OR_PENDING** — `{code}`: {message}")
+        failed = True
+    else:
+        try:
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+            packages = report["packages"]
+        except (OSError, ValueError, KeyError, TypeError):
+            rows.append("Publisher result unavailable: **FAILED_OR_PENDING** — `PUBLISHER_REPORT_UNREADABLE`: "
+                        + DIAGNOSTIC_MESSAGES["PUBLISHER_REPORT_UNREADABLE"])
+            failed = True
+            packages = []
+        for package in packages:
+            status = package.get("status", "")
+            if status in ("READY", "STAGED") and job_status != "success":
+                status = "FAILED_OR_PENDING"
+                phase_failure = failed_workflow_phase(outcomes)
+                if phase_failure:
+                    code, message = phase_failure
+                else:
+                    code = "WORKFLOW_INTERRUPTED_BEFORE_CONFIRMATION"
+                    message = DIAGNOSTIC_MESSAGES[code]
+            else:
+                code, message = operator_diagnostic(package)
+            rows.append(f"{package.get('package', 'Package')}: **{status}** — `{code}`: {message}")
+            pending_authorization |= status == "AUTHORIZATION_PENDING"
+            failed |= status == "FAILED_OR_PENDING"
+
+    if pending_authorization:
+        rows.append("Resolve the listed owner acceptance or disposition evidence before retrying; these packages are not currently eligible for publication.")
+    if failed:
+        rows.append("After recovering a retryable failure, inspect exact destination refs and retry only with the same source, policy and publisher SHAs. Existing tags are retained.")
+    with summary_path.open("a", encoding="utf-8") as summary:
+        summary.write("## Shared publisher result\n\n")
+        summary.write("\n\n".join(rows) + "\n")
+
 
 def git(root, *args):
     result = subprocess.run(["git", *map(str, args)], cwd=root, capture_output=True)
@@ -322,7 +528,8 @@ def stage(root, package, decision, vibe, directory):
         target.write_bytes(data)
     git(None, "clone", "--bare", "--", package["destination"], str(staging))
     if tag_oid(remote_refs(staging.as_uri(), tag), tag):
-        result.update(status="ALREADY_PUBLISHED", remote_refs=remote_refs(package["destination"], tag))
+        result.update(status="ALREADY_PUBLISHED", remote_refs=remote_refs(package["destination"], tag),
+                      warning="Existing identity retained; the retry source has not been proven published.")
         return result
     command = [str(vibe), "--json", "registry", "publish", str(payload_root), "--repo-url", staging.as_uri()]
     completed = subprocess.run(command, cwd=payload_root, env=native_environment(directory),
@@ -376,9 +583,10 @@ def stage_all(root, binding, report, vibe, directory, selected):
             continue
         try:
             result = stage(root, package, decision, vibe, Path(directory) / package["coordinate"].replace("/", "."))
-        except (ValueError, OSError, subprocess.SubprocessError):
+        except (ValueError, OSError, subprocess.SubprocessError) as error:
             result = {**decision, "status": "FAILED_OR_PENDING",
-                      "reason": "Preparation failed; retry the same source and publisher SHA after recovery."}
+                      "reason": "Credential-free preparation did not complete; no destination write was attempted.",
+                      "failure_code": staging_failure_code(error)}
         results.append(result)
     if selected and not results:
         raise ValueError("selected package is absent from the accepted binding")
@@ -389,12 +597,13 @@ def write_report(report, path):
     Path(path).write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     # Artifacts are deliberately not uploaded: private source identity can be sensitive.
     for result in report["packages"]:
-        print(result["package"] + ": " + result["status"])
+        code, message = operator_diagnostic(result)
+        print(f"{result['package']}: {result['status']} — {code}: {message}")
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("operation", choices=("plan", "stage", "finalize"))
+    parser.add_argument("operation", choices=("plan", "stage", "finalize", "summary"))
     parser.add_argument("--source", type=Path)
     parser.add_argument("--source-sha")
     parser.add_argument("--main", default="origin/main")
@@ -406,7 +615,16 @@ def main():
     parser.add_argument("--vibe", type=Path)
     parser.add_argument("--directory", type=Path)
     parser.add_argument("--report", type=Path, required=True)
+    parser.add_argument("--summary", type=Path)
     args = parser.parse_args()
+    if args.operation == "summary":
+        if not args.summary:
+            raise ValueError("summary output path is required")
+        outcomes = {phase: os.environ.get(phase.upper() + "_OUTCOME", "unknown")
+                    for phase, _, _ in SUMMARY_PHASES}
+        append_actions_summary(args.report, args.summary,
+                               os.environ.get("PUBLICATION_JOB_STATUS", "unknown"), outcomes)
+        return 0
     if args.operation == "finalize":
         report = json.loads(args.report.read_text())
         if len(report["packages"]) != 1:

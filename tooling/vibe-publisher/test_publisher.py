@@ -295,6 +295,76 @@ class PublicationTests(Fixture):
                          ["ALREADY_PUBLISHED", "FAILED_OR_PENDING"])
 
 
+class DiagnosticsTests(unittest.TestCase):
+    def test_report_and_actions_summary_show_safe_reasons_and_warnings(self):
+        report = {"packages": [
+            {"package": "org.fixture/pending", "status": "AUTHORIZATION_PENDING",
+             "reason": "no unambiguous authorized owner squash integration"},
+            {"package": "org.fixture/readback", "status": "FAILED_OR_PENDING",
+             "reason": "Publication readback unavailable; inspect and retry the same source and publisher SHA."},
+            {"package": "org.fixture/competing", "status": "ALREADY_PUBLISHED",
+             "warning": "A competing identity exists and was retained; this source was not published."},
+            {"package": "org.fixture/unknown", "status": "FAILED_OR_PENDING",
+             "reason": "private/path https://user:secret@example.invalid/repo"},
+        ]}
+        with tempfile.TemporaryDirectory() as temporary:
+            report_path = Path(temporary) / "publication.json"
+            summary_path = Path(temporary) / "summary.md"
+            with patch("builtins.print") as output:
+                P.write_report(report, report_path)
+            log_text = "\n".join(call.args[0] for call in output.call_args_list)
+            self.assertIn("OWNER_ACCEPTANCE_NOT_ESTABLISHED", log_text)
+            self.assertIn("PUBLICATION_READBACK_UNAVAILABLE", log_text)
+            self.assertIn("COMPETING_TAG_RETAINED", log_text)
+            self.assertIn("UNCLASSIFIED_PUBLICATION_FAILURE", log_text)
+            self.assertNotIn("secret@example.invalid", log_text)
+            self.assertNotIn("private/path", log_text)
+
+            P.append_actions_summary(report_path, summary_path, "failure", {"plan": "success"})
+            summary = summary_path.read_text(encoding="utf-8")
+            self.assertIn("OWNER_ACCEPTANCE_NOT_ESTABLISHED", summary)
+            self.assertIn("PUBLICATION_READBACK_UNAVAILABLE", summary)
+            self.assertIn("COMPETING_TAG_RETAINED", summary)
+            self.assertIn("Resolve the listed owner acceptance or disposition", summary)
+            self.assertNotIn("secret@example.invalid", summary)
+            self.assertNotIn("private/path", summary)
+
+    def test_staging_failure_reports_a_safe_failure_category(self):
+        coordinate = "org.fixture/failure"
+        binding = {"packages": [{"coordinate": coordinate, "destination": "unused"}]}
+        report = {"source_sha": "a" * 40, "publisher_sha": "b" * 40,
+                  "packages": [{"package": coordinate, "status": "READY"}]}
+        with patch.object(P, "stage", side_effect=ValueError("native staging failed; recover and retry the same source SHA")):
+            staged = P.stage_all(Path("."), binding, report, None, Path("."), None)
+        result = staged["packages"][0]
+        self.assertEqual(result["failure_code"], "NATIVE_PUBLISHER_FAILED")
+        self.assertEqual(P.operator_diagnostic(result)[0], "NATIVE_PUBLISHER_FAILED")
+        self.assertNotIn("native staging failed", result["reason"])
+
+    def test_missing_report_summary_identifies_the_failed_phase_safely(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            summary_path = Path(temporary) / "summary.md"
+            P.append_actions_summary(Path(temporary) / "missing.json", summary_path,
+                                     "failure", {"plan": "failure"})
+            summary = summary_path.read_text(encoding="utf-8")
+        self.assertIn("SOURCE_ACCEPTANCE_OR_CI_CHECK_FAILED", summary)
+        self.assertIn("Resolve the source, binding, owner acceptance or exact CI evidence", summary)
+        self.assertNotIn("private/path", summary)
+
+    def test_actions_summary_names_failed_phase_when_eligibility_report_exists(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            report_path = Path(temporary) / "publication.json"
+            summary_path = Path(temporary) / "summary.md"
+            report_path.write_text(json.dumps({"packages": [
+                {"package": "org.fixture/ready", "status": "READY"}
+            ]}), encoding="utf-8")
+            P.append_actions_summary(report_path, summary_path, "failure", {"tool": "failure"})
+            summary = summary_path.read_text(encoding="utf-8")
+        self.assertIn("**FAILED_OR_PENDING**", summary)
+        self.assertIn("PINNED_TOOL_PREPARATION_FAILED", summary)
+        self.assertIn("no destination write was attempted", summary)
+
+
 @unittest.skipUnless(VIBE, "pass --vibe for pinned Linux native staging")
 class NativeTests(Fixture):
     def setUp(self):

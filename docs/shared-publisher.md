@@ -136,6 +136,17 @@ different source was published. Ambiguous push results are read back: the exact
 staged tag object proves publication, a competing tag is retained with a warning,
 and unavailable/absent evidence remains pending. No frozen tag is repaired in place.
 
+Publisher logs and the durable Actions summary show an allowlisted diagnostic code
+and operator message for each package. Authorization-pending output distinguishes
+missing or mismatched owner/PR/CI evidence, unresolved package baselines and owner
+disposition from retryable staging/publication failures. `ALREADY_PUBLISHED`
+explicitly warns when the existing tag does not prove that this source was
+published. Failures before a report exists receive a non-sensitive workflow-phase
+category; finalization failures direct operators to inspect exact destination refs.
+Raw Git stderr, arbitrary exception text, private source details, credential URLs
+and the full report remain out of the summary and logs; reports stay in runner
+temporary storage and are not uploaded.
+
 There is no cross-repository atomic transaction. If A succeeds and B fails, retain
 both outcomes and retry **the same source, policy and publisher SHAs**: A skips its
 tag; B resumes. An implementation-pin change for recovery needs a separately
@@ -159,6 +170,8 @@ All test distribution writes target local bare repositories. Focused fixtures
 cover two packages, eligibility/CI failures, direct-main no-op, inherited
 unaccepted bytes, fixed-version rejection, private-shaped export, existing tags,
 concurrent writers, ambiguous response readback and same-source partial recovery.
+Focused diagnostics checks exercise authorization-pending, retryable failure,
+non-proving existing-tag warnings, redaction and failures before a report exists.
 The accepted release/dependency tests retain their own coverage. These are bounded
 integration checks, not a requirement to rerun native transport on every release.
 
@@ -167,7 +180,8 @@ synthetic named-secret marker, checks its own code SHA and separate producer SHA
 and executes the focused tests. It has no distribution credential or publish step.
 It does not qualify private caller access, actual cross-repository credentials or
 real publication. Exact run evidence and remaining limits belong in the result PR
-and [Step 2 evidence](task-45/step-2/validation.md).
+and [Step 2 evidence](task-45/step-2/validation.md) or
+[Step 3 diagnostics evidence](task-45/step-3/validation.md), as applicable.
 
 After independent acceptance, production integration still needs separate owner
 authority in each producer, approved destinations/visibility, public payload

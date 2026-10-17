@@ -45,6 +45,7 @@ jobs:
       MODE: ${{ inputs.mode }}
     steps:
       - name: Check immutable execution inputs
+        id: inputs
         env:
           PUBLISHER_SHA: ${{ job.workflow_sha }}
           PUBLISHER_REPOSITORY: ${{ job.workflow_repository }}
@@ -64,6 +65,7 @@ jobs:
           esac
           printf 'PUBLISHER_SHA=%s\nPUBLISHER_REPOSITORY=%s\n' "$PUBLISHER_SHA" "$PUBLISHER_REPOSITORY" >> "$GITHUB_ENV"
       - name: Check out the called workflow's own implementation
+        id: publisher_checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: ${{ job.workflow_repository }}
@@ -72,6 +74,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Check out exact producer source independently
+        id: producer_checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ inputs.source_sha }}
@@ -79,6 +82,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Verify the two source identities and secret-free preparation
+        id: source_identity
         run: |
           test "$(git -C publisher rev-parse HEAD)" = "$PUBLISHER_SHA"
           test "$(git -C producer rev-parse HEAD)" = "$SOURCE_SHA"
@@ -99,6 +103,7 @@ jobs:
           PUBLISH_TOKEN: ${{ secrets.publish_token }}
         run: test "$PUBLISH_TOKEN" = 'task45-fixture-sentinel'
       - name: Check out pinned accepted producer policy
+        id: policy_checkout
         if: inputs.mode != 'fixture'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -123,6 +128,7 @@ jobs:
               output.write('ready=' + str(any(p['status'] == 'READY' for p in report['packages'])).lower() + '\n')
           PY
       - name: Prepare pinned native tool without destination credentials
+        id: tool
         if: inputs.mode == 'publish' && steps.plan.outputs.ready == 'true'
         run: |
           python3 - <<'PY'
@@ -152,6 +158,7 @@ jobs:
               output.write('staged=' + str(any(p['status'] == 'STAGED' for p in report['packages'])).lower() + '\n')
           PY
       - name: Atomic non-force publication to one bound destination
+        id: finalize
         if: inputs.mode == 'publish' && steps.stage.outputs.staged == 'true'
         env:
           PUBLISH_TOKEN: ${{ secrets.publish_token }}
@@ -172,18 +179,19 @@ jobs:
         if: always() && inputs.mode != 'fixture'
         env:
           PUBLICATION_JOB_STATUS: ${{ job.status }}
+          INPUTS_OUTCOME: ${{ steps.inputs.outcome }}
+          PUBLISHER_CHECKOUT_OUTCOME: ${{ steps.publisher_checkout.outcome }}
+          PRODUCER_CHECKOUT_OUTCOME: ${{ steps.producer_checkout.outcome }}
+          SOURCE_IDENTITY_OUTCOME: ${{ steps.source_identity.outcome }}
+          POLICY_CHECKOUT_OUTCOME: ${{ steps.policy_checkout.outcome }}
+          PLAN_OUTCOME: ${{ steps.plan.outcome }}
+          TOOL_OUTCOME: ${{ steps.tool.outcome }}
+          STAGE_OUTCOME: ${{ steps.stage.outcome }}
+          FINALIZE_OUTCOME: ${{ steps.finalize.outcome }}
         run: |
-          python3 - <<'PY'
-          import json, os, pathlib
-          path = pathlib.Path(os.environ['RUNNER_TEMP']) / 'publication.json'
-          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
-              if path.exists():
-                  for package in json.loads(path.read_text())['packages']:
-                      status = package['status']
-                      if status in ('READY', 'STAGED') and os.environ['PUBLICATION_JOB_STATUS'] != 'success':
-                          status = 'FAILED_OR_PENDING'
-                      summary.write(f"{package['package']}: **{status}**\n\n")
-              else:
-                  summary.write('FAILED_OR_PENDING: evidence / preparation unavailable.\n\n')
-              summary.write('On failure, retry the same source, policy and publisher SHAs. Existing tags are retained.\n')
-          PY
+          if [[ -f publisher/tooling/vibe-publisher/publisher.py ]]; then
+            python3 publisher/tooling/vibe-publisher/publisher.py summary \
+              --report "$RUNNER_TEMP/publication.json" --summary "$GITHUB_STEP_SUMMARY"
+          else
+            printf '## Shared publisher result\n\nPublisher result unavailable: FAILED_OR_PENDING — PUBLISHER_CHECKOUT_FAILED. The pinned reusable workflow code could not be checked out; no package result or destination write was produced.\n' >> "$GITHUB_STEP_SUMMARY"
+          fi
