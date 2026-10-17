@@ -19,10 +19,19 @@ historical and are not republished.
 The two new regression tests were run against the original Step 4 publisher:
 both fail at their intended invariants (R1 production stays pending; R2 candidate
 accepts old-version reuse). With the corrected publisher, the complete temporal
-suite passes 13 tests. These are real disposable Git histories with synthetic
+suite passes 14 tests, including the adjacent historical-root case below. These
+are real disposable Git histories with synthetic
 GitHub PR/CI evidence, not actual remote publication or proof of independent
 review. Current source readiness negatives, earlier F1-F3, owner/CI rotations,
 inherited-ineligible changes, no-op and private-file export remain covered.
+
+Full-solution self-check also found that the first Step 5 correction
+(`87ab28658f61991748dbc81cb36839f68099b802`) could skip an older package root
+before the disposed baseline. The final history walk looks up the coordinate's
+historical root before deciding whether package source exists. An unsupported
+root/identity transition remains pending instead of silently dropping older
+frozen versions. A focused candidate/production negative test covers this path;
+no root migration is introduced or qualified by this correction.
 
 ## Guidance, projection and client limits
 

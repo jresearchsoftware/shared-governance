@@ -494,6 +494,25 @@ class TemporalTests(Fixture):
             P.plan(self.source, changed, "main", self.binding, self.api, CODE_SHA,
                    "binding.json", self.revision)
 
+    def test_baseline_cannot_hide_unsupported_historical_package_root_change(self):
+        original = self.packages[0]["root"]
+        self.packages[0]["root"] = "packages/relocated-subagents"
+        self.git("mv", original, self.packages[0]["root"])
+        self.save_binding()
+        moved = self.change(version="2.0.0")
+        self.packages[0]["baseline"] = moved
+        self.packages[0]["baseline_disposition"] = "https://github.com/fixture/private-source/issues/2"
+        self.save_binding()
+        disposed = self.commit()
+        changed = self.change(version="3.0.0")
+        self.api = Evidence(self.binding, [disposed, changed])
+        candidate = self.candidate(changed, disposed)
+        production = self.plan(changed)["packages"][0]
+        self.assertEqual((candidate["status"], production["status"]),
+                         ("AUTHORIZATION_PENDING", "AUTHORIZATION_PENDING"))
+        self.assertEqual(candidate["reason_code"], "HISTORICAL_BINDING_UNRESOLVED")
+        self.assertEqual(production["reason_code"], "HISTORICAL_BINDING_UNRESOLVED")
+
     def test_missing_policy_history_cannot_fall_back_to_current_policy(self):
         result = P.plan(self.source, self.revision, "main", self.binding, self.api, CODE_SHA)
         self.assertEqual(result["packages"][0]["reason_code"], "HISTORICAL_BINDING_UNRESOLVED")

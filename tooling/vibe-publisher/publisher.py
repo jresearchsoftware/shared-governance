@@ -513,7 +513,12 @@ def plan(root, source_sha, main, binding, api, publisher_sha, binding_path=None,
                 identity_history = git(root, "rev-list", "--first-parent", "--reverse", baseline,
                                        "--", package["root"], binding_path).decode().splitlines()
                 for revision in identity_history:
-                    if not git(root, "ls-tree", revision, "--", package["root"]):
+                    if (not git(root, "ls-tree", revision, "--", binding_path)
+                            and not git(root, "ls-tree", revision, "--", package["root"])):
+                        continue
+                    historical_root = next((p["root"] for p in policy(revision)["packages"]
+                                            if p["coordinate"] == package["coordinate"]), package["root"])
+                    if not git(root, "ls-tree", revision, "--", historical_root):
                         continue
                     value = export(revision, package)
                     if value is not None:

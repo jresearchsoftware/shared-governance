@@ -86,7 +86,9 @@ baseline, retaining each version's first source-main payload with its historical
 approved inventory. Earlier eligibility need not be replayed after explicit
 disposition, but older frozen versions cannot be reused with different bytes,
 even without a remote tag. Missing historical policy for package-bearing source
-remains pending; today's inventory is not a substitute. This uses bounded Git
+remains pending; today's inventory is not a substitute. Historical root changes
+cannot be hidden by advancing the baseline: an unsupported identity/root mapping
+still needs producer-owned qualification and disposition. This uses bounded Git
 records, not a registry or ledger.
 
 ## Export adapters
