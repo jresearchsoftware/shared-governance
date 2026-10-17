@@ -2,12 +2,12 @@
   "acceptance_verification": "external owner/review evidence required; consistency only",
   "accepted_sha": "ec048fb39ae28cf2d747101466a603ddd062b1b0",
   "artifacts": {
-    "instructions.md": "bfd128ce437588d14136f82cd3006d586bcb09650ac32b28f98aa01aa115b087"
+    "instructions.md": "22d8a40a410542b8d3d263d2a309a3dace8893783778ecef850897f4184c9874"
   },
   "authority_anchor": "https://github.com/jresearchsoftware/shared-governance/issues/45#issuecomment-6236224883",
   "binding_sha256": "e4888c30ad58ca4bdb6db749af29dc686566b6284ed71cd589ee84f510ecc991",
   "condition_disposition": "preserved, not evaluated or adopted by projector",
-  "custom_sha256": "41a567151939f930e87e50c5b8f720587feadf95551b86e72e83686279be91e0",
+  "custom_sha256": "ae56229a77f72dd17a0b053aa6a92b3e88cf1bf161231ee35c59ddde8f3d197a",
   "generator": "shared-governance/chatgpt",
   "native_entries": [
     {
@@ -93,5 +93,5 @@
     "package": "org.jresearch.ai/development-governance",
     "version": "3.0.0"
   },
-  "unicode_characters": 5803
+  "unicode_characters": 5847
 }

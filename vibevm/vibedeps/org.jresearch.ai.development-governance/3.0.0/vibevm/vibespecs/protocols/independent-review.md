@@ -94,6 +94,20 @@ or reviewed baseline and classify their provenance:
 - pre-existing but newly exposed or made blocking by changed behavior/validation;
 - undetermined, with the missing comparison evidence stated.
 
+At the project's already expected owner-facing report before publishing a
+Change Request or negative assessment, give each actionable finding a concise
+preview containing severity, origin, exact result/comparison and evidence,
+qualified impact, required remediation/invariant and closure evidence. Give a
+Step/commit origin when supported; distinguish confirmed behavior, analytical
+risk and missing tests. An explicit `undetermined` origin plus the missing
+comparison evidence is complete provenance; do not guess or investigate without
+bound. Missing classification is an incomplete report. Retain these fields and
+consistent classification in the published assessment, even after the preview.
+This specifies the existing report's content, not another reviewer, approval,
+waiting period or universal preview gate. Local publication permissions and
+[Task Handoff's verdict lifecycle](task-handoff.md#result-acceptance-strategies)
+remain unchanged.
+
 Call a defect a regression only when introduction is supported. Baseline debt
 does not automatically enter remediation: explain current authority or a material
 dependency/changed acceptance boundary. Discovering it expands no Task scope.

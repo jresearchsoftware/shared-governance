@@ -194,6 +194,20 @@ Reuse proof for the same invariant and unchanged result while retaining separate
 justified checks and independent review. A changed result needs the applicable
 fresh qualification and review; old exact-result acceptance does not carry over.
 
+At an already expected owner-facing report before a Change Request or negative
+assessment is published, include each actionable finding's severity, origin,
+exact result/comparison and evidence, qualified impact, required correction and
+closure evidence. Origin is introduced, pre-existing at baseline, pre-existing
+but newly exposed/blocking, or explicit `undetermined` with the missing comparison
+evidence; give a Step/commit only when supported. Distinguish observed failure,
+analytical risk and missing tests. Missing fields make the report incomplete;
+retain consistent classification and fields in the published assessment.
+Where separately adopted, [independent-review](independent-review.md#findings-and-review-after-correction)
+provides finding methodology. This lifecycle rule is operative under Task
+Handoff without adopting that optional topic. It clarifies an existing report,
+adding no reviewer, second owner approval, waiting period or cross-project
+preview gate; local publication permissions and acceptance strategies remain.
+
 ## Result acceptance strategies
 
 Select by the decision needed to accept the result, not whether it contains code
