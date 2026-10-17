@@ -41,7 +41,10 @@ def main():
         run("git", "rm", "-qr", ".")
         # This archive is produced from the identified local repository tree.
         with tarfile.open(fileobj=io.BytesIO(archive)) as snapshot:
-            snapshot.extractall(fixture, filter="data")
+            for member in snapshot.getmembers():
+                assert member.isfile() or member.isdir(), "Unexpected archive member type"
+                assert (fixture / member.name).resolve().is_relative_to(fixture)
+            snapshot.extractall(fixture)
         run("git", "add", ".")
         run("git", "commit", "-qm", "Synthetic owner squash of candidate tree")
         print("Candidate tree: " + candidate, flush=True)
