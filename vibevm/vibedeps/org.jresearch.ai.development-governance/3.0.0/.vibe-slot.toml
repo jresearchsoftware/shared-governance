@@ -1,10 +1,10 @@
 schema = 1
-source_hash = "sha256:663c51ba9aa71b7b7f95da2b9bc09ecd20ab3cdc81eda3a89cf824e53e153f67"
+source_hash = "sha256:fea03ea041c92cc065103bd719c1d70f7183baf05491472792a329a0e07cb9d4"
 spec_format = "mixed"
 
 [[file]]
 path = "CHANGELOG.md"
-sha256 = "0aa6f0927394ef0511756cb67628d22bc6ce80726764bea6fa991e9144580139"
+sha256 = "127d735214ac96b49f4e84e35c304fdc9291de057d5a8d3e14c66d4b4cfc0577"
 
 [[file]]
 path = "LICENSE"
@@ -12,7 +12,7 @@ sha256 = "89a08ec77ff61e57c9e2da6d604d696bbe894f7f6f70de0d557022b2a9a8b853"
 
 [[file]]
 path = "README.md"
-sha256 = "138b67ea5c2ce1ba64265bc6d2c46740e429be3cf90eef103b136f32ae27d70f"
+sha256 = "95d1453cc126845104de83daffc968332951846b2e85d700cd9c5c4b3ac1bbb5"
 
 [[file]]
 path = "tools/chatgpt/README.md"
@@ -80,4 +80,4 @@ sha256 = "d49a3a8bdb648cfbc24a823e7f6e9abb6315f71ded6677453c0260849255ece4"
 
 [[file]]
 path = "vibevm/vibespecs/protocols/task-handoff.md"
-sha256 = "b2dfcae4aaf7a4e6f6b34ba9e54c3012d389ea6e2df751dea6b992f913f62297"
+sha256 = "1f0544cc177c538adb435dd905ea65fcc94a96f7fe582fe3abe2d9aebfdb2a02"

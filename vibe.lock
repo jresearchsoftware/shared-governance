@@ -1,6 +1,6 @@
 [meta]
 generated_by = "vibe 1.0.7"
-generated_at = "2026-10-17T18:31:19Z"
+generated_at = "2026-10-17T19:03:51Z"
 schema_version = 7
 root_dependencies = ["flow:org.jresearch.ai/development-governance@=3.0.0"]
 
@@ -9,8 +9,8 @@ kind = "flow"
 name = "development-governance"
 group = "org.jresearch.ai"
 version = "3.0.0"
-source_url = "file:///tmp/shared-governance-step6.q7KkYR/source/vibevm/vibepacks/org.jresearch.ai/development-governance/v3.0.0"
-content_hash = "sha256:663c51ba9aa71b7b7f95da2b9bc09ecd20ab3cdc81eda3a89cf824e53e153f67"
+source_url = "file:///tmp/shared-governance-step7.l3PMrhEI/source/vibevm/vibepacks/org.jresearch.ai/development-governance/v3.0.0"
+content_hash = "sha256:fea03ea041c92cc065103bd719c1d70f7183baf05491472792a329a0e07cb9d4"
 files_written = []
 admitted_by = "root-edge"
 source_kind = "registry"

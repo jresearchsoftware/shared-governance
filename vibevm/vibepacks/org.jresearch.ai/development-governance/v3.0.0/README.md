@@ -33,6 +33,14 @@ Task Handoff requires independent assessment under project rules; consumers
 select Independent Review separately for its shared methodology. That method
 adds no universal owner-wait or publication permission rule.
 
+For adopted Task Handoff, [TH-028](vibevm/vibespecs/protocols/task-handoff.md#TH-028)
+adds executor-owned Draft/Ready handoff for applicable implementation PRs: Draft
+before newly admitted work; verified successful Outcome before verified Ready
+for independent review. Automation ownership and supported local capabilities
+remain with each project. Ready grants no approval, merge or completion authority.
+This mandatory lifecycle change requires deliberate consumer migration; updating
+the dependency alone activates no new topic or tooling.
+
 The [onboarding procedure](vibevm/vibespecs/guides/onboarding.md) and
 [worked examples](vibevm/vibespecs/guides/onboarding-examples.md) are loaded on an
 explicit human onboarding request. The optional

@@ -203,6 +203,62 @@ or integrate several PRs by implication: each PR still requires its independent
 exact-head review and applicable acceptance/integration authority. Consumer-owned
 stronger Writer/Reviewer/admission/merge guarantees remain intact.
 
+## Executor-to-review artifact readiness
+
+<a id="TH-028"></a>
+**TH-028 — Verified executor handoff and PR Draft/Ready lifecycle.**
+
+For applicable GitHub PR-backed implementation or remediation, Draft means
+active, incomplete, blocked or unconfirmed execution handoff. Ready for review
+means that the executor successfully completed, durably published and verified
+the handoff of that identifiable result for independent review. It does not mean
+reviewer APPROVE, passing CI, mergeability, integration readiness, merge authority,
+Task completion or package adoption. A base conflict or red CI alone does not
+require drafting a successfully handed-off result; required checks, review and
+merge remain separate gates.
+
+Preserve the owning project's qualified automation when it owns this transition;
+do not create competing executor mutations. Otherwise the authorized executor,
+including a manual executor, performs the state changes where available and
+permitted by the local client/product binding. Do not silently pass that duty to
+the owner or another client when the executor has the authorized capability.
+This rule prescribes behavior, not a GitHub API, CLI, bot, privileged identity,
+new credential or universal automation system. Preserve stronger product
+security, branch-protection, admission/recovery and approval guarantees.
+
+At the beginning of newly admitted implementation/remediation on an existing
+open result PR, ensure Draft and verify the same PR and current head **before
+substantive modification**. If already Draft, verify without a redundant mutation.
+Create new implementation PRs as Draft where the project supports it. A new Step
+on the same PR re-enters Draft, preserving its branch/PR identity, prior reviews
+and historical acceptance. Review/discussion alone and no-PR analytical work
+create neither a PR nor a Draft transition.
+
+For a successful handoff, reconcile and push the authorized exact candidate,
+publish the one canonical attributable Outcome under [TH-014](#TH-014) through
+[TH-018](#TH-018), and verify durable publication. **Then** mark only successfully
+completed result PRs Ready for review and read back the same PR number, exact
+head and native state. This executor handoff precedes independent review; it
+does not wait for APPROVE. With an Issue-level or multi-PR Outcome, judge each
+PR's own completion/readiness; a completed sibling cannot make a blocked PR Ready.
+An equivalent verified atomic/coordinated completion sequence is allowed if it
+preserves these invariants.
+
+Keep blocked, failed, incomplete or uncertain affected PRs Draft. If successful
+Outcome publication is durable but the Ready mutation or readback fails, retain
+that Outcome and the same Step/result identity. Report the exact observed state,
+permission/capability or readback gap and needed authorized action; reconcile and
+retry only the single idempotent lifecycle transition through the local authorized
+mechanism. Never duplicate the Outcome, redo execution solely for this mutation,
+claim Ready without readback or invent capability. Missing state permission is
+an explicit handoff/readiness limitation for owner disposition, not by itself a
+defect in successfully published code.
+
+For non-GitHub workflows, apply equivalent *supported* local artifact states.
+This rule requires no new Draft/Ready UI, CLI/account/permission setup or synthetic
+PR where those states or a PR are absent. Shared publication changes no consumer
+automation: consumers separately review and adopt the changed topic/version.
+
 ## Exact result and independent assessment
 
 Where separately adopted, [independent-review methodology](independent-review.md)
