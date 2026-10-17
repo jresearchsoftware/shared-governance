@@ -25,13 +25,6 @@ finding provenance and risk-directed rereview. Missing sufficient evidence
 prevents unsupported PASS/APPROVE. It preserves manual and non-PR review,
 Task Handoff acceptance strategies, local specialist methods and product identity.
 
-Version 3.0.0 also clarifies finding content at the already expected owner-facing
-report before a Change Request or negative assessment: severity, explicit origin
-(including undetermined with the comparison gap), exact evidence, qualified impact,
-remediation and closure evidence remain consistent through publication. Task
-Handoff owns this lifecycle rule for its adopters; Independent Review remains a
-separately adopted topic. No additional reviewer, approval or waiting step is added.
-
 Version 2.4.0 adds [contract and decision maintenance](vibevm/vibespecs/protocols/contract-and-decision-maintenance.md)
 as a separately adopted conditional topic: explicit authority for material
 supported-contract changes, durable accepted reusable decisions and affected
@@ -69,8 +62,15 @@ prepare the actual public license, approved redistribution rights, aligned
 metadata and complete export before accepting frozen package source into main.
 The first accepted `(group, name, version)` is immutable even before remote
 publication; subsequent repairs require a new version. These mandatory pre-merge
-operator obligations make this a MAJOR change from 2.7.0. All other protocol and
-tool bytes remain unchanged. Existing topic adoption, producer release cadence,
+operator obligations make this a MAJOR change from 2.7.0. Version 3.0.0 also
+clarifies finding content at the already expected owner-facing report before a
+Change Request or negative assessment: severity, explicit origin (including
+undetermined with the comparison gap), exact evidence, qualified impact,
+remediation and closure evidence remain consistent through publication. Task
+Handoff owns this lifecycle rule for its adopters; Independent Review remains a
+separately adopted topic. No additional reviewer, approval or waiting step is
+added. The other six protocols and tool bytes remain unchanged.
+Existing topic adoption, producer release cadence,
 owner exceptions and separate consumer authority remain intact; updating the
 package does not activate package-versioning in another project.
 
