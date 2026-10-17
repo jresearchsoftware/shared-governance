@@ -59,6 +59,22 @@ class NativeAdoptionTests(unittest.TestCase):
         target.unlink()
         self.reject()
 
+    def test_manual_readiness_rule_is_accessible_through_native_and_local_routes(self):
+        authored = self.work / EXPORTER.PACKAGE / EXPORTER.HANDOFF
+        installed = (self.slot / EXPORTER.HANDOFF).read_bytes()
+        self.assertEqual(installed, authored.read_bytes())
+        self.assertIn(b'<a id="TH-028"></a>', installed)
+        self.assertIn(b"Executor-to-review artifact readiness", installed)
+        # The human-owned agent route discovers the usable producer operations.
+        root = (self.work / "AGENTS.md").read_text()
+        self.assertIn("docs/manual-task-handoff.md", root)
+        self.assertIn("PR Draft/Ready operations", root)
+        binding = (self.work / "docs/manual-task-handoff.md").read_text()
+        self.assertIn("gh pr ready N --repo jresearchsoftware/shared-governance --undo", binding)
+        self.assertIn("gh pr ready N --repo jresearchsoftware/shared-governance\n", binding)
+        self.assertIn("headRefOid", binding)
+        self.assertIn("task-45/step-7/scenarios.md", binding)
+
     def test_corrupt_slot_and_git_restore(self):
         target = self.slot / EXPORTER.HANDOFF
         target.write_text("changed installed rules\n")

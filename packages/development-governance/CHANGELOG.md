@@ -10,6 +10,13 @@ Entries describe the version contract, not live Task status.
 
 ### Added
 
+- [TH-028](vibevm/vibespecs/protocols/task-handoff.md#TH-028): executor-to-review
+  Draft/Ready lifecycle for applicable implementation/remediation PRs. Existing
+  PRs enter verified Draft before newly admitted work; new PRs start Draft where
+  supported. A successful durably published/read-back Outcome precedes verified
+  Ready, before independent review. Blocked/uncertain PRs stay Draft. State-only
+  recovery retains the same Outcome/Step/result. Automation ownership, per-PR
+  readiness, local capability limits and non-GitHub/no-PR exceptions are preserved.
 - Installed change history and stable rule anchors throughout the nine protocols,
   conditional boot and operator procedures. See [DG-001](README.md#DG-001)
   for address maintenance and the legacy mapping below.
@@ -50,7 +57,18 @@ Entries describe the version contract, not live Task status.
 
 ### Breaking changes and migration/adoption from 2.7.0
 
-MAJOR: package preparation adds mandatory pre-acceptance work, and
+MAJOR: Task Handoff adds mandatory executor Draft/Ready operations where supported
+and authorized; Ready now denotes a verified executor handoff, independently of
+review APPROVE, CI, conflicts, mergeability, merge authority or Task completion.
+Consumers adopting this version must reconcile their local executor/automation
+ownership and supported state operations. Keep qualified automation (including
+Codex Relay Writer), stronger guarantees and existing recovery; do not add a
+competing executor, credentials, CLI or PR to unsupported workflows. Missing
+permission is a disclosed handoff limitation for owner disposition. Adoption
+and any consumer implementation remain separately authorized. TH-001–TH-027
+retain their IDs; TH-028 is new and supersedes no prior ID.
+
+Package preparation also adds mandatory pre-acceptance work, and
 Task-Handoff-only consumers no longer receive its former detailed assessment
 method through that topic alone. Assess this under consumer-owned authority:
 deliberately adopt Independent Review for the shared method, or keep the accepted

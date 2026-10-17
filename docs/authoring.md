@@ -67,7 +67,11 @@ tag. Candidate branches may refine a new version before acceptance; later accept
 content repairs require a new version.
 
 Task 45 retains the same unaccepted 3.0.0 MAJOR candidate for material preparation
-obligations and the review-method ownership split. All nine protocols have stable
+obligations, the review-method ownership split and executor Draft/Ready handoff.
+[TH-028](../packages/development-governance/vibevm/vibespecs/protocols/task-handoff.md#TH-028)
+adds mandatory supported PR state operations to Task Handoff; local capability
+and automation ownership stay project-owned. See the
+[Step 7 coverage and walks](task-45/step-7/scenarios.md). All nine protocols have stable
 rule anchors; the six outside package-versioning/Task Handoff/Independent Review
 retain their normative meaning. Shared ChatGPT tool bytes remain unchanged.
 The installed [changelog](../packages/development-governance/CHANGELOG.md) owns

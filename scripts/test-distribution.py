@@ -102,6 +102,22 @@ class DistributionTests(unittest.TestCase):
         changed["README.md"] += b'\n[Execution cycle](vibevm/vibespecs/protocols/task-handoff.md#TH-006)\n'
         DISTRIBUTION.validate_payload(changed, files["LICENSE"])
 
+    def test_pr_readiness_rule_keeps_prior_addresses_and_its_lifecycle_owner(self):
+        files = self.current_export()
+        previous = subprocess.check_output(
+            ["git", "show", "b76ea98e6ee2645be674690094f88a6fa265d77d:"
+             + DISTRIBUTION.PACKAGE + "/" + DISTRIBUTION.HANDOFF], cwd=REPOSITORY)
+        anchors = lambda value: set(re.findall(rb'<a id="(TH-[0-9]{3})"></a>', value))
+        self.assertEqual(anchors(files[DISTRIBUTION.HANDOFF]), anchors(previous) | {b"TH-028"})
+        for heading in re.findall(rb"^#{1,6} .+$", previous, re.M):
+            self.assertIn(heading, files[DISTRIBUTION.HANDOFF])
+        owners = [name for name, content in files.items() if b'<a id="TH-028"></a>' in content]
+        self.assertEqual(owners, [DISTRIBUTION.HANDOFF])
+        self.assertIn(b"#TH-028", files[DISTRIBUTION.CHANGELOG])
+        self.assertIn(b"#TH-028", files["README.md"])
+        # Product commands stay in the producer binding, outside the passive flow.
+        self.assertNotIn(b"gh pr ready", files[DISTRIBUTION.HANDOFF])
+
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory(prefix="governance-distribution-test-")
         self.addCleanup(self.temporary.cleanup)

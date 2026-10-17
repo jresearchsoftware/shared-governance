@@ -46,7 +46,8 @@ boot/slot routes, preserving their conditional applicability:
 - Read `package-versioning.md` for package lifecycle work, together with this
   producer's [release policy](docs/releases.md).
 - Read `task-handoff.md` for governed execution, handoff or continuation, together
-  with the [manual client binding](docs/manual-task-handoff.md).
+  with the [manual client binding](docs/manual-task-handoff.md), including its
+  executor-owned PR Draft/Ready operations and verified Outcome recovery.
 - Read the full `independent-review.md` for relevant independent review
   activities. Its methodology is mandatory for this producer's independent
   assessments; unrelated tasks skip it. Task Handoff retains lifecycle ownership.
