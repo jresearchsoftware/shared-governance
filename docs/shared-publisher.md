@@ -49,7 +49,9 @@ it is not authenticated proof of independent review or a prose parser. Local
 candidate/version-category checks and review sufficiency remain producer-owned.
 
 Ordinary direct-main research or tooling with no exported payload change returns
-`NO_PACKAGE_CHANGE`, without a PR/CI eligibility requirement or release. A green
+`NO_PACKAGE_CHANGE`, without release-readiness or PR/CI eligibility requirements,
+including when the unchanged historically accepted payload is incomplete. This
+never releases that content or waives an applicable source-time preparation check. A green
 direct-main package edit returns `AUTHORIZATION_PENDING`. A later owner squash
 cannot launder its accumulated bytes: for a changed package, audit every changed
 export on first-parent history from the explicitly accepted baseline to this
@@ -142,8 +144,9 @@ or add missing files after merge. Historic incomplete exports may be compared fo
 a forward source repair, but cannot be silently published as ready releases.
 Production planning compares those historical exports without reapplying current
 readiness requirements; historical package transitions still need their appropriate
-owner/CI eligibility or explicit disposition. The exact current release and the
-source-time candidate check enforce full readiness. A version-bumped, eligible
+owner/CI eligibility or explicit disposition. Every changed/new current release
+and the source-time candidate check (including an unchanged candidate export)
+enforce full readiness. A version-bumped, eligible
 repair can therefore publish without trying to publish its incomplete predecessor.
 
 An accepted frozen `(group, name, version)` is immutable at its first main
@@ -180,8 +183,12 @@ identifies accepted source main. The check compares the final candidate export
 against accepted main and its bounded frozen-version history, including inventory
 changes and unpublished accepted identities. It permits candidate refinements of
 a new version, performs no acceptance API calls or distribution reads/writes and
-reports `CANDIDATE_VALID` or a safe pending reason. It grants no merge/publication
-authority. Producer candidate CI must invoke this check or its qualified equivalent
+reports `CANDIDATE_VALID` or a safe pending reason. This is bounded source validation:
+it does not independently qualify inherited historical PR/CI acceptance, promise
+production eligibility, or grant owner acceptance, merge or publication authority.
+Production planning retains the historical eligibility audit above; a candidate
+can be valid while inherited acceptance remains unresolved. No privileged/API
+pre-merge gate or second approval is implied. Producer candidate CI must invoke this check or its qualified equivalent
 (Shared Governance retains its existing exporter and release-transition checks).
 
 `GH_TOKEN` grants read access to the producer's API evidence; it is not a

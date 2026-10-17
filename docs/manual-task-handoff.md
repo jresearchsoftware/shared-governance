@@ -109,16 +109,15 @@ implementer stops for independent assessment; self-checks do not accept the resu
 Acceptance, recommendation selection, owner-authorized integration, publication,
 further execution and closure remain distinct.
 
-The existing ChatGPT owner-facing report before publishing a Change Request or
-negative assessment follows adopted Task Handoff's finding-preview rule: each
-finding states severity, origin (or explicit undetermined plus the comparison
-gap), exact result/comparison and evidence, qualified impact, remediation and
-closure evidence. Include a supported Step/commit; distinguish confirmed failure,
-analytical risk and missing tests. Missing fields leave the report incomplete;
-published findings retain the same classification and fields. This is content
-for the existing report, with no added approval, reviewer or waiting step and
-no adoption of the optional Independent Review topic. See the focused
-[preview scenarios](task-45/step-5/review-scenarios.md). Source-controlled
+For relevant independent review, root AGENTS explicitly adopts the full accepted
+materialized Independent Review protocol. It owns affected-behavior completeness,
+primary evidence, finding severity/provenance, owner-facing report content and
+rereview; Task Handoff owns authority, Outcome and acceptance/continuation.
+This producer's adoption changes no other consumer's topic choices. The
+ChatGPT-specific publication instruction lives in [custom.md](../chatgpt/custom.md);
+this manual Codex binding adds no such restriction to executor Outcomes.
+See the current [Step 6 coverage and scenarios](task-45/step-6/coverage.md).
+Source-controlled
 [ChatGPT Instructions](../chatgpt/instructions.md) are desired state; the owner
 manually applies and verifies live settings under the existing client procedure.
 

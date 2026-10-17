@@ -9,6 +9,13 @@ Active guidance is frozen from independently accepted source-main, separately fr
 public publication. Package splitting,
 parallel major maintenance lines and consumer migration need separate decisions.
 
+Task 45 refines one unaccepted 3.0.0 MAJOR candidate from accepted 2.7.0, including
+preparation requirements, review-topic ownership and installed rule/change-history
+addresses. Refinement before first acceptance needs no 4.0.0. See the packaged
+[changelog and adoption impact](../packages/development-governance/CHANGELOG.md).
+Independent Review is explicitly adopted only for this producer's relevant
+assessments. Other consumers retain their own adoption and local policy.
+
 ## Contribution and integration
 
 Each independently accepted package-changing PR increments the whole-package

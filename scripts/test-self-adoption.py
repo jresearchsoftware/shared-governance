@@ -45,6 +45,10 @@ class NativeAdoptionTests(unittest.TestCase):
         self.assertEqual(self.receipt["version"], manifest["package"]["version"])
         self.assertFalse((self.slot / EXPORTER.RECEIPT).exists())
         self.assertFalse((self.source / EXPORTER.RECEIPT).exists())
+        self.assertEqual((self.slot / EXPORTER.CHANGELOG).read_bytes(),
+                         (self.work / EXPORTER.PACKAGE / EXPORTER.CHANGELOG).read_bytes())
+        self.assertIn('Read the full `independent-review.md`', (self.work / "AGENTS.md").read_text())
+        self.assertIn('id="IR-005"', (self.slot / EXPORTER.INDEPENDENT_REVIEW).read_text())
 
     def test_registry_source_mutation_and_missing_file_rejected(self):
         target = self.source / EXPORTER.HANDOFF

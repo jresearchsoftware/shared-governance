@@ -28,6 +28,7 @@ CONTEXT_LOADING = "vibevm/vibespecs/protocols/context-loading.md"
 ONBOARDING = "vibevm/vibespecs/guides/onboarding.md"
 ONBOARDING_EXAMPLES = "vibevm/vibespecs/guides/onboarding-examples.md"
 ENGINEERING_METHODS = "vibevm/vibespecs/guides/engineering-methods.md"
+CHANGELOG = "CHANGELOG.md"
 BOOT_INDEX = "vibevm/vibespecs/boot/INDEX.md"
 # Producer-only native routing is committed alongside authored source, not exported.
 SOURCE_ARTIFACTS = {"AGENTS.md", "CLAUDE.md", "GEMINI.md", BOOT_INDEX,
@@ -84,6 +85,34 @@ def validate_skill_links(files, prefix):
 
 def slot(version):
     return "vibevm/vibedeps/org.jresearch.ai.development-governance/" + version
+
+
+def validate_rule_addresses(files):
+    """Bounded Markdown checks, not a rule registry or semantic attestation."""
+    prefixes = {PROTOCOL: "PC", AUTHORITY: "RA", VERSIONING: "PV", HANDOFF: "TH",
+                SELF_ADOPTION: "SA", REPOSITORY_GOVERNANCE: "GH", INDEPENDENT_REVIEW: "IR",
+                CONTRACT_MAINTENANCE: "CD", CONTEXT_LOADING: "CL"}
+    addresses, documents = {}, {}
+    for name, data in files.items():
+        if not name.endswith(".md"):
+            continue
+        prose = re.sub(r"^```[^\n]*\n.*?^```\s*$", "", data.decode(), flags=re.M | re.S)
+        labels = re.findall(r'<a id="([A-Z]+-[0-9]{3})"></a>', prose)
+        for label in labels:
+            if label in addresses:
+                raise ValueError("duplicate stable rule address: " + label)
+            addresses[label] = name
+        if name in prefixes and (not labels or any(not label.startswith(prefixes[name] + "-") for label in labels)):
+            raise ValueError("canonical protocol rule addresses missing or misprefixed: " + name)
+        documents[name] = prose
+    for name, prose in documents.items():
+        for target in re.findall(r"\[[^\]\n]*\]\(\s*(<[^>\n]*>|[^)\s]+)", prose):
+            url = urlsplit(target.strip("<>"))
+            if url.scheme or url.netloc or not re.fullmatch(r"[A-Z]+-[0-9]{3}", unquote(url.fragment)):
+                continue
+            resolved = posixpath.normpath(posixpath.join(posixpath.dirname(name), unquote(url.path))) if url.path else name
+            if addresses.get(unquote(url.fragment)) != resolved:
+                raise ValueError("missing or redirected stable rule reference: " + name + " -> " + target)
 
 
 def package_path(revision):
@@ -147,6 +176,8 @@ def validate_payload(files, license_bytes, historical=False):
         allowed.update({ONBOARDING, ONBOARDING_EXAMPLES})
     if tuple(map(int, version.split("."))) >= (2, 7, 0):
         allowed.add(ENGINEERING_METHODS)
+    if tuple(map(int, version.split("."))) >= (3, 0, 0):
+        allowed.add(CHANGELOG)
     if set(files) != allowed:
         raise ValueError("source package file set differs from declared passive payload")
     if files["LICENSE"] != license_bytes:
@@ -160,6 +191,10 @@ def validate_payload(files, license_bytes, historical=False):
     if any(not files[name].strip() for name in allowed & {ONBOARDING, ONBOARDING_EXAMPLES,
                                                        ENGINEERING_METHODS}):
         raise ValueError("operator guide is empty")
+    if CHANGELOG in allowed:
+        if not files[CHANGELOG].strip():
+            raise ValueError("installed changelog is empty")
+        validate_rule_addresses(files)
     return manifest
 
 
@@ -331,10 +366,10 @@ def verify_producer(revision, directory=ROOT):
                 raise ValueError("producer generated agent route differs: " + name)
             if root != directory and text.strip() != BOOT_BLOCK:
                 raise ValueError("package member route contains an unexpected local overlay")
-    # This repository retains its four conditional adoptions and explicit self-adoption.
+    # This producer explicitly selects review methodology; other consumers do not.
     agents = (directory / "AGENTS.md").read_text(encoding="utf-8")
     if "scripts/self-adopt.py" in agents or any(Path(topic).name not in agents for topic in
-            (PROTOCOL, AUTHORITY, VERSIONING, HANDOFF, SELF_ADOPTION)):
+            (PROTOCOL, AUTHORITY, VERSIONING, HANDOFF, SELF_ADOPTION, INDEPENDENT_REVIEW)):
         raise ValueError("producer conditional adoption/retired helper route differs")
     return receipt
 

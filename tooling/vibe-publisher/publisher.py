@@ -485,10 +485,12 @@ def plan(root, source_sha, main, binding, api, publisher_sha, binding_path=None,
             if policy_identity(policy(source_sha)) != policy_identity(binding):
                 raise AuthorizationError("POLICY_PIN_MISMATCH", "source policy differs from the independently accepted policy pin")
             current = export(source_sha, package)
-            # Readiness gates the proposed export, not the ability to compare a
-            # historically incomplete frozen identity for a forward repair.
-            snapshot(root, source_sha, package)
             previous = export(candidate_base or parents[0], package) if parents else None
+            # Source-time checks always enforce preparation. Production no-ops
+            # request no release, including for historically incomplete content.
+            # Every changed/new export still needs full current readiness.
+            if candidate_base is not None or payload(current) != payload(previous):
+                snapshot(root, source_sha, package)
             if payload(current) == payload(previous):
                 result["status"] = "NO_PACKAGE_CHANGE"
             else:

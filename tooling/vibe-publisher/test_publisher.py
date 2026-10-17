@@ -295,6 +295,64 @@ class PlanningTests(Fixture):
 
 
 class TemporalTests(Fixture):
+    def incomplete_initial_package(self):
+        (self.source / self.packages[0]["root"] / "LICENSE").unlink()
+        self.git("add", ".")
+        self.git("commit", "--amend", "--no-edit", "-q")
+        self.revision = self.git("rev-parse", "HEAD")
+        self.api = Evidence(self.binding, [self.revision])
+
+    def test_incomplete_historical_package_factual_noop_and_source_time_readiness(self):
+        self.incomplete_initial_package()
+        (self.source / "research.txt").write_text("Ordinary factual direct-main update")
+        factual = self.commit()
+        with patch.object(self.api, "get", side_effect=AssertionError("no acceptance API for no-op")), \
+                patch.object(self.api, "pages", side_effect=AssertionError("no acceptance API for no-op")):
+            decisions = self.plan(factual)["packages"]
+            self.assertEqual([p["status"] for p in decisions],
+                             ["NO_PACKAGE_CHANGE", "NO_PACKAGE_CHANGE"])
+        with patch.object(P, "remote_refs", side_effect=AssertionError("no distribution access for no-op")):
+            self.assertEqual(P.stage(self.source, self.packages[0], decisions[0],
+                                     self.directory / "absent-vibe", self.directory / "unused"), decisions[0])
+        # Production requested no release; an applicable source-time preparation
+        # check must still reject the same unchanged incomplete payload.
+        self.git("switch", "-qc", "candidate")
+        (self.source / "research.txt").write_text("Candidate factual update")
+        proposed = self.commit()
+        self.assertEqual(self.candidate(proposed, factual)["reason_code"], "PUBLIC_EXPORT_INCOMPLETE")
+
+    def test_changed_incomplete_release_never_uses_the_noop_exemption(self):
+        self.incomplete_initial_package()
+        # Initial incomplete source is a new export, not a no-op.
+        self.assertEqual(self.plan()["packages"][0]["reason_code"], "PUBLIC_EXPORT_INCOMPLETE")
+        self.git("switch", "-qc", "candidate")
+        proposed = self.change()
+        self.assertEqual(self.candidate(proposed)["reason_code"], "PUBLIC_EXPORT_INCOMPLETE")
+        self.git("switch", "-q", "main")
+        self.git("merge", "--squash", "candidate")
+        accepted = self.commit()
+        self.api.revisions.append(accepted)
+        self.assertEqual(self.plan(accepted)["packages"][0]["reason_code"], "PUBLIC_EXPORT_INCOMPLETE")
+
+    def test_candidate_valid_is_bounded_and_production_retains_inherited_acceptance_gate(self):
+        inherited = self.change()
+        self.git("switch", "-qc", "candidate")
+        proposed = self.change(version="1.0.2")
+        with patch.object(self.api, "pages", side_effect=AssertionError("offline source check")):
+            candidate = self.candidate(proposed, inherited)
+        self.assertEqual(candidate["status"], "CANDIDATE_VALID")
+        self.assertEqual(candidate["acceptance"], [])
+        self.git("switch", "-q", "main")
+        self.git("merge", "--squash", "candidate")
+        accepted = self.commit()
+        self.api.revisions.append(accepted)
+        self.assertEqual(self.plan(accepted)["packages"][0]["reason_code"], "OWNER_ACCEPTANCE_NOT_ESTABLISHED")
+        # A separately accepted explicit disposition can move this audit baseline;
+        # candidate validity itself did not supply acceptance authority.
+        self.packages[0]["baseline"] = inherited
+        self.packages[0]["baseline_disposition"] = "https://github.com/fixture/private-source/issues/2"
+        self.assertEqual(self.plan(accepted)["packages"][0]["status"], "READY")
+
     def candidate(self, revision, base=None):
         with patch.object(self.api, "get", side_effect=AssertionError("source checks do not grant acceptance")):
             return P.plan(self.source, revision, base or self.revision, self.binding, self.api, CODE_SHA,
