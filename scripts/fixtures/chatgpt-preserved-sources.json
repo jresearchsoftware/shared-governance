@@ -2,7 +2,7 @@
   "schema": 1,
   "source_revision": "bff65a38f61e7fc618ef86260a291637bf3477d1",
   "source_record": "https://github.com/jresearchsoftware/shared-governance/pull/33",
-  "scope": "Task 32 steps 1-4 and the seven pre-existing protocols retained by Task 35 Step 1; Git-normalized blob identities. Authorized future protocol edits may revise the corresponding baseline with their source/authority evidence.",
+  "scope": "Task 32 steps 1-4 and the seven pre-existing protocols retained by Task 35 Step 1; Git-normalized blob identities. Authorized future protocol edits may revise the corresponding baseline with their source/authority evidence. Task 45 preserves package-versioning in retained frozen 2.7.0 while allowing the owner-admitted canonical 3.0.0 update.",
   "historical_roots": [
     "docs/task-32/step-1",
     "docs/task-32/step-2",
@@ -78,7 +78,7 @@
     "docs/task-32/step-4/semantic-coverage.md": "931b57ca2468d64f2bda1c644410cd17d15bb299",
     "packages/development-governance/vibevm/vibespecs/protocols/github-repository-governance.md": "1ed982b293d7feda69cf6638fbca9e45394364b8",
     "packages/development-governance/vibevm/vibespecs/protocols/independent-review.md": "166a7becf83c31c1f08fc6745ec9093ddf5c9f49",
-    "packages/development-governance/vibevm/vibespecs/protocols/package-versioning.md": "9c14579e9cb32bf209eb4545661f6c30f9558505",
+    "vibevm/vibepacks/org.jresearch.ai/development-governance/v2.7.0/vibevm/vibespecs/protocols/package-versioning.md": "9c14579e9cb32bf209eb4545661f6c30f9558505",
     "packages/development-governance/vibevm/vibespecs/protocols/proportional-controls.md": "eab1eba9a7ab2a1a415a8cc89a04a8e5251eb463",
     "packages/development-governance/vibevm/vibespecs/protocols/requirement-authority.md": "e8306782566ade864193f2f6fd8001cf34d639d1",
     "packages/development-governance/vibevm/vibespecs/protocols/self-adoption.md": "3da59f6c205229c73e0839f9944bd9f3f22570fa",

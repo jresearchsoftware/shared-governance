@@ -58,3 +58,15 @@ from a committed clean clone. Use the repository's pinned VibeVM 1.0.7 musl bina
 for intentional local materialization and optional native tests. Record actual
 counts/results below after execution; the canonical Outcome supplies the final
 head's CI links and annotations without a self-referential source commit pin.
+
+Initial clean-clone qualification at `1092ab8c7dc81c17564a2e4d9b2277a0a639601a`
+passed source/exact-export (675 files, 1,003 local links), all 43 focused publisher
+tests including six native scenarios, 42 distribution tests, 17 release/dependency
+tests including six native scenarios, and 12 self-adoption tests. No native tests
+were skipped. The ChatGPT suite exposed two expected package-bump follow-ups:
+the bounded preservation fixture still treated current package-versioning source
+as forever unchanged, and the maintenance receipt recorded the earlier tool
+version. Preservation now targets the unchanged retained 2.7.0 protocol; the
+receipt is refreshed against the frozen accepted source/Step 4 authority.
+Instructions content and live client settings are unchanged. This is fixture and
+receipt maintenance, not activation of candidate policy or consumer adoption.
