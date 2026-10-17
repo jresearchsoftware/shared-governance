@@ -53,7 +53,35 @@ Run source/exact-export, distribution, release, self-adoption and ChatGPT checks
 from a committed clean Linux clone. Regenerate the current unaccepted 3.0.0
 projection through the existing exporter and pinned VibeVM 1.0.7 musl installer;
 its binary digest is `20d111df02eb28040ef4cb766bfcb0bde8ff4427b031f88f33eacb3711c3e240`.
-Actual results are recorded below once executed; the Outcome binds final-head CI.
+The Outcome binds final-head CI. Fresh observed results:
+
+- Clean Linux clone at `db5ce404aec5238e6045e17e423fba683a4a4974`:
+  source/exact-export/native integrity PASS (677 tracked files, 1,013 local links,
+  bounded credential-marker scan); 42 distribution, 12 self-adoption and 24
+  ChatGPT tests PASS. Focused publisher: 46 total, 40 passed / six optional native
+  skipped. Retained release suite: 17 total, 11 passed / six optional native
+  skipped. These counts include the two new temporal tests, with negative and
+  positive baseline-disposition subcases. Whitespace passes.
+- `project-chatgpt.py check` reproduces Instructions and receipt with NO_OP,
+  Sources DISABLED and live settings unverified. Complete Instructions are 5,847
+  Unicode characters. The initial authorized custom update was CHANGED, not a
+  claim of no effective content change.
+- Pinned-native materialization of authored package at
+  `8040699672f6c5e22326bfc8ce99a0b96c17149a` produced payload digest
+  `50a5119ec9183bfe721ede6775d331a97f7f324470f4c2b47f753a804fa4917c`.
+  Existing exporter staged 19 payload files; fresh native resolution regenerated
+  the current 3.0.0 slot and lock. The authoring qualifier passes all seven native
+  commands, zero findings, dependency install and overlay preservation. Its
+  disposable fixture uses the native-pruned tracked inventory; the PR retains
+  all historical source and slots. A first run before reconciling that fixture's
+  tracked inventory stopped on a pruned historical file, not a package-content
+  defect. No zero-warning claim is made for the PR's deliberately retained old
+  slots. Final canonical source/slot/lock/route validation passed in the clean
+  clone containing those retained slots.
+- Full Git comparison confirms accepted 2.7.0 source/slots, root topic adoption,
+  ChatGPT binding, production exporter/release scripts and existing candidate/
+  publication workflows retain accepted bytes. Step 5 does not change either
+  publisher workflow or publication transport.
 
 Publication transport, atomic non-force staging, credentials and existing-tag
 recovery are unchanged. Prior Step 2/4 native transport evidence remains applicable
