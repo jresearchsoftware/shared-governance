@@ -1,5 +1,8 @@
 # Development governance
 
+<a id="DG-002"></a>
+**DG-002 — Conditional topic routing.**
+
 For proposed security, validation or operator controls, read the full
 [proportional-controls protocol](../protocols/proportional-controls.md),
 including when assessing behaviorally free security hardening. Unrelated tasks
@@ -45,7 +48,7 @@ applies settings nor grants permission to change them. Existing local policy
 remains authoritative until reviewed adoption. Unrelated tasks skip this topic.
 
 For independent assessment, read
-[independent-review methodology](../protocols/independent-review.md) only when
+[full independent-review methodology](../protocols/independent-review.md) only when
 the owning project explicitly adopts that topic. Inspect the actual result and
 primary evidence; disclose review gaps before a positive verdict. Package updates
 and Task Handoff adoption do not activate this additional topic. Local acceptance

@@ -1,5 +1,8 @@
 # Onboard a project to Shared Governance
 
+<a id="ON-001"></a>
+**ON-001 — Explicit onboarding request and scope.**
+
 Start with an ordinary request: **“Onboard this project to Shared Governance.”**
 An agent or human operator can follow this procedure for a new or existing
 software project. Use the project's existing Task, change or owner record;
@@ -15,6 +18,9 @@ Use existing authorization where it covers an action; this procedure creates
 no additional approval gate or permission to mutate another project.
 
 ## 1. Discover the project and agree the intended scope
+
+<a id="ON-002"></a>
+**ON-002 — Discover accepted project authority.**
 
 Read accepted project instructions and boot entrypoints, the onboarding request
 and applicable owner Decisions. Establish the actual repository/tracker and
@@ -53,6 +59,9 @@ JIT loading does not waive required chronology, source or evidence completeness.
 
 ## 2. Recommend topics and identify their local bindings
 
+<a id="ON-003"></a>
+**ON-003 — Recommend topics with explicit local choices.**
+
 Review the available package's compact boot/catalog at an identified accepted
 revision. The following catalog covers Development Governance 2.6.0's nine
 topics. Consider every available topic for relevance, then read full protocols
@@ -83,6 +92,9 @@ package can make all topics available while the project adopts only some.
 
 ## 3. Reconcile local rules before proposing authority transfer
 
+<a id="ON-004"></a>
+**ON-004 — Reconcile complete local rules and ownership.**
+
 For new projects, state where durable owner choices and local bindings will
 live. For existing projects, establish the bounded complete accepted baseline
 for each domain being migrated: relevant instructions, routes, exceptions and
@@ -105,6 +117,9 @@ same reviewed change, preserving local bindings. Test the proposed route without
 residual duplicates and inspect the original project's retained exceptions.
 
 ## 4. Present choices and a concrete setup plan
+
+<a id="ON-005"></a>
+**ON-005 — Concrete authorized setup plan.**
 
 Summarize the recommended profile, selected/retained/declined/deferred topics,
 local rules and exceptions. For each needed change, name its owner, effect,
@@ -131,6 +146,9 @@ settings, credentials, publication or another project's migration. Do not turn
 each routine implementation correction into a new approval ceremony.
 
 ## 5. Verify the chosen scope through its ordinary entrypoints
+
+<a id="ON-006"></a>
+**ON-006 — Verify through ordinary entrypoints.**
 
 Prefer read-only inspection and fresh existing proof. Record the actual source,
 revision/ref, time and environment for mutable observations. A proposed setting,
@@ -159,6 +177,9 @@ supply and the cheaper acceptable alternative or blocked invariant.
 
 ## 6. Return a scoped verdict and the next useful action
 
+<a id="ON-007"></a>
+**ON-007 — Scoped readiness verdict.**
+
 Keep a concise handoff in the existing onboarding/Task/change record. Include:
 
 - The chosen scope/profile, accepted source/package identity and topic choices.
@@ -186,6 +207,9 @@ blocker, or **PLAN COMPLETE; SETUP DEFERRED** when discovery/planning is the
 agreed result. Partial readiness is useful: a manual path may work while a
 ChatGPT or publication path remains unqualified. An unobserved live-client
 guarantee cannot be inferred from a static validator or prose walkthrough.
+
+<a id="ON-008"></a>
+**ON-008 — Event-directed upkeep.**
 
 Retain stable choices/routing in accepted project guidance and dated mutable
 observations in existing records. Reuse sufficient unchanged evidence. Recheck
