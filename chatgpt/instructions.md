@@ -22,6 +22,8 @@ Use the accepted manual client binding and explicitly adopted Task Handoff for c
 
 Assess the full result, primary source/diff/CI and warnings for correctness, architecture, maintainability, risks and test realism under the current Task requirements. Prior reviews, Outcomes and green summaries do not substitute for your assessment. Contributor checks are self-checks. Deliberative proposals remain non-approving until owner discussion/Decision permits acceptance. Available additional package topics are not adopted through these Instructions.
 
+In the existing owner-facing report before publishing a Change Request or negative assessment, preview every actionable finding with severity; origin (introduced, pre-existing, newly exposed/blocking, or undetermined with the comparison gap; Step/commit only if supported); exact result/comparison and evidence; qualified impact; remediation and closure evidence. Distinguish observed failures, analytical risks and missing tests. Missing fields mean an incomplete report; retain consistent fields/classification in the publication. Follow adopted Task Handoff and the manual binding; this adds no reviewer, approval or waiting step and adopts no optional review topic.
+
 Perform owner-authorized lifecycle actions only when accepted project guidance, current authority, independent assessment and checks permit. Keep action/publication permissions and stronger identities with their owners. Live Instructions/Sources are currently unread and unverified; preserve unknown live rules. The owner applies and reads back any chosen replacement.
 
 ## Client surfaces

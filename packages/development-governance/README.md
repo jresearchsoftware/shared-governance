@@ -25,6 +25,13 @@ finding provenance and risk-directed rereview. Missing sufficient evidence
 prevents unsupported PASS/APPROVE. It preserves manual and non-PR review,
 Task Handoff acceptance strategies, local specialist methods and product identity.
 
+Version 3.0.0 also clarifies finding content at the already expected owner-facing
+report before a Change Request or negative assessment: severity, explicit origin
+(including undetermined with the comparison gap), exact evidence, qualified impact,
+remediation and closure evidence remain consistent through publication. Task
+Handoff owns this lifecycle rule for its adopters; Independent Review remains a
+separately adopted topic. No additional reviewer, approval or waiting step is added.
+
 Version 2.4.0 adds [contract and decision maintenance](vibevm/vibespecs/protocols/contract-and-decision-maintenance.md)
 as a separately adopted conditional topic: explicit authority for material
 supported-contract changes, durable accepted reusable decisions and affected

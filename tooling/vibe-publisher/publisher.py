@@ -505,7 +505,21 @@ def plan(root, source_sha, main, binding, api, publisher_sha, binding_path=None,
                     # exact integration/CI and immediate version boundary checked.
                     history, prior = [source_sha], previous
                 accepted = []
-                versions = {prior[1]["version"]: payload(prior)} if prior else {}
+                # A disposition bounds eligibility auditing, not frozen identity.
+                # Read the first-main payload of each older version from canonical
+                # Git history, including inventory-only changes. No PR/CI replay
+                # before the baseline and no current-policy fallback are needed.
+                versions = {}
+                identity_history = git(root, "rev-list", "--first-parent", "--reverse", baseline,
+                                       "--", package["root"], binding_path).decode().splitlines()
+                for revision in identity_history:
+                    if not git(root, "ls-tree", revision, "--", package["root"]):
+                        continue
+                    value = export(revision, package)
+                    if value is not None:
+                        versions.setdefault(value[1]["version"], payload(value))
+                if prior:
+                    versions.setdefault(prior[1]["version"], payload(prior))
                 for revision in history:
                     next_value = export(revision, package)
                     revision_parents = git(root, "show", "-s", "--format=%P", revision).decode().split()
@@ -530,7 +544,6 @@ def plan(root, source_sha, main, binding, api, publisher_sha, binding_path=None,
                             raise AuthorizationError("PACKAGE_VERSION_REUSE", "package payload changed without a new version")
                         versions.setdefault(version, payload(next_value))
                         if candidate_base is None:
-                            snapshot(root, revision, package_binding(after_policy, package["coordinate"]))
                             if revision not in evidence_cache:
                                 evidence_cache[revision] = eligible(api, authority, revision, revision_parents)
                     if candidate_base is None and (policy_changed or payload(prior) != payload(next_value)):

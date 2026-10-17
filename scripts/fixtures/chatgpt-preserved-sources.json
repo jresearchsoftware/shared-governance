@@ -77,12 +77,12 @@
     "docs/task-32/step-4/owner-handoff.md": "6b7a92e68e18b97006e48e9b736943a29c28b63c",
     "docs/task-32/step-4/semantic-coverage.md": "931b57ca2468d64f2bda1c644410cd17d15bb299",
     "packages/development-governance/vibevm/vibespecs/protocols/github-repository-governance.md": "1ed982b293d7feda69cf6638fbca9e45394364b8",
-    "packages/development-governance/vibevm/vibespecs/protocols/independent-review.md": "166a7becf83c31c1f08fc6745ec9093ddf5c9f49",
+    "vibevm/vibepacks/org.jresearch.ai/development-governance/v2.7.0/vibevm/vibespecs/protocols/independent-review.md": "166a7becf83c31c1f08fc6745ec9093ddf5c9f49",
     "vibevm/vibepacks/org.jresearch.ai/development-governance/v2.7.0/vibevm/vibespecs/protocols/package-versioning.md": "9c14579e9cb32bf209eb4545661f6c30f9558505",
     "packages/development-governance/vibevm/vibespecs/protocols/proportional-controls.md": "eab1eba9a7ab2a1a415a8cc89a04a8e5251eb463",
     "packages/development-governance/vibevm/vibespecs/protocols/requirement-authority.md": "e8306782566ade864193f2f6fd8001cf34d639d1",
     "packages/development-governance/vibevm/vibespecs/protocols/self-adoption.md": "3da59f6c205229c73e0839f9944bd9f3f22570fa",
-    "packages/development-governance/vibevm/vibespecs/protocols/task-handoff.md": "b5f3e75ecc8a69823b889d26c9560f89e6959bf5"
+    "vibevm/vibepacks/org.jresearch.ai/development-governance/v2.7.0/vibevm/vibespecs/protocols/task-handoff.md": "b5f3e75ecc8a69823b889d26c9560f89e6959bf5"
   },
   "boot": {
     "path": "packages/development-governance/vibevm/vibespecs/boot/development-governance.md",

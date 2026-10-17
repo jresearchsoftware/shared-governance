@@ -68,13 +68,22 @@ tag. Candidate branches may refine a new version before acceptance; later accept
 content repairs require a new version.
 
 Task 45 prepares 3.0.0 MAJOR because these are material mandatory pre-merge
-obligations under the accepted classification. Only package-versioning and its
-version-scoped README change semantically; the other eight protocols and tooling
-payload retain their 2.7.0 bytes. Generated 3.0.0 source/slots/lock/routes accompany
+obligations under the accepted classification. Package-versioning, task-handoff,
+independent-review and the version-scoped README change semantically; the other
+six protocols and tooling payload retain their 2.7.0 bytes. Generated 3.0.0 source/slots/lock/routes accompany
 the candidate. Retained 2.7.0 source and slots are historical and untouched.
 This does not adopt any new topic or change other consumers' local policies.
 
 ## Semantic completeness
+
+The 3.0.0 candidate also refines the already expected owner-facing negative-review
+report. Task Handoff carries its operational lifecycle rule; optional Independent
+Review carries finding methodology. Both preserve explicit provenance (including
+undetermined with missing comparison evidence) from preview through publication.
+The producer's adopted topics are unchanged. Its local manual binding and custom
+ChatGPT Markdown route the client to that report; regenerate complete Instructions
+with the existing projector. Desired source-controlled text still needs owner
+application and live readback. See [Step 5 scenarios](task-45/step-5/review-scenarios.md).
 
 [Task 15](https://github.com/jresearchsoftware/shared-governance/issues/15)
 establishes the accepted invariant for future governance extraction, package

@@ -56,6 +56,13 @@ CI continues to authorize the existing automatic publication below. Preparing
 this candidate grants no merge or manual publication authority and adds no
 second release permission. The shared publisher remains an unactivated alternative.
 
+The same unaccepted 3.0.0 candidate includes the owner-facing finding-report
+clarification in Task Handoff and optional Independent Review. Aggregate impact
+against accepted 2.7.0 remains MAJOR: new pre-merge preparation obligations and
+explicit finding-report content refine mandatory operator behavior. Refining this
+candidate before its first accepted main integration requires no 4.0.0 bump.
+Frozen 2.7.0 and the existing post-accepted-merge publisher remain unchanged.
+
 ## Automatic publication and recovery
 
 [Publish accepted package](../.github/workflows/publish.yml) runs after successful

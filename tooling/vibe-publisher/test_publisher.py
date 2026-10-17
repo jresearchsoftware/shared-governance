@@ -432,6 +432,62 @@ class TemporalTests(Fixture):
         revised = self.change(version="1.0.1")
         self.assertEqual(self.candidate(revised)["status"], "CANDIDATE_VALID")
 
+    def test_forward_license_repair_checks_candidate_and_accepted_production_history(self):
+        root = self.source / self.packages[0]["root"]
+        (root / "LICENSE").unlink()
+        self.git("add", ".")
+        self.git("commit", "--amend", "--no-edit", "-q")
+        self.revision = self.git("rev-parse", "HEAD")
+        self.api = Evidence(self.binding, [self.revision])
+        self.assertEqual(self.plan()["packages"][0]["reason_code"], "PUBLIC_EXPORT_INCOMPLETE")
+        self.git("switch", "-qc", "candidate")
+        (root / "LICENSE").write_text("MIT\nPublic synthetic fixture.\n")
+        repair = self.change()
+        self.assertEqual(self.candidate(repair)["status"], "CANDIDATE_VALID")
+        self.git("switch", "-q", "main")
+        self.git("merge", "--squash", "candidate")
+        accepted = self.commit()
+        self.api.revisions.append(accepted)
+        result = self.plan(accepted)["packages"][0]
+        self.assertEqual(result["status"], "READY")
+        self.assertEqual(result["version"], "1.0.1")
+        self.assertEqual([e["source_sha"] for e in result["acceptance"]], [self.revision, accepted])
+        self.assertEqual(self.git("tag"), "")
+        # Historical incompleteness is comparable, not an eligibility waiver.
+        self.api.revisions.remove(self.revision)
+        self.assertEqual(self.plan(accepted)["packages"][0]["reason_code"], "OWNER_ACCEPTANCE_NOT_ESTABLISHED")
+
+    def test_baseline_disposition_preserves_older_frozen_versions_in_candidate_and_plan(self):
+        for version in ("1.0.0", "3.0.0"):
+            with self.subTest(version=version):
+                self.reset_fixture()
+                newer = self.change(version="2.0.0")
+                self.packages[0]["baseline"] = newer
+                self.packages[0]["baseline_disposition"] = "https://github.com/fixture/private-source/issues/2"
+                self.save_binding()
+                disposed = self.commit()
+                # Earlier eligibility is disposed, not replayed; older identity
+                # still exists in Git without a remote tag or new registry.
+                self.api = Evidence(self.binding, [disposed])
+                self.git("switch", "-qc", "candidate")
+                proposed = self.change(version=version)
+                candidate = self.candidate(proposed, disposed)
+                expected = "AUTHORIZATION_PENDING" if version == "1.0.0" else "CANDIDATE_VALID"
+                self.git("switch", "-q", "main")
+                self.git("merge", "--squash", "candidate")
+                accepted = self.commit()
+                self.api.revisions.append(accepted)
+                production = self.plan(accepted)["packages"][0]
+                self.git("branch", "-D", "candidate")
+                self.assertEqual(candidate["status"], expected)
+                self.assertEqual(production["status"], "AUTHORIZATION_PENDING" if version == "1.0.0" else "READY")
+                if version == "1.0.0":
+                    self.assertEqual(candidate["reason_code"], "PACKAGE_VERSION_REUSE")
+                    self.assertEqual(production["reason_code"], "PACKAGE_VERSION_REUSE")
+                else:
+                    self.assertNotIn(self.revision, [e["source_sha"] for e in production["acceptance"]])
+                self.assertEqual(self.git("tag"), "")
+
     def test_source_check_rejects_a_stale_main_baseline(self):
         changed = self.change()
         with self.assertRaisesRegex(ValueError, "current accepted"):

@@ -80,6 +80,15 @@ delta and pin a new `baseline`, recording its existing Decision URL in
 That starts a bounded audit, without pretending to prove earlier eligibility.
 It does not authorize same-version repairs of already accepted frozen content.
 
+The eligibility audit baseline does not reset version identity. Separately read
+the package and binding changes in canonical first-parent Git history up to that
+baseline, retaining each version's first source-main payload with its historical
+approved inventory. Earlier eligibility need not be replayed after explicit
+disposition, but older frozen versions cannot be reused with different bytes,
+even without a remote tag. Missing historical policy for package-bearing source
+remains pending; today's inventory is not a substitute. This uses bounded Git
+records, not a registry or ledger.
+
 ## Export adapters
 
 `shared-governance-v1` invokes the existing governance exporter from the **same
@@ -129,6 +138,11 @@ whether arbitrary legal text grants sufficient rights: owner review of the actua
 notices remains necessary. A publisher may verify readiness, never invent rights
 or add missing files after merge. Historic incomplete exports may be compared for
 a forward source repair, but cannot be silently published as ready releases.
+Production planning compares those historical exports without reapplying current
+readiness requirements; historical package transitions still need their appropriate
+owner/CI eligibility or explicit disposition. The exact current release and the
+source-time candidate check enforce full readiness. A version-bumped, eligible
+repair can therefore publish without trying to publish its incomplete predecessor.
 
 An accepted frozen `(group, name, version)` is immutable at its first main
 integration even if no remote tag exists. Add/delete/rename of approved files,
