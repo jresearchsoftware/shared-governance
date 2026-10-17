@@ -386,6 +386,7 @@ class TemporalTests(Fixture):
             result = self.plan(changed)["packages"][0]
         self.assertEqual(result["status"], "READY")
         self.assertEqual(result["acceptance"][0]["ci_workflow"], ".github/workflows/check.yml")
+        self.assertIn(rotation, [e["source_sha"] for e in result["acceptance"]])
 
     def test_new_integrator_cannot_self_authorize_policy_rotation(self):
         self.binding["authorized_integrators"] = ["new-owner"]

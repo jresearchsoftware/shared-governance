@@ -70,3 +70,26 @@ version. Preservation now targets the unchanged retained 2.7.0 protocol; the
 receipt is refreshed against the frozen accepted source/Step 4 authority.
 Instructions content and live client settings are unchanged. This is fixture and
 receipt maintenance, not activation of candidate policy or consumer adoption.
+
+Follow-up at `f18cf6a16fb6f6044d9439a829298c9a3c858f59` passed all 24 ChatGPT tests
+and confirmed `2.7.0 -> 3.0.0` with `Package bump: major`. Instructions stayed
+5,132 Unicode characters and effective content was `NO_OP`; live settings were
+not inspected or changed. The final focused implementation additionally requires
+historical policy for every adapter and records policy-rotation PR/CI evidence
+alongside package transitions. Its full pinned-native suite passes 44 tests,
+zero skips; final-head CI checks the complete combined candidate separately.
+
+The initial native authoring probe reported zero errors and three orphan-slot
+warnings for retained 2.5.0/2.6.0/2.7.0 slots. No clean-check claim is made for that
+inventory. A separate disposable clone performed deliberate fresh resolution of
+the task-generated 3.0.0 lock with the pinned native installer; ordinary install
+pruned the old slots there. With that native fixture inventory, the unmodified
+authoring qualifier passed seven commands, zero findings, dependency installation
+and overlay preservation. This did not delete any historical source/slot in the
+PR and does not waive canonical exporter/lock/slot/route checks. Native absolute
+URLs/timestamps remain location metadata, not acceptance evidence.
+
+No production publication mechanics changed. Fresh local native tests nevertheless
+also reran the six existing shared-publisher race/retry scenarios and all six
+retained release/dependency integrations after temporal planning changed. All
+distribution writes remained confined to disposable local bare repositories.

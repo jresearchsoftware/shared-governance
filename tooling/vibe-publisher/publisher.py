@@ -533,7 +533,8 @@ def plan(root, source_sha, main, binding, api, publisher_sha, binding_path=None,
                             snapshot(root, revision, package_binding(after_policy, package["coordinate"]))
                             if revision not in evidence_cache:
                                 evidence_cache[revision] = eligible(api, authority, revision, revision_parents)
-                            accepted.append(evidence_cache[revision])
+                    if candidate_base is None and (policy_changed or payload(prior) != payload(next_value)):
+                        accepted.append(evidence_cache[revision])
                     prior = next_value
                 result.update(status="CANDIDATE_VALID" if candidate_base is not None else "READY", version=current[1]["version"],
                               payload_sha256=current[1]["payload_sha256"], acceptance=accepted)
