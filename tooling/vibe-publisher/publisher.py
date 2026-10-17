@@ -464,13 +464,8 @@ def plan(root, source_sha, main, binding, api, publisher_sha, binding_path=None,
     def policy(revision):
         if revision not in policies:
             if binding_path is None:
-                # Governance export owns its historical inventory. Generic
-                # exports must supply the source-controlled binding path.
-                if any(p["adapter"] == "tree-v1" for p in binding["packages"]):
-                    raise AuthorizationError("HISTORICAL_BINDING_UNRESOLVED", "historical producer binding path is required")
-                policies[revision] = binding
-            else:
-                policies[revision] = revision_binding(root, revision, binding_path)
+                raise AuthorizationError("HISTORICAL_BINDING_UNRESOLVED", "historical producer binding path is required")
+            policies[revision] = revision_binding(root, revision, binding_path)
         return policies[revision]
     def export(revision, package):
         key = revision, package["coordinate"]

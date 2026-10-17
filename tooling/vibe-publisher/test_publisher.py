@@ -437,6 +437,16 @@ class TemporalTests(Fixture):
             P.plan(self.source, changed, "main", self.binding, self.api, CODE_SHA,
                    "binding.json", self.revision)
 
+    def test_missing_policy_history_cannot_fall_back_to_current_policy(self):
+        result = P.plan(self.source, self.revision, "main", self.binding, self.api, CODE_SHA)
+        self.assertEqual(result["packages"][0]["reason_code"], "HISTORICAL_BINDING_UNRESOLVED")
+        self.git("rm", "binding.json")
+        missing = self.commit()
+        self.save_binding()
+        changed = self.change()
+        self.api.revisions.extend([missing, changed])
+        self.assertEqual(self.plan(changed)["packages"][0]["reason_code"], "HISTORICAL_BINDING_UNRESOLVED")
+
 
 class SourceCliTests(Fixture):
     public_destinations = True
