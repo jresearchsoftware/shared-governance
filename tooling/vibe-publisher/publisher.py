@@ -458,8 +458,8 @@ def plan(root, source_sha, main, binding, api, publisher_sha, binding_path=None,
         raise AuthorizationError("SOURCE_NOT_ON_MAIN", "source is not on first-parent source main")
     if candidate_base is not None:
         exact(root, candidate_base)
-        if candidate_base not in chain:
-            raise ValueError("candidate base is not on first-parent source main")
+        if not chain or candidate_base != chain[0]:
+            raise ValueError("candidate base must be the current accepted source main")
     evidence_cache, snapshots, policies = {}, {}, {}
     def policy(revision):
         if revision not in policies:

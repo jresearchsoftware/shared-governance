@@ -297,7 +297,7 @@ class PlanningTests(Fixture):
 class TemporalTests(Fixture):
     def candidate(self, revision, base=None):
         with patch.object(self.api, "get", side_effect=AssertionError("source checks do not grant acceptance")):
-            return P.plan(self.source, revision, "main", self.binding, self.api, CODE_SHA,
+            return P.plan(self.source, revision, base or self.revision, self.binding, self.api, CODE_SHA,
                           "binding.json", base or self.revision)["packages"][0]
 
     def reset_fixture(self):
@@ -430,6 +430,12 @@ class TemporalTests(Fixture):
         self.change()
         revised = self.change(version="1.0.1")
         self.assertEqual(self.candidate(revised)["status"], "CANDIDATE_VALID")
+
+    def test_source_check_rejects_a_stale_main_baseline(self):
+        changed = self.change()
+        with self.assertRaisesRegex(ValueError, "current accepted"):
+            P.plan(self.source, changed, "main", self.binding, self.api, CODE_SHA,
+                   "binding.json", self.revision)
 
 
 class SourceCliTests(Fixture):
