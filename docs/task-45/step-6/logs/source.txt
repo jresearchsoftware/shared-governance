@@ -1,0 +1,3 @@
+Source: 8a2e62dc4b0d70e42de4f4344d28e27aedbab421
+Command: python3 scripts/qualify.py --export-ref HEAD
+{"qualification": "PASS", "tracked_files": 681, "local_links": 1080, "secret_scan": "bounded markers PASS", "active_protocol": "PASS", "native_projection_source": "8a2e62dc4b0d70e42de4f4344d28e27aedbab421", "native_skill": "absent", "flow_export": "PASS"}

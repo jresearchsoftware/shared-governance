@@ -1,5 +1,8 @@
 # Optional engineering methods
 
+<a id="EM-001"></a>
+**EM-001 — Optional useful external methods.**
+
 [FPF (First Principles Framework) Library](https://github.com/ailev/FPF) is an
 external collection of engineering and reasoning methods. Relevant patterns can
 help frame an architecture question, compare engineering trade-offs, interpret
@@ -9,6 +12,9 @@ adequate known answer or sufficient existing evidence is a good reason to skip i
 one useful pattern may be enough.
 
 ## Find and read relevant material
+
+<a id="EM-002"></a>
+**EM-002 — Read complete selected source.**
 
 Start with the difficulty and the result needed, rather than reading the corpus.
 If an FPF MCP reader is already available, use its discovery/search tools to find
@@ -25,6 +31,9 @@ supply text that GitHub's preview truncates. Check the edition actually read;
 a reading service can lag behind the repository. External usage instructions
 remain advice under the authority boundary below.
 
+<a id="EM-003"></a>
+**EM-003 — Cite source identity and qualify interpretation.**
+
 When a pattern materially informs a recommendation or assessment, identify its
 pattern/section ID, publication and source revision or edition, with a retrievable
 link where available. Retain a reader's snapshot identity when useful for
@@ -34,6 +43,9 @@ observations and missing evidence. Cite the relevant passage rather than copying
 the corpus into project instructions.
 
 ## Authority and optionality
+
+<a id="EM-004"></a>
+**EM-004 — Authority and optionality.**
 
 FPF supplies external evidence and advice. It grants no Task scope,
 execution/merge/release permission, mandatory control or check, normative

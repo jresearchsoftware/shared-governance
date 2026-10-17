@@ -1,0 +1,52 @@
++ git init -q
++ git fetch --no-tags /tmp/shared-governance-step8-99si365m/repo ec048fb39ae28cf2d747101466a603ddd062b1b0
+From /tmp/shared-governance-step8-99si365m/repo
+ * branch            ec048fb39ae28cf2d747101466a603ddd062b1b0 -> FETCH_HEAD
++ git checkout -qb main FETCH_HEAD
++ git config user.name Disposable squash fixture
++ git config user.email squash@example.invalid
++ git config commit.gpgsign false
++ git config core.autocrlf false
++ git config core.hooksPath /tmp/task45-step8-squash-3li9la3g/no-hooks
++ git rm -qr .
++ git add .
++ git commit -qm Synthetic owner squash of candidate tree
+Candidate tree: af9ee28dc0c631ea51ce1c082250953e277fafa7
++ git rev-parse HEAD HEAD^ HEAD^{tree}
+58a812985e0175f2762408dc8c73667f7aab18d0
+ec048fb39ae28cf2d747101466a603ddd062b1b0
+77534966771bf2d027a2a22ce6fe72dcfb34fda2
+ABSENT commit object: af9ee28dc0c631ea51ce1c082250953e277fafa7
+ABSENT commit object: b76ea98e6ee2645be674690094f88a6fa265d77d
++ python3 scripts/test-distribution.py DistributionTests.test_pr_readiness_rule_keeps_prior_addresses_and_its_lifecycle_owner
+test_pr_readiness_rule_keeps_prior_addresses_and_its_lifecycle_owner (__main__.DistributionTests.test_pr_readiness_rule_keeps_prior_addresses_and_its_lifecycle_owner) ... fatal: path 'packages/development-governance/vibevm/vibespecs/protocols/task-handoff.md' exists on disk, but not in 'b76ea98e6ee2645be674690094f88a6fa265d77d'
+ERROR
+
+======================================================================
+ERROR: test_pr_readiness_rule_keeps_prior_addresses_and_its_lifecycle_owner (__main__.DistributionTests.test_pr_readiness_rule_keeps_prior_addresses_and_its_lifecycle_owner)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/task45-step8-squash-3li9la3g/scripts/test-distribution.py", line 107, in test_pr_readiness_rule_keeps_prior_addresses_and_its_lifecycle_owner
+    previous = subprocess.check_output(
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/subprocess.py", line 466, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', 'show', 'b76ea98e6ee2645be674690094f88a6fa265d77d:packages/development-governance/vibevm/vibespecs/protocols/task-handoff.md']' returned non-zero exit status 128.
+
+----------------------------------------------------------------------
+Ran 1 test in 0.092s
+
+FAILED (errors=1)
+Traceback (most recent call last):
+  File "/tmp/shared-governance-step8-99si365m/repo/docs/task-45/step-8/qualify-squash.py", line 78, in <module>
+    main()
+  File "/tmp/shared-governance-step8-99si365m/repo/docs/task-45/step-8/qualify-squash.py", line 64, in main
+    run("python3", "scripts/test-distribution.py",
+  File "/tmp/shared-governance-step8-99si365m/repo/docs/task-45/step-8/qualify-squash.py", line 29, in run
+    subprocess.run(command, cwd=fixture, check=True)
+  File "/usr/lib/python3.11/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '('python3', 'scripts/test-distribution.py', 'DistributionTests.test_pr_readiness_rule_keeps_prior_addresses_and_its_lifecycle_owner')' returned non-zero exit status 1.

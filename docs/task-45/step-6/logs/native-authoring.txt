@@ -1,0 +1,81 @@
+vibe 1.0.7
+{
+  "chain": [
+    "validate"
+  ],
+  "command": "lifecycle:plan",
+  "contributions": [],
+  "notices": [],
+  "requested": "validate"
+}
+{
+  "chain": [
+    "validate"
+  ],
+  "command": "lifecycle",
+  "contributions": [],
+  "notices": [],
+  "ok": true,
+  "requested": "validate",
+  "steps": [
+    {
+      "phase": "validate",
+      "status": "ok"
+    }
+  ]
+}
+{
+  "ok": true,
+  "command": "check",
+  "project": "/tmp/shared-governance-vibe-d9lisq26/workspace",
+  "summary": {
+    "error": 0,
+    "warning": 0,
+    "info": 0
+  },
+  "findings": []
+}
+{
+  "ok": true,
+  "command": "check",
+  "project": "/tmp/shared-governance-vibe-d9lisq26/workspace/packages/development-governance",
+  "summary": {
+    "error": 0,
+    "warning": 0,
+    "info": 0
+  },
+  "findings": []
+}
+{
+  "ok": true,
+  "command": "skill:list",
+  "project": "/tmp/shared-governance-vibe-d9lisq26/workspace/packages/development-governance",
+  "count": 0,
+  "skills": []
+}
+{
+  "ok": true,
+  "command": "check",
+  "project": "/tmp/shared-governance-vibe-d9lisq26/workspace",
+  "summary": {
+    "error": 0,
+    "warning": 0,
+    "info": 0
+  },
+  "findings": []
+}
+{
+  "command": "install",
+  "complete": true,
+  "materialised": [],
+  "nodes_regenerated": [
+    ".",
+    "packages/development-governance"
+  ],
+  "ok": true,
+  "project": "/tmp/shared-governance-vibe-d9lisq26/workspace",
+  "pruned": [],
+  "skipped": [],
+  "unchanged": true
+}
+{"vibevm_qualification": "PASS", "version": "1.0.7", "commands": 7, "native_skills": "none declared/projected", "dependency_install": "PASS", "fixture": "disposable local paths; no package publication or consumer writes"}

@@ -26,23 +26,22 @@ specialist review methods remain separately owned.
 Contract and decision maintenance is a separate opt-in lifecycle topic for material
 supported-contract changes, accepted reusable decisions and same-change human
 guidance. Existing authority/control/handoff/review procedures remain with their
-owners; the seven earlier protocols are unchanged. This producer's existing
-conditional adoption set remains unchanged. See the bounded
+owners. Task 35 originally preserved seven earlier protocols and the adoption
+set; subsequent version changes are recorded in the installed changelog. See the bounded
 [Task 35 coverage and scenarios](task-35/step-1/README.md).
 
 Context loading and JIT discipline is a separately adopted conditional topic for
 decision-relevant startup, triggered canonical detail and selective freshness.
 It preserves the completeness duties of existing semantic owners and adds no
-runtime retrieval, context ledger or client boot command. All eight earlier
-protocols, ChatGPT maintenance tools and this producer's existing topic adoptions
-remain unchanged. See the bounded
+runtime retrieval, context ledger or client boot command. Task 37 originally
+preserved eight earlier protocols, client tools and topic adoptions. See the bounded
 [Task 37 coverage and scenarios](task-37/step-1/README.md).
 
 [Release policy](releases.md) separates this producer's cadence from reusable
 policy and documents automatic publication, exact-source retry and credentials.
 [Distribution](distribution.md) describes the generated source receipt and
 one-time integration tests. The authoring boot is outside the exported package.
-The four existing topics and explicitly adopted producer self-adoption are read
+The five explicitly adopted topics and producer self-adoption are read
 from a frozen independently accepted source-main commit as described in
 [self-adoption](self-adoption.md). Native generated source/slot/boot files are
 committed alongside authoring; candidate instructions remain proposal data.
@@ -56,7 +55,45 @@ payload; producer-only entry pages link to that single copy. See
 The optional engineering-methods guide in the same directory exposes FPF as
 external advice only; its conditional boot pointer adds no topic or prerequisite.
 
+## Frozen-package preparation and 3.0.0
+
+For adopted package lifecycle work, complete the public `LICENSE`, applicable
+manifest/license metadata, approved redistribution rights, intended export file
+set and source checks before accepting frozen source into main. This repository
+already carries its accepted MIT notices. Legal uncertainty needs its owner's
+decision; neither an exporter nor transport can grant rights or repair accepted
+bytes in place. First accepted source freezes the identity even without a remote
+tag. Candidate branches may refine a new version before acceptance; later accepted
+content repairs require a new version.
+
+Task 45 retains the same unaccepted 3.0.0 MAJOR candidate for material preparation
+obligations, the review-method ownership split and executor Draft/Ready handoff.
+[TH-028](../packages/development-governance/vibevm/vibespecs/protocols/task-handoff.md#TH-028)
+adds mandatory supported PR state operations to Task Handoff; local capability
+and automation ownership stay project-owned. See the
+[Step 7 coverage and walks](task-45/step-7/scenarios.md). All nine protocols have stable
+rule anchors; the six outside package-versioning/Task Handoff/Independent Review
+retain their normative meaning. Shared ChatGPT tool bytes remain unchanged.
+The installed [changelog](../packages/development-governance/CHANGELOG.md) owns
+version history and material 2.7.0 section-to-rule migration mappings; README is
+the current overview. Export includes changelog and addresses in the actual
+native source/slot/receipt/lock/routes. Retained 2.7.0 source and slots are untouched.
+Root AGENTS explicitly adopts full Independent Review for this producer's relevant
+assessments; other consumers own their separate topic choices and migration.
+
 ## Semantic completeness
+
+Task Handoff owns Task/Step, canonical Outcome, independent-review handoff,
+Direct/Deliberative, publication/actor and continuation boundaries. Independent
+Review owns primary evidence, complete affected behavior, finding severity/origin,
+owner-facing report content, coupled paths and rereview. Task-Handoff-only
+consumers retain independent assessment under their local rules; a reference does
+not adopt the optional method. This deliberate contract change is MAJOR and needs
+consumer-owned migration. Common report content adds no publication wait.
+The ChatGPT-specific publication instruction is confined to local custom Markdown;
+regenerate complete Instructions with the existing projector. Desired text still
+needs manual owner application and live readback. See
+[Step 6 semantic coverage and scenarios](task-45/step-6/coverage.md).
 
 [Task 15](https://github.com/jresearchsoftware/shared-governance/issues/15)
 establishes the accepted invariant for future governance extraction, package
