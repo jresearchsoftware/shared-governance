@@ -1,0 +1,7 @@
+Source: 8a2e62dc4b0d70e42de4f4344d28e27aedbab421
+Command: python3 tooling/vibe-publisher/test_publisher.py
+.....ssssss.......................................
+----------------------------------------------------------------------
+Ran 50 tests in 4.037s
+
+OK (skipped=6)

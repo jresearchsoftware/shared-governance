@@ -1,0 +1,26 @@
+Original publisher: 6c8df4197a2b6980a0d314cc0cba236d57c7b5b9
+test_incomplete_historical_package_factual_noop_and_source_time_readiness (test_publisher.TemporalTests.test_incomplete_historical_package_factual_noop_and_source_time_readiness) ... FAIL
+test_changed_incomplete_release_never_uses_the_noop_exemption (test_publisher.TemporalTests.test_changed_incomplete_release_never_uses_the_noop_exemption) ... ok
+test_candidate_valid_is_bounded_and_production_retains_inherited_acceptance_gate (test_publisher.TemporalTests.test_candidate_valid_is_bounded_and_production_retains_inherited_acceptance_gate) ... ok
+
+======================================================================
+FAIL: test_incomplete_historical_package_factual_noop_and_source_time_readiness (test_publisher.TemporalTests.test_incomplete_historical_package_factual_noop_and_source_time_readiness)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/shared-governance-step6.q7KkYR/qualified/tooling/vibe-publisher/test_publisher.py", line 312, in test_incomplete_historical_package_factual_noop_and_source_time_readiness
+    self.assertEqual([p["status"] for p in decisions],
+AssertionError: Lists differ: ['AUTHORIZATION_PENDING', 'NO_PACKAGE_CHANGE'] != ['NO_PACKAGE_CHANGE', 'NO_PACKAGE_CHANGE']
+
+First differing element 0:
+'AUTHORIZATION_PENDING'
+'NO_PACKAGE_CHANGE'
+
+- ['AUTHORIZATION_PENDING', 'NO_PACKAGE_CHANGE']
++ ['NO_PACKAGE_CHANGE', 'NO_PACKAGE_CHANGE']
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.358s
+
+FAILED (failures=1)
+
+Expected N1 regression reproduced; unchanged readiness negative and bounded N2 contract pass.
