@@ -104,13 +104,15 @@ class DistributionTests(unittest.TestCase):
 
     def test_pr_readiness_rule_keeps_prior_addresses_and_its_lifecycle_owner(self):
         files = self.current_export()
-        previous = subprocess.check_output(
-            ["git", "show", "b76ea98e6ee2645be674690094f88a6fa265d77d:"
-             + DISTRIBUTION.PACKAGE + "/" + DISTRIBUTION.HANDOFF], cwd=REPOSITORY)
+        # The prior candidate commit need not survive squash integration. Keep
+        # its structural contract in-tree instead of looking up a PR-only object.
+        previous = json.loads((REPOSITORY / "scripts/fixtures/task-handoff-before-th-028.json")
+                              .read_text(encoding="utf-8"))
         anchors = lambda value: set(re.findall(rb'<a id="(TH-[0-9]{3})"></a>', value))
-        self.assertEqual(anchors(files[DISTRIBUTION.HANDOFF]), anchors(previous) | {b"TH-028"})
-        for heading in re.findall(rb"^#{1,6} .+$", previous, re.M):
-            self.assertIn(heading, files[DISTRIBUTION.HANDOFF])
+        self.assertEqual(anchors(files[DISTRIBUTION.HANDOFF]),
+                         {value.encode() for value in previous["anchors"]} | {b"TH-028"})
+        for heading in previous["headings"]:
+            self.assertIn(heading.encode(), files[DISTRIBUTION.HANDOFF])
         owners = [name for name, content in files.items() if b'<a id="TH-028"></a>' in content]
         self.assertEqual(owners, [DISTRIBUTION.HANDOFF])
         self.assertIn(b"#TH-028", files[DISTRIBUTION.CHANGELOG])

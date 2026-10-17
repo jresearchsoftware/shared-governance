@@ -1,0 +1,19 @@
+{
+  "provenance": "Structural snapshot of Task 45 Step 6 candidate b76ea98e6ee2645be674690094f88a6fa265d77d, packages/development-governance/vibevm/vibespecs/protocols/task-handoff.md. Descriptive provenance only; no runtime Git lookup or acceptance claim.",
+  "anchors": [
+    "TH-001", "TH-002", "TH-003", "TH-004", "TH-005", "TH-006", "TH-007",
+    "TH-008", "TH-009", "TH-010", "TH-011", "TH-012", "TH-013", "TH-014",
+    "TH-015", "TH-016", "TH-017", "TH-018", "TH-019", "TH-020", "TH-021",
+    "TH-022", "TH-023", "TH-024", "TH-025", "TH-026", "TH-027"
+  ],
+  "headings": [
+    "# Task handoff and continuation",
+    "## Stable charter and chronological authority",
+    "## Step as an authorized execution cycle",
+    "## Startable handoff and bounded execution",
+    "## Canonical Outcome publication target",
+    "## Exact result and independent assessment",
+    "## Result acceptance strategies",
+    "## Authorized continuation and completion"
+  ]
+}
