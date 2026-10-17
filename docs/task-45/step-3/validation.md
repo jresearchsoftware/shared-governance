@@ -29,7 +29,7 @@ Executed locally from the Step 3 candidate before commit:
 
 | Check | Result |
 | --- | --- |
-| `python tooling/vibe-publisher/test_publisher.py` | 31 passed, 6 optional pinned-native tests skipped because no `--vibe` binary was supplied. |
+| `python tooling/vibe-publisher/test_publisher.py` | 31 tests total: 25 passed and 6 optional pinned-native tests skipped because no `--vibe` binary was supplied. |
 | `python -m py_compile tooling/vibe-publisher/publisher.py tooling/vibe-publisher/test_publisher.py` | Passed. |
 | Parse `.github/workflows/vibe-publisher.yml` with PyYAML | Passed. |
 | `git diff --check` | Passed. |
