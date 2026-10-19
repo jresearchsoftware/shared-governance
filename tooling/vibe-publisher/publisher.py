@@ -108,6 +108,7 @@ class AuthorizationError(ValueError):
 
 
 AUTHORIZATION_MESSAGES.update({
+    "INITIAL_PUBLICATION_UNRESOLVED": "Initial publication requires the exact accepted onboarding commit, frozen source/version/digest and explicit owner baseline disposition; retry those same pins.",
     "HISTORICAL_BINDING_UNRESOLVED": "Historical export or acceptance policy is unavailable or incompatible; obtain explicit owner disposition of the affected baseline before publication.",
     "POLICY_PIN_MISMATCH": "The source-time binding differs from the independently accepted policy pin; reconcile the exact producer pins before publication.",
     "PUBLIC_EXPORT_INCOMPLETE": "Approved public package files or license are missing or invalid; prepare a new version before source acceptance.",
@@ -355,7 +356,7 @@ def verify_trigger(api, binding, source_sha):
         raise AuthorizationError("TRIGGER_RUN_MISMATCH", "automatic trigger is not the bound successful exact-source push run")
 
 
-def eligible(api, binding, revision, parents):
+def owner_integration(api, binding, revision, parents):
     """Owner integration attests review; it does not prove independent review identity."""
     repository = api.get("")
     if (repository["id"], repository["full_name"]) != (binding["repository_id"], binding["repository"]):
@@ -374,6 +375,14 @@ def eligible(api, binding, revision, parents):
             matches.append(pr)
     if len(matches) != 1:
         raise AuthorizationError("OWNER_ACCEPTANCE_NOT_ESTABLISHED", "no unambiguous authorized owner squash integration")
+    pr = matches[0]
+    return {"pr": pr["html_url"], "reviewed_head": pr["head"]["sha"],
+            "integrator": pr["merged_by"]["login"], "source_sha": revision,
+            "attestation": binding["acceptance"]}
+
+
+def eligible(api, binding, revision, parents):
+    acceptance = owner_integration(api, binding, revision, parents)
     # Run records retain the workflow path used at this source revision, even
     # after a workflow is renamed/deleted. Never resolve yesterday via today's
     # workflow-name endpoint.
@@ -381,10 +390,7 @@ def eligible(api, binding, revision, parents):
     runs = [run for run in runs if valid_ci(run, binding, revision)]
     if not runs:
         raise AuthorizationError("MATCHING_SOURCE_CI_MISSING", "no successful matching source-main push CI")
-    pr = matches[0]
-    return {"pr": pr["html_url"], "reviewed_head": pr["head"]["sha"],
-            "integrator": pr["merged_by"]["login"], "ci_run": runs[0]["html_url"],
-            "source_sha": revision, "attestation": binding["acceptance"],
+    return {**acceptance, "ci_run": runs[0]["html_url"],
             "ci_workflow": binding["ci_workflow"], "ci_workflow_id": runs[0]["workflow_id"]}
 
 
@@ -447,6 +453,86 @@ def payload(snapshot_value):
     # Source SHA changes alone are not releases; deliberate disclosure changes
     # are versioned export content. The governance adapter keeps its own schema.
     return receipt["payload_sha256"], receipt.get("disclosure")
+
+
+def initial_plan(root, initiation_sha, main, binding, api, publisher_sha, binding_path, candidate_base=None):
+    """Explicit first publication; current readiness never impersonates historic CI."""
+    exact(root, initiation_sha)
+    if not SHA.fullmatch(publisher_sha):
+        raise ValueError("a full called-workflow publisher SHA is required")
+    chain = git(root, "rev-list", "--first-parent", main).decode().splitlines()
+    if candidate_base is not None:
+        if not chain or candidate_base != chain[0]:
+            raise ValueError("candidate base must be the current accepted source main")
+        chain = [initiation_sha] + chain
+    results = []
+    for package in binding["packages"]:
+        result = {"package": package["coordinate"], "source_sha": initiation_sha,
+                  "initiation_sha": initiation_sha, "publisher_sha": publisher_sha,
+                  "destination": package["destination"], "operation": "initial-publication"}
+        try:
+            if initiation_sha not in chain:
+                raise AuthorizationError("SOURCE_NOT_ON_MAIN", "initiation is not on first-parent main")
+            if revision_binding(root, initiation_sha, binding_path) != binding:
+                raise AuthorizationError("POLICY_PIN_MISMATCH", "initial publication requires the exact accepted binding")
+            initial = package.get("initial_publication", {})
+            frozen_sha = initial.get("source_sha", "")
+            if (package["adapter"] != "tree-v1" or not SHA.fullmatch(frozen_sha)
+                    or not VERSION.fullmatch(initial.get("version", ""))
+                    or not re.fullmatch(r"[0-9a-f]{64}", initial.get("payload_sha256", ""))
+                    or not package.get("baseline_disposition", "").startswith("https://")):
+                raise AuthorizationError("INITIAL_PUBLICATION_UNRESOLVED", "explicit frozen source, version, digest and owner disposition are required")
+            if frozen_sha not in chain or chain.index(frozen_sha) <= chain.index(initiation_sha):
+                raise AuthorizationError("PACKAGE_BASELINE_UNRESOLVED", "frozen source must precede initiation on first-parent main")
+            parents = git(root, "show", "-s", "--format=%P", initiation_sha).decode().split()
+            authority = binding
+            # Only the accepted integration introducing this record is an initiation.
+            # An unchanged declaration on a later factual commit cannot initiate.
+            if git(root, "ls-tree", parents[0], "--", binding_path):
+                before = revision_binding(root, parents[0], binding_path)
+                prior = package_binding(before, package["coordinate"])
+                if prior.get("initial_publication") == initial:
+                    raise AuthorizationError("INITIAL_PUBLICATION_UNRESOLVED", "retry the original initiation, not a later commit")
+                if any(before[k] != binding[k] for k in ("repository", "repository_id", "branch", "acceptance")):
+                    raise AuthorizationError("HISTORICAL_BINDING_UNRESOLVED", "source identity policy changes require owner disposition")
+                authority = dict(binding, authorized_integrators=before["authorized_integrators"])
+            readiness = eligible(api, authority, initiation_sha, parents) if candidate_base is None else None
+            source_parents = git(root, "show", "-s", "--format=%P", frozen_sha).decode().split()
+            source_acceptance = (owner_integration(api, binding, frozen_sha, source_parents)
+                                 if candidate_base is None else None)
+            frozen = snapshot(root, frozen_sha, package)
+            current = snapshot(root, initiation_sha, package)
+            if (frozen is None or current is None or frozen[1]["version"] != initial["version"]
+                    or frozen[1]["payload_sha256"] != initial["payload_sha256"]
+                    or payload(frozen) != payload(current)):
+                raise AuthorizationError("PACKAGE_VERSION_REUSE", "initial publication must retain the attested frozen payload")
+            # The explicitly approved inventory is used to compare source-only
+            # history, never asserted to be a historical publisher policy.
+            # Check the first accepted identity, not just today's remote tag.
+            history = list(reversed(chain[chain.index(initiation_sha):]))
+            first = None
+            for revision in history:
+                if (chain.index(revision) >= chain.index(frozen_sha)
+                        and git(root, "ls-tree", revision, "--", binding_path)):
+                    raise AuthorizationError("HISTORICAL_BINDING_UNRESOLVED", "initial publication does not override an existing historical publisher policy")
+                value = snapshot(root, revision, package, require_ready=False)
+                if value is not None and value[1]["version"] == initial["version"]:
+                    first = first or revision
+                    if payload(value) != payload(frozen):
+                        raise AuthorizationError("PACKAGE_VERSION_REUSE", "accepted frozen identity changed in source history")
+            if first != frozen_sha:
+                raise AuthorizationError("PACKAGE_VERSION_REUSE", "attestation must name the first source-main integration of this version")
+            result.update(status="CANDIDATE_VALID" if candidate_base is not None else "READY",
+                          source_sha=frozen_sha, version=initial["version"],
+                          payload_sha256=initial["payload_sha256"],
+                          baseline_disposition=package["baseline_disposition"],
+                          source_acceptance=source_acceptance, readiness_acceptance=readiness)
+        except (ValueError, KeyError, TypeError) as error:
+            result.update(status="AUTHORIZATION_PENDING", reason=str(error),
+                          reason_code=error.code if isinstance(error, AuthorizationError) else "INITIAL_PUBLICATION_UNRESOLVED")
+        results.append(result)
+    return {"source_sha": initiation_sha, "publisher_sha": publisher_sha,
+            "operation": "initial-publication", "packages": results}
 
 
 def plan(root, source_sha, main, binding, api, publisher_sha, binding_path=None, candidate_base=None):
@@ -691,6 +777,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("operation", choices=("check", "plan", "stage", "finalize", "summary"))
     parser.add_argument("--base", help="Exact accepted main for source-time candidate checks")
+    parser.add_argument("--initial-publication", action="store_true",
+                        help="Explicitly initiate the frozen version attested in the accepted onboarding binding")
     parser.add_argument("--source", type=Path)
     parser.add_argument("--source-sha")
     parser.add_argument("--main", default="origin/main")
@@ -727,8 +815,14 @@ def main():
             verify_trigger(api, binding, args.source_sha)
         elif not args.base:
             raise ValueError("candidate check requires an exact accepted base")
-        report = plan(args.source, args.source_sha, args.main, binding, api, args.publisher_sha,
-                      args.binding, args.base if args.operation == "check" else None)
+        if args.initial_publication:
+            if args.source_sha != args.policy_sha:
+                raise ValueError("initial publication requires the exact initiation/policy SHA")
+            report = initial_plan(args.source, args.source_sha, args.main, binding, api,
+                                  args.publisher_sha, args.binding, args.base if args.operation == "check" else None)
+        else:
+            report = plan(args.source, args.source_sha, args.main, binding, api, args.publisher_sha,
+                          args.binding, args.base if args.operation == "check" else None)
         if args.operation == "stage":
             report = stage_all(args.source, binding, report, args.vibe, args.directory, args.package)
         elif args.package:

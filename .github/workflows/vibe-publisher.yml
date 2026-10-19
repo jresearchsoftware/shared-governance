@@ -23,6 +23,10 @@ on:
         description: One coordinate / destination per named-secret call
         type: string
         default: ''
+      initial_publication:
+        description: Explicit bounded first publication from the accepted onboarding binding
+        type: boolean
+        default: false
     secrets:
       publish_token:
         description: Contents-write credential for this one destination only
@@ -43,6 +47,7 @@ jobs:
       BINDING: ${{ inputs.binding }}
       PACKAGE: ${{ inputs.package }}
       MODE: ${{ inputs.mode }}
+      INITIAL_PUBLICATION: ${{ inputs.initial_publication }}
     steps:
       - name: Check immutable execution inputs
         id: inputs
@@ -117,7 +122,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          initial_args=()
+          if [[ "$INITIAL_PUBLICATION" == true ]]; then initial_args+=(--initial-publication); fi
           python3 publisher/tooling/vibe-publisher/publisher.py plan \
+            "${initial_args[@]}" \
             --source producer --source-sha "$SOURCE_SHA" \
             --policy policy --policy-sha "$POLICY_SHA" --binding "$BINDING" \
             --publisher-sha "$PUBLISHER_SHA" --package "$PACKAGE" --report "$RUNNER_TEMP/publication.json"
@@ -145,7 +153,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          initial_args=()
+          if [[ "$INITIAL_PUBLICATION" == true ]]; then initial_args+=(--initial-publication); fi
           python3 publisher/tooling/vibe-publisher/publisher.py stage \
+            "${initial_args[@]}" \
             --source producer --source-sha "$SOURCE_SHA" \
             --policy policy --policy-sha "$POLICY_SHA" --binding "$BINDING" \
             --publisher-sha "$PUBLISHER_SHA" --package "$PACKAGE" \
