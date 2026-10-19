@@ -878,6 +878,26 @@ class InitialPublicationTests(Fixture):
             P.initial_plan(self.source, self.initiation, "accepted", self.binding,
                            self.api, CODE_SHA, "binding.json", self.old)
 
+    def test_initial_candidate_cli_requires_the_same_source_and_policy_pin(self):
+        for i, package in enumerate(self.packages):
+            package["destination"] = "https://github.com/fixture/distribution-" + str(i) + ".git"
+        self.amend_binding()
+        self.git("branch", "accepted", self.frozen)
+        code_sha = P.git(P.ROOT, "rev-parse", "HEAD").decode().strip()
+        report = self.directory / "candidate.json"
+        command = [sys.executable, str(Path(P.__file__)), "check", "--initial-publication",
+            "--source", str(self.source), "--source-sha", self.initiation, "--main", "accepted",
+            "--base", self.frozen, "--policy", str(self.source), "--policy-sha", self.initiation,
+            "--binding", "binding.json", "--publisher-sha", code_sha, "--report", str(report)]
+        result = subprocess.run(command, env=dict(self.env, GH_TOKEN="", GITHUB_EVENT_NAME="pull_request"),
+                                capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual([p["status"] for p in json.loads(report.read_text())["packages"]],
+                         ["CANDIDATE_VALID"] * 2)
+        command[command.index("--policy-sha") + 1] = self.frozen
+        result = subprocess.run(command, env=self.env, capture_output=True, text=True)
+        self.assertNotEqual(result.returncode, 0)
+
     def test_missing_failed_or_wrong_current_ci_stops(self):
         for field, value in (("conclusion", "failure"), ("head_sha", self.frozen),
                              ("event", "pull_request"), ("path", ".github/workflows/other.yml")):
