@@ -54,7 +54,7 @@ VibeVM 1.0.7 musl SHA-256:
 All distribution writes used fixture-owned **local bare repositories**.
 Primary logs below qualify runtime implementation revision
 `297aa42dac4f9cdc70ebf81e3416a8cf2f0d70b7`; later candidate refinements add CLI
-coverage and evidence only. Final-head GitHub CI is bound by the canonical Outcome.
+coverage and evidence only. At `37174f9fea744b8cfecae8643f68bdeb8238edfa`, the [final native rerun](publisher-final.log) passes all **64 publisher tests, zero skips**, including the added actual CLI check; exact-commit source qualification passes (720 tracked files, 1,137 local links). Final-head GitHub CI is bound by the canonical Outcome.
 
 | Command | Result | Primary log |
 | --- | --- | --- |
