@@ -275,3 +275,111 @@ remains in service; this PR prepares 3.0.0 without cutting over to the shared to
 Keep existing entrypoints until that replacement is qualified. Landscape #3/#4
 content tasks and consumer adoption keep their separate authority. Roll back an
 integration through ordinary Git; never move/delete a frozen release to recover.
+
+## Explicit first publication of pre-onboarding source
+
+Task [49](https://github.com/jresearchsoftware/shared-governance/issues/49)
+adds an opt-in operation for a proven gap: `baseline_disposition` alone cannot
+publish a frozen source snapshot that predates its first publisher binding.
+Ordinary `plan`, `check` and release selection retain their existing behavior.
+No passive package protocol or production producer is changed.
+
+For **tree-v1, stable-root, previously unbound source only**, the independently
+accepted onboarding binding may add these per-package fields:
+
+```json
+{
+  "baseline_disposition": "https://github.com/OWNER/PRODUCER/issues/N#issuecomment-ID",
+  "initial_publication": {
+    "source_sha": "FULL_FIRST_ACCEPTED_VERSION_SHA",
+    "version": "1.0.1",
+    "payload_sha256": "64_LOWERCASE_HEX_DIGITS_FROM_APPROVED_EXPORT"
+  }
+}
+```
+
+These fields augment the ordinary package binding: coordinate, stable root,
+`baseline`, approved `files`, redistribution rights, disclosure and one destination
+remain required. The separately reviewed disposition explicitly attests the named
+already accepted source, immutable version and approved export digest, and admits
+first publication without claiming historical push CI. A URL alone is not owner
+proof: as with ordinary baseline disposition, authority comes from independent
+acceptance of this exact binding and caller pin. The publisher does not parse
+Decision prose or infer permission from an arbitrary linked comment.
+
+1. In the producer's separately authorized onboarding PR, approve the complete
+   public inventory and actual notices/rights, choose `opaque` or `public-source`
+   separately, and bind one destination per coordinate. Compute the digest with
+   `snapshot(producer, FROZEN_SHA, package_binding)[1]['payload_sha256']` from the
+   pinned publisher. Do not edit the frozen package to create this binding.
+2. Qualify that candidate with ordinary CLI arguments plus
+   `check --initial-publication --base EXACT_ACCEPTED_MAIN`. For this operation
+   `source_sha` and `policy_sha` both name the candidate onboarding commit.
+   It checks readiness, exact frozen bytes and source identity history offline;
+   `CANDIDATE_VALID` cannot stage or publish, and does not assert acceptance/CI.
+   The producer also runs its own package/source tests on these same bytes.
+3. Independently review and owner-squash the onboarding PR, including the explicit
+   initial-release disposition, caller and CI. Obtain successful matching **push**
+   CI at that exact integration. The caller pins that integration as **both**
+   `source_sha` and `policy_sha`; the historical payload SHA stays inside the
+   per-package `initial_publication` record. Pin shared code separately by its
+   accepted full SHA. A candidate head or a green arbitrary direct-main commit
+   cannot substitute for accepted onboarding.
+4. Explicitly invoke `plan --initial-publication`, then
+   `stage --initial-publication` with those identical arguments and pins, and
+   ordinary `finalize`. In the reusable workflow set `initial_publication: true`
+   for this bounded call; leave its default `false` for ordinary releases. Use
+   `mode: plan` for a read-only plan, `mode: publish` for authorized publication.
+   One call receives only the named credential for that coordinate's destination.
+
+The operation requires the source commit to precede onboarding on first-parent
+main and to be the **first main integration** of the attested version under the
+approved stable-root inventory. Both its authorized owner squash and the
+onboarding owner squash are verified. Source acceptance uses the integrators
+explicitly endorsed by the onboarding binding; this is a new attestation of the
+old source, not reconstructed historical policy. If a binding already precedes
+onboarding, its integrators authorize the rotation; new integrators cannot
+self-authorize. Readiness CI belongs exclusively to onboarding. No historical
+CI is fabricated, rerun or reported as successful.
+
+Current and frozen exports must match, including disclosure choice, and all
+observed occurrences of that version through onboarding must retain the same
+exported bytes. Missing files/license, unresolved rights/dependencies, altered
+same-version payload, wrong source/version/digest, missing owner squash or wrong
+CI stays pending. Preexisting historical publisher policy is deliberately
+unsupported by this narrow operation and returns `HISTORICAL_BINDING_UNRESOLVED`;
+it is never overridden with today's inventory. The current approved allowlist
+compares **previously unbound source**; it is not called historical export policy.
+Older versions are not staged or licensed by this operation.
+
+Only the accepted integration **introducing** the initial-publication declaration
+is an initiation. A later commit retaining it cannot reinitiate, even with the
+flag. Ordinary factual commits keep `NO_PACKAGE_CHANGE`. Reports distinguish
+`initiation_sha` / top-level `source_sha` (onboarding) from per-package `source_sha`
+(frozen payload), `source_acceptance` (without CI) and `readiness_acceptance`
+(with onboarding CI). Private reports stay in runner temporary storage; choosing
+`opaque` keeps source paths/SHAs out of distribution receipts.
+
+Existing-tag bypass, pinned native staging, atomic non-force push and exact-tag
+readback are shared with ordinary publication. Partial success has separate
+per-package results: retain A, retry B using the **same onboarding/policy/code and
+frozen payload pins**. An existing tag is retained, never overwritten, and does
+not prove the retry's source was originally published. There is no new ledger,
+credential type, cross-distribution transaction or production activation.
+
+Ordinary subsequent releases still use the full historical policy, frozen-version
+and exact-source owner/CI audit. This first-publication operation neither waives
+that audit nor claims to reconstruct missing old bindings. A producer with
+pre-binding history may still receive `HISTORICAL_BINDING_UNRESOLVED` for a later
+ordinary package change; that migration needs separately qualified historical
+policy/disposition. Do not claim complete subsequent-release onboarding from a
+successful initial release. Unrelated ordinary commits remain no-ops.
+
+Shared Governance owns this reusable operation and its disposable qualification.
+Landscape separately owns any actual binding/caller, source checks, review and
+initial-publication Decision, rights/inventory/disclosure choice, destinations
+and visibility, credentials and activation. Its intended versions remain exactly
+`org.jresearch.ai/landscape-subagents@1.0.1` and
+`org.jresearch.ai/landscape-model-guidance@1.0.1` at accepted source
+`638fbd7ca3c4ef778c9a371c9e6f5b9433c780cd`. Nothing here publishes their 1.0.0
+predecessors, changes 1.0.1, or authorizes consumer adoption.
