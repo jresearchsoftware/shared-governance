@@ -46,9 +46,10 @@ receipt equality. Native mode stages/publishes only to disposable local bare Git
 with failed-push/same-source retry and immutable existing collision. GitHub
 evidence in local fixtures is synthetic, not live-release evidence.
 
-The unprivileged PR workflow calls the exact accepted reusable pin in fixture
-mode with public sentinel, checks the candidate's real embedded binding/no-op
-against accepted main, and probes read-only real GitHub push CI. Common publisher
+The unprivileged PR workflow checks out the exact accepted implementation pin,
+checks the candidate's real embedded binding/no-op against accepted main, runs
+its unchanged publisher regressions and probes read-only real GitHub push CI.
+Common publisher
 tests cover trigger mismatch, native atomic concurrent writers, secret stripping
 and included dependency interactions. Existing release tests retain category,
 arithmetic and pre-merge remote-tag rejection. Results are recorded below and
@@ -67,3 +68,45 @@ Fixtures do not qualify live publication or independent native reviewer identity
 Retained local publication code serves historical fixtures/original-run recovery;
 the candidate's active workflow does not call it. Cutover and ordinary reviewed
 rollback/recovery are documented in the producer release policy.
+
+### Executed results
+
+Debian WSL / Python 3.11.2, disposable native clone. VibeVM 1.0.7 musl digest
+reverified as `20d111df02eb28040ef4cb766bfcb0bde8ff4427b031f88f33eacb3711c3e240`.
+
+| Check | Result / primary log |
+| --- | --- |
+| Producer exact-source/native migration | 11 passed, zero skips; [log](logs/producer.log). |
+| Accepted shared publisher/native | 74 passed, zero skips; [log](logs/publisher.log). |
+| Retained producer release/dependency/native | 17 passed, zero skips; [log](logs/release.log). |
+| Distribution | 47 passed; [log](logs/distribution.log). |
+| Accepted-guidance/self-adoption | 13 passed; [log](logs/self-adoption.log). |
+| Source/exact export | PASS; [log](logs/source.log). Final-head Actions requalify documentation/evidence additions. |
+| Tooling-only transition | Package unchanged at 3.0.0; [log](logs/transition.log). |
+
+The 74/17/47/13 checks ran at `c9cc5c80f26a07a14c9ead88546430cbdcb12f52`;
+their implementation/test/package bytes are unchanged afterward. The 11 producer
+checks and source/transition logs ran at
+`cd03595133552eaf0401bb36c471b228858ded54` (full SHA verified in Outcome).
+The final-head workflow checks will be linked in the canonical Outcome; those
+readbacks, rather than this document, bind the terminal candidate.
+
+### Discovered fixture limit and correction
+
+Initial unprivileged run
+[39413174181](https://github.com/jresearchsoftware/shared-governance/actions/runs/39413174181)
+passed actual embedded candidate/no-op qualification but failed the accepted
+`probe_github.py`: it assumes the publisher checkout HEAD is an unaccepted
+candidate. At an already accepted pin with successful main CI, that assumption
+fails (`Candidate unexpectedly eligible`). The same probe is baked into shared
+workflow fixture mode. Production plan/stage/finalize do not use that probe.
+
+The producer qualification instead passes explicit accepted/candidate source SHAs
+to a read-only probe using the unchanged accepted library. It verifies current
+accepted-main push CI and rejects the actual PR candidate's missing main-push CI.
+No publisher fork, pin change or hidden passing claim. Consequently this Step's
+Actions evidence qualifies exact pinned code/checkout and producer integration,
+not a successful full reusable fixture-mode call. A real reusable publish/no-op
+call from accepted bound main remains later authorized integration evidence.
+This fixture-only issue needs separately scoped upstream correction if that
+mode is wanted for already accepted external pins; it does not add a release gate.
