@@ -130,6 +130,129 @@ class Fixture(unittest.TestCase):
         return destination
 
 
+class PackageOnboardingTests(Fixture):
+    def bind_only_a(self):
+        self.binding["packages"] = self.packages[:1]
+        self.save_binding()
+        return self.change(1, "1.0.1")
+
+    def test_existing_unbound_b_added_to_a_binding_is_noop(self):
+        self.bind_only_a()
+        self.binding["packages"] = self.packages
+        self.save_binding()
+        onboarding = self.commit()
+        with patch.object(self.api, "pages", wraps=self.api.pages) as pages, \
+                patch.object(P, "remote_refs", side_effect=AssertionError("no destination for onboarding")):
+            report = self.plan(onboarding)
+        self.assertEqual([r["status"] for r in report["packages"]], ["NO_PACKAGE_CHANGE"] * 2)
+        pages.assert_not_called()
+        # Unchanged old B also needs no retrospective rights/readiness approval.
+        self.packages[1]["redistribution"] = {}
+        self.save_binding()
+        without_rights = self.commit()
+        self.assertEqual(self.plan(without_rights)["packages"][1]["status"], "NO_PACKAGE_CHANGE")
+
+    def test_new_binding_does_not_hide_a_same_version_rewrite_of_b(self):
+        self.bind_only_a()
+        self.binding["packages"] = self.packages
+        self.save_binding()
+        rewritten = self.change(1, "1.0.1")
+        self.assertEqual(self.plan(rewritten)["packages"][1]["reason_code"], "PACKAGE_VERSION_REUSE")
+
+    def test_new_binding_and_new_version_of_existing_b_is_ready(self):
+        self.bind_only_a()
+        self.binding["packages"] = self.packages
+        self.save_binding()
+        versioned = self.change(1, "1.0.2")
+        rows = self.plan(versioned)["packages"]
+        self.assertEqual([r["status"] for r in rows], ["NO_PACKAGE_CHANGE", "READY"])
+        self.assertEqual(rows[1]["acceptance"][0]["source_sha"], versioned)
+
+    def test_genuinely_new_b_can_publish_when_first_added_to_a_binding(self):
+        self.binding["packages"] = self.packages[:1]
+        self.save_binding()
+        root = self.packages[1]["root"]
+        self.git("rm", "-r", root)
+        self.commit()
+        self.git("restore", "--source", self.revision, "--", root)
+        self.binding["packages"] = self.packages
+        self.save_binding()
+        introduced = self.change(1, "1.0.1")
+        rows = self.plan(introduced)["packages"]
+        self.assertEqual([r["status"] for r in rows], ["NO_PACKAGE_CHANGE", "READY"])
+        self.assertEqual(rows[1]["version"], "1.0.1")
+
+
+class PackageSelectionTests(Fixture):
+    public_destinations = True
+
+    def invoke(self, operation, revision, selected, extra=()):
+        report = self.directory / (operation + "-selected.json")
+        command = ["publisher.py", operation, "--source", str(self.source),
+                   "--source-sha", revision, "--main", "main", "--binding", "binding.json",
+                   "--package", selected, "--report", str(report), *extra]
+        with patch.object(sys, "argv", command), patch("sys.stdout", new=io.StringIO()):
+            code = P.main()
+        return code, json.loads(report.read_text())
+
+    def test_selected_noop_b_skips_changed_a_in_plan_check_and_stage(self):
+        self.git("branch", "accepted", self.revision)
+        changed = self.change(0)
+        a, b = [p["coordinate"] for p in self.packages]
+        snapshot = P.snapshot
+        def selected_snapshot(root, revision, package, require_ready=True):
+            self.assertNotEqual(package["coordinate"], a, "selected B must not inspect sibling A")
+            self.assertFalse(require_ready, "no release readiness for unchanged B")
+            return snapshot(root, revision, package, require_ready=require_ready)
+        with patch.object(P, "snapshot", side_effect=selected_snapshot), \
+                patch.object(P.GitHub, "get", side_effect=AssertionError("no API for selected no-op")), \
+                patch.object(P.GitHub, "pages", side_effect=AssertionError("no CI for selected no-op")), \
+                patch.object(P, "verify_trigger", side_effect=AssertionError("no trigger for selected no-op")), \
+                patch.object(P, "remote_refs", side_effect=AssertionError("no destination for selected no-op")), \
+                patch.object(P, "included_dependencies", side_effect=AssertionError("no native readiness")):
+            for operation in ("plan", "check", "stage"):
+                with self.subTest(operation=operation):
+                    extra = (["--base", self.revision, "--main", "accepted"] if operation == "check"
+                             else ["--directory", str(self.directory / "unused-stage"),
+                                   "--vibe", str(self.directory / "absent-vibe")] if operation == "stage" else [])
+                    code, report = self.invoke(operation, changed, b, extra)
+                    self.assertEqual(code, 0)
+                    self.assertEqual([(p["package"], p["status"]) for p in report["packages"]], [(b, "NO_PACKAGE_CHANGE")])
+        self.assertFalse((self.directory / "unused-stage").exists())
+
+    def test_selected_changed_a_requires_current_ci_and_trigger(self):
+        changed = self.change(0)
+        a = self.packages[0]["coordinate"]
+        event = self.directory / "event.json"
+        event.write_text(json.dumps({"workflow_run": {"id": 987}}))
+        run = self.api.pages("actions/runs?head_sha=" + changed)[0]
+        with patch.dict(os.environ, GITHUB_EVENT_NAME="workflow_run", GITHUB_EVENT_PATH=str(event)), \
+                patch.object(P, "GitHub", return_value=self.api), \
+                patch.object(self.api, "pages", wraps=self.api.pages) as pages, \
+                patch.object(self.api, "get", return_value=run) as get:
+            code, report = self.invoke("plan", changed, a)
+            self.assertEqual(code, 0)
+            self.assertEqual([(p["package"], p["status"]) for p in report["packages"]], [(a, "READY")])
+            self.assertIn("head_sha=" + changed, pages.call_args.args[0])
+            get.assert_called_once_with("actions/runs/987")
+            get.reset_mock()
+            self.api.alter_run = lambda run: dict(run, head_sha=self.revision)
+            code, report = self.invoke("plan", changed, a)
+            self.assertEqual(code, 1)
+            self.assertEqual(report["packages"][0]["reason_code"], "MATCHING_SOURCE_CI_MISSING")
+            get.assert_not_called()
+            self.api.alter_run = lambda run: run
+            get.return_value = dict(run, head_sha=self.revision)
+            with self.assertRaisesRegex(P.AuthorizationError, "automatic trigger"):
+                self.invoke("plan", changed, a)
+
+    def test_unknown_selection_fails_before_package_evidence(self):
+        with patch.object(P.GitHub, "pages", side_effect=AssertionError("no sibling CI")), \
+                patch.object(P, "snapshot", side_effect=AssertionError("no sibling export")):
+            with self.assertRaisesRegex(ValueError, "selected package is absent"):
+                self.invoke("plan", self.revision, "org.fixture/absent")
+
+
 class PlanningTests(Fixture):
     def test_integration_methods_use_only_current_push_ci(self):
         self.binding.pop("acceptance")
@@ -648,6 +771,21 @@ class NativeTests(Fixture):
         return P.stage(self.source, self.packages[index], report["packages"][index], VIBE,
                        self.directory / (suffix + str(index)))
 
+    def test_native_selected_b_stages_its_own_payload_and_destination(self):
+        self.revision = self.change(1)
+        b = self.packages[1]["coordinate"]
+        report = P.plan(self.source, self.revision, "main", self.binding, self.api,
+                        "binding.json", selected=b)
+        self.assertEqual([r["package"] for r in report["packages"]], [b])
+        staged = P.stage_all(self.source, self.binding, report, VIBE,
+                             self.directory / "selected-b", b)["packages"][0]
+        self.assertEqual(staged["destination"], self.packages[1]["destination"])
+        self.assertEqual(P.finalize(staged)["status"], "PUBLISHED")
+        files = P.snapshot(self.source, self.revision, self.packages[1])[0]
+        for path, data in files.items():
+            self.assertEqual(P.git(Path(staged["staging"]), "show", "v1.0.1:" + path), data)
+        self.assertEqual(P.remote_refs(self.packages[0]["destination"], "v1.0.1"), [])
+
     def native_dependencies(self, mutable=False):
         registry, consumer = self.directory / "registry", self.directory / "consumer"
         consumer.mkdir()
@@ -844,6 +982,20 @@ class InitialPublicationTests(Fixture):
     def initial(self, revision=None):
         return P.initial_plan(self.source, revision or self.initiation, self.main,
                               self.binding, self.api, "binding.json")
+
+    def test_initial_selected_b_retains_its_acceptance_without_inspecting_a(self):
+        a, b = [p["coordinate"] for p in self.packages]
+        snapshot = P.snapshot
+        def selected_snapshot(root, revision, package, require_ready=True):
+            self.assertNotEqual(package["coordinate"], a, "initial selected B must not inspect A")
+            return snapshot(root, revision, package, require_ready=require_ready)
+        with patch.object(P, "snapshot", side_effect=selected_snapshot):
+            report = P.initial_plan(self.source, self.initiation, self.main, self.binding,
+                                    self.api, "binding.json", selected=b)
+        self.assertEqual([(r["package"], r["status"]) for r in report["packages"]], [(b, "READY")])
+        row = report["packages"][0]
+        self.assertEqual(row["source_acceptance"]["source_sha"], self.frozen)
+        self.assertEqual(row["readiness_acceptance"]["source_sha"], self.initiation)
 
     def test_late_onboarding_then_generic_102_103_without_historical_evidence(self):
         # The ordinary producer supplies neither baseline nor PR/integrator

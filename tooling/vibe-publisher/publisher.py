@@ -287,6 +287,15 @@ def package_binding(binding, coordinate):
     return matches[0]
 
 
+def selected_packages(binding, selected):
+    if not selected:
+        return binding["packages"]
+    matches = [p for p in binding["packages"] if p["coordinate"] == selected]
+    if not matches:
+        raise ValueError("selected package is absent from the accepted binding")
+    return matches
+
+
 def revision_binding(root, revision, path):
     """Git owns the policy chronology; today's pin cannot rewrite old rules."""
     try:
@@ -504,7 +513,7 @@ def payload(snapshot_value):
     return receipt["payload_sha256"], receipt.get("disclosure")
 
 
-def initial_plan(root, initiation_sha, main, binding, api, binding_path, candidate_base=None):
+def initial_plan(root, initiation_sha, main, binding, api, binding_path, candidate_base=None, selected=None):
     """Explicit first publication; current readiness never impersonates historic CI."""
     exact(root, initiation_sha)
     chain = git(root, "rev-list", "--first-parent", main).decode().splitlines()
@@ -513,7 +522,7 @@ def initial_plan(root, initiation_sha, main, binding, api, binding_path, candida
             raise ValueError("candidate base must be the current accepted source main")
         chain = [initiation_sha] + chain
     results = []
-    for package in binding["packages"]:
+    for package in selected_packages(binding, selected):
         result = {"package": package["coordinate"], "source_sha": initiation_sha,
                   "initiation_sha": initiation_sha,
                   "destination": package["destination"], "operation": "initial-publication"}
@@ -586,7 +595,7 @@ def initial_plan(root, initiation_sha, main, binding, api, binding_path, candida
             "operation": "initial-publication", "packages": results}
 
 
-def plan(root, source_sha, main, binding, api, binding_path, candidate_base=None):
+def plan(root, source_sha, main, binding, api, binding_path, candidate_base=None, selected=None):
     """Compare one source transition; never reconstruct historical eligibility."""
     exact(root, source_sha)
     chain = git(root, "rev-list", "--first-parent", main).decode().splitlines()
@@ -605,18 +614,19 @@ def plan(root, source_sha, main, binding, api, binding_path, candidate_base=None
     if previous_sha and git(root, "ls-tree", previous_sha, "--", binding_path):
         previous_binding = binding_at(root, previous_sha, binding_path, allow_local=True)
     results = []
-    for package in binding["packages"]:
+    for package in selected_packages(binding, selected):
         result = {"package": package["coordinate"], "source_sha": source_sha,
                   "destination": package["destination"]}
         try:
             current = snapshot(root, source_sha, package, require_ready=False)
             # When an immediate previous binding exists use its own export
-            # inventory. Initial late onboarding compares the unchanged source
-            # under the newly selected inventory without demanding older policy.
+            # inventory. An unbound coordinate (also in an existing binding)
+            # compares prior source under its current inventory without inventing
+            # historical policy or treating old payload as a new release.
             prior_package = package
             if previous_binding is not None:
                 prior_package = next((p for p in previous_binding["packages"]
-                                      if p["coordinate"] == package["coordinate"]), None)
+                                      if p["coordinate"] == package["coordinate"]), package)
                 if prior_package is not None and any(prior_package[k] != package[k]
                                                      for k in ("root", "adapter", "destination")):
                     raise AuthorizationError("PACKAGE_MAPPING_CHANGED", "immediate package mapping changed")
@@ -743,9 +753,10 @@ def finalize(staged, push=None):
 
 def stage_all(root, binding, report, vibe, directory, selected):
     results = []
-    for package, decision in zip(binding["packages"], report["packages"]):
-        if selected and package["coordinate"] != selected:
+    for decision in report["packages"]:
+        if selected and decision["package"] != selected:
             continue
+        package = package_binding(binding, decision["package"])
         try:
             result = stage(root, package, decision, vibe, Path(directory) / package["coordinate"].replace("/", "."))
         except (ValueError, OSError, subprocess.SubprocessError) as error:
@@ -802,16 +813,13 @@ def main():
             raise ValueError("candidate check requires an exact accepted base")
         planner = initial_plan if args.initial_publication else plan
         report = planner(args.source, args.source_sha, args.main, binding, api,
-                         args.binding, args.base if args.operation == "check" else None)
+                         args.binding, args.base if args.operation == "check" else None,
+                         selected=args.package)
         # No-op onboarding must not query even the triggering CI run.
         if args.operation != "check" and any(p["status"] == "READY" for p in report["packages"]):
             verify_trigger(api, binding, args.source_sha)
         if args.operation == "stage":
             report = stage_all(args.source, binding, report, args.vibe, args.directory, args.package)
-        elif args.package:
-            report["packages"] = [row for row in report["packages"] if row["package"] == args.package]
-            if not report["packages"]:
-                raise ValueError("selected package is absent from the accepted binding")
     write_report(report, args.report)
     return int(any(item["status"] in ("AUTHORIZATION_PENDING", "FAILED_OR_PENDING") for item in report["packages"]))
 

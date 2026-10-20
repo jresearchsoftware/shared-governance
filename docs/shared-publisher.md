@@ -29,12 +29,22 @@ Ordinary planning checks first-parent source-main membership and compares only
 that commit with its immediate first parent. Candidate `check` instead compares
 against the exact current accepted main supplied as `--base`. If the immediate
 prior commit has a binding, its own package inventory selects its export; a new
-allowlist cannot hide a current inventory change. At late onboarding, absent
-prior bindings are normal: compare the preexisting package source under the new
-inventory. Identical exported payloads return `NO_PACKAGE_CHANGE` before readiness,
+allowlist cannot hide a current inventory change. At late onboarding, an absent
+prior binding **or an absent coordinate in an existing binding** is normal:
+compare the preexisting package source under the new inventory. Adding a binding
+entry alone cannot release unchanged old source; a genuinely new package or
+changed new version still follows ordinary qualification.
+Identical exported payloads return `NO_PACKAGE_CHANGE` before readiness,
 CI/trigger queries, destination access, credentials, tool preparation or staging.
 This includes unchanged historically incomplete licenses or unresolved rights.
 A non-package commit never opportunistically releases an earlier version.
+
+`--package` selects the coordinate before export/readiness and CI/trigger work,
+in both ordinary and explicit initial-publication planning. A selected unchanged
+B returns its own no-op even if sibling A changed, without A's API/CI, trigger,
+destination or staging work. Unselected all-package planning still assesses each
+coordinate. Staging associates decisions with bindings by coordinate, preserving
+the selected payload/destination even when it is not the first binding entry.
 
 For a changed package, require a valid authored frozen version, a **different**
 version from the immediately preceding accepted payload, complete approved public
