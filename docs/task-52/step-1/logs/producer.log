@@ -1,0 +1,16 @@
+test_binding_onboarding_and_later_tooling_are_noops_before_rights_or_api (__main__.ProducerTests.test_binding_onboarding_and_later_tooling_are_noops_before_rights_or_api) ... ok
+test_changed_source_uses_its_committed_binding_and_exact_ci (__main__.ProducerTests.test_changed_source_uses_its_committed_binding_and_exact_ci) ... ok
+test_direct_main (__main__.ProducerTests.test_direct_main) ... ok
+test_exact_bytes_receipt_and_dependency_free_export_are_preserved (__main__.ProducerTests.test_exact_bytes_receipt_and_dependency_free_export_are_preserved) ... ok
+test_missing_and_mismatched_rights_reject_changed_source (__main__.ProducerTests.test_missing_and_mismatched_rights_reject_changed_source) ... ok
+test_missing_license_is_rejected (__main__.ProducerTests.test_missing_license_is_rejected) ... ok
+test_native_exact_export_same_source_retry_and_immutable_collision (__main__.ProducerTests.test_native_exact_export_same_source_retry_and_immutable_collision) ... skipped 'optional pinned native Linux publisher'
+test_ordinary_merge (__main__.ProducerTests.test_ordinary_merge) ... ok
+test_rebase (__main__.ProducerTests.test_rebase) ... ok
+test_same_version_change_and_non_first_parent_source_are_rejected (__main__.ProducerTests.test_same_version_change_and_non_first_parent_source_are_rejected) ... ok
+test_squash (__main__.ProducerTests.test_squash) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 3.372s
+
+OK (skipped=1)

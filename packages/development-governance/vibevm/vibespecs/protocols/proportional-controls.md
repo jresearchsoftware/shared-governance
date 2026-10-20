@@ -151,3 +151,38 @@ requires the owning project's authorized disposition. Do not automatically
 remove a historical restriction because an agent invented it; preserve accepted
 contracts and protected invariants whatever their implementation origin. Use
 the existing authority mechanism, not a new approval loop or standing ledger.
+
+## Preserve scope when reviewing controls
+
+<a id="PC-013"></a>
+**PC-013 — Review-driven scope preservation.**
+
+Before presenting a review blocker or proposed Task amendment, distinguish a
+violation of an accepted requirement, existing supported contract or already
+binding protected invariant from a newly proposed defense. Calling an absent
+control a security defect does not make a new guarantee, historical prerequisite,
+trust condition, operator step or architecture mandatory. Apply this distinction
+in the existing owner-facing finding report, before a negative assessment or
+Change Request is published; follow [IR-012–IR-015](independent-review.md#IR-012)
+where that methodology is separately adopted, otherwise the local review method.
+
+Compare the old and proposed supported user/operator paths, especially when
+sharing or replacing an already used component. Explicitly quantify the changed
+contract and operational cost at decision-relevant scale: affected workflows,
+added actions/prerequisites, frequency and maintenance/recovery burden. State
+uncertainty rather than inventing numeric precision. Consider the cheapest
+acceptable alternative, including doing nothing or accepting a hypothetical risk
+when applicable. A newly imagined stronger assurance is a proposed requirement,
+not a proven implementation defect merely because it would prevent possible harm.
+
+For an important newly discovered risk, explain severity, evidence, affected
+behavior and control cost, and request an explicit owner decision on any scope
+amendment through existing canonical authority. Until resolved, preserve current
+authority and protected boundaries; do not insert the proposed control into a
+negative review's required remediation or the next Step as if already authorized.
+A material unresolved risk can justify discussion or a hold under current
+authority without fabricating an earlier obligation or approving unsafe behavior.
+True vulnerabilities/regressions violating existing obligations, missing evidence,
+baseline debt and optional new protection retain distinct dispositions. This rule
+adds no universal per-PR reapproval, reviewer, checklist, service, ledger or wait;
+applicable local/specialist rules and stronger safety obligations remain in force.

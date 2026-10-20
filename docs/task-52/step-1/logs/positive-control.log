@@ -1,0 +1,11 @@
+{
+  "positive_blocker_control": "PASS",
+  "obligation": "Task 45 immutable frozen tags; PV-011/PV-012",
+  "baseline_non_force_push": "rejected replacement; original tag retained",
+  "unsafe_variant": "force push replaced tag with changed payload",
+  "old_tag": "114d422e5536df8f94a3a663926368a1ec021e80",
+  "changed_tag": "bce82a2f12cd70c6f13eae98e916574abcf32a17",
+  "classification": "demonstrated existing-contract security regression",
+  "scope": "disposable local Git only; no actual publisher modified or public destination contacted",
+  "limit": "demonstrates supplied unsafe variant, not a defect discovered in the current publisher"
+}

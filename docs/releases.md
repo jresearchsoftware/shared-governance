@@ -18,6 +18,14 @@ assessments. Other consumers retain their own adoption and local policy.
 
 ## Contribution and integration
 
+Task 52 proposes 4.0.0 against frozen accepted 3.0.0: explicit per-blocker
+obligation binding and prepublication proposed-requirement classification tighten
+mandatory PC/IR report content. This is a concrete MAJOR contract change, without
+an additional approval or publication stage. See the installed changelog and
+[coverage/scenarios](task-52/step-1/README.md). Earlier references here to an
+unaccepted 3.0.0 candidate retain Task 45's historical context; 3.0.0 is now the
+accepted baseline and cannot be refined in place.
+
 Each independently accepted package-changing PR increments the whole-package
 version once against current accepted `main`. Its English description contains
 one `Package bump: major`, `Package bump: minor` or `Package bump: patch` line

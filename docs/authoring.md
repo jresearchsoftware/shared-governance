@@ -83,6 +83,14 @@ assessments; other consumers own their separate topic choices and migration.
 
 ## Semantic completeness
 
+Task 52's [scope-classification coverage and scenarios](task-52/step-1/README.md)
+document the 4.0.0 correction in PC-013 and IR-012–IR-015. Existing report duties
+now require explicit blocker-to-obligation binding and separate proposed
+requirements before negative reporting or amendments; the mandatory reporting
+tightening is MAJOR against accepted 3.0.0. It adds no review/approval stage.
+The seven other protocols, topic routing and client tools retain their meaning.
+The earlier Task 45 sections above describe the historical 3.0.0 preparation.
+
 Task Handoff owns Task/Step, canonical Outcome, independent-review handoff,
 Direct/Deliberative, publication/actor and continuation boundaries. Independent
 Review owns primary evidence, complete affected behavior, finding severity/origin,

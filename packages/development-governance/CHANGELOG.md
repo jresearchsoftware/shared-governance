@@ -6,6 +6,48 @@ and READMEs; they change no old payloads and assert no publication dates.
 Source acceptance, remote publication and consumer adoption remain distinct.
 Entries describe the version contract, not live Task status.
 
+## 4.0.0
+
+### Added
+
+- [PC-013](vibevm/vibespecs/protocols/proportional-controls.md#PC-013): preserve
+  scope before review blockers or proposed Task amendments. Assess old/new
+  supported workflows and quantify contract/operational cost; doing nothing or
+  accepting hypothetical risk can be legitimate. A security label cannot make
+  an optional defense, history prerequisite or trust condition mandatory.
+
+### Changed
+
+- [IR-012–IR-015](vibevm/vibespecs/protocols/independent-review.md#IR-012): every
+  blocker explicitly identifies the violated accepted Task requirement, supported
+  contract or binding protected invariant, its authority and concrete evidence.
+  Before negative reporting or amendment discussion, separate demonstrated
+  violations, evidence gaps, baseline debt and **PROPOSED REQUIREMENT / OPTIONAL
+  CHANGE**. Report new-risk severity, evidence, affected behavior, alternatives
+  and cost for explicit owner scope disposition. A review/Change Request cannot
+  admit its own proposed control or silently bind the next Step.
+
+### Breaking changes and migration/adoption from 3.0.0
+
+MAJOR because existing PC/IR adopters must now supply explicit per-blocker
+obligation binding and prepublication requirement classification in their
+existing reports. Earlier authority comparison and optional-improvement rules
+remain, but did not require this explicit binding in every blocker. This is
+mandatory reporting work, not a PATCH wording repair or an optional new topic
+qualifying as MINOR. Reconcile adopted local finding/report methods under the
+consumer's own authority. A dependency update does not adopt another topic.
+
+There is no extra reviewer, checklist, ledger, service, security gate, waiting
+period or universal per-PR owner reapproval. Genuine vulnerabilities/regressions,
+required evidence and stronger local/specialist obligations remain enforceable.
+A material unresolved new risk may justify an existing-authority discussion/hold
+without being mislabeled an old defect. Later explicit owner ratification binds
+subsequent work, not the earlier implementation retroactively. Task Handoff
+retains Decisions, Step admission, verdict lifecycle and publication ownership.
+Other seven protocols, boot/adoption conditions and client tool bytes retain
+their 3.0.0 meaning. PC-001–PC-012 and all IR IDs remain; PC-013 is new and
+supersedes no prior ID. Frozen 3.0.0 and older payloads remain unchanged.
+
 ## 3.0.0
 
 ### Added
