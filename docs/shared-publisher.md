@@ -42,7 +42,7 @@ A non-package commit never opportunistically releases an earlier version.
 `--package` selects the coordinate before export/readiness and CI/trigger work,
 in both ordinary and explicit initial-publication planning. A selected unchanged
 B returns its own no-op even if sibling A changed, without A's API/CI, trigger,
-destination or staging work. Unselected all-package planning still assesses each
+destination or staging work. Calls without a package selection still assess each
 coordinate. Staging associates decisions with bindings by coordinate, preserving
 the selected payload/destination even when it is not the first binding entry.
 

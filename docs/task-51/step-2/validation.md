@@ -39,6 +39,23 @@ Focused regression result: **7 passed**; full native publisher result:
 be bound in the canonical Step 2 Outcome. All native publication writes stay
 inside disposable local bare repositories.
 
+Fresh committed-source checks at `d246980e42bbab46db97c505b3c48843c83228d9`:
+
+| Check | Observed result / primary log |
+| --- | --- |
+| Full publisher, pinned native binary | **74 passed, zero skips**, [verbose log](logs/publisher-native.log). |
+| Focused CR regressions | **7 passed**, [log](logs/focused.log); the same seven tests reproduced failures against the unchanged starting publisher. |
+| Source/exact export | PASS, 730 tracked files / 1,144 local links, [log](logs/source.log). Final-head source qualification is separately covered by CI. |
+| Release/dependency, pinned native binary | **17 passed, zero skips**, [log](logs/release-native.log). |
+| Self-adoption | **13 passed**, [log](logs/self-adoption.log). |
+| Package boundary / whitespace | PASS; unchanged 3.0.0 payload, [log](logs/boundary.log); diff check clean. |
+
+The focused log was produced from identical implementation/test bytes before
+the implementation commit. Later evidence/documentation updates do not change
+those publisher/test bytes. General unchanged-script suites are also exercised
+by the final-head candidate workflow; its optional native skips do not replace
+the separate fully native run above.
+
 Reproduce at the result revision:
 
 ```sh
