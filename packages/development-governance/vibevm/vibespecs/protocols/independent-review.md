@@ -137,6 +137,13 @@ or reviewed baseline and classify their provenance:
 - pre-existing but newly exposed or made blocking by changed behavior/validation;
 - undetermined, with the missing comparison evidence stated.
 
+For each blocking finding, explicitly identify the accepted Task requirement,
+existing supported contract or already binding protected invariant that is
+violated, its authoritative source, and concrete evidence of the violation.
+Severity or a security label supplies no missing obligation. Keep the finding's
+origin separate from its authority: a newly discovered failure may violate an
+old obligation, while an imagined stronger guarantee may have no such binding.
+
 <a id="IR-013"></a>
 **IR-013 — Owner-facing report content and publication consistency.**
 
@@ -154,6 +161,17 @@ waiting period or universal preview gate. Local publication permissions and
 [Task Handoff's verdict lifecycle](task-handoff.md#result-acceptance-strategies)
 remain unchanged.
 
+Before an owner receives a negative assessment or proposed Task amendment,
+classify each finding under [IR-014](#IR-014) and include each blocker's binding
+obligation and source from [IR-012](#IR-012). Label a newly proposed guarantee,
+architecture or operator precondition **PROPOSED REQUIREMENT / OPTIONAL CHANGE**,
+separately from defects and required remediation. Disclose its changed supported
+behavior and operational cost, applying [PC-013](proportional-controls.md#PC-013)
+where adopted. Preserve that separation in any expected preview and the published
+report; an optional addition must not appear as defective already-required
+security functionality. This is content for the existing report, not an added
+publication approval or universal owner-preview/wait stage.
+
 <a id="IR-014"></a>
 **IR-014 — Defect versus gap versus optional improvement.**
 
@@ -165,6 +183,24 @@ offline candidate check does not promise historical PR/CI acceptance. Preserve
 its separate production gate; propose stronger pre-merge assurance as optional
 unless canonical authority requires it. Missing evidence is not proof of a defect.
 
+Keep four cases explicit: demonstrated violations of existing obligations
+(including true vulnerabilities/regressions); missing evidence of required
+behavior; pre-existing debt with its own scope/disposition; and optional new
+protection. An evidence-based inability to justify acceptance may retain the
+project's pending/hold disposition under [IR-018](#IR-018), but must name the
+required evidence instead of asserting an unproved defect. Baseline debt is not
+automatically a blocker, and optional protection is not mandatory remediation.
+
+A credible material new risk outside existing obligations warrants explicit
+owner discussion: explain severity, evidence and uncertainty, affected user
+behavior, alternatives and operational cost; request a canonical owner decision
+on any scope amendment. Preserve current authority/protected boundaries while
+unresolved. A justified hold under existing authority does not turn that risk
+into a pre-existing requirement, nor must demonstrated unsafe behavior receive
+approval merely because a new control has not been selected. Existing local,
+specialist and stronger safety obligations still apply. No universal owner
+reapproval, new security gate or automatic Task expansion follows.
+
 <a id="IR-015"></a>
 **IR-015 — Supported origin and bounded remediation.**
 
@@ -175,6 +211,13 @@ Give proportional remediation guidance for non-local findings: the invariant,
 coupled surfaces and useful correction sequence. Distinguish mandatory constraints
 and acceptance evidence from suggested implementation choices; an equivalent
 authorized solution is acceptable. New architecture or scope requires its owner.
+
+A review recommendation or Change Request cannot authorize itself. Do not carry
+an optional new guarantee into a correction Step as an accepted requirement
+without the owning project's explicit canonical scope decision. A later genuine
+owner ratification binds subsequent work; it does not retroactively prove that
+the earlier implementation violated that newly selected requirement. Follow
+adopted Task Handoff or local authority for amendments and execution admission.
 
 <a id="IR-016"></a>
 **IR-016 — Closure, adjacent risks and surviving interactions.**

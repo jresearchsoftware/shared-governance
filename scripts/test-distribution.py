@@ -86,12 +86,33 @@ class DistributionTests(unittest.TestCase):
             with self.subTest(protocol=name):
                 headings = re.findall(rb"^#{1,6} .+$", historical[name], re.M)
                 self.assertTrue(set(headings) <= set(re.findall(rb"^#{1,6} .+$", files[name], re.M)))
-        unchanged = set(protocols) - {DISTRIBUTION.HANDOFF, DISTRIBUTION.INDEPENDENT_REVIEW, DISTRIBUTION.VERSIONING}
+        # PC gained a normative rule after 3.0.0; check that accepted prefix
+        # separately instead of asserting the old annotation-only transition.
+        unchanged = set(protocols) - {DISTRIBUTION.HANDOFF, DISTRIBUTION.INDEPENDENT_REVIEW,
+                                      DISTRIBUTION.VERSIONING, DISTRIBUTION.PROTOCOL}
         unchanged.update({DISTRIBUTION.ONBOARDING, DISTRIBUTION.ENGINEERING_METHODS})
         for name in unchanged:
             with self.subTest(meaning=name):
                 stripped = re.sub(rb'\n<a id="[A-Z]+-[0-9]{3}"></a>\n\*\*[^\n]+\*\*\n\n', b"\n", files[name])
                 self.assertEqual(stripped, historical[name])
+
+    def test_review_scope_change_preserves_accepted_rules_and_unaffected_protocols(self):
+        files = self.current_export()
+        accepted, _ = DISTRIBUTION.snapshot("e654d9e20a7c42c50cc05786dc83a4f7a16f84e4")
+        # Seven untouched protocols and all earlier PC rules keep exact bytes.
+        for name in files:
+            if name.startswith("vibevm/vibespecs/protocols/") and name not in {
+                    DISTRIBUTION.PROTOCOL, DISTRIBUTION.INDEPENDENT_REVIEW}:
+                with self.subTest(protocol=name):
+                    self.assertEqual(files[name], accepted[name])
+        self.assertTrue(files[DISTRIBUTION.PROTOCOL].startswith(accepted[DISTRIBUTION.PROTOCOL]))
+        anchors = lambda value: set(re.findall(rb'<a id="([A-Z]+-[0-9]{3})"></a>', value))
+        for name, new in ((DISTRIBUTION.PROTOCOL, {b"PC-013"}),
+                          (DISTRIBUTION.INDEPENDENT_REVIEW, set())):
+            self.assertEqual(anchors(files[name]), anchors(accepted[name]) | new)
+        owners = [name for name, content in files.items() if b'<a id="PC-013"></a>' in content]
+        self.assertEqual(owners, [DISTRIBUTION.PROTOCOL])
+        DISTRIBUTION.validate_payload(files, files["LICENSE"])
 
     def test_rule_links_survive_paragraph_and_section_insertion(self):
         files = self.current_export()

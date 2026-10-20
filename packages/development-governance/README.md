@@ -12,6 +12,14 @@ the package payload. This README is the current overview; actual acceptance and
 publication evidence remains in source Issues/PRs, workflows and distribution
 tags. Frozen historical versions retain their original bytes.
 
+Version 4.0.0 adds [PC-013](vibevm/vibespecs/protocols/proportional-controls.md#PC-013)
+and tightens [IR-012–IR-015](vibevm/vibespecs/protocols/independent-review.md#IR-012):
+bind each blocker to an existing obligation and separate proposed requirements
+before negative reporting or Task-amendment discussion. Quantify workflow/cost
+effects; preserve genuine security obligations and explicit owner scope authority.
+Existing adopters must reconcile this mandatory report content. It adds no
+approval/wait stage or topic adoption; see the 3.0.0 → 4.0.0 changelog entry.
+
 | Topic and rule prefix | Conditional applicability |
 | --- | --- |
 | [Proportional controls — PC](vibevm/vibespecs/protocols/proportional-controls.md) | Proposed security, validation or operator controls, including behaviorally free hardening. |
