@@ -38,7 +38,8 @@ SHA-256 `20d111df02eb28040ef4cb766bfcb0bde8ff4427b031f88f33eacb3711c3e240`.
 Native `install --offline --registry <disposable> --no-default-registry` resolves
 a pinned direct dependency and frozen transitive dependency. Tests copy the
 tool-produced lock/slots into the approved source inventory, then stage/publish
-and compare every release blob. Included dependencies need frozen identities,+resolved sources, lock content hashes and matching native slot inventories/hashes.
+and compare every release blob. Included dependencies need frozen identities,
+resolved sources, lock content hashes and matching native slot inventories/hashes.
 Included mutable, missing transitive and mismatched native metadata are rejected.
 Excluded optional suggestions publish with an empty included closure; included
 development-labelled dependencies are checked too. The governance exporter and

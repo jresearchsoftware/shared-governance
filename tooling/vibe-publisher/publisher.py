@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Source-only VibeVM publisher. Producer authority is supplied by a pinned binding.
+"""Source-only VibeVM publisher. Producer configuration is read from the exact source commit.
 
 No producer is integrated by installing this file. See docs/shared-publisher.md.
 """
@@ -110,7 +110,7 @@ class AuthorizationError(ValueError):
 AUTHORIZATION_MESSAGES.update({
     "INITIAL_PUBLICATION_UNRESOLVED": "Initial publication requires the exact accepted onboarding commit, frozen source/version/digest and explicit owner baseline disposition; retry those same pins.",
     "HISTORICAL_BINDING_UNRESOLVED": "Historical export or acceptance policy is unavailable or incompatible; obtain explicit owner disposition of the affected baseline before publication.",
-    "POLICY_PIN_MISMATCH": "The source-time binding differs from the independently accepted policy pin; reconcile the exact producer pins before publication.",
+    "SOURCE_BINDING_MISMATCH": "The supplied binding differs from its exact source commit; reload the source-committed binding before publication.",
     "PUBLIC_EXPORT_INCOMPLETE": "Approved public package files or license are missing or invalid; prepare a new version before source acceptance.",
     "REDISTRIBUTION_UNRESOLVED": "License metadata does not match an explicit redistribution approval; resolve rights and notices with the owner before accepting package source.",
 })
@@ -208,7 +208,7 @@ def append_actions_summary(report_path, summary_path, job_status, outcomes):
             failed |= status == "FAILED_OR_PENDING"
 
     if pending_authorization:
-        rows.append("Resolve the listed owner acceptance or disposition evidence before retrying; these packages are not currently eligible for publication.")
+        rows.append("Resolve the listed source, CI, readiness or explicit initial-publication evidence before retrying; these packages are not currently eligible for publication.")
     if failed:
         rows.append("After recovering a retryable failure, inspect exact destination refs and retry only with the same source SHA and workflow implementation pin. Existing tags are retained.")
     with summary_path.open("a", encoding="utf-8") as summary:
@@ -521,7 +521,7 @@ def initial_plan(root, initiation_sha, main, binding, api, binding_path, candida
             if initiation_sha not in chain:
                 raise AuthorizationError("SOURCE_NOT_ON_MAIN", "initiation is not on first-parent main")
             if revision_binding(root, initiation_sha, binding_path) != binding:
-                raise AuthorizationError("POLICY_PIN_MISMATCH", "initial publication requires the exact accepted binding")
+                raise AuthorizationError("SOURCE_BINDING_MISMATCH", "initial publication requires the exact accepted binding")
             initial = package.get("initial_publication", {})
             frozen_sha = initial.get("source_sha", "")
             if (package["adapter"] != "tree-v1" or not SHA.fullmatch(frozen_sha)

@@ -493,6 +493,20 @@ class TemporalTests(Fixture):
 class SourceCliTests(Fixture):
     public_destinations = True
 
+    def test_ordinary_noop_cli_needs_no_other_sha_or_ci_event_access(self):
+        (self.source / "notes.txt").write_text("Non-package source evidence")
+        revision = self.commit()
+        report = self.directory / "noop.json"
+        command = [sys.executable, str(Path(P.__file__)), "plan",
+                   "--source", str(self.source), "--source-sha", revision,
+                   "--main", "main", "--binding", "binding.json", "--report", str(report)]
+        result = subprocess.run(command, capture_output=True, text=True,
+            env=dict(self.env, GH_TOKEN="", GITHUB_EVENT_NAME="workflow_run",
+                     GITHUB_EVENT_PATH=str(self.directory / "absent-event.json")))
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual([p["status"] for p in json.loads(report.read_text())["packages"]],
+                         ["NO_PACKAGE_CHANGE"] * 2)
+
     def test_source_time_cli_validates_a_candidate_without_api_or_distribution(self):
         self.git("switch", "-qc", "candidate")
         changed = self.change()
