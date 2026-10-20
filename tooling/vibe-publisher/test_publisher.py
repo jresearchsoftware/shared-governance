@@ -325,7 +325,7 @@ class TemporalTests(Fixture):
         self.revision = self.git("rev-parse", "HEAD")
         self.api = Evidence(self.binding, [self.revision])
 
-    def test_incomplete_historical_package_factual_noop_and_source_time_readiness(self):
+    def test_incomplete_historical_package_factual_and_candidate_noops(self):
         self.incomplete_initial_package()
         (self.source / "research.txt").write_text("Ordinary factual direct-main update")
         factual = self.commit()
@@ -337,8 +337,8 @@ class TemporalTests(Fixture):
         with patch.object(P, "remote_refs", side_effect=AssertionError("no distribution access for no-op")):
             self.assertEqual(P.stage(self.source, self.packages[0], decisions[0],
                                      self.directory / "absent-vibe", self.directory / "unused"), decisions[0])
-        # Production requested no release; an applicable source-time preparation
-        # check must still reject the same unchanged incomplete payload.
+        # Candidate non-package changes also request no release; unchanged older
+        # incomplete content must not acquire a retrospective readiness gate.
         self.git("switch", "-qc", "candidate")
         (self.source / "research.txt").write_text("Candidate factual update")
         proposed = self.commit()
@@ -476,7 +476,7 @@ class TemporalTests(Fixture):
         self.assertEqual(result["version"], "1.0.1")
         self.assertEqual([e["source_sha"] for e in result["acceptance"]], [accepted])
         self.assertEqual(self.git("tag"), "")
-        # Historical incompleteness is comparable, not an eligibility waiver.
+        # Historical incompleteness is comparable; only current push CI is needed.
         self.api.revisions.remove(self.revision)
         self.assertEqual(self.plan(accepted)["packages"][0]["status"], "READY")
 
@@ -593,7 +593,7 @@ class DiagnosticsTests(unittest.TestCase):
             self.assertIn("OWNER_ACCEPTANCE_NOT_ESTABLISHED", summary)
             self.assertIn("PUBLICATION_READBACK_UNAVAILABLE", summary)
             self.assertIn("COMPETING_TAG_RETAINED", summary)
-            self.assertIn("Resolve the listed owner acceptance or disposition", summary)
+            self.assertIn("Resolve the listed source, CI, readiness or explicit initial-publication", summary)
             self.assertNotIn("secret@example.invalid", summary)
             self.assertNotIn("private/path", summary)
 
