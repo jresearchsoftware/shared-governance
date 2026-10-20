@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Source-only VibeVM publisher. Producer authority is supplied by a pinned binding.
+"""Source-only VibeVM publisher. Producer configuration is read from the exact source commit.
 
 No producer is integrated by installing this file. See docs/shared-publisher.md.
 """
@@ -24,6 +24,7 @@ AUTHORIZATION_MESSAGES = {
     'PACKAGE_BASELINE_UNRESOLVED': 'The accepted package baseline is not verifiably on first-parent main at or before this source; correct the bound baseline before retrying.',
     'OWNER_DISPOSITION_REQUIRED': 'This package removal needs an explicit owner disposition before publication.',
     'PACKAGE_VERSION_REUSE': "Package bytes changed without a new package version; correct the version under the producer's release policy.",
+    'PACKAGE_MAPPING_CHANGED': 'The immediate transition changes a package root, adapter or destination; obtain the producer-owned migration disposition before using that transition for publication.',
     'SOURCE_REPOSITORY_MISMATCH': 'The checked source repository does not match the accepted producer binding; correct the binding or source checkout.',
     'UNSUPPORTED_MERGE_ROUTE': 'This binding supports squash integration only; another merge route needs producer-specific qualification and owner disposition.',
     'OWNER_ACCEPTANCE_NOT_ESTABLISHED': 'No unique authorized owner squash merge was found; resolve the owner and PR acceptance evidence before retrying.',
@@ -33,7 +34,7 @@ AUTHORIZATION_MESSAGES = {
     'ACCEPTANCE_EVIDENCE_UNAVAILABLE': 'Required GitHub acceptance or CI evidence could not be read; restore read access and verify the exact source before retrying.',
     'PRODUCER_BINDING_UNSUPPORTED': "The accepted producer binding uses an unsupported schema or acceptance rule; resolve it in the producer's authority.",
     'PACKAGE_IDENTITY_MISMATCH': "The package identity or frozen version does not match its accepted binding; correct the package under its owner's release policy.",
-    'DEPENDENCY_CLOSURE_UNQUALIFIED': 'This export adapter has not qualified included dependencies; owner-authorized adapter evidence is required before publication.',
+    'DEPENDENCY_CLOSURE_UNQUALIFIED': 'An included dependency is unresolved, mutable or lacks matching native lock/slot hashes. Materialize the frozen closure with pinned VibeVM and approve its complete export inventory.',
 }
 
 AUTHORIZATION_FALLBACK = (
@@ -47,10 +48,10 @@ DIAGNOSTIC_MESSAGES = {
     "PUBLISHED_CONFIRMED": "The exact staged tag object was read back from the destination; publication is confirmed.",
     "EXISTING_TAG_UNVERIFIED": "An existing release tag was retained. Its presence does not prove this exact source was published; compare trusted tag provenance before claiming success.",
     "COMPETING_TAG_RETAINED": "A competing release identity was retained and this exact source was not published; resolve its provenance before any retry.",
-    "ATOMIC_PUSH_UNCERTAIN": "The atomic push result is uncertain. Inspect exact destination tag and main refs before retrying with the same source, policy and publisher SHAs.",
-    "RELEASE_TAG_NOT_OBSERVED": "No release tag was observed. Recover the credential, network or concurrency issue, then retry with the same source, policy and publisher SHAs.",
+    "ATOMIC_PUSH_UNCERTAIN": "The atomic push result is uncertain. Inspect exact destination tag and main refs before retrying with the same source SHA and workflow implementation pin.",
+    "RELEASE_TAG_NOT_OBSERVED": "No release tag was observed. Recover the credential, network or concurrency issue, then retry with the same source SHA and workflow implementation pin.",
     "PUBLICATION_READBACK_UNAVAILABLE": "Destination readback was unavailable; do not claim publication. Restore read access and inspect the exact tag and branch before retrying with the same pins.",
-    "UNCLASSIFIED_PUBLICATION_FAILURE": "Publication failed or remains unverified. Inspect the failed step and exact destination refs before retrying with the same source, policy and publisher SHAs.",
+    "UNCLASSIFIED_PUBLICATION_FAILURE": "Publication failed or remains unverified. Inspect the failed step and exact destination refs before retrying with the same source SHA and workflow implementation pin.",
     "PINNED_TOOL_MISMATCH": "The pinned VibeVM binary check failed; restore the recorded tool before retrying the same source and publisher pins.",
     "STAGED_PAYLOAD_MISMATCH": "The staged package payload differs from the plan; discard this attempt and investigate the exact source and export before retrying.",
     "NATIVE_PUBLISHER_FAILED": "Credential-free native staging failed; inspect the pinned publisher and local staging inputs. No destination write was attempted.",
@@ -62,14 +63,14 @@ DIAGNOSTIC_MESSAGES = {
     "STAGING_VALIDATION_FAILED": "Package or staging validation failed; review the accepted source and binding before retrying.",
     "STAGING_SUBPROCESS_FAILED": "A local staging process failed; inspect the failed preparation step. No destination write was attempted.",
     "STAGING_PREPARATION_FAILED": "Credential-free preparation failed; inspect the failed preparation step. No destination write was attempted.",
-    "WORKFLOW_INTERRUPTED_BEFORE_CONFIRMATION": "The workflow stopped before a final package result was confirmed. Inspect destination refs before retrying with the same source, policy and publisher SHAs.",
+    "WORKFLOW_INTERRUPTED_BEFORE_CONFIRMATION": "The workflow stopped before a final package result was confirmed. Inspect destination refs before retrying with the same source SHA and workflow implementation pin.",
     "PUBLISHER_REPORT_UNREADABLE": "The package report could not be read. Do not infer publication; inspect the failed workflow step and exact destination refs.",
 }
 
 FAILURE_REASON_CODES = {
-    "Atomic publication failed or transport result is ambiguous; retry the same source and publisher SHA.": "ATOMIC_PUSH_UNCERTAIN",
-    "No release tag observed; retry the same source and publisher SHA.": "RELEASE_TAG_NOT_OBSERVED",
-    "Publication readback unavailable; inspect and retry the same source and publisher SHA.": "PUBLICATION_READBACK_UNAVAILABLE",
+    "Atomic publication failed or transport result is ambiguous; retry the same source SHA and workflow implementation pin.": "ATOMIC_PUSH_UNCERTAIN",
+    "No release tag observed; retry the same source SHA and workflow implementation pin.": "RELEASE_TAG_NOT_OBSERVED",
+    "Publication readback unavailable; inspect and retry the same source SHA and workflow implementation pin.": "PUBLICATION_READBACK_UNAVAILABLE",
 }
 
 WARNING_CODES = {
@@ -93,7 +94,6 @@ SUMMARY_PHASES = (
     ("publisher_checkout", "PUBLISHER_CHECKOUT_FAILED", "The pinned reusable workflow code could not be checked out; no package result or destination write was produced."),
     ("producer_checkout", "PRODUCER_CHECKOUT_FAILED", "The exact producer source could not be checked out; no package result or destination write was produced."),
     ("source_identity", "SOURCE_IDENTITY_VERIFICATION_FAILED", "The checked-out publisher or producer SHA did not match its bound identity; correct the exact pins before retrying."),
-    ("policy_checkout", "POLICY_CHECKOUT_FAILED", "The accepted producer policy could not be checked out; no package result or destination write was produced."),
     ("plan", "SOURCE_ACCEPTANCE_OR_CI_CHECK_FAILED", "The publisher did not produce a package report during planning. Resolve the source, binding, owner acceptance or exact CI evidence before retrying."),
     ("tool", "PINNED_TOOL_PREPARATION_FAILED", "The pinned VibeVM tool could not be prepared; no destination write was attempted. Recover the download or digest issue before retrying."),
     ("stage", "CREDENTIAL_FREE_STAGING_FAILED", "Credential-free staging did not produce a package report; no final publication result is available. Recover the failed staging step before retrying."),
@@ -110,7 +110,7 @@ class AuthorizationError(ValueError):
 AUTHORIZATION_MESSAGES.update({
     "INITIAL_PUBLICATION_UNRESOLVED": "Initial publication requires the exact accepted onboarding commit, frozen source/version/digest and explicit owner baseline disposition; retry those same pins.",
     "HISTORICAL_BINDING_UNRESOLVED": "Historical export or acceptance policy is unavailable or incompatible; obtain explicit owner disposition of the affected baseline before publication.",
-    "POLICY_PIN_MISMATCH": "The source-time binding differs from the independently accepted policy pin; reconcile the exact producer pins before publication.",
+    "SOURCE_BINDING_MISMATCH": "The supplied binding differs from its exact source commit; reload the source-committed binding before publication.",
     "PUBLIC_EXPORT_INCOMPLETE": "Approved public package files or license are missing or invalid; prepare a new version before source acceptance.",
     "REDISTRIBUTION_UNRESOLVED": "License metadata does not match an explicit redistribution approval; resolve rights and notices with the owner before accepting package source.",
 })
@@ -208,9 +208,9 @@ def append_actions_summary(report_path, summary_path, job_status, outcomes):
             failed |= status == "FAILED_OR_PENDING"
 
     if pending_authorization:
-        rows.append("Resolve the listed owner acceptance or disposition evidence before retrying; these packages are not currently eligible for publication.")
+        rows.append("Resolve the listed source, CI, readiness or explicit initial-publication evidence before retrying; these packages are not currently eligible for publication.")
     if failed:
-        rows.append("After recovering a retryable failure, inspect exact destination refs and retry only with the same source, policy and publisher SHAs. Existing tags are retained.")
+        rows.append("After recovering a retryable failure, inspect exact destination refs and retry only with the same source SHA and workflow implementation pin. Existing tags are retained.")
     with summary_path.open("a", encoding="utf-8") as summary:
         summary.write("## Shared publisher result\n\n")
         summary.write("\n\n".join(rows) + "\n")
@@ -241,15 +241,15 @@ def safe_path(value):
     return value
 
 
-def binding_at(policy_root, policy_sha, path, allow_local=False):
-    exact(policy_root, policy_sha)
-    binding = json.loads(git(policy_root, "show", policy_sha + ":" + safe_path(path)))
-    if binding.get("schema") != 1 or binding.get("acceptance") != "owner-squash-attestation-v1":
+def binding_at(root, source_sha, path, allow_local=False):
+    exact(root, source_sha)
+    binding = json.loads(git(root, "show", source_sha + ":" + safe_path(path)))
+    if binding.get("schema") != 1:
         raise AuthorizationError("PRODUCER_BINDING_UNSUPPORTED", "unsupported producer binding / acceptance rule")
     if not re.fullmatch(r"[\w.-]+/[\w.-]+", binding["repository"]):
         raise ValueError("invalid source repository")
-    if not isinstance(binding["repository_id"], int) or not binding["authorized_integrators"]:
-        raise ValueError("source repository identity and owner integrators are required")
+    if not isinstance(binding["repository_id"], int):
+        raise ValueError("source repository identity is required")
     if not re.fullmatch(r"[\w.-]+", binding["branch"]):
         raise ValueError("unsupported source branch")
     if not binding["ci_workflow"].startswith(".github/workflows/"):
@@ -265,8 +265,6 @@ def binding_at(policy_root, policy_sha, path, allow_local=False):
         if not re.fullmatch(r"[\w.-]+/[\w.-]+", package["coordinate"]):
             raise ValueError("invalid package coordinate")
         safe_path(package["root"])
-        if not SHA.fullmatch(package["baseline"]):
-            raise ValueError("an explicitly accepted package baseline SHA is required")
         if package["adapter"] not in ("tree-v1", "shared-governance-v1"):
             raise ValueError("unsupported export adapter")
         if package["adapter"] == "tree-v1":
@@ -289,20 +287,21 @@ def package_binding(binding, coordinate):
     return matches[0]
 
 
+def selected_packages(binding, selected):
+    if not selected:
+        return binding["packages"]
+    matches = [p for p in binding["packages"] if p["coordinate"] == selected]
+    if not matches:
+        raise ValueError("selected package is absent from the accepted binding")
+    return matches
+
+
 def revision_binding(root, revision, path):
     """Git owns the policy chronology; today's pin cannot rewrite old rules."""
     try:
         return binding_at(root, revision, path, allow_local=True)
     except (ValueError, KeyError, TypeError) as error:
         raise AuthorizationError("HISTORICAL_BINDING_UNRESOLVED", "historical producer binding is unavailable") from error
-
-
-def policy_identity(binding):
-    # Baseline changes are explicit dispositions in the independently accepted
-    # policy pin. They do not change the export or authorize integrators by magic.
-    return {k: v for k, v in binding.items() if k != "packages"} | {
-        "packages": [{k: v for k, v in p.items() if k not in ("baseline", "baseline_disposition")}
-                     for p in binding["packages"]]}
 
 
 class GitHub:
@@ -382,7 +381,8 @@ def owner_integration(api, binding, revision, parents):
 
 
 def eligible(api, binding, revision, parents):
-    acceptance = owner_integration(api, binding, revision, parents)
+    # The producer owns review and integration mechanics. Only exact push CI
+    # is publication evidence here; no PR, integrator or identity API lookup.
     # Run records retain the workflow path used at this source revision, even
     # after a workflow is renamed/deleted. Never resolve yesterday via today's
     # workflow-name endpoint.
@@ -390,8 +390,68 @@ def eligible(api, binding, revision, parents):
     runs = [run for run in runs if valid_ci(run, binding, revision)]
     if not runs:
         raise AuthorizationError("MATCHING_SOURCE_CI_MISSING", "no successful matching source-main push CI")
-    return {**acceptance, "ci_run": runs[0]["html_url"],
+    return {"source_sha": revision, "ci_run": runs[0]["html_url"],
             "ci_workflow": binding["ci_workflow"], "ci_workflow_id": runs[0]["workflow_id"]}
+
+
+def included_dependencies(blobs, manifest):
+    """Qualify native lock/installed slots actually shipped by the allowlist.
+
+    Resolution and hashes belong to VibeVM. This reads its committed evidence;
+    it neither resolves ranges nor downloads/materializes additional content.
+    """
+    prefix = "vibevm/vibedeps/"
+    slots = {}
+    for name in blobs:
+        if name.startswith(prefix):
+            parts = name[len(prefix):].split("/")
+            if len(parts) < 3:
+                raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "included dependency has no native versioned slot")
+            slots.setdefault((parts[0], parts[1]), {})["/".join(parts[2:])] = blobs[name]
+    if slots:
+        if "vibe.lock" not in blobs:
+            raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "include the native vibe.lock for the exported dependency slots")
+        lock = tomllib.loads(blobs["vibe.lock"].decode())
+        if lock.get("meta", {}).get("schema_version") != 7:
+            raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "materialize dependencies with pinned VibeVM schema-7 lock metadata")
+        entries = lock.get("package", [])
+    else:
+        entries = []
+    included = set()
+    manifests = [manifest]
+    for (identity, version), files in slots.items():
+        if "vibe.toml" not in files:
+            raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "included dependency slot is missing its native manifest")
+        resolved = tomllib.loads(files["vibe.toml"].decode())
+        metadata = resolved.get("package", {})
+        group, name = metadata.get("group", ""), metadata.get("name", "")
+        matches = [e for e in entries if (e.get("group"), e.get("name"), e.get("version")) == (group, name, version)]
+        if (identity != group + "." + name or metadata.get("version") != version
+                or not VERSION.fullmatch(version) or metadata.get("frozen") is not True
+                or len(matches) != 1 or matches[0].get("kind") != metadata.get("kind")
+                or not matches[0].get("source_url")
+                or not re.fullmatch(r"sha256:[0-9a-f]{64}", matches[0].get("content_hash", ""))):
+            raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "included dependency needs frozen identity and native resolved source/content hash: " + identity)
+        marker = tomllib.loads(files.get(".vibe-slot.toml", b"").decode())
+        recorded = marker.get("file", [])
+        hashes = {f: hashlib.sha256(data).hexdigest() for f, data in files.items() if f != ".vibe-slot.toml"}
+        if (marker.get("schema") != 1 or marker.get("source_hash") != matches[0]["content_hash"]
+                or len(recorded) != len(hashes)
+                or {f["path"]: f["sha256"] for f in recorded} != hashes):
+            raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "included slot differs from native materialization hashes/inventory: " + identity)
+        included.add(group + "/" + name)
+        manifests.append(resolved)
+    # Check required edges for unresolved/excluded runtime members, including
+    # transitives. Optional and dev declarations outside the shipped slots are
+    # not the release closure. Included dev/optional slots were checked above.
+    for resolved in manifests:
+        for coordinate, requirement in resolved.get("requires", {}).get("packages", {}).items():
+            if isinstance(requirement, dict) and requirement.get("optional") is True:
+                continue
+            coordinate = coordinate.split(":", 1)[-1]
+            if coordinate not in included:
+                raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "materialize and approve the required dependency slot: " + coordinate)
+    return sorted(included)
 
 
 def snapshot(root, revision, package, require_ready=True):
@@ -425,10 +485,8 @@ def snapshot(root, revision, package, require_ready=True):
     if (metadata["group"] + "/" + metadata["name"] != package["coordinate"]
             or not VERSION.fullmatch(metadata["version"]) or metadata.get("frozen") is not True):
         raise AuthorizationError("PACKAGE_IDENTITY_MISMATCH", "canonical frozen package identity differs")
-    if manifest.get("requires") or manifest.get("dev-requires"):
-        # The adapter contract must be extended with actual lock/slot closure
-        # evidence before admitting dependencies. Do not implement a resolver.
-        raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "tree-v1 supports an empty dependency closure only")
+    if require_ready:
+        included_dependencies(blobs, manifest)
     if require_ready and not blobs["LICENSE"].strip():
         raise AuthorizationError("PUBLIC_EXPORT_INCOMPLETE", "public package license is empty")
     rights = package.get("redistribution", {})
@@ -455,26 +513,27 @@ def payload(snapshot_value):
     return receipt["payload_sha256"], receipt.get("disclosure")
 
 
-def initial_plan(root, initiation_sha, main, binding, api, publisher_sha, binding_path, candidate_base=None):
+def initial_plan(root, initiation_sha, main, binding, api, binding_path, candidate_base=None, selected=None):
     """Explicit first publication; current readiness never impersonates historic CI."""
     exact(root, initiation_sha)
-    if not SHA.fullmatch(publisher_sha):
-        raise ValueError("a full called-workflow publisher SHA is required")
     chain = git(root, "rev-list", "--first-parent", main).decode().splitlines()
     if candidate_base is not None:
         if not chain or candidate_base != chain[0]:
             raise ValueError("candidate base must be the current accepted source main")
         chain = [initiation_sha] + chain
     results = []
-    for package in binding["packages"]:
+    for package in selected_packages(binding, selected):
         result = {"package": package["coordinate"], "source_sha": initiation_sha,
-                  "initiation_sha": initiation_sha, "publisher_sha": publisher_sha,
+                  "initiation_sha": initiation_sha,
                   "destination": package["destination"], "operation": "initial-publication"}
         try:
+            if (binding.get("acceptance") != "owner-squash-attestation-v1"
+                    or not binding.get("authorized_integrators")):
+                raise AuthorizationError("PRODUCER_BINDING_UNSUPPORTED", "explicit initial publication requires its owner-squash acceptance binding")
             if initiation_sha not in chain:
                 raise AuthorizationError("SOURCE_NOT_ON_MAIN", "initiation is not on first-parent main")
             if revision_binding(root, initiation_sha, binding_path) != binding:
-                raise AuthorizationError("POLICY_PIN_MISMATCH", "initial publication requires the exact accepted binding")
+                raise AuthorizationError("SOURCE_BINDING_MISMATCH", "initial publication requires the exact accepted binding")
             initial = package.get("initial_publication", {})
             frozen_sha = initial.get("source_sha", "")
             if (package["adapter"] != "tree-v1" or not SHA.fullmatch(frozen_sha)
@@ -496,7 +555,8 @@ def initial_plan(root, initiation_sha, main, binding, api, publisher_sha, bindin
                 if any(before[k] != binding[k] for k in ("repository", "repository_id", "branch", "acceptance")):
                     raise AuthorizationError("HISTORICAL_BINDING_UNRESOLVED", "source identity policy changes require owner disposition")
                 authority = dict(binding, authorized_integrators=before["authorized_integrators"])
-            readiness = eligible(api, authority, initiation_sha, parents) if candidate_base is None else None
+            readiness = ({**owner_integration(api, authority, initiation_sha, parents),
+                          **eligible(api, authority, initiation_sha, parents)} if candidate_base is None else None)
             source_parents = git(root, "show", "-s", "--format=%P", frozen_sha).decode().split()
             source_acceptance = (owner_integration(api, binding, frozen_sha, source_parents)
                                  if candidate_base is None else None)
@@ -531,124 +591,67 @@ def initial_plan(root, initiation_sha, main, binding, api, publisher_sha, bindin
             result.update(status="AUTHORIZATION_PENDING", reason=str(error),
                           reason_code=error.code if isinstance(error, AuthorizationError) else "INITIAL_PUBLICATION_UNRESOLVED")
         results.append(result)
-    return {"source_sha": initiation_sha, "publisher_sha": publisher_sha,
+    return {"source_sha": initiation_sha,
             "operation": "initial-publication", "packages": results}
 
 
-def plan(root, source_sha, main, binding, api, publisher_sha, binding_path=None, candidate_base=None):
+def plan(root, source_sha, main, binding, api, binding_path, candidate_base=None, selected=None):
+    """Compare one source transition; never reconstruct historical eligibility."""
     exact(root, source_sha)
-    if not SHA.fullmatch(publisher_sha):
-        raise ValueError("a full called-workflow publisher SHA is required")
     chain = git(root, "rev-list", "--first-parent", main).decode().splitlines()
-    if source_sha not in chain and candidate_base is None:
+    if candidate_base is None and source_sha not in chain:
         raise AuthorizationError("SOURCE_NOT_ON_MAIN", "source is not on first-parent source main")
     if candidate_base is not None:
         exact(root, candidate_base)
         if not chain or candidate_base != chain[0]:
             raise ValueError("candidate base must be the current accepted source main")
-    evidence_cache, snapshots, policies = {}, {}, {}
-    def policy(revision):
-        if revision not in policies:
-            if binding_path is None:
-                raise AuthorizationError("HISTORICAL_BINDING_UNRESOLVED", "historical producer binding path is required")
-            policies[revision] = revision_binding(root, revision, binding_path)
-        return policies[revision]
-    def export(revision, package):
-        key = revision, package["coordinate"]
-        if key not in snapshots:
-            historical = package_binding(policy(revision), package["coordinate"])
-            if (historical["root"], historical["adapter"], historical["destination"]) != (
-                    package["root"], package["adapter"], package["destination"]):
-                raise AuthorizationError("HISTORICAL_BINDING_UNRESOLVED", "historical package identity or destination requires owner disposition")
-            snapshots[key] = snapshot(root, revision, historical, require_ready=False)
-        return snapshots[key]
+    # The source commit is the only configuration identity, including on retry.
+    if binding_at(root, source_sha, binding_path, allow_local=True) != binding:
+        raise ValueError("binding must come from the exact source commit")
+    parents = git(root, "show", "-s", "--format=%P", source_sha).decode().split()
+    previous_sha = candidate_base or (parents[0] if parents else None)
+    previous_binding = None
+    if previous_sha and git(root, "ls-tree", previous_sha, "--", binding_path):
+        previous_binding = binding_at(root, previous_sha, binding_path, allow_local=True)
     results = []
-    for package in binding["packages"]:
+    for package in selected_packages(binding, selected):
         result = {"package": package["coordinate"], "source_sha": source_sha,
-                  "publisher_sha": publisher_sha, "destination": package["destination"]}
+                  "destination": package["destination"]}
         try:
-            parents = git(root, "show", "-s", "--format=%P", source_sha).decode().split()
-            if policy_identity(policy(source_sha)) != policy_identity(binding):
-                raise AuthorizationError("POLICY_PIN_MISMATCH", "source policy differs from the independently accepted policy pin")
-            current = export(source_sha, package)
-            previous = export(candidate_base or parents[0], package) if parents else None
-            # Source-time checks always enforce preparation. Production no-ops
-            # request no release, including for historically incomplete content.
-            # Every changed/new export still needs full current readiness.
-            if candidate_base is not None or payload(current) != payload(previous):
-                snapshot(root, source_sha, package)
-            if payload(current) == payload(previous):
+            current = snapshot(root, source_sha, package, require_ready=False)
+            # When an immediate previous binding exists use its own export
+            # inventory. An unbound coordinate (also in an existing binding)
+            # compares prior source under its current inventory without inventing
+            # historical policy or treating old payload as a new release.
+            prior_package = package
+            if previous_binding is not None:
+                prior_package = next((p for p in previous_binding["packages"]
+                                      if p["coordinate"] == package["coordinate"]), package)
+                if prior_package is not None and any(prior_package[k] != package[k]
+                                                     for k in ("root", "adapter", "destination")):
+                    raise AuthorizationError("PACKAGE_MAPPING_CHANGED", "immediate package mapping changed")
+            previous = (snapshot(root, previous_sha, prior_package, require_ready=False)
+                        if previous_sha and prior_package is not None else None)
+            inventory_changed = (previous_binding is not None and prior_package is not None
+                                 and set(prior_package.get("files", [])) != set(package.get("files", [])))
+            if payload(current) == payload(previous) and not inventory_changed:
                 result["status"] = "NO_PACKAGE_CHANGE"
             else:
-                baseline = package["baseline"]
-                boundary = candidate_base or source_sha
-                if baseline not in chain or chain.index(baseline) < chain.index(boundary):
-                    raise AuthorizationError("PACKAGE_BASELINE_UNRESOLVED", "accepted package baseline must be at or before source on first-parent main")
-                history = list(reversed(chain[chain.index(boundary):chain.index(baseline)]))
-                if candidate_base is not None:
-                    history.append(source_sha)
-                prior = export(baseline, package)
-                if baseline == source_sha and candidate_base is None:
-                    # The explicitly accepted baseline is retryable with its own
-                    # exact integration/CI and immediate version boundary checked.
-                    history, prior = [source_sha], previous
-                accepted = []
-                # A disposition bounds eligibility auditing, not frozen identity.
-                # Read the first-main payload of each older version from canonical
-                # Git history, including inventory-only changes. No PR/CI replay
-                # before the baseline and no current-policy fallback are needed.
-                versions = {}
-                identity_history = git(root, "rev-list", "--first-parent", "--reverse", baseline,
-                                       "--", package["root"], binding_path).decode().splitlines()
-                for revision in identity_history:
-                    if (not git(root, "ls-tree", revision, "--", binding_path)
-                            and not git(root, "ls-tree", revision, "--", package["root"])):
-                        continue
-                    historical_root = next((p["root"] for p in policy(revision)["packages"]
-                                            if p["coordinate"] == package["coordinate"]), package["root"])
-                    if not git(root, "ls-tree", revision, "--", historical_root):
-                        continue
-                    value = export(revision, package)
-                    if value is not None:
-                        versions.setdefault(value[1]["version"], payload(value))
-                if prior:
-                    versions.setdefault(prior[1]["version"], payload(prior))
-                for revision in history:
-                    next_value = export(revision, package)
-                    revision_parents = git(root, "show", "-s", "--format=%P", revision).decode().split()
-                    before_policy = policy(revision_parents[0])
-                    after_policy = policy(revision)
-                    if any(before_policy[k] != after_policy[k] for k in ("repository", "repository_id", "branch", "acceptance")):
-                        raise AuthorizationError("HISTORICAL_BINDING_UNRESOLVED", "source identity policy changes require owner disposition")
-                    # A policy rotation is accepted by the previous owners,
-                    # with CI from its source-time workflow. New owners cannot
-                    # self-authorize or retroactively cleanse earlier changes.
-                    authority = dict(after_policy, authorized_integrators=before_policy["authorized_integrators"])
-                    policy_changed = policy_identity(before_policy) != policy_identity(after_policy)
-                    if policy_changed and candidate_base is None:
-                        evidence_cache[revision] = eligible(api, authority, revision, revision_parents)
-                    if payload(prior) != payload(next_value):
-                        if next_value is None:
-                            raise AuthorizationError("OWNER_DISPOSITION_REQUIRED", "package removal requires owner disposition")
-                        version = next_value[1]["version"]
-                        if (candidate_base is None or revision == source_sha) and (
-                                (prior and prior[1]["version"] == version)
-                                or (version in versions and versions[version] != payload(next_value))):
-                            raise AuthorizationError("PACKAGE_VERSION_REUSE", "package payload changed without a new version")
-                        versions.setdefault(version, payload(next_value))
-                        if candidate_base is None:
-                            if revision not in evidence_cache:
-                                evidence_cache[revision] = eligible(api, authority, revision, revision_parents)
-                    if candidate_base is None and (policy_changed or payload(prior) != payload(next_value)):
-                        accepted.append(evidence_cache[revision])
-                    prior = next_value
-                result.update(status="CANDIDATE_VALID" if candidate_base is not None else "READY", version=current[1]["version"],
-                              payload_sha256=current[1]["payload_sha256"], acceptance=accepted)
+                if current is None:
+                    raise AuthorizationError("OWNER_DISPOSITION_REQUIRED", "package removal requires owner disposition")
+                if previous and previous[1]["version"] == current[1]["version"]:
+                    raise AuthorizationError("PACKAGE_VERSION_REUSE", "package payload changed without a new version")
+                snapshot(root, source_sha, package)
+                acceptance = [] if candidate_base is not None else [eligible(api, binding, source_sha, parents)]
+                result.update(status="CANDIDATE_VALID" if candidate_base is not None else "READY",
+                              version=current[1]["version"], payload_sha256=current[1]["payload_sha256"],
+                              acceptance=acceptance)
         except (ValueError, KeyError, TypeError) as error:
             result.update(status="AUTHORIZATION_PENDING", reason=str(error),
-                          reason_code=error.code if isinstance(error, AuthorizationError) else "ACCEPTANCE_OR_OWNER_DISPOSITION_UNRESOLVED")
+                          reason_code=error.code if isinstance(error, AuthorizationError)
+                          else "ACCEPTANCE_OR_OWNER_DISPOSITION_UNRESOLVED")
         results.append(result)
-    return {"source_sha": source_sha, "publisher_sha": publisher_sha, "packages": results}
+    return {"source_sha": source_sha, "packages": results}
 
 
 def remote_refs(destination, tag):
@@ -731,7 +734,7 @@ def finalize(staged, push=None):
         operation(Path(staged["staging"]), "push", "--atomic", "--", destination,
                   "refs/heads/main:refs/heads/main", f"refs/tags/{tag}:refs/tags/{tag}")
     except (ValueError, subprocess.SubprocessError):
-        result.update(status="FAILED_OR_PENDING", reason="Atomic publication failed or transport result is ambiguous; retry the same source and publisher SHA.")
+        result.update(status="FAILED_OR_PENDING", reason="Atomic publication failed or transport result is ambiguous; retry the same source SHA and workflow implementation pin.")
     try:
         refs = remote_refs(destination, tag)
         observed = tag_oid(refs, tag)
@@ -742,17 +745,18 @@ def finalize(staged, push=None):
                           warning="A competing identity exists and was retained; this source was not published.")
         else:
             result.update(status="FAILED_OR_PENDING", remote_refs=refs,
-                          reason="No release tag observed; retry the same source and publisher SHA.")
+                          reason="No release tag observed; retry the same source SHA and workflow implementation pin.")
     except ValueError:
-        result.update(status="FAILED_OR_PENDING", reason="Publication readback unavailable; inspect and retry the same source and publisher SHA.")
+        result.update(status="FAILED_OR_PENDING", reason="Publication readback unavailable; inspect and retry the same source SHA and workflow implementation pin.")
     return result
 
 
 def stage_all(root, binding, report, vibe, directory, selected):
     results = []
-    for package, decision in zip(binding["packages"], report["packages"]):
-        if selected and package["coordinate"] != selected:
+    for decision in report["packages"]:
+        if selected and decision["package"] != selected:
             continue
+        package = package_binding(binding, decision["package"])
         try:
             result = stage(root, package, decision, vibe, Path(directory) / package["coordinate"].replace("/", "."))
         except (ValueError, OSError, subprocess.SubprocessError) as error:
@@ -782,10 +786,7 @@ def main():
     parser.add_argument("--source", type=Path)
     parser.add_argument("--source-sha")
     parser.add_argument("--main", default="origin/main")
-    parser.add_argument("--policy", type=Path)
-    parser.add_argument("--policy-sha")
     parser.add_argument("--binding")
-    parser.add_argument("--publisher-sha")
     parser.add_argument("--package", help="One destination per named-secret workflow call")
     parser.add_argument("--vibe", type=Path)
     parser.add_argument("--directory", type=Path)
@@ -806,29 +807,19 @@ def main():
             raise ValueError("finalize requires one destination per named credential")
         report["packages"] = [finalize(report["packages"][0])]
     else:
-        exact(ROOT, args.publisher_sha)
-        if git(ROOT, "rev-parse", "HEAD").decode().strip() != args.publisher_sha:
-            raise ValueError("CLI code checkout differs from publisher pin")
-        binding = binding_at(args.policy, args.policy_sha, args.binding)
+        binding = binding_at(args.source, args.source_sha, args.binding)
         api = GitHub(binding["repository"], os.environ.get("GH_TOKEN"))
-        if args.operation != "check":
-            verify_trigger(api, binding, args.source_sha)
-        elif not args.base:
+        if args.operation == "check" and not args.base:
             raise ValueError("candidate check requires an exact accepted base")
-        if args.initial_publication:
-            if args.source_sha != args.policy_sha:
-                raise ValueError("initial publication requires the exact initiation/policy SHA")
-            report = initial_plan(args.source, args.source_sha, args.main, binding, api,
-                                  args.publisher_sha, args.binding, args.base if args.operation == "check" else None)
-        else:
-            report = plan(args.source, args.source_sha, args.main, binding, api, args.publisher_sha,
-                          args.binding, args.base if args.operation == "check" else None)
+        planner = initial_plan if args.initial_publication else plan
+        report = planner(args.source, args.source_sha, args.main, binding, api,
+                         args.binding, args.base if args.operation == "check" else None,
+                         selected=args.package)
+        # No-op onboarding must not query even the triggering CI run.
+        if args.operation != "check" and any(p["status"] == "READY" for p in report["packages"]):
+            verify_trigger(api, binding, args.source_sha)
         if args.operation == "stage":
             report = stage_all(args.source, binding, report, args.vibe, args.directory, args.package)
-        elif args.package:
-            report["packages"] = [row for row in report["packages"] if row["package"] == args.package]
-            if not report["packages"]:
-                raise ValueError("selected package is absent from the accepted binding")
     write_report(report, args.report)
     return int(any(item["status"] in ("AUTHORIZATION_PENDING", "FAILED_OR_PENDING") for item in report["packages"]))
 

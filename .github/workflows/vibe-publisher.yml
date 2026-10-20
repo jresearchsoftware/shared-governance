@@ -11,12 +11,8 @@ on:
         description: Exact producer source-main commit, never moving main
         required: true
         type: string
-      policy_sha:
-        description: Independently accepted producer binding commit
-        type: string
-        default: ''
       binding:
-        description: Binding path in the pinned producer policy commit
+        description: Binding path in the exact producer source commit
         type: string
         default: ''
       package:
@@ -35,7 +31,6 @@ on:
 permissions:
   contents: read
   actions: read
-  pull-requests: read
 
 jobs:
   publisher:
@@ -43,7 +38,6 @@ jobs:
     timeout-minutes: 15
     env:
       SOURCE_SHA: ${{ inputs.source_sha }}
-      POLICY_SHA: ${{ inputs.policy_sha }}
       BINDING: ${{ inputs.binding }}
       PACKAGE: ${{ inputs.package }}
       MODE: ${{ inputs.mode }}
@@ -54,15 +48,12 @@ jobs:
         env:
           PUBLISHER_SHA: ${{ job.workflow_sha }}
           PUBLISHER_REPOSITORY: ${{ job.workflow_repository }}
-          PUBLISHER_REF: ${{ job.workflow_ref }}
         run: |
           [[ "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
           [[ "$PUBLISHER_SHA" =~ ^[0-9a-f]{40}$ ]]
           case "$MODE" in
             fixture) ;;
             plan|publish)
-              [[ "$POLICY_SHA" =~ ^[0-9a-f]{40}$ ]]
-              [[ "$PUBLISHER_REF" == *@"$PUBLISHER_SHA" ]]
               test -n "$BINDING"
               test -n "$PACKAGE"
               ;;
@@ -107,16 +98,7 @@ jobs:
         env:
           PUBLISH_TOKEN: ${{ secrets.publish_token }}
         run: test "$PUBLISH_TOKEN" = 'task45-fixture-sentinel'
-      - name: Check out pinned accepted producer policy
-        id: policy_checkout
-        if: inputs.mode != 'fixture'
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: ${{ inputs.policy_sha }}
-          path: policy
-          fetch-depth: 0
-          persist-credentials: false
-      - name: Plan using actual GitHub source / PR / CI evidence
+      - name: Plan the exact source transition and push CI
         id: plan
         if: inputs.mode != 'fixture'
         env:
@@ -127,8 +109,7 @@ jobs:
           python3 publisher/tooling/vibe-publisher/publisher.py plan \
             "${initial_args[@]}" \
             --source producer --source-sha "$SOURCE_SHA" \
-            --policy policy --policy-sha "$POLICY_SHA" --binding "$BINDING" \
-            --publisher-sha "$PUBLISHER_SHA" --package "$PACKAGE" --report "$RUNNER_TEMP/publication.json"
+            --binding "$BINDING" --package "$PACKAGE" --report "$RUNNER_TEMP/publication.json"
           python3 - <<'PY'
           import json, os, pathlib
           report = json.loads((pathlib.Path(os.environ['RUNNER_TEMP']) / 'publication.json').read_text())
@@ -158,8 +139,7 @@ jobs:
           python3 publisher/tooling/vibe-publisher/publisher.py stage \
             "${initial_args[@]}" \
             --source producer --source-sha "$SOURCE_SHA" \
-            --policy policy --policy-sha "$POLICY_SHA" --binding "$BINDING" \
-            --publisher-sha "$PUBLISHER_SHA" --package "$PACKAGE" \
+            --binding "$BINDING" --package "$PACKAGE" \
             --vibe "$RUNNER_TEMP/vibe" --directory "$RUNNER_TEMP/staged" \
             --report "$RUNNER_TEMP/publication.json"
           python3 - <<'PY'
@@ -194,7 +174,6 @@ jobs:
           PUBLISHER_CHECKOUT_OUTCOME: ${{ steps.publisher_checkout.outcome }}
           PRODUCER_CHECKOUT_OUTCOME: ${{ steps.producer_checkout.outcome }}
           SOURCE_IDENTITY_OUTCOME: ${{ steps.source_identity.outcome }}
-          POLICY_CHECKOUT_OUTCOME: ${{ steps.policy_checkout.outcome }}
           PLAN_OUTCOME: ${{ steps.plan.outcome }}
           TOOL_OUTCOME: ${{ steps.tool.outcome }}
           STAGE_OUTCOME: ${{ steps.stage.outcome }}

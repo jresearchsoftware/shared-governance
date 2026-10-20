@@ -1,0 +1,145 @@
+F..E.FFFF
+======================================================================
+ERROR: test_new_binding_does_not_hide_a_same_version_rewrite_of_b (__main__.PackageOnboardingTests.test_new_binding_does_not_hide_a_same_version_rewrite_of_b)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/shared-task51-step2.jf0tIPrQ/tooling/vibe-publisher/test_publisher.py", line 160, in test_new_binding_does_not_hide_a_same_version_rewrite_of_b
+    self.assertEqual(self.plan(rewritten)["packages"][1]["reason_code"], "PACKAGE_VERSION_REUSE")
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'reason_code'
+
+======================================================================
+FAIL: test_existing_unbound_b_added_to_a_binding_is_noop (__main__.PackageOnboardingTests.test_existing_unbound_b_added_to_a_binding_is_noop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/shared-task51-step2.jf0tIPrQ/tooling/vibe-publisher/test_publisher.py", line 147, in test_existing_unbound_b_added_to_a_binding_is_noop
+    self.assertEqual([r["status"] for r in report["packages"]], ["NO_PACKAGE_CHANGE"] * 2)
+AssertionError: Lists differ: ['NO_PACKAGE_CHANGE', 'READY'] != ['NO_PACKAGE_CHANGE', 'NO_PACKAGE_CHANGE']
+
+First differing element 1:
+'READY'
+'NO_PACKAGE_CHANGE'
+
+- ['NO_PACKAGE_CHANGE', 'READY']
+?                        ^  ^^
+
++ ['NO_PACKAGE_CHANGE', 'NO_PACKAGE_CHANGE']
+?                        ^^^^^^^^^ +++ ^^^
+
+
+======================================================================
+FAIL: test_selected_noop_b_skips_changed_a_in_plan_check_and_stage (__main__.PackageSelectionTests.test_selected_noop_b_skips_changed_a_in_plan_check_and_stage) (operation='plan')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/shared-task51-step2.jf0tIPrQ/tooling/vibe-publisher/test_publisher.py", line 218, in test_selected_noop_b_skips_changed_a_in_plan_check_and_stage
+    code, report = self.invoke(operation, changed, b, extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/shared-task51-step2.jf0tIPrQ/tooling/vibe-publisher/test_publisher.py", line 195, in invoke
+    code = P.main()
+           ^^^^^^^^
+  File "/tmp/shared-task51-step2.jf0tIPrQ/tooling/vibe-publisher/publisher.py", line 804, in main
+    report = planner(args.source, args.source_sha, args.main, binding, api,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/shared-task51-step2.jf0tIPrQ/tooling/vibe-publisher/publisher.py", line 612, in plan
+    current = snapshot(root, source_sha, package, require_ready=False)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/unittest/mock.py", line 1118, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/unittest/mock.py", line 1122, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/unittest/mock.py", line 1183, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/shared-task51-step2.jf0tIPrQ/tooling/vibe-publisher/test_publisher.py", line 204, in selected_snapshot
+    self.assertNotEqual(package["coordinate"], a, "selected B must not inspect sibling A")
+AssertionError: 'org.fixture/landscape-subagents' == 'org.fixture/landscape-subagents' : selected B must not inspect sibling A
+
+======================================================================
+FAIL: test_selected_noop_b_skips_changed_a_in_plan_check_and_stage (__main__.PackageSelectionTests.test_selected_noop_b_skips_changed_a_in_plan_check_and_stage) (operation='check')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/shared-task51-step2.jf0tIPrQ/tooling/vibe-publisher/test_publisher.py", line 218, in test_selected_noop_b_skips_changed_a_in_plan_check_and_stage
+    code, report = self.invoke(operation, changed, b, extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/shared-task51-step2.jf0tIPrQ/tooling/vibe-publisher/test_publisher.py", line 195, in invoke
+    code = P.main()
+           ^^^^^^^^
+  File "/tmp/shared-task51-step2.jf0tIPrQ/tooling/vibe-publisher/publisher.py", line 804, in main
+    report = planner(args.source, args.source_sha, args.main, binding, api,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/shared-task51-step2.jf0tIPrQ/tooling/vibe-publisher/publisher.py", line 612, in plan
+    current = snapshot(root, source_sha, package, require_ready=False)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/unittest/mock.py", line 1118, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/unittest/mock.py", line 1122, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/unittest/mock.py", line 1183, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/shared-task51-step2.jf0tIPrQ/tooling/vibe-publisher/test_publisher.py", line 204, in selected_snapshot
+    self.assertNotEqual(package["coordinate"], a, "selected B must not inspect sibling A")
+AssertionError: 'org.fixture/landscape-subagents' == 'org.fixture/landscape-subagents' : selected B must not inspect sibling A
+
+======================================================================
+FAIL: test_selected_noop_b_skips_changed_a_in_plan_check_and_stage (__main__.PackageSelectionTests.test_selected_noop_b_skips_changed_a_in_plan_check_and_stage) (operation='stage')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/shared-task51-step2.jf0tIPrQ/tooling/vibe-publisher/test_publisher.py", line 218, in test_selected_noop_b_skips_changed_a_in_plan_check_and_stage
+    code, report = self.invoke(operation, changed, b, extra)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/shared-task51-step2.jf0tIPrQ/tooling/vibe-publisher/test_publisher.py", line 195, in invoke
+    code = P.main()
+           ^^^^^^^^
+  File "/tmp/shared-task51-step2.jf0tIPrQ/tooling/vibe-publisher/publisher.py", line 804, in main
+    report = planner(args.source, args.source_sha, args.main, binding, api,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/shared-task51-step2.jf0tIPrQ/tooling/vibe-publisher/publisher.py", line 612, in plan
+    current = snapshot(root, source_sha, package, require_ready=False)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/unittest/mock.py", line 1118, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/unittest/mock.py", line 1122, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/unittest/mock.py", line 1183, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/shared-task51-step2.jf0tIPrQ/tooling/vibe-publisher/test_publisher.py", line 204, in selected_snapshot
+    self.assertNotEqual(package["coordinate"], a, "selected B must not inspect sibling A")
+AssertionError: 'org.fixture/landscape-subagents' == 'org.fixture/landscape-subagents' : selected B must not inspect sibling A
+
+======================================================================
+FAIL: test_unknown_selection_fails_before_package_evidence (__main__.PackageSelectionTests.test_unknown_selection_fails_before_package_evidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/shared-task51-step2.jf0tIPrQ/tooling/vibe-publisher/test_publisher.py", line 253, in test_unknown_selection_fails_before_package_evidence
+    self.invoke("plan", self.revision, "org.fixture/absent")
+  File "/tmp/shared-task51-step2.jf0tIPrQ/tooling/vibe-publisher/test_publisher.py", line 195, in invoke
+    code = P.main()
+           ^^^^^^^^
+  File "/tmp/shared-task51-step2.jf0tIPrQ/tooling/vibe-publisher/publisher.py", line 804, in main
+    report = planner(args.source, args.source_sha, args.main, binding, api,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/shared-task51-step2.jf0tIPrQ/tooling/vibe-publisher/publisher.py", line 612, in plan
+    current = snapshot(root, source_sha, package, require_ready=False)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/unittest/mock.py", line 1118, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/unittest/mock.py", line 1122, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/unittest/mock.py", line 1177, in _execute_mock_call
+    raise effect
+AssertionError: no sibling export
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.521s
+
+FAILED (failures=5, errors=1)

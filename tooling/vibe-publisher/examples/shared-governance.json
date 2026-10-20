@@ -4,13 +4,10 @@
   "repository_id": 1408747561,
   "branch": "main",
   "ci_workflow": ".github/workflows/candidate.yml",
-  "acceptance": "owner-squash-attestation-v1",
-  "authorized_integrators": ["foal"],
   "packages": [
     {
       "coordinate": "org.jresearch.ai/development-governance",
       "root": "packages/development-governance",
-      "baseline": "ec048fb39ae28cf2d747101466a603ddd062b1b0",
       "adapter": "shared-governance-v1",
       "destination": "https://github.com/jrs-vibevm/org.jresearch.ai.development-governance.git"
     }

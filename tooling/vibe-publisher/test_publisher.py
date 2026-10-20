@@ -122,7 +122,7 @@ class Fixture(unittest.TestCase):
         return self.commit()
 
     def plan(self, revision=None):
-        return P.plan(self.source, revision or self.revision, "main", self.binding, self.api, CODE_SHA, "binding.json")
+        return P.plan(self.source, revision or self.revision, "main", self.binding, self.api, "binding.json")
 
     def remote(self, number):
         destination = self.directory / (self.packages[number]["coordinate"].split("/")[1] + ".git")
@@ -130,12 +130,183 @@ class Fixture(unittest.TestCase):
         return destination
 
 
+class PackageOnboardingTests(Fixture):
+    def bind_only_a(self):
+        self.binding["packages"] = self.packages[:1]
+        self.save_binding()
+        return self.change(1, "1.0.1")
+
+    def test_existing_unbound_b_added_to_a_binding_is_noop(self):
+        self.bind_only_a()
+        self.binding["packages"] = self.packages
+        self.save_binding()
+        onboarding = self.commit()
+        with patch.object(self.api, "pages", wraps=self.api.pages) as pages, \
+                patch.object(P, "remote_refs", side_effect=AssertionError("no destination for onboarding")):
+            report = self.plan(onboarding)
+        self.assertEqual([r["status"] for r in report["packages"]], ["NO_PACKAGE_CHANGE"] * 2)
+        pages.assert_not_called()
+        # Unchanged old B also needs no retrospective rights/readiness approval.
+        self.packages[1]["redistribution"] = {}
+        self.save_binding()
+        without_rights = self.commit()
+        self.assertEqual(self.plan(without_rights)["packages"][1]["status"], "NO_PACKAGE_CHANGE")
+
+    def test_new_binding_does_not_hide_a_same_version_rewrite_of_b(self):
+        self.bind_only_a()
+        self.binding["packages"] = self.packages
+        self.save_binding()
+        rewritten = self.change(1, "1.0.1")
+        self.assertEqual(self.plan(rewritten)["packages"][1]["reason_code"], "PACKAGE_VERSION_REUSE")
+
+    def test_new_binding_and_new_version_of_existing_b_is_ready(self):
+        self.bind_only_a()
+        self.binding["packages"] = self.packages
+        self.save_binding()
+        versioned = self.change(1, "1.0.2")
+        rows = self.plan(versioned)["packages"]
+        self.assertEqual([r["status"] for r in rows], ["NO_PACKAGE_CHANGE", "READY"])
+        self.assertEqual(rows[1]["acceptance"][0]["source_sha"], versioned)
+
+    def test_genuinely_new_b_can_publish_when_first_added_to_a_binding(self):
+        self.binding["packages"] = self.packages[:1]
+        self.save_binding()
+        root = self.packages[1]["root"]
+        self.git("rm", "-r", root)
+        self.commit()
+        self.git("restore", "--source", self.revision, "--", root)
+        self.binding["packages"] = self.packages
+        self.save_binding()
+        introduced = self.change(1, "1.0.1")
+        rows = self.plan(introduced)["packages"]
+        self.assertEqual([r["status"] for r in rows], ["NO_PACKAGE_CHANGE", "READY"])
+        self.assertEqual(rows[1]["version"], "1.0.1")
+
+
+class PackageSelectionTests(Fixture):
+    public_destinations = True
+
+    def invoke(self, operation, revision, selected, extra=()):
+        report = self.directory / (operation + "-selected.json")
+        command = ["publisher.py", operation, "--source", str(self.source),
+                   "--source-sha", revision, "--main", "main", "--binding", "binding.json",
+                   "--package", selected, "--report", str(report), *extra]
+        with patch.object(sys, "argv", command), patch("sys.stdout", new=io.StringIO()):
+            code = P.main()
+        return code, json.loads(report.read_text())
+
+    def test_selected_noop_b_skips_changed_a_in_plan_check_and_stage(self):
+        self.git("branch", "accepted", self.revision)
+        changed = self.change(0)
+        a, b = [p["coordinate"] for p in self.packages]
+        snapshot = P.snapshot
+        def selected_snapshot(root, revision, package, require_ready=True):
+            self.assertNotEqual(package["coordinate"], a, "selected B must not inspect sibling A")
+            self.assertFalse(require_ready, "no release readiness for unchanged B")
+            return snapshot(root, revision, package, require_ready=require_ready)
+        with patch.object(P, "snapshot", side_effect=selected_snapshot), \
+                patch.object(P.GitHub, "get", side_effect=AssertionError("no API for selected no-op")), \
+                patch.object(P.GitHub, "pages", side_effect=AssertionError("no CI for selected no-op")), \
+                patch.object(P, "verify_trigger", side_effect=AssertionError("no trigger for selected no-op")), \
+                patch.object(P, "remote_refs", side_effect=AssertionError("no destination for selected no-op")), \
+                patch.object(P, "included_dependencies", side_effect=AssertionError("no native readiness")):
+            for operation in ("plan", "check", "stage"):
+                with self.subTest(operation=operation):
+                    extra = (["--base", self.revision, "--main", "accepted"] if operation == "check"
+                             else ["--directory", str(self.directory / "unused-stage"),
+                                   "--vibe", str(self.directory / "absent-vibe")] if operation == "stage" else [])
+                    code, report = self.invoke(operation, changed, b, extra)
+                    self.assertEqual(code, 0)
+                    self.assertEqual([(p["package"], p["status"]) for p in report["packages"]], [(b, "NO_PACKAGE_CHANGE")])
+        self.assertFalse((self.directory / "unused-stage").exists())
+
+    def test_selected_changed_a_requires_current_ci_and_trigger(self):
+        changed = self.change(0)
+        a = self.packages[0]["coordinate"]
+        event = self.directory / "event.json"
+        event.write_text(json.dumps({"workflow_run": {"id": 987}}))
+        run = self.api.pages("actions/runs?head_sha=" + changed)[0]
+        with patch.dict(os.environ, GITHUB_EVENT_NAME="workflow_run", GITHUB_EVENT_PATH=str(event)), \
+                patch.object(P, "GitHub", return_value=self.api), \
+                patch.object(self.api, "pages", wraps=self.api.pages) as pages, \
+                patch.object(self.api, "get", return_value=run) as get:
+            code, report = self.invoke("plan", changed, a)
+            self.assertEqual(code, 0)
+            self.assertEqual([(p["package"], p["status"]) for p in report["packages"]], [(a, "READY")])
+            self.assertIn("head_sha=" + changed, pages.call_args.args[0])
+            get.assert_called_once_with("actions/runs/987")
+            get.reset_mock()
+            self.api.alter_run = lambda run: dict(run, head_sha=self.revision)
+            code, report = self.invoke("plan", changed, a)
+            self.assertEqual(code, 1)
+            self.assertEqual(report["packages"][0]["reason_code"], "MATCHING_SOURCE_CI_MISSING")
+            get.assert_not_called()
+            self.api.alter_run = lambda run: run
+            get.return_value = dict(run, head_sha=self.revision)
+            with self.assertRaisesRegex(P.AuthorizationError, "automatic trigger"):
+                self.invoke("plan", changed, a)
+
+    def test_unknown_selection_fails_before_package_evidence(self):
+        with patch.object(P.GitHub, "pages", side_effect=AssertionError("no sibling CI")), \
+                patch.object(P, "snapshot", side_effect=AssertionError("no sibling export")):
+            with self.assertRaisesRegex(ValueError, "selected package is absent"):
+                self.invoke("plan", self.revision, "org.fixture/absent")
+
+
 class PlanningTests(Fixture):
+    def test_integration_methods_use_only_current_push_ci(self):
+        self.binding.pop("acceptance")
+        self.binding.pop("authorized_integrators")
+        for package in self.packages:
+            package.pop("baseline")
+        self.save_binding()
+        self.commit()
+        with patch.object(self.api, "get", side_effect=AssertionError("no PR/integrator API")):
+            for route, version in (("direct", "1.0.1"), ("squash", "1.0.2"),
+                                   ("merge", "1.0.3"), ("rebase", "1.0.4")):
+                with self.subTest(route=route):
+                    if route == "direct":
+                        accepted = self.change(version=version)
+                    else:
+                        self.git("switch", "-qc", "candidate-" + route)
+                        self.change(version=version)
+                        if route == "rebase":
+                            self.git("switch", "main")
+                            (self.source / "fact.txt").write_text(route)
+                            self.commit()
+                            self.git("switch", "candidate-" + route)
+                            self.git("rebase", "main")
+                        self.git("switch", "main")
+                        if route == "squash":
+                            self.git("merge", "--squash", "candidate-" + route)
+                            accepted = self.commit()
+                        else:
+                            self.git("merge", "--no-ff" if route == "merge" else "--ff-only",
+                                     "-m", "Accepted fixture", "candidate-" + route)
+                            accepted = self.git("rev-parse", "HEAD")
+                    self.assertEqual(self.plan(accepted)["packages"][0]["status"], "READY")
+
+    def test_invalid_version_and_unapproved_redistribution_fail(self):
+        for version in ("01.0.1", "v1.0.1", "1.0", "1.0.1+private"):
+            with self.subTest(version=version):
+                self.git("reset", "--hard", self.revision)
+                revision = self.change(version=version)
+                self.assertEqual(self.plan(revision)["packages"][0]["reason_code"], "PACKAGE_IDENTITY_MISMATCH")
+        self.git("reset", "--hard", self.revision)
+        for rights in ({}, {"status": "pending"},
+                       {"status": "approved", "license": "MIT"},
+                       {"status": "approved", "license": "Apache-2.0", "approval": "https://example.com/decision"}):
+            self.git("reset", "--hard", self.revision)
+            self.packages[0]["redistribution"] = rights
+            self.save_binding()
+            revision = self.change(version="1.0.2")
+            self.assertEqual(self.plan(revision)["packages"][0]["reason_code"], "REDISTRIBUTION_UNRESOLVED")
+
     def test_two_independent_initial_versions(self):
         report = self.plan()
         self.assertEqual([row["version"] for row in report["packages"]], ["1.0.0", "1.0.0"])
         self.assertEqual([row["status"] for row in report["packages"]], ["READY", "READY"])
-        self.assertEqual(report["packages"][0]["acceptance"][0]["reviewed_head"], "b" * 40)
+        self.assertEqual(report["packages"][0]["acceptance"][0]["source_sha"], self.revision)
 
     def test_a_only_change_leaves_b_noop(self):
         changed = self.change()
@@ -143,10 +314,6 @@ class PlanningTests(Fixture):
         self.assertEqual([row["status"] for row in self.plan(changed)["packages"]],
                          ["READY", "NO_PACKAGE_CHANGE"])
 
-    def test_exact_accepted_baseline_can_be_retried(self):
-        for package in self.packages:
-            package["baseline"] = self.revision
-        self.assertEqual([row["status"] for row in self.plan()["packages"]], ["READY", "READY"])
 
     def test_factual_direct_main_noop_without_api(self):
         (self.source / "research.txt").write_text("Ordinary direct-main research")
@@ -165,19 +332,7 @@ class PlanningTests(Fixture):
         self.assertNotEqual(before[0][P.RECEIPT], after[0][P.RECEIPT])
         self.assertEqual(P.payload(before), P.payload(after))
 
-    def test_direct_main_versioned_change_is_pending(self):
-        changed = self.change()
-        self.assertEqual(self.plan(changed)["packages"][0]["status"], "AUTHORIZATION_PENDING")
 
-    def test_later_owner_merge_cannot_launder_ineligible_payload(self):
-        rejected = self.change()
-        accepted = self.change(version="1.0.2")
-        self.api.revisions.append(accepted)
-        self.assertEqual(self.plan(accepted)["packages"][0]["status"], "AUTHORIZATION_PENDING")
-        self.assertNotIn(rejected, self.api.revisions)
-        # An explicitly owner-reconciled binding can name this reviewed baseline.
-        self.packages[0]["baseline"] = rejected
-        self.assertEqual(self.plan(accepted)["packages"][0]["status"], "READY")
 
     def test_reused_version_is_rejected(self):
         readme = self.source / self.packages[0]["root"] / "README.md"
@@ -186,15 +341,6 @@ class PlanningTests(Fixture):
         self.api.revisions.append(changed)
         self.assertIn("without a new version", self.plan(changed)["packages"][0]["reason"])
 
-    def test_unmerged_wrong_integrator_repository_and_sha_are_pending(self):
-        for change in (lambda pr: dict(pr, merged=False),
-                       lambda pr: dict(pr, merged_by={"login": "stranger"}),
-                       lambda pr: dict(pr, merge_commit_sha="c" * 40),
-                       lambda pr: dict(pr, base={"ref": "main", "repo": {"id": 999}}),
-                       lambda pr: dict(pr, head={"sha": self.revision})):
-            with self.subTest(change=change):
-                self.api.alter_pr = change
-                self.assertEqual(self.plan()["packages"][0]["status"], "AUTHORIZATION_PENDING")
 
     def test_ci_identity_failures_are_pending(self):
         for values in ({"event": "pull_request"}, {"head_sha": "c" * 40},
@@ -226,7 +372,7 @@ class PlanningTests(Fixture):
     def test_frozen_dependencies_and_license_are_adapter_boundaries(self):
         manifest = self.source / self.packages[0]["root"] / "vibe.toml"
         manifest.write_text(manifest.read_text() + '\n[requires.packages]\n"org.fixture/dep" = "=1.0.0"\n')
-        with self.assertRaisesRegex(ValueError, "closure"):
+        with self.assertRaisesRegex(ValueError, "dependency slot"):
             P.snapshot(self.source, self.commit(), self.packages[0])
         self.packages[1]["files"].remove("LICENSE")
         (self.source / "binding.json").write_text(json.dumps(self.binding))
@@ -302,7 +448,7 @@ class TemporalTests(Fixture):
         self.revision = self.git("rev-parse", "HEAD")
         self.api = Evidence(self.binding, [self.revision])
 
-    def test_incomplete_historical_package_factual_noop_and_source_time_readiness(self):
+    def test_incomplete_historical_package_factual_and_candidate_noops(self):
         self.incomplete_initial_package()
         (self.source / "research.txt").write_text("Ordinary factual direct-main update")
         factual = self.commit()
@@ -314,12 +460,12 @@ class TemporalTests(Fixture):
         with patch.object(P, "remote_refs", side_effect=AssertionError("no distribution access for no-op")):
             self.assertEqual(P.stage(self.source, self.packages[0], decisions[0],
                                      self.directory / "absent-vibe", self.directory / "unused"), decisions[0])
-        # Production requested no release; an applicable source-time preparation
-        # check must still reject the same unchanged incomplete payload.
+        # Candidate non-package changes also request no release; unchanged older
+        # incomplete content must not acquire a retrospective readiness gate.
         self.git("switch", "-qc", "candidate")
         (self.source / "research.txt").write_text("Candidate factual update")
         proposed = self.commit()
-        self.assertEqual(self.candidate(proposed, factual)["reason_code"], "PUBLIC_EXPORT_INCOMPLETE")
+        self.assertEqual(self.candidate(proposed, factual)["status"], "NO_PACKAGE_CHANGE")
 
     def test_changed_incomplete_release_never_uses_the_noop_exemption(self):
         self.incomplete_initial_package()
@@ -334,28 +480,10 @@ class TemporalTests(Fixture):
         self.api.revisions.append(accepted)
         self.assertEqual(self.plan(accepted)["packages"][0]["reason_code"], "PUBLIC_EXPORT_INCOMPLETE")
 
-    def test_candidate_valid_is_bounded_and_production_retains_inherited_acceptance_gate(self):
-        inherited = self.change()
-        self.git("switch", "-qc", "candidate")
-        proposed = self.change(version="1.0.2")
-        with patch.object(self.api, "pages", side_effect=AssertionError("offline source check")):
-            candidate = self.candidate(proposed, inherited)
-        self.assertEqual(candidate["status"], "CANDIDATE_VALID")
-        self.assertEqual(candidate["acceptance"], [])
-        self.git("switch", "-q", "main")
-        self.git("merge", "--squash", "candidate")
-        accepted = self.commit()
-        self.api.revisions.append(accepted)
-        self.assertEqual(self.plan(accepted)["packages"][0]["reason_code"], "OWNER_ACCEPTANCE_NOT_ESTABLISHED")
-        # A separately accepted explicit disposition can move this audit baseline;
-        # candidate validity itself did not supply acceptance authority.
-        self.packages[0]["baseline"] = inherited
-        self.packages[0]["baseline_disposition"] = "https://github.com/fixture/private-source/issues/2"
-        self.assertEqual(self.plan(accepted)["packages"][0]["status"], "READY")
 
     def candidate(self, revision, base=None):
         with patch.object(self.api, "get", side_effect=AssertionError("source checks do not grant acceptance")):
-            return P.plan(self.source, revision, base or self.revision, self.binding, self.api, CODE_SHA,
+            return P.plan(self.source, revision, base or self.revision, self.binding, self.api,
                           "binding.json", base or self.revision)["packages"][0]
 
     def reset_fixture(self):
@@ -411,48 +539,8 @@ class TemporalTests(Fixture):
         changed = self.change()
         self.assertEqual(self.candidate(changed)["status"], "CANDIDATE_VALID")
 
-    def test_owner_addition_does_not_reauthorize_historical_package_bytes(self):
-        rejected = self.change()
-        self.binding["authorized_integrators"].append("new-owner")
-        self.save_binding()
-        rotation = self.commit()
-        changed = self.change(version="1.0.2")
-        self.api.revisions.extend([rejected, rotation, changed])
-        self.api.alter_pr = lambda pr: dict(pr, merged_by={"login": "new-owner" if pr["merge_commit_sha"] == rejected else "owner"})
-        self.assertEqual(self.plan(changed)["packages"][0]["status"], "AUTHORIZATION_PENDING")
-        # Explicit owner disposition of the accumulated delta is a distinct pin,
-        # not a side effect of adding an integrator.
-        self.packages[0]["baseline"] = rejected
-        self.packages[0]["baseline_disposition"] = "https://github.com/fixture/private-source/issues/2"
-        self.assertEqual(self.plan(changed)["packages"][0]["status"], "READY")
 
-    def test_historical_workflow_and_owner_survive_rotation_and_deletion(self):
-        self.binding["ci_workflow"] = ".github/workflows/replacement.yml"
-        self.binding["authorized_integrators"] = ["new-owner"]
-        self.save_binding()
-        rotation = self.commit()
-        changed = self.change()
-        self.api.revisions.extend([rotation, changed])
-        self.api.alter_pr = lambda pr: dict(pr, merged_by={"login": "new-owner" if pr["merge_commit_sha"] == changed else "owner"})
-        self.api.alter_run = lambda run: dict(run, path=(".github/workflows/check.yml" if run["head_sha"] == self.revision
-                                                        else self.binding["ci_workflow"]))
-        original = self.api.get
-        def get(path):
-            self.assertFalse(path.startswith("actions/workflows/"), "deleted historical workflows need no current lookup")
-            return original(path)
-        with patch.object(self.api, "get", side_effect=get):
-            result = self.plan(changed)["packages"][0]
-        self.assertEqual(result["status"], "READY")
-        self.assertEqual(result["acceptance"][0]["ci_workflow"], ".github/workflows/check.yml")
-        self.assertIn(rotation, [e["source_sha"] for e in result["acceptance"]])
 
-    def test_new_integrator_cannot_self_authorize_policy_rotation(self):
-        self.binding["authorized_integrators"] = ["new-owner"]
-        self.save_binding()
-        changed = self.change()
-        self.api.revisions.append(changed)
-        self.api.alter_pr = lambda pr: dict(pr, merged_by={"login": "new-owner" if pr["merge_commit_sha"] == changed else "owner"})
-        self.assertEqual(self.plan(changed)["packages"][0]["status"], "AUTHORIZATION_PENDING")
 
     def test_premerge_license_readiness_and_unresolved_rights(self):
         for defect in ("missing", "empty", "metadata", "rights"):
@@ -509,91 +597,47 @@ class TemporalTests(Fixture):
         result = self.plan(accepted)["packages"][0]
         self.assertEqual(result["status"], "READY")
         self.assertEqual(result["version"], "1.0.1")
-        self.assertEqual([e["source_sha"] for e in result["acceptance"]], [self.revision, accepted])
+        self.assertEqual([e["source_sha"] for e in result["acceptance"]], [accepted])
         self.assertEqual(self.git("tag"), "")
-        # Historical incompleteness is comparable, not an eligibility waiver.
+        # Historical incompleteness is comparable; only current push CI is needed.
         self.api.revisions.remove(self.revision)
-        self.assertEqual(self.plan(accepted)["packages"][0]["reason_code"], "OWNER_ACCEPTANCE_NOT_ESTABLISHED")
+        self.assertEqual(self.plan(accepted)["packages"][0]["status"], "READY")
 
-    def test_baseline_disposition_preserves_older_frozen_versions_in_candidate_and_plan(self):
-        for version in ("1.0.0", "3.0.0"):
-            with self.subTest(version=version):
-                self.reset_fixture()
-                newer = self.change(version="2.0.0")
-                self.packages[0]["baseline"] = newer
-                self.packages[0]["baseline_disposition"] = "https://github.com/fixture/private-source/issues/2"
-                self.save_binding()
-                disposed = self.commit()
-                # Earlier eligibility is disposed, not replayed; older identity
-                # still exists in Git without a remote tag or new registry.
-                self.api = Evidence(self.binding, [disposed])
-                self.git("switch", "-qc", "candidate")
-                proposed = self.change(version=version)
-                candidate = self.candidate(proposed, disposed)
-                expected = "AUTHORIZATION_PENDING" if version == "1.0.0" else "CANDIDATE_VALID"
-                self.git("switch", "-q", "main")
-                self.git("merge", "--squash", "candidate")
-                accepted = self.commit()
-                self.api.revisions.append(accepted)
-                production = self.plan(accepted)["packages"][0]
-                self.git("branch", "-D", "candidate")
-                self.assertEqual(candidate["status"], expected)
-                self.assertEqual(production["status"], "AUTHORIZATION_PENDING" if version == "1.0.0" else "READY")
-                if version == "1.0.0":
-                    self.assertEqual(candidate["reason_code"], "PACKAGE_VERSION_REUSE")
-                    self.assertEqual(production["reason_code"], "PACKAGE_VERSION_REUSE")
-                else:
-                    self.assertNotIn(self.revision, [e["source_sha"] for e in production["acceptance"]])
-                self.assertEqual(self.git("tag"), "")
 
     def test_source_check_rejects_a_stale_main_baseline(self):
         changed = self.change()
         with self.assertRaisesRegex(ValueError, "current accepted"):
-            P.plan(self.source, changed, "main", self.binding, self.api, CODE_SHA,
+            P.plan(self.source, changed, "main", self.binding, self.api,
                    "binding.json", self.revision)
 
-    def test_baseline_cannot_hide_unsupported_historical_package_root_change(self):
-        original = self.packages[0]["root"]
-        self.packages[0]["root"] = "packages/relocated-subagents"
-        self.git("mv", original, self.packages[0]["root"])
-        self.save_binding()
-        moved = self.change(version="2.0.0")
-        self.packages[0]["baseline"] = moved
-        self.packages[0]["baseline_disposition"] = "https://github.com/fixture/private-source/issues/2"
-        self.save_binding()
-        disposed = self.commit()
-        changed = self.change(version="3.0.0")
-        self.api = Evidence(self.binding, [disposed, changed])
-        candidate = self.candidate(changed, disposed)
-        production = self.plan(changed)["packages"][0]
-        self.assertEqual((candidate["status"], production["status"]),
-                         ("AUTHORIZATION_PENDING", "AUTHORIZATION_PENDING"))
-        self.assertEqual(candidate["reason_code"], "HISTORICAL_BINDING_UNRESOLVED")
-        self.assertEqual(production["reason_code"], "HISTORICAL_BINDING_UNRESOLVED")
 
-    def test_missing_policy_history_cannot_fall_back_to_current_policy(self):
-        result = P.plan(self.source, self.revision, "main", self.binding, self.api, CODE_SHA)
-        self.assertEqual(result["packages"][0]["reason_code"], "HISTORICAL_BINDING_UNRESOLVED")
-        self.git("rm", "binding.json")
-        missing = self.commit()
-        self.save_binding()
-        changed = self.change()
-        self.api.revisions.extend([missing, changed])
-        self.assertEqual(self.plan(changed)["packages"][0]["reason_code"], "HISTORICAL_BINDING_UNRESOLVED")
 
 
 class SourceCliTests(Fixture):
     public_destinations = True
 
+    def test_ordinary_noop_cli_needs_no_other_sha_or_ci_event_access(self):
+        (self.source / "notes.txt").write_text("Non-package source evidence")
+        revision = self.commit()
+        report = self.directory / "noop.json"
+        command = [sys.executable, str(Path(P.__file__)), "plan",
+                   "--source", str(self.source), "--source-sha", revision,
+                   "--main", "main", "--binding", "binding.json", "--report", str(report)]
+        result = subprocess.run(command, capture_output=True, text=True,
+            env=dict(self.env, GH_TOKEN="", GITHUB_EVENT_NAME="workflow_run",
+                     GITHUB_EVENT_PATH=str(self.directory / "absent-event.json")))
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual([p["status"] for p in json.loads(report.read_text())["packages"]],
+                         ["NO_PACKAGE_CHANGE"] * 2)
+
     def test_source_time_cli_validates_a_candidate_without_api_or_distribution(self):
         self.git("switch", "-qc", "candidate")
         changed = self.change()
-        code_sha = P.git(P.ROOT, "rev-parse", "HEAD").decode().strip()
         report = self.directory / "candidate.json"
         result = subprocess.run([sys.executable, str(Path(P.__file__)), "check",
             "--source", str(self.source), "--source-sha", changed, "--main", "main",
-            "--base", self.revision, "--policy", str(self.source), "--policy-sha", changed,
-            "--binding", "binding.json", "--publisher-sha", code_sha, "--report", str(report)],
+            "--base", self.revision,
+            "--binding", "binding.json", "--report", str(report)],
             env=dict(self.env, GH_TOKEN="", GITHUB_EVENT_NAME="pull_request"), capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertEqual([p["status"] for p in json.loads(report.read_text())["packages"]],
@@ -648,7 +692,7 @@ class DiagnosticsTests(unittest.TestCase):
              "reason": "no unambiguous authorized owner squash integration",
              "reason_code": "OWNER_ACCEPTANCE_NOT_ESTABLISHED"},
             {"package": "org.fixture/readback", "status": "FAILED_OR_PENDING",
-             "reason": "Publication readback unavailable; inspect and retry the same source and publisher SHA."},
+             "reason": "Publication readback unavailable; inspect and retry the same source SHA and workflow implementation pin."},
             {"package": "org.fixture/competing", "status": "ALREADY_PUBLISHED",
              "warning": "A competing identity exists and was retained; this source was not published."},
             {"package": "org.fixture/unknown", "status": "FAILED_OR_PENDING",
@@ -672,7 +716,7 @@ class DiagnosticsTests(unittest.TestCase):
             self.assertIn("OWNER_ACCEPTANCE_NOT_ESTABLISHED", summary)
             self.assertIn("PUBLICATION_READBACK_UNAVAILABLE", summary)
             self.assertIn("COMPETING_TAG_RETAINED", summary)
-            self.assertIn("Resolve the listed owner acceptance or disposition", summary)
+            self.assertIn("Resolve the listed source, CI, readiness or explicit initial-publication", summary)
             self.assertNotIn("secret@example.invalid", summary)
             self.assertNotIn("private/path", summary)
 
@@ -726,6 +770,111 @@ class NativeTests(Fixture):
         report = self.plan()
         return P.stage(self.source, self.packages[index], report["packages"][index], VIBE,
                        self.directory / (suffix + str(index)))
+
+    def test_native_selected_b_stages_its_own_payload_and_destination(self):
+        self.revision = self.change(1)
+        b = self.packages[1]["coordinate"]
+        report = P.plan(self.source, self.revision, "main", self.binding, self.api,
+                        "binding.json", selected=b)
+        self.assertEqual([r["package"] for r in report["packages"]], [b])
+        staged = P.stage_all(self.source, self.binding, report, VIBE,
+                             self.directory / "selected-b", b)["packages"][0]
+        self.assertEqual(staged["destination"], self.packages[1]["destination"])
+        self.assertEqual(P.finalize(staged)["status"], "PUBLISHED")
+        files = P.snapshot(self.source, self.revision, self.packages[1])[0]
+        for path, data in files.items():
+            self.assertEqual(P.git(Path(staged["staging"]), "show", "v1.0.1:" + path), data)
+        self.assertEqual(P.remote_refs(self.packages[0]["destination"], "v1.0.1"), [])
+
+    def native_dependencies(self, mutable=False):
+        registry, consumer = self.directory / "registry", self.directory / "consumer"
+        consumer.mkdir()
+        for name in ("direct", "transitive"):
+            target = registry / "org.fixture" / name / "v1.0.0"
+            target.mkdir(parents=True)
+            text = ('[package]\ngroup="org.fixture"\nname="' + name + '"\nversion="1.0.0"\n'
+                    'kind="flow"\nformat="simple"\nepoch=1\nlicense="MIT"\npublish=false\n'
+                    'frozen=' + ("false" if mutable and name == "transitive" else "true") + '\n')
+            if name == "direct":
+                text += '\n[requires.packages]\n"org.fixture/transitive"="=1.0.0"\n'
+            (target / "vibe.toml").write_text(text)
+        (consumer / "vibe.toml").write_text('[project]\nname="deps"\nversion="0.0.0"\nspec_format="mixed"\n'
+            '[requires.packages]\n"org.fixture/direct"="=1.0.0"\n')
+        result = subprocess.run([str(VIBE), "--offline", "--json", "install", "--path", str(consumer),
+            "--registry", str(registry), "--assume-yes", "--no-default-registry"],
+            env=P.native_environment(self.directory), capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        package = self.packages[0]
+        target = self.source / package["root"]
+        for path in consumer.rglob("*"):
+            if not path.is_file():
+                continue
+            relative = path.relative_to(consumer).as_posix()
+            if relative != "vibe.lock" and not relative.startswith("vibevm/vibedeps/"):
+                continue
+            output = target / relative
+            output.parent.mkdir(parents=True, exist_ok=True)
+            output.write_bytes(path.read_bytes())
+            package["files"].append(relative)
+        manifest = target / "vibe.toml"
+        manifest.write_text(manifest.read_text() + '\n[requires.packages]\n"org.fixture/direct"="=1.0.0"\n')
+        self.save_binding()
+        self.revision = self.change()
+
+    def test_native_direct_transitive_dependency_release(self):
+        self.native_dependencies()
+        staged = self.stage()
+        self.assertEqual(staged["status"], "STAGED")
+        self.assertEqual(P.finalize(staged)["status"], "PUBLISHED")
+        paths = self.git("ls-tree", "-r", "--name-only", "v1.0.1", cwd=Path(staged["staging"]))
+        self.assertIn("org.fixture.direct/1.0.0/vibe.toml", paths)
+        self.assertIn("org.fixture.transitive/1.0.0/vibe.toml", paths)
+        files = P.snapshot(self.source, self.revision, self.packages[0])[0]
+        for path, data in files.items():
+            self.assertEqual(P.git(Path(staged["staging"]), "show", "v1.0.1:" + path), data)
+
+    def test_native_included_mutable_or_unresolved_closure_rejected(self):
+        self.native_dependencies(mutable=True)
+        row = self.plan()["packages"][0]
+        self.assertEqual(row["reason_code"], "DEPENDENCY_CLOSURE_UNQUALIFIED")
+        # Missing transitive slot fails even with otherwise valid direct metadata.
+        self.packages[0]["files"] = [f for f in self.packages[0]["files"]
+                                     if "org.fixture.transitive/" not in f]
+        self.save_binding()
+        self.revision = self.change(version="1.0.2")
+        self.assertEqual(self.plan()["packages"][0]["reason_code"], "DEPENDENCY_CLOSURE_UNQUALIFIED")
+
+    def test_native_included_hash_and_inventory_evidence_is_required(self):
+        self.native_dependencies()
+        root = self.source / self.packages[0]["root"]
+        marker = root / "vibevm/vibedeps/org.fixture.direct/1.0.0/.vibe-slot.toml"
+        marker.write_text(marker.read_text().replace('source_hash = "sha256:', 'source_hash = "sha256:0'))
+        self.revision = self.change(version="1.0.2")
+        self.assertEqual(self.plan()["packages"][0]["reason_code"], "DEPENDENCY_CLOSURE_UNQUALIFIED")
+
+    def test_included_dependency_is_checked_even_when_labelled_development_only(self):
+        self.native_dependencies(mutable=True)
+        path = self.source / self.packages[0]["root"] / "vibe.toml"
+        path.write_text(path.read_text().replace("[requires.packages]", "[dev-requires.packages]"))
+        self.revision = self.change(version="1.0.2")
+        self.assertEqual(self.plan()["packages"][0]["reason_code"], "DEPENDENCY_CLOSURE_UNQUALIFIED")
+
+    def test_nonincluded_dev_optional_planning_and_native_schema_limit(self):
+        manifest = self.source / self.packages[0]["root"] / "vibe.toml"
+        manifest.write_text(manifest.read_text() + '\n[dev-requires.packages]\n"org.fixture/dev"="*"\n'
+            '[requires.packages]\n"org.fixture/optional"={version="*", optional=true}\n')
+        self.revision = self.change()
+        self.assertEqual(self.plan()["packages"][0]["status"], "READY")
+        # VibeVM 1.0.7 itself cannot parse dev-requires/optional=true. Do not
+        # rewrite frozen manifests to hide this upstream schema limitation.
+        with self.assertRaisesRegex(ValueError, "native staging failed"):
+            self.stage()
+
+    def test_native_excluded_optional_suggestion_publishes(self):
+        manifest = self.source / self.packages[0]["root"] / "vibe.toml"
+        manifest.write_text(manifest.read_text() + '\n[suggests]\npackages=["flow:org.fixture/unused@*"]\n')
+        self.revision = self.change()
+        self.assertEqual(P.finalize(self.stage())["status"], "PUBLISHED")
 
     def test_native_two_packages_partial_failure_and_same_source_retry(self):
         a, b = self.stage(0), self.stage(1)
@@ -832,7 +981,85 @@ class InitialPublicationTests(Fixture):
 
     def initial(self, revision=None):
         return P.initial_plan(self.source, revision or self.initiation, self.main,
-                              self.binding, self.api, CODE_SHA, "binding.json")
+                              self.binding, self.api, "binding.json")
+
+    def test_initial_selected_b_retains_its_acceptance_without_inspecting_a(self):
+        a, b = [p["coordinate"] for p in self.packages]
+        snapshot = P.snapshot
+        def selected_snapshot(root, revision, package, require_ready=True):
+            self.assertNotEqual(package["coordinate"], a, "initial selected B must not inspect A")
+            return snapshot(root, revision, package, require_ready=require_ready)
+        with patch.object(P, "snapshot", side_effect=selected_snapshot):
+            report = P.initial_plan(self.source, self.initiation, self.main, self.binding,
+                                    self.api, "binding.json", selected=b)
+        self.assertEqual([(r["package"], r["status"]) for r in report["packages"]], [(b, "READY")])
+        row = report["packages"][0]
+        self.assertEqual(row["source_acceptance"]["source_sha"], self.frozen)
+        self.assertEqual(row["readiness_acceptance"]["source_sha"], self.initiation)
+
+    def test_late_onboarding_then_generic_102_103_without_historical_evidence(self):
+        # The ordinary producer supplies neither baseline nor PR/integrator
+        # attestations. The explicit Task 49 route is tested separately.
+        for key in ("acceptance", "authorized_integrators"):
+            self.binding.pop(key)
+        for package in self.packages:
+            for key in ("baseline", "baseline_disposition", "initial_publication"):
+                package.pop(key)
+            package["redistribution"] = {}
+        self.save_binding()
+        onboarding = self.commit()
+        def ordinary(revision):
+            return P.plan(self.source, revision, self.main, self.binding, self.api, "binding.json")
+        with patch.object(self.api, "get", side_effect=AssertionError("no PR/identity lookup")), \
+                patch.object(self.api, "pages", side_effect=AssertionError("no CI for no-op")), \
+                patch.object(P, "remote_refs", side_effect=AssertionError("no destination for no-op")):
+            self.assertEqual([r["status"] for r in ordinary(onboarding)["packages"]], ["NO_PACKAGE_CHANGE"] * 2)
+            (self.source / "notes.txt").write_text("non-package commit")
+            factual = self.commit()
+            self.assertEqual([r["status"] for r in ordinary(factual)["packages"]], ["NO_PACKAGE_CHANGE"] * 2)
+        for package in self.packages:
+            package["redistribution"] = {"status": "approved", "license": "MIT",
+                                       "approval": "https://github.com/fixture/private-source/issues/1"}
+        self.save_binding()
+        self.commit()
+        with patch.object(self.api, "get", side_effect=AssertionError("no PR/identity lookup")):
+            for version in ("1.0.2", "1.0.3"):
+                changed = self.change(version=version)
+                calls = []
+                pages = self.api.pages
+                def current_ci(path, key=None):
+                    calls.append(path)
+                    self.assertIn("head_sha=" + changed, path)
+                    return pages(path, key)
+                with patch.object(self.api, "pages", side_effect=current_ci):
+                    rows = ordinary(changed)["packages"]
+                self.assertEqual([r["status"] for r in rows], ["READY", "NO_PACKAGE_CHANGE"])
+                self.assertEqual(len(calls), 1)
+                self.assertEqual(rows[0]["source_sha"], changed)
+                self.assertEqual(rows[0]["version"], version)
+            # Moving main and worktree policy cannot change the selected run.
+            selected = changed
+            self.binding["ci_workflow"] = ".github/workflows/later.yml"
+            self.save_binding()
+            self.change(version="1.0.4")
+            frozen_binding = P.binding_at(self.source, selected, "binding.json", allow_local=True)
+            self.assertEqual(P.plan(self.source, selected, self.main, frozen_binding,
+                                   self.api, "binding.json")["packages"][0]["version"], "1.0.3")
+
+    @unittest.skipUnless(VIBE, "pass --vibe for pinned Linux native staging")
+    def test_late_onboarding_future_versions_native_publish_and_retry(self):
+        with patch.dict(os.environ, self.env):
+            self.remote(0)
+            for version in ("1.0.2", "1.0.3"):
+                changed = self.change(version=version)
+                report = P.plan(self.source, changed, self.main, self.binding, self.api, "binding.json")
+                row = report["packages"][0]
+                self.assertEqual(row["status"], "READY")
+                staged = P.stage(self.source, self.packages[0], row, VIBE, self.directory / version)
+                self.assertEqual(P.finalize(staged)["status"], "PUBLISHED")
+                self.assertEqual(P.stage(self.source, self.packages[0], row, None, None)["status"], "ALREADY_PUBLISHED")
+            tags = self.git("tag", cwd=Path(self.packages[0]["destination"].removeprefix("file://")))
+            self.assertEqual(tags.splitlines(), ["v1.0.2", "v1.0.3"])
 
     def amend_binding(self):
         self.git("reset", "--soft", self.frozen)
@@ -841,13 +1068,11 @@ class InitialPublicationTests(Fixture):
         self.api.revisions[-1] = self.initiation
 
     def test_current_baseline_disposition_alone_does_not_publish(self):
-        for revision in (self.frozen, self.initiation):
-            report = P.plan(self.source, revision, self.main, self.binding, self.api, CODE_SHA, "binding.json")
-            self.assertEqual([(p["status"], p["reason_code"]) for p in report["packages"]],
-                [("AUTHORIZATION_PENDING", "HISTORICAL_BINDING_UNRESOLVED")] * 2)
+        report = P.plan(self.source, self.initiation, self.main, self.binding, self.api, "binding.json")
+        self.assertEqual([p["status"] for p in report["packages"]], ["NO_PACKAGE_CHANGE"] * 2)
         (self.source / "research.txt").write_text("Unrelated direct-main evidence")
         revision = self.commit()
-        report = P.plan(self.source, revision, self.main, self.binding, self.api, CODE_SHA, "binding.json")
+        report = P.plan(self.source, revision, self.main, self.binding, self.api, "binding.json")
         self.assertEqual([p["status"] for p in report["packages"]], ["NO_PACKAGE_CHANGE"] * 2)
 
     def test_first_publication_separates_source_acceptance_and_current_ci(self):
@@ -866,35 +1091,43 @@ class InitialPublicationTests(Fixture):
         self.api.alter_pr = forge_old
         self.assertEqual(self.initial()["packages"][0]["reason_code"], "OWNER_ACCEPTANCE_NOT_ESTABLISHED")
 
+    def test_initial_acceptance_contract_remains_isolated_and_required(self):
+        self.binding["acceptance"] = "unsupported"
+        self.amend_binding()
+        self.assertEqual(self.initial()["packages"][0]["reason_code"], "PRODUCER_BINDING_UNSUPPORTED")
+        self.binding["acceptance"] = "owner-squash-attestation-v1"
+        self.binding.pop("authorized_integrators")
+        self.amend_binding()
+        self.assertEqual(self.initial()["packages"][0]["reason_code"], "PRODUCER_BINDING_UNSUPPORTED")
+
     def test_initial_candidate_check_is_offline_and_cannot_authorize_staging(self):
         self.git("branch", "accepted", self.frozen)
         with patch.object(self.api, "get", side_effect=AssertionError("candidate checks are offline")):
             report = P.initial_plan(self.source, self.initiation, "accepted", self.binding,
-                                    self.api, CODE_SHA, "binding.json", self.frozen)
+                                    self.api, "binding.json", self.frozen)
         self.assertEqual([p["status"] for p in report["packages"]], ["CANDIDATE_VALID"] * 2)
         self.assertEqual(P.stage(self.source, self.packages[0], report["packages"][0], None, None),
                          report["packages"][0])
         with self.assertRaisesRegex(ValueError, "current accepted source main"):
             P.initial_plan(self.source, self.initiation, "accepted", self.binding,
-                           self.api, CODE_SHA, "binding.json", self.old)
+                           self.api, "binding.json", self.old)
 
-    def test_initial_candidate_cli_requires_the_same_source_and_policy_pin(self):
+    def test_initial_candidate_cli_uses_only_the_source_binding(self):
         for i, package in enumerate(self.packages):
             package["destination"] = "https://github.com/fixture/distribution-" + str(i) + ".git"
         self.amend_binding()
         self.git("branch", "accepted", self.frozen)
-        code_sha = P.git(P.ROOT, "rev-parse", "HEAD").decode().strip()
         report = self.directory / "candidate.json"
         command = [sys.executable, str(Path(P.__file__)), "check", "--initial-publication",
             "--source", str(self.source), "--source-sha", self.initiation, "--main", "accepted",
-            "--base", self.frozen, "--policy", str(self.source), "--policy-sha", self.initiation,
-            "--binding", "binding.json", "--publisher-sha", code_sha, "--report", str(report)]
+            "--base", self.frozen,
+            "--binding", "binding.json", "--report", str(report)]
         result = subprocess.run(command, env=dict(self.env, GH_TOKEN="", GITHUB_EVENT_NAME="pull_request"),
                                 capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertEqual([p["status"] for p in json.loads(report.read_text())["packages"]],
                          ["CANDIDATE_VALID"] * 2)
-        command[command.index("--policy-sha") + 1] = self.frozen
+        command[command.index("--source-sha") + 1] = self.frozen
         result = subprocess.run(command, env=self.env, capture_output=True, text=True)
         self.assertNotEqual(result.returncode, 0)
 
@@ -961,7 +1194,7 @@ class InitialPublicationTests(Fixture):
         self.api.revisions.append(later)
         self.assertEqual(self.initial(later)["packages"][0]["reason_code"], "INITIAL_PUBLICATION_UNRESOLVED")
         self.assertEqual(self.initial()["packages"][0]["status"], "READY")
-        ordinary = P.plan(self.source, later, self.main, self.binding, self.api, CODE_SHA, "binding.json")
+        ordinary = P.plan(self.source, later, self.main, self.binding, self.api, "binding.json")
         self.assertEqual([p["status"] for p in ordinary["packages"]], ["NO_PACKAGE_CHANGE"] * 2)
 
     def test_frozen_version_first_integration_and_intervening_reuse(self):
@@ -1019,6 +1252,8 @@ if __name__ == "__main__":
     if args.vibe:
         VIBE = args.vibe.resolve()
         NativeTests.__unittest_skip__ = False
-        native_initial = InitialPublicationTests.test_native_first_publication_partial_success_retry_and_exact_bytes
-        InitialPublicationTests.test_native_first_publication_partial_success_retry_and_exact_bytes = native_initial.__wrapped__
+        for name in dir(InitialPublicationTests):
+            if name.startswith("test_native_") or name == "test_late_onboarding_future_versions_native_publish_and_retry":
+                method = getattr(InitialPublicationTests, name)
+                setattr(InitialPublicationTests, name, method.__wrapped__)
     unittest.main(argv=[sys.argv[0], *remaining])
