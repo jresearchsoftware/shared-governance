@@ -7,6 +7,7 @@ on:
       - vibe-publisher.json
       - scripts/check-publication.py
       - scripts/test-publication.py
+      - scripts/probe-publication.py
       - .github/workflows/publish.yml
       - .github/workflows/producer-publisher-fixture.yml
 
@@ -39,11 +40,7 @@ jobs:
       - name: Read-only actual exact-source push CI evidence
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python3 publisher/tooling/vibe-publisher/probe_github.py
-  shared:
-    uses: jresearchsoftware/shared-governance/.github/workflows/vibe-publisher.yml@5a1e5de66388501235fc9ffd23d45efb34df2b85
-    with:
-      mode: fixture
-      source_sha: ${{ github.event.pull_request.head.sha }}
-    secrets:
-      publish_token: task45-fixture-sentinel
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha }}
+        run: python3 producer/scripts/probe-publication.py --publisher publisher --candidate "$SOURCE_SHA"
+      - name: Accepted shared implementation regressions without destination credentials
+        run: python3 publisher/tooling/vibe-publisher/test_publisher.py
