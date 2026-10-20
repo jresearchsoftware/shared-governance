@@ -68,6 +68,28 @@ syntax support would require upstream/toolchain work outside this Step.
 
 ## Reproduction
 
+Observed local results on Debian/Python 3.11.2:
+
+| Check | Result and primary log |
+| --- | --- |
+| Publisher, pinned native binary | **65 passed, zero skips**, implementation/test revision `ada2eea90910e2b932bec64880b408da9cfc9cfe`; [log](logs/publisher-native.log). One passing negative test explicitly records the unsupported native dev/optional syntax described above. |
+| Source/exact export | PASS, 722 tracked files / 1,136 local links at `0e8efd18c6dba99c97106e158c38a70f80c57ad1`; [log](logs/source-qualification.log). Final-head source qualification is separately required in CI. |
+| Distribution | **47 passed**, [log](logs/distribution.log). |
+| Release/dependency, pinned native binary | **17 passed, zero skips**, [log](logs/release-native.log). |
+| Self-adoption | **13 passed**, [log](logs/self-adoption.log). |
+| ChatGPT projection | **24 passed**, [log](logs/chatgpt-projection.log). |
+| Package boundary / whitespace | PASS at `f6a486876d37b347070f59f4ad1edb7394dd2ff4`: package unchanged at 3.0.0; diff check clean. |
+
+The distribution/release/self-adoption/ChatGPT checks ran at `f6a486876d37b347070f59f4ad1edb7394dd2ff4`;
+their scripts, package and installed producer state are unchanged in the final
+implementation. Later corrections affected the publisher diagnostic regression,
+explicit-mode acceptance isolation and additional CLI tests; the full 65-test
+native publisher suite above covers those final implementation bytes. The
+read-only primary GitHub probe verified accepted source `c26d0fc3...` against
+successful push CI [39253057798](https://github.com/jresearchsoftware/shared-governance/actions/runs/39253057798)
+and rejected the candidate lacking successful source-main push CI. It does not
+claim that a real producer/cross-repository release was exercised.
+
 Use a clean native Linux clone of the result commit and the pinned binary:
 
 ```sh
