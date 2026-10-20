@@ -125,9 +125,16 @@ No new automated classifier or publication gate is introduced.
 | S8: Separate consumer adopts IR but keeps its own control/specialist policy and no prepublication preview stage. | IR report binds blockers and separates proposals; PC-013 reference does not adopt PC. Existing specialist obligations and local publication path remain. | Add universal preview/owner wait, weaken stronger native review identity, or activate new topic through a link. PASS, IR-001/IR-002/IR-013/IR-020. |
 | S9: Ordinary in-scope security fix already admitted; evidence and independent Direct assessment sufficient. | Keep existing checks and independent acceptance; no additional approval/owner reconfirmation. | Every finding, safe hardening or PR now needs owner reapproval. PASS, unchanged PC-003/TH-013/TH-022 plus PC-013. |
 
+S4's Git primitive was also exercised in an actual disposable local fixture:
+[positive control](logs/positive-control.log) records the original frozen tag
+retained after non-force rejection and changed after the intentionally unsafe
+force variant. No production publisher was modified and no public destination
+was contacted. The evidence proves the supplied unsafe variant violates an
+existing invariant; finding classification itself remains an authoring walk.
+
 ## Qualification
 
-Executed source/export/native checks and their limits will be recorded in
-[validation.md](validation.md) before the canonical Outcome. The walks above
+Executed source/export/native checks and their limits are recorded in
+[validation.md](validation.md). The walks above
 do not establish fresh model adherence, live client settings, publication or
 consumer migration. Implementer checks cannot supply independent acceptance.

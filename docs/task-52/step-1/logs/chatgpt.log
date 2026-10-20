@@ -1,0 +1,14 @@
+..................F.....
+======================================================================
+FAIL: test_real_producer_output_and_accepted_workflow_routing (__main__.ProjectionTests.test_real_producer_output_and_accepted_workflow_routing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/shared-governance-task52-final-01a15917/scripts/test-chatgpt-projection.py", line 253, in test_real_producer_output_and_accepted_workflow_routing
+    self.assertEqual(receipt, recorded)
+AssertionError: {'schema': 2, 'generator': 'shared-governan[11295 chars]d4'}} != {'acceptance_verification': 'external owner[11295 chars]6135}
+Diff is 12839 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 24 tests in 2.305s
+
+FAILED (failures=1)
