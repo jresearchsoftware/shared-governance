@@ -61,7 +61,8 @@ independently accepted. Historical accepted source, receipts and tags stay intac
 An independently reviewed package-changing owner merge plus successful main push
 CI continues to authorize the existing automatic publication below. Preparing
 this candidate grants no merge or manual publication authority and adds no
-second release permission. The shared publisher remains an unactivated alternative.
+second release permission. Task 53 proposes the shared-publisher cutover described
+below; independent review and authorized integration remain separate.
 
 The same unaccepted 3.0.0 candidate includes the owner-facing finding-report
 clarification in Task Handoff and optional Independent Review. Aggregate impact
@@ -74,8 +75,24 @@ Frozen 2.7.0 and the existing post-accepted-merge publisher remain unchanged.
 
 [Publish accepted package](../.github/workflows/publish.yml) runs after successful
 Public candidate checks for a push to source main. It binds the accepted merge
-or squash SHA, checks first-parent source-main membership and the version/payload
-transition, and qualifies that exact accepted source. Unchanged packages skip.
+or squash SHA (ordinary merge, rebase and eligible direct-main also work), checks
+first-parent source-main membership and the version/payload transition, and
+qualifies that exact accepted source. Unchanged packages skip. The candidate
+caller delegates staging and publication to the accepted shared workflow pinned
+to `5a1e5de66388501235fc9ffd23d45efb34df2b85`, passing only the exact triggering
+`source_sha` and its committed [producer binding](../vibe-publisher.json).
+There is no independent producer-policy SHA or PR/integrator eligibility gate.
+
+An unprivileged readiness job uses that same pinned planner and checks the
+producer's affirmative MIT redistribution acknowledgement for changed packages.
+The accepted governance adapter already checks license bytes/metadata, exact
+export inventory and the dependency-free passive contract; its early return
+precedes tree-v1's generic rights acknowledgement. This small producer check
+closes that integration gap without copying the publisher. Its reference is
+the owner's original [public MIT bootstrap request](https://github.com/jresearchsoftware/codex-relay/issues/83#issuecomment-6037643777),
+implemented by the accepted root/package LICENSE grant. It acknowledges existing
+rights while applicable, creates no new rights and adds no per-release approval.
+Unchanged packages skip before rights/CI/destination/native-tool work.
 The explicit direct-Git destination is
 [jrs-vibevm/org.jresearch.ai.development-governance](https://github.com/jrs-vibevm/org.jresearch.ai.development-governance).
 There is no registry service. Source `publish=false` excludes workspace batch
@@ -107,7 +124,7 @@ authorized fine-grained token granting Contents write on the distribution
 repository only. The source repository's ordinary `GITHUB_TOKEN` cannot write
 across repositories. Keep allowed writers with authorized maintainers/workflows;
 credential setup is an owner/account action, not inferred from GitHub admin access.
-The token is used only by Git askpass in the publication step; it is never placed
+The token is used only by Git askpass in shared finalization; it is never placed
 in a remote URL, persisted config, artifact or log. PR checks receive no publisher
 secret. No environment approval gate or second release approval is added.
 
@@ -131,3 +148,25 @@ They do not re-run native publication or recalculate every remote blob hash.
 Pinned-tool publisher/consumer, transitive conflict/update and concurrency probes
 are one-time integration qualification. Existing full integrity/incident probes
 remain diagnostic tools. No recurring package-manager transport ritual is required.
+
+## Task 53 cutover and older-source recovery
+
+The migration PR changes the single publishing workflow in place. Until its
+independent acceptance and separately authorized integration, the existing main
+workflow remains the production path. Integrating the tooling/binding-only
+change is a no-op for unchanged 3.0.0; do not create a test release. Candidate
+fixtures use disposable local Git and unprivileged Actions. Actual new-main
+CI/no-op and the next genuine accepted release need later live verification.
+
+Retry post-cutover releases with the same full source SHA via the existing
+workflow name. A pre-cutover source has no binding: rerun its original failed
+workflow run using its original implementation, never today's binding injected
+into old source. The retained package-release.py publication code supports those
+historical fixtures/original-run recovery; the new workflow never invokes it for
+publication. Its category/arithmetic and pre-merge tag-reuse CLI remains active.
+All five recent production runs succeeded at migration discovery.
+
+If later authorized, rollback is an ordinary reviewed revert of the caller and
+integration changes. It does not undo accepted source, move public tags or
+release an unchanged package. Recover failed releases using their original
+source and implementation; repair package defects forward in a new version.

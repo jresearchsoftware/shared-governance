@@ -2,9 +2,11 @@
 
 The reusable Python CLI and workflow live outside the Development Governance
 package. [Task 51](https://github.com/jresearchsoftware/shared-governance/issues/51)
-corrects ordinary publication under its explicit Owner Decision. The active
-[producer-local release entrypoint](releases.md) remains in service; cutover is
-separately owned by Task 53. Installing a package does not activate publication.
+corrects ordinary publication under its explicit Owner Decision. The
+[producer release entrypoint](releases.md) describes Task 53's pinned caller,
+producer-specific readiness, cutover and historical-source recovery. Its migration
+PR requires independent acceptance and authorized integration before activation.
+Installing a package does not activate publication.
 
 ## Invocation and source eligibility
 

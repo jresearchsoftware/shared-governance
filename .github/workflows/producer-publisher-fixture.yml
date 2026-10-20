@@ -1,0 +1,46 @@
+name: Producer shared publisher qualification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - vibe-publisher.json
+      - scripts/check-publication.py
+      - scripts/test-publication.py
+      - scripts/probe-publication.py
+      - .github/workflows/publish.yml
+      - .github/workflows/producer-publisher-fixture.yml
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  producer:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: producer
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: jresearchsoftware/shared-governance
+          ref: 5a1e5de66388501235fc9ffd23d45efb34df2b85
+          path: publisher
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Check exact candidate binding and no-op onboarding against accepted main
+        env:
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: python3 producer/scripts/check-publication.py --publisher publisher --source-sha "$SOURCE_SHA" --base "$BASE_SHA"
+      - name: Read-only actual exact-source push CI evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha }}
+        run: python3 producer/scripts/probe-publication.py --publisher publisher --candidate "$SOURCE_SHA"
+      - name: Accepted shared implementation regressions without destination credentials
+        run: python3 publisher/tooling/vibe-publisher/test_publisher.py
