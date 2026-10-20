@@ -212,8 +212,9 @@ class ProducerTests(unittest.TestCase):
     def test_rebase(self):
         self.route("rebase")
 
-    @unittest.skipUnless(VIBE, "optional pinned native Linux publisher")
     def test_native_exact_export_same_source_retry_and_immutable_collision(self):
+        if VIBE is None:
+            self.skipTest("optional pinned native Linux publisher")
         revision = self.change()
         (report, _), _ = self.check(revision)
         destination = self.directory / "distribution.git"
@@ -246,5 +247,4 @@ if __name__ == "__main__":
     args, remaining = parser.parse_known_args()
     if args.vibe:
         VIBE = args.vibe.resolve()
-        ProducerTests.test_native_exact_export_same_source_retry_and_immutable_collision.__unittest_skip__ = False
     unittest.main(argv=[__file__, *remaining], verbosity=2)
