@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "repository": "jresearchsoftware/shared-governance",
+  "repository_id": 1408747561,
+  "branch": "main",
+  "ci_workflow": ".github/workflows/candidate.yml",
+  "packages": [
+    {
+      "coordinate": "org.jresearch.ai/development-governance",
+      "root": "packages/development-governance",
+      "adapter": "shared-governance-v1",
+      "destination": "https://github.com/jrs-vibevm/org.jresearch.ai.development-governance.git",
+      "redistribution": {
+        "status": "approved",
+        "license": "MIT",
+        "approval": "https://github.com/jresearchsoftware/codex-relay/issues/83#issuecomment-6037643777"
+      }
+    }
+  ]
+}
