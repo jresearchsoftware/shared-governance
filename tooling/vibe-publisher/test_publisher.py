@@ -939,6 +939,15 @@ class InitialPublicationTests(Fixture):
         self.api.alter_pr = forge_old
         self.assertEqual(self.initial()["packages"][0]["reason_code"], "OWNER_ACCEPTANCE_NOT_ESTABLISHED")
 
+    def test_initial_acceptance_contract_remains_isolated_and_required(self):
+        self.binding["acceptance"] = "unsupported"
+        self.amend_binding()
+        self.assertEqual(self.initial()["packages"][0]["reason_code"], "PRODUCER_BINDING_UNSUPPORTED")
+        self.binding["acceptance"] = "owner-squash-attestation-v1"
+        self.binding.pop("authorized_integrators")
+        self.amend_binding()
+        self.assertEqual(self.initial()["packages"][0]["reason_code"], "PRODUCER_BINDING_UNSUPPORTED")
+
     def test_initial_candidate_check_is_offline_and_cannot_authorize_staging(self):
         self.git("branch", "accepted", self.frozen)
         with patch.object(self.api, "get", side_effect=AssertionError("candidate checks are offline")):

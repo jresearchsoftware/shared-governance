@@ -518,6 +518,9 @@ def initial_plan(root, initiation_sha, main, binding, api, binding_path, candida
                   "initiation_sha": initiation_sha,
                   "destination": package["destination"], "operation": "initial-publication"}
         try:
+            if (binding.get("acceptance") != "owner-squash-attestation-v1"
+                    or not binding.get("authorized_integrators")):
+                raise AuthorizationError("PRODUCER_BINDING_UNSUPPORTED", "explicit initial publication requires its owner-squash acceptance binding")
             if initiation_sha not in chain:
                 raise AuthorizationError("SOURCE_NOT_ON_MAIN", "initiation is not on first-parent main")
             if revision_binding(root, initiation_sha, binding_path) != binding:
