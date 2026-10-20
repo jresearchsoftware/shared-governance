@@ -6,7 +6,7 @@ from pathlib import Path
 import publisher as P
 
 binding = json.loads((Path(__file__).parent / "examples/shared-governance.json").read_text())
-source = binding["packages"][0]["baseline"]
+source = "c26d0fc3a287dca86c36855b6b5230509f98152a"
 api = P.GitHub(binding["repository"], os.environ.get("GH_TOKEN"))
 parents = P.git(P.ROOT, "show", "-s", "--format=%P", source).decode().split()
 print(json.dumps(P.eligible(api, binding, source, parents), sort_keys=True))
