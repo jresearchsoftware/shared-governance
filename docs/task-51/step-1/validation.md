@@ -72,8 +72,8 @@ Observed local results on Debian/Python 3.11.2:
 
 | Check | Result and primary log |
 | --- | --- |
-| Publisher, pinned native binary | **65 passed, zero skips**, implementation/test revision `ada2eea90910e2b932bec64880b408da9cfc9cfe`; [log](logs/publisher-native.log). One passing negative test explicitly records the unsupported native dev/optional syntax described above. |
-| Source/exact export | PASS, 722 tracked files / 1,136 local links at `0e8efd18c6dba99c97106e158c38a70f80c57ad1`; [log](logs/source-qualification.log). Final-head source qualification is separately required in CI. |
+| Publisher, pinned native binary | **65 passed, zero skips**, implementation/test revision `2dca20a3e42c6a048796083152136698954d17fd`; [log](logs/publisher-native.log). One passing negative test explicitly records the unsupported native dev/optional syntax described above. |
+| Source/exact export | PASS, 728 tracked files / 1,142 local links at `2dca20a3e42c6a048796083152136698954d17fd`; [log](logs/source-qualification.log). Final-head source qualification is separately required in CI. |
 | Distribution | **47 passed**, [log](logs/distribution.log). |
 | Release/dependency, pinned native binary | **17 passed, zero skips**, [log](logs/release-native.log). |
 | Self-adoption | **13 passed**, [log](logs/self-adoption.log). |
