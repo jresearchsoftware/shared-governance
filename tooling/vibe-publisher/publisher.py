@@ -439,7 +439,7 @@ def included_dependencies(blobs, manifest):
         for coordinate, requirement in resolved.get("requires", {}).get("packages", {}).items():
             if isinstance(requirement, dict) and requirement.get("optional") is True:
                 continue
-            coordinate = coordinate.removeprefix("flow:").removeprefix("skill:")
+            coordinate = coordinate.split(":", 1)[-1]
             if coordinate not in included:
                 raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "materialize and approve the required dependency slot: " + coordinate)
     return sorted(included)
