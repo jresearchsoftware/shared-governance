@@ -32,8 +32,8 @@ class DestinationEvidence:
         self.metadata = {"full_name": self.repository, "private": False,
                          "visibility": "public", "owner": {"login": "jrs-vibevm"}}
         self.get_status = None
-        self.membership = {"state": "active", "role": "admin"}
-        self.headers = {"X-OAuth-Scopes": "repo, read:org"}
+        self.identity = {"id": 123, "login": "fixture-publisher", "type": "User"}
+        self.headers = {}  # Fine-grained PATs do not report classic scopes.
         self.create_status = 201
         self.on_create = lambda: None
 
@@ -44,8 +44,8 @@ class DestinationEvidence:
                 self.on_create()
                 self.exists = True
             return self.create_status, self.metadata, {}
-        if path.startswith("user/memberships/"):
-            return 200, self.membership, self.headers
+        if path == "user":
+            return 200, self.identity, self.headers
         return (self.get_status if self.get_status is not None else (200 if self.exists else 404)), self.metadata, {}
 
 
@@ -71,7 +71,7 @@ class ProvisioningTests(unittest.TestCase):
 
     def test_existing_repository_needs_no_create_or_owner_visibility_proof(self):
         self.api.exists = True
-        self.api.membership = {}
+        self.api.identity = {}
         P.ensure_destination(self.api.repository, self.api)
         self.assertEqual(len(self.api.calls), 1)
 
@@ -92,13 +92,12 @@ class ProvisioningTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 P.ensure_destination(self.api.repository, self.api)
             self.assertFalse(any(c[0] == "POST" for c in self.api.calls))
-        for membership, headers in (({"state": "active", "role": "member"}, self.api.headers),
-                                    ({"state": "pending", "role": "admin"}, self.api.headers),
-                                    ({"state": "active", "role": "admin"}, {}),
-                                    ({"state": "active", "role": "admin"}, {"X-OAuth-Scopes": "public_repo"}),
-                                    ({"state": "active", "role": "admin"}, {"X-OAuth-Scopes": "repo", "X-GitHub-SSO": "required"})):
+        for identity, headers in (({}, {}), ({"id": 123, "login": "fixture"}, {}),
+                                   ({"id": 0, "login": "fixture", "type": "User"}, {}),
+                                   ({"id": 123, "login": "", "type": "User"}, {}),
+                                   (self.api.identity, {"X-GitHub-SSO": "required"})):
             self.api = DestinationEvidence()
-            self.api.membership, self.api.headers = membership, headers
+            self.api.identity, self.api.headers = identity, headers
             with self.assertRaises(ValueError):
                 P.ensure_destination(self.api.repository, self.api)
             self.assertFalse(any(c[0] == "POST" for c in self.api.calls))
@@ -109,6 +108,45 @@ class ProvisioningTests(unittest.TestCase):
             self.api.create_status = status
             P.ensure_destination(self.api.repository, self.api)
             self.assertEqual(sum(c[0] == "POST" for c in self.api.calls), 1)
+
+    def test_fine_grained_authentication_errors_and_inconclusive_refresh_cannot_create(self):
+        for failure in (0, 301, 401, 403, 404, 429, 503):
+            for phase in ("authentication", "refresh"):
+                if phase == "refresh" and failure == 404:
+                    continue  # Expected absence under the owner-confirmed visibility premise.
+                with self.subTest(status=failure, phase=phase):
+                    api = DestinationEvidence()
+                    original = api.request
+                    reads = 0
+                    def request(method, path, data=None):
+                        nonlocal reads
+                        if path.startswith("repos/"):
+                            reads += 1
+                        if (phase == "authentication" and path == "user"
+                                or phase == "refresh" and reads == 2):
+                            api.calls.append((method, path, data))
+                            return failure, {}, {}
+                        return original(method, path, data)
+                    with patch.object(api, "request", side_effect=request), self.assertRaises(ValueError):
+                        P.ensure_destination(api.repository, api)
+                    self.assertFalse(any(c[0] == "POST" for c in api.calls))
+
+    def test_authenticated_fine_grained_credential_without_create_permission_cannot_push(self):
+        self.api.create_status = 403
+        row = {"status": "STAGED", "destination": "https://github.com/" + self.api.repository + ".git",
+               "tag": "v1.0.0", "staging": "unused"}
+        with patch.object(P, "remote_refs", side_effect=ValueError("Git unavailable")), \
+                patch.object(P, "git", side_effect=AssertionError("no push")):
+            result = P.finalize(row, destination_api=self.api)
+        self.assertEqual(result["failure_code"], "DESTINATION_PROVISIONING_PENDING")
+        self.assertFalse(self.api.exists)
+
+    def test_private_name_race_does_not_create_or_publish(self):
+        self.api.create_status = 422
+        self.api.on_create = lambda: self.api.metadata.update(private=True, visibility="private")
+        with self.assertRaises(ValueError):
+            P.ensure_destination(self.api.repository, self.api)
+        self.assertEqual(sum(c[0] == "POST" for c in self.api.calls), 1)
 
     def test_failed_create_and_failed_readback_stay_pending(self):
         for status in (403, 422, 0, 503):
@@ -791,6 +829,17 @@ class SourceCliTests(Fixture):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertEqual([p["status"] for p in json.loads(report.read_text())["packages"]],
                          ["NO_PACKAGE_CHANGE"] * 2)
+        self.assertEqual(json.loads(report.read_text())["publisher"]["sha"], P.exact(P.ROOT, "HEAD"))
+
+    def test_finalize_rejects_report_from_different_implementation_before_destination_access(self):
+        report = self.directory / "mismatched.json"
+        report.write_text(json.dumps({"publisher": {"repository": "jresearchsoftware/shared-governance",
+                                                   "sha": "0" * 40},
+                                      "packages": [{"status": "STAGED"}]}))
+        result = subprocess.run([sys.executable, str(Path(P.__file__)), "finalize", "--report", str(report)],
+                                env=self.env, capture_output=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(json.loads(report.read_text())["packages"][0]["status"], "STAGED")
 
     def test_source_time_cli_validates_a_candidate_without_api_or_distribution(self):
         self.git("switch", "-qc", "candidate")

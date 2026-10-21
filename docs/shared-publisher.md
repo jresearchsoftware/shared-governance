@@ -3,7 +3,7 @@
 The reusable Python CLI and workflow live outside the Development Governance
 package. [Task 51](https://github.com/jresearchsoftware/shared-governance/issues/51)
 corrects ordinary publication under its explicit Owner Decision. The
-[producer release entrypoint](releases.md) describes Task 53's pinned caller,
+[producer release entrypoint](releases.md) describes this producer's local caller,
 producer-specific readiness, cutover and historical-source recovery. Its migration
 PR requires independent acceptance and authorized integration before activation.
 Installing a package does not activate publication.
@@ -12,12 +12,12 @@ Installing a package does not activate publication.
 
 For producers in the approved `jrs-vibevm` public distribution namespace, use the
 existing **`DEVELOPMENT_GOVERNANCE_PUBLISH_TOKEN`**. No project-specific token is
-needed. A caller using a reviewed full-SHA publisher pin passes the named secret:
+needed. External callers use the reviewed default branch and pass the named secret:
 
 ```yaml
 jobs:
   publish:
-    uses: jresearchsoftware/shared-governance/.github/workflows/vibe-publisher.yml@FULL_REVIEWED_COMMIT_SHA
+    uses: jresearchsoftware/shared-governance/.github/workflows/vibe-publisher.yml@main
     with:
       mode: publish
       source_sha: ${{ github.event.workflow_run.head_sha || inputs.source_sha }}
@@ -56,17 +56,33 @@ atomic non-force push publishes both main and the new immutable tag.
 Finalization first reads Git refs and follows the ordinary atomic push/readback
 path when accessible. Existing Git-accessible repositories receive no REST,
 creation or metadata request. If Git access fails, finalization uses the injected
-token to verify the exact destination and public visibility. Before
-creating an absent repository, distinguish GitHub's masked private-resource 404
-from absence: the current supported proof is an active destination-organization
-owner membership plus the classic token's `repo` scope, with no SSO restriction
-response. This proof is checked only for absent destinations. A limited token or
-an unavailable membership/scope proof leaves absence ambiguous and returns
-`DESTINATION_PROVISIONING_PENDING` without POST; existing public publication does
-not acquire an owner-membership prerequisite. Do not rotate/escalate credentials
-automatically. Owner disposition is needed if the established token cannot prove
-absence under this supported path. GitHub documents the
-[masked 404 behavior](https://docs.github.com/en/rest/using-the-rest-api/troubleshooting-the-rest-api#404-not-found-for-an-existing-resource).
+token to verify the exact destination and public visibility.
+
+The supported missing-destination credential contract is the owner's explicitly
+confirmed complete visibility of `jrs-vibevm`: the token's user can access **every**
+repository in that organization, and the fine-grained token selects all current
+and future repositories with Metadata read. The established token also has
+Contents write and Repository creation write. `All repositories` alone is
+insufficient if its user cannot access some organization repositories. This is
+an owner-confirmed configuration premise, not a claim that secret metadata or a
+successful `/user` response introspects the injected token's repository selection.
+Do not use a selected-repository, public-only or otherwise visibility-limited
+credential for missing destinations. If the premise is no longer established,
+stop for owner disposition before this path; do not substitute/escalate tokens.
+The owner explicitly confirmed both user and token coverage during Task 58 Step 3.
+
+Under that premise, finalization verifies authenticated user identity with
+`GET /user`, rejects malformed/failed/SSO-restricted authentication and refreshes
+the exact repository lookup before POST. A naked unauthenticated 404 authorizes
+only local staging. Neither classic `repo` scope nor organization-owner membership
+is required. GitHub's [creation endpoint](https://docs.github.com/en/rest/repos/repos#create-an-organization-repository)
+supports fine-grained Repository creation write; GitHub enforces the user's
+organization policy and actual create permission at POST. Missing permission
+fails without a push. A [masked private 404](https://docs.github.com/en/rest/using-the-rest-api/troubleshooting-the-rest-api#404-not-found-for-an-existing-resource)
+cannot be distinguished by this tool if the confirmed visibility premise is false;
+it is not silently treated as runtime-proven completeness. A hidden existing
+name cannot be converted to public by the create-only endpoint; unsuccessful
+creation or non-public/inconclusive readback cannot authorize publication.
 
 After a refreshed 404, POST only the bound repository name with `private=false`
 and `auto_init=false`, then verify its identity/public visibility by readback.
@@ -75,22 +91,40 @@ identities never become creation permission. A 422 name race or ambiguous POST
 transport is reconciled by exact public destination readback before any push;
 failed readback stays pending. There is no blind create retry, visibility change,
 deletion, force push or metadata repair. A created empty repo may remain after a
-later failure; rerun the same source/workflow pin to reuse it. No-op and existing
+later failure; rerun the same source to reuse it. No-op and existing
 release tags do not create repositories. API errors and reports expose safe codes
 without raw response bodies or credentials.
 
 ## Invocation and source eligibility
 
-A producer accepts its own source-committed JSON binding and thin caller. Pin
-`.github/workflows/vibe-publisher.yml` in `uses: ...@FULL_COMMIT_SHA`, or use the
-supported local reusable-workflow reference. Pass the **exact triggering
+A producer accepts its own source-committed JSON binding and thin caller. External
+callers use `.github/workflows/vibe-publisher.yml@main`; Shared Governance uses
+`./.github/workflows/vibe-publisher.yml`, from the same commit as its caller.
+Future accepted implementation updates therefore become available centrally.
+Pass the **exact triggering
 main-push CI commit** as `source_sha`, a repository-relative `binding` path and
 one `package` coordinate. Never reread moving main to select the release.
 There is no separate `policy_sha`, policy checkout, caller `publisher_sha` or
-`--publisher-sha` argument. The workflow checks out its own implementation using
+publisher-selection input. The workflow checks out its own implementation using
 `job.workflow_repository` / `job.workflow_sha` and independently checks out the
 producer at `source_sha`. The binding is read from that same Git commit, never
 the worktree. GitHub context describes the caller, not the reusable code identity.
+The producer readiness CLI accepts `--publisher-sha` only as an assertion of
+`job.workflow_sha`, never as a second independently selected implementation.
+Its adapter and publisher checkout come from that executing workflow revision,
+while `--source` selects the independent exact producer checkout. Workflow summaries
+and temporary CLI reports record the publisher repository and resolved SHA.
+The workflow identity contexts are documented by [GitHub](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#job-context).
+
+Moving `@main` changes selection for future invocations, not the source SHA being
+released. GitHub reruns of a failed job or a specific job retain the original
+called workflow commit; rerunning all jobs can resolve the branch again. A new
+same-source dispatch may likewise use a newer accepted publisher. Each execution
+records its implementation and repeats source/CI/export qualification; old tags
+remain immutable. A staged report from another implementation is rejected before
+finalization. See [reusable workflow rerun behavior](https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations#behavior-of-reusable-workflows-when-re-running-jobs).
+Other producers, including Landscape's historical full-SHA caller, need separately
+authorized workflow migrations; this producer's change does not edit them.
 
 The [illustrative binding](../tooling/vibe-publisher/examples/shared-governance.json)
 identifies repository name/numeric ID, source branch, qualifying CI workflow,
@@ -237,7 +271,9 @@ Reports distinguish `NO_PACKAGE_CHANGE`, `CANDIDATE_VALID`, `AUTHORIZATION_PENDI
 `READY`, `STAGED`, `PUBLISHED`, `ALREADY_PUBLISHED` and `FAILED_OR_PENDING`. Logs and
 Actions summaries expose allowlisted diagnostic codes, never raw private errors or
 reports. Reports remain temporary and are not uploaded. Retry a failed/partial
-release with the **same source SHA and workflow implementation pin**. A successful
+release with the **same source SHA**. Prefer rerunning the failed job to retain its
+resolved implementation; a new dispatch may use a later accepted publisher and
+records that revision while requalifying the same source. A successful
 sibling skips its tag while the failed sibling resumes. Caller concurrency groups
 should include producer/source/coordinate with `cancel-in-progress: false`.
 

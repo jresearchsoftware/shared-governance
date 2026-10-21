@@ -720,18 +720,19 @@ def ensure_destination(repository, api):
         raise ValueError("destination creation outside approved namespace")
     if destination_exists(repository, api):
         return
-    # GitHub deliberately masks inaccessible private repositories as 404. A
-    # classic full-repo token held by an active org owner can distinguish absence.
-    # Other credentials still publish to existing public repos; ambiguous absence
-    # must fail closed, rather than attempting a create against a hidden name.
-    status, membership, headers = api.request("GET", "user/memberships/orgs/jrs-vibevm")
-    scopes = {s.strip() for k, v in headers.items() if k.lower() == "x-oauth-scopes"
-              for s in v.split(",")}
-    if (status != 200 or membership.get("state") != "active"
-            or membership.get("role") != "admin" or "repo" not in scopes
+    # The owner-confirmed shared credential contract is full organization
+    # visibility: its user can see every repository and its fine-grained token
+    # selects all of them with Metadata read. A 404 alone is never that proof.
+    # GET /user verifies authentication, not token selections or user authority;
+    # those remain the explicit operator premise (see the documented contract).
+    # The create endpoint enforces Repository creation write and org policy.
+    status, identity, headers = api.request("GET", "user")
+    if (status != 200 or type(identity.get("id")) is not int or identity["id"] <= 0
+            or not isinstance(identity.get("login"), str) or not identity["login"]
+            or identity.get("type") != "User"
             or any(k.lower() == "x-github-sso" for k in headers)):
-        raise ValueError("destination absence is ambiguous")
-    # Refresh after the visibility proof: another writer may have created it.
+        raise ValueError("destination credential authentication is ambiguous")
+    # Refresh under the confirmed visibility premise: a name may now exist.
     if destination_exists(repository, api):
         return
     status, data, _ = api.request("POST", "orgs/jrs-vibevm/repos",
@@ -893,6 +894,8 @@ def stage_all(root, binding, report, vibe, directory, selected):
 
 
 def write_report(report, path):
+    report["publisher"] = {"repository": "jresearchsoftware/shared-governance",
+                           "sha": exact(ROOT, "HEAD")}
     Path(path).write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     # Artifacts are deliberately not uploaded: private source identity can be sensitive.
     for result in report["packages"]:
@@ -926,6 +929,10 @@ def main():
         return 0
     if args.operation == "finalize":
         report = json.loads(args.report.read_text())
+        identity = report.get("publisher")
+        if identity is not None and identity != {"repository": "jresearchsoftware/shared-governance",
+                                                "sha": exact(ROOT, "HEAD")}:
+            raise ValueError("staged report publisher differs from executing implementation")
         if len(report["packages"]) != 1:
             raise ValueError("finalize requires one destination per named credential")
         report["packages"] = [finalize(report["packages"][0])]

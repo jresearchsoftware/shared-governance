@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -116,6 +117,37 @@ class ProducerTests(unittest.TestCase):
             (report, changed), api = self.check(self.commit())
         self.assertFalse(changed)
         self.assertEqual(api.calls, [])
+
+    def test_moving_workflow_checkout_and_old_source_retry_use_executing_implementation(self):
+        publisher = self.directory / "publisher"
+        publisher.mkdir()
+        shutil.copytree(ROOT / "scripts", publisher / "scripts")
+        (publisher / "tooling/vibe-publisher").mkdir(parents=True)
+        shutil.copyfile(ROOT / "tooling/vibe-publisher/publisher.py",
+                        publisher / "tooling/vibe-publisher/publisher.py")
+        self.git("init", "-q", "-b", "main", cwd=publisher)
+        self.git("config", "commit.gpgsign", "false", cwd=publisher)
+        self.git("config", "core.autocrlf", "false", cwd=publisher)
+        self.git("config", "core.hooksPath", str(self.directory / "no-hooks"), cwd=publisher)
+        self.git("update-ref", "refs/remotes/origin/main", self.baseline)
+        for iteration in range(2):
+            (publisher / "revision.txt").write_text(str(iteration))
+            self.git("add", ".", cwd=publisher)
+            self.git("commit", "-qm", "Reviewed workflow fixture", cwd=publisher)
+            implementation = self.git("rev-parse", "HEAD", cwd=publisher)
+            command = [sys.executable, str(publisher / "scripts/check-publication.py"),
+                       "--publisher", str(publisher), "--publisher-sha", implementation,
+                       "--source", str(self.source), "--source-sha", self.baseline,
+                       "--base", self.baseline]
+            output = subprocess.check_output(command, env=self.env)
+            result = json.loads(output)
+            self.assertEqual(result["source_sha"], self.baseline)
+            self.assertEqual(result["publisher_sha"], implementation)
+            self.assertEqual(result["status"], ["NO_PACKAGE_CHANGE"])
+            command[command.index("--publisher-sha") + 1] = "0" * 40
+            failed = subprocess.run(command, env=self.env, capture_output=True)
+            self.assertNotEqual(failed.returncode, 0)
+            self.assertIn(b"checkout mismatch", failed.stderr)
 
     def test_changed_source_uses_its_committed_binding_and_exact_ci(self):
         revision = self.change()
