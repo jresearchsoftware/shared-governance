@@ -33,7 +33,7 @@ All candidate projections remain proposals during this effort.
 These are reasoned policy scenarios, not executed model-behavior claims. No new
 protocol, registry, checklist or review stage. Existing RA-001–005 remain; RA-006
 owns the shared principle once. TH and IR apply it without copying its contents.
-Other seven protocol payloads retain bytes; boot/adoption routes remain conditional.
+Other six protocol payloads retain bytes; boot/adoption routes remain conditional.
 Combined package 5.0.0 is MAJOR: conditional mandatory workflow clarification and
 receipt/status contract changes; frozen 4.0.0 is preserved. Independent exact-head
 review, integration, automatic publication and consumer adoption remain separate.
