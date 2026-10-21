@@ -90,7 +90,13 @@ class DistributionTests(unittest.TestCase):
         # separately instead of asserting the old annotation-only transition.
         unchanged = set(protocols) - {DISTRIBUTION.HANDOFF, DISTRIBUTION.INDEPENDENT_REVIEW,
                                       DISTRIBUTION.VERSIONING, DISTRIBUTION.PROTOCOL, DISTRIBUTION.AUTHORITY}
-        unchanged.update({DISTRIBUTION.ONBOARDING, DISTRIBUTION.ENGINEERING_METHODS})
+        # Task 62 removes the ChatGPT receipt reference from the current guide;
+        # retain the annotation-only historical guide comparison at accepted 3.0.0.
+        annotated, _ = DISTRIBUTION.snapshot("e654d9e20a7c42c50cc05786dc83a4f7a16f84e4")
+        stripped = re.sub(rb'\n<a id="[A-Z]+-[0-9]{3}"></a>\n\*\*[^\n]+\*\*\n\n', b"\n",
+                          annotated[DISTRIBUTION.ONBOARDING])
+        self.assertEqual(stripped, historical[DISTRIBUTION.ONBOARDING])
+        unchanged.add(DISTRIBUTION.ENGINEERING_METHODS)
         for name in unchanged:
             with self.subTest(meaning=name):
                 stripped = re.sub(rb'\n<a id="[A-Z]+-[0-9]{3}"></a>\n\*\*[^\n]+\*\*\n\n', b"\n", files[name])
@@ -120,6 +126,9 @@ class DistributionTests(unittest.TestCase):
     def test_joint_authority_settings_change_preserves_unaffected_contracts(self):
         files = self.current_export()
         accepted, _ = DISTRIBUTION.snapshot("61aa3444365b02a27c392d48aa9ea33e85c5d5d4")
+        guide = files[DISTRIBUTION.ONBOARDING].replace(b'its content check/diff', b'its check/diff/receipt')
+        guide = guide.replace(b'remain separate and conditional on application scope.', b'remain separate.')
+        self.assertEqual(guide, accepted[DISTRIBUTION.ONBOARDING])
         changed = {DISTRIBUTION.AUTHORITY, DISTRIBUTION.HANDOFF, DISTRIBUTION.INDEPENDENT_REVIEW}
         for name in files:
             if name.startswith("vibevm/vibespecs/protocols/") and name not in changed:
