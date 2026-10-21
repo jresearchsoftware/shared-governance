@@ -127,12 +127,20 @@ heads and unaccepted commits are rejected. Retry does not bump, overwrite or
 silently publish current HEAD. Existing tags remain untouched after an ambiguous
 transport result. A release defect is repaired in a new reviewed version.
 
-Configure repository secret `DEVELOPMENT_GOVERNANCE_PUBLISH_TOKEN` with an
-authorized fine-grained token granting Contents write on the distribution
-repository only. The source repository's ordinary `GITHUB_TOKEN` cannot write
-across repositories. Keep allowed writers with authorized maintainers/workflows;
-credential setup is an owner/account action, not inferred from GitHub admin access.
-The token is used only by Git askpass in shared finalization; it is never placed
+Use the established `DEVELOPMENT_GOVERNANCE_PUBLISH_TOKEN` Actions secret through
+its existing organization/repository access arrangement. The source repository's
+ordinary `GITHUB_TOKEN` cannot write across repositories. Keep allowed writers
+with authorized maintainers/workflows; changes to credential access are an
+owner/account action, not inferred from GitHub admin access. New producers reuse
+the shared secret instead of creating their own tokens.
+The current pinned workflow uses the token only by Git askpass in finalization.
+Task 58's [shared credential/provisioning implementation](shared-publisher.md#shared-credential-and-destination-provisioning)
+also uses it for bound destination API operations after native staging, when a
+producer separately adopts that reviewed workflow pin. The existing named
+organization secret is shared with authorized producer repositories; do not
+create project-specific tokens or assume another repository's secret is visible.
+This change does not activate a new publisher pin or mutate secret access.
+The token is never placed
 in a remote URL, persisted config, artifact or log. PR checks receive no publisher
 secret. No environment approval gate or second release approval is added.
 
