@@ -98,6 +98,7 @@ class DistributionTests(unittest.TestCase):
 
     def test_review_scope_change_preserves_accepted_rules_and_unaffected_protocols(self):
         # Historical Task 52 transition; future authorized edits do not redefine it.
+        DISTRIBUTION.ROOT = REPOSITORY
         files, _ = DISTRIBUTION.snapshot("99034dd708e5d0201060986b561ada4d2cffd453")
         accepted, _ = DISTRIBUTION.snapshot("e654d9e20a7c42c50cc05786dc83a4f7a16f84e4")
         # Seven untouched protocols and all earlier PC rules keep exact bytes.
