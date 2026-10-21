@@ -66,9 +66,8 @@ in-contract defects/protected obligations, discretionary scope proposals and
 routine implementation/testing choices within delegated scope. The last category
 needs no separate permission; proposals remain optional until accepted.
 
-Bound required proof to the deliverable and accountable component. For publication,
-verify the agreed producer qualification, public destination, version/tag, exact
-contents, provenance and result. An unrelated tool's cold installation, downstream
+Bound required proof to the deliverable and accountable component.
+An unrelated tool's cold installation, downstream
 application or consumer configuration is mandatory only within accepted scope or
 when demonstrably necessary to establish the producer's promised contract. Invalid
 required manifests/dependencies, missing agreed proof, supported-interface defects,

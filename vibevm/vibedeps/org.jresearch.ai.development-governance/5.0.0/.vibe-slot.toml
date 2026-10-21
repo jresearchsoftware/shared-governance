@@ -1,10 +1,10 @@
 schema = 1
-source_hash = "sha256:d4dd63fa5c7d62e88f5c8d651d85c90e82889beee7fa60152998b77d1c418a38"
+source_hash = "sha256:da18ef62634a8203064103a7454f346d6c46c1e3d1a64f16e8280390c637b5af"
 spec_format = "mixed"
 
 [[file]]
 path = "CHANGELOG.md"
-sha256 = "4742f7743a05f4eed6a9960a6c3b378347d061ff46d3f7cb0ffd2f49d8d1df90"
+sha256 = "3ed7cbc90cca1b856df14a8fb810d7812fa73b7c144683abfc9c1fa65419a10e"
 
 [[file]]
 path = "LICENSE"
@@ -16,7 +16,7 @@ sha256 = "2ac7b1be94aeff96a4b7622df0c62636c06d3f0112823f3337df3fd5bdc8dccb"
 
 [[file]]
 path = "tools/chatgpt/README.md"
-sha256 = "ac7eb31ad86d2a1660852e8b9272369ac5e6368d49dc4c857d8541ccfe6eefcf"
+sha256 = "d4ab1f5f0401a9d8afc6751ba37f1af3f35a17b13af62f3a0970d39f818fbf11"
 
 [[file]]
 path = "tools/chatgpt/base.md"
@@ -24,7 +24,7 @@ sha256 = "4479c0afc65ab4f2c7ba1f7441ad093e2af9feff1cf16d9a2c730edfa62fb986"
 
 [[file]]
 path = "tools/chatgpt/project.py"
-sha256 = "57877496359e242f80076a7902ba99684fcc9aa29e70f86983667f8239985864"
+sha256 = "5fe59c07ff19eb54c84e5c043a5d55a580a9075f75c9e6bf2d3a622130fc7342"
 
 [[file]]
 path = "vibe.toml"
@@ -40,11 +40,11 @@ sha256 = "01103c8d52ab6ebd1acfecbce35e7b425db4d747094c6a2ac76289b875906248"
 
 [[file]]
 path = "vibevm/vibespecs/guides/onboarding-examples.md"
-sha256 = "bdda88da4bfaa797493f008d23b6593788aef9db25c8029eff8be6cac954ee99"
+sha256 = "af33f3fb934af67193d158714189e48e61eb8a3419c8ab3e7629be01a518c952"
 
 [[file]]
 path = "vibevm/vibespecs/guides/onboarding.md"
-sha256 = "a2e738cb5f10605272e623bb7730d35a6511dcb45d7c71857aff51b40f96e72f"
+sha256 = "f8c2715ae4ace8cae16fa29ced73b9e0d30ed5c577b1caf11aba5b934d9cf83f"
 
 [[file]]
 path = "vibevm/vibespecs/protocols/context-loading.md"
@@ -72,7 +72,7 @@ sha256 = "9d4995184b84665c3e1a8912d53438cdaa6e0b4fcef2af1f04e9111021e729ab"
 
 [[file]]
 path = "vibevm/vibespecs/protocols/requirement-authority.md"
-sha256 = "f82a27d7c2b16db60c73fe11d19015693b58c2015b383eebdc244411d1ccfb11"
+sha256 = "bec2211e7243a37e46ec9eaa493cf3ee41eff33205cd8d70542990bfa20b6b80"
 
 [[file]]
 path = "vibevm/vibespecs/protocols/self-adoption.md"

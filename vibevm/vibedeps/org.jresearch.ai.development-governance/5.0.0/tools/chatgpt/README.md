@@ -9,7 +9,7 @@ Git are used only for deliberate maintenance; ordinary chats read accepted files
 The producer owns [base.md](base.md) and [project.py](project.py). Each consumer
 owns one directory (for example `chatgpt/`) containing reviewed `binding.json`
 and human-editable `custom.md`. The same tool combines them into canonical
-generated `instructions.md` and `receipt.json` in that directory. Optional
+generated `instructions.md` in that directory. Optional
 `sources.md` and `sources-manifest.json` share the same selection/update path.
 Commit source/custom/generated changes together in the consumer's normal review.
 Never edit generic code per project, edit generated text as policy, or keep
@@ -35,16 +35,16 @@ check --repository . --binding chatgpt/binding.json --accepted-sha <independentl
 ```
 
 Use `update` instead of `check` for an intentional local write. Both report exact
-Instructions/cache diffs, effective `CHANGED`/`NO_OP`, and
-ownership-receipt changes separately (status schema 3; no `source_changes`). Check is read-only: exit 0 is current,
-1 is stale/missing generated output or receipt, 2 is invalid/unavailable input.
-It can be opted into consumer CI; this package imposes no universal gate.
-Update validates the complete plan before writing. Existing generated files
-must match the previous receipt; unknown or manually changed files are preserved
-with an error. Reconcile useful edits into custom Markdown and recover the old
-generated file from the project's ordinary Git history before regeneration.
-Only verified previously owned cache files are removed when disabling cache.
-There is no force/overwrite-unknown switch or recursive cleanup.
+Instructions/cache diffs and effective `CHANGED`/`NO_OP` (status schema 4).
+Check is read-only: exit 0 is current, 1 is stale/missing generated output or
+cache pending removal, 2 is invalid/unavailable input. It can be opted into
+consumer CI; this package imposes no universal gate.
+Update validates local paths before writing and regenerates changed outputs,
+including manually edited generated files. Review useful edits through custom
+Markdown and ordinary Git review. Disabling cache removes only `sources.md` and
+`sources-manifest.json` in the binding directory, including locally edited copies.
+Unchanged bytes are not rewritten. No ownership registry or clean-worktree gate
+is involved; no recursive cleanup is performed.
 
 Binding schema 2 has exactly these fields:
 
@@ -84,17 +84,15 @@ record exact invocation/source/authority evidence in the normal Task/PR as neede
 The projector still validates committed native inputs at the explicit accepted SHA,
 even if the effective output is unchanged. Candidate guidance cannot accept itself.
 
-Receipt schema 3 retains only `schema`, `generator`, `repository` and generated
-`artifacts` hashes. This has one concrete purpose beyond Git: prevent `update`
-from silently overwriting valuable local generated-file edits (or deleting a
-modified cache on disable). It is not an acceptance record, source inventory or
-live-settings receipt. A schema-2 receipt is read for the same ownership check and
-replaced once during an intentional update, preserving unknown/modified files.
-No source/tool/version/SHA metadata refresh is required when output is unchanged.
+There is no ChatGPT projection receipt. When adopting this interface from an
+older version, remove the consumer's tracked `chatgpt/receipt.json` in its normal
+adoption PR. The tool does not read, migrate, generate or delete legacy receipts.
+Status schema 4 removes `maintenance_evidence` as well as the former
+`source_changes` inventory. Git and normal invocation/review evidence own
+provenance; native VibeVM `.vibe-slot.toml` receipts remain a separate contract.
 A substantive dependency upgrade is validated/regenerated in the same normal PR;
-if Instructions remain identical, no receipt or settings action follows merely
-because routes or main advanced. No stale historical source inventory survives
-in schema 3 and no circular self-pin or recurring receipt-only commit is needed.
+if Instructions remain identical, no settings action follows merely because
+routes or main advanced. No circular self-pin or recurring metadata commit is needed.
 
 Regenerate/check after effective base, custom, binding, relevant accepted guidance
 or materialization changes and review the output in the same normal PR. A pinned
@@ -116,15 +114,18 @@ unsupported formats; this tool neither solves ranges/edges nor installs files.
 ## Owner-controlled settings and optional Sources
 
 Generated raw `instructions.md` is complete desired text, including its generated
-marker, not a UI installation receipt. The owner reviews and manually applies
-and reads back changed text, preserving unknown live rules. When the Task includes
+marker, not a UI installation receipt. When the Task includes
 application, compare the accepted desired text with supported live evidence, surface
 the **complete** replacement for manual application if different, and obtain
 supported confirmation/readback before claiming application or Task closure.
 Disclose unavailable live reads or uncertain confirmation; a supplied export alone
 proves comparison, not UI currentness. If effective text is unchanged and no known
 application gap remains, no manual settings action is needed. Generation-only
-Tasks acquire no settings-application obligation. On demand:
+Tasks acquire no settings-application obligation. The CLI's `application` field
+reports that conditional requirement for changed Instructions; NO_OP and cache-only
+changes report that unchanged Instructions need no new application, preserving any
+prior verification gap. The CLI cannot determine a Task's application scope or
+verify live Settings; `live_settings_verified` remains false. On demand:
 
 ```text
 compare --repository . --binding chatgpt/binding.json --live-export <owner-export.md> --live-format raw

@@ -6,11 +6,15 @@ MAJOR: RA-006 prevents agent-authored obligation expansion across Task authoring
 acceptance, execution and continuation; TH-002/026 and IR-013 apply that principle.
 TH-029 conditionally requires supported live settings reconciliation for Tasks
 that include applying generated instructions. Existing topic adoption remains local.
-ChatGPT receipt schema 3 retains only generated-file ownership hashes; schema 2
-is migrated safely on deliberate update. Exact accepted-source validation remains,
-but unrelated main/tool/source changes no longer create receipt-only commits.
-Status no longer carries duplicated source inventory; Git/invocation evidence owns
-provenance. Optional exact-source caches retain their snapshot contract.
+ChatGPT projection receipts, ownership checks and receipt migration are removed.
+Adoption removes the old tracked ChatGPT receipt in the consumer's ordinary PR;
+native VibeVM slot receipts remain. Status schema 4 reports content changes and
+conditional application meaning, without source inventory or maintenance_evidence.
+Exact accepted-source/native validation remains; Git/invocation evidence owns
+provenance. Same-output main/tool/source changes are NO_OP. Optional exact-source
+caches retain their snapshot contract and can be disabled without ownership checks.
+RA-006 adds no universal publication checklist; existing accepted obligations retain
+their authority at their actual source.
 No consumer adoption, live settings change or additional publication stage follows.
 
 
