@@ -829,7 +829,8 @@ class SourceCliTests(Fixture):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertEqual([p["status"] for p in json.loads(report.read_text())["packages"]],
                          ["NO_PACKAGE_CHANGE"] * 2)
-        self.assertEqual(json.loads(report.read_text())["publisher"]["sha"], P.exact(P.ROOT, "HEAD"))
+        self.assertEqual(json.loads(report.read_text())["publisher"]["sha"],
+                         P.git(P.ROOT, "rev-parse", "HEAD").decode().strip())
 
     def test_finalize_rejects_report_from_different_implementation_before_destination_access(self):
         report = self.directory / "mismatched.json"

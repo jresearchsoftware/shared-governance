@@ -895,7 +895,7 @@ def stage_all(root, binding, report, vibe, directory, selected):
 
 def write_report(report, path):
     report["publisher"] = {"repository": "jresearchsoftware/shared-governance",
-                           "sha": exact(ROOT, "HEAD")}
+                           "sha": git(ROOT, "rev-parse", "HEAD").decode().strip()}
     Path(path).write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     # Artifacts are deliberately not uploaded: private source identity can be sensitive.
     for result in report["packages"]:
@@ -931,7 +931,7 @@ def main():
         report = json.loads(args.report.read_text())
         identity = report.get("publisher")
         if identity is not None and identity != {"repository": "jresearchsoftware/shared-governance",
-                                                "sha": exact(ROOT, "HEAD")}:
+                                                "sha": git(ROOT, "rev-parse", "HEAD").decode().strip()}:
             raise ValueError("staged report publisher differs from executing implementation")
         if len(report["packages"]) != 1:
             raise ValueError("finalize requires one destination per named credential")

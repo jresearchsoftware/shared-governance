@@ -130,6 +130,7 @@ class ProducerTests(unittest.TestCase):
         self.git("config", "core.autocrlf", "false", cwd=publisher)
         self.git("config", "core.hooksPath", str(self.directory / "no-hooks"), cwd=publisher)
         self.git("update-ref", "refs/remotes/origin/main", self.baseline)
+        release_source = self.change()
         for iteration in range(2):
             (publisher / "revision.txt").write_text(str(iteration))
             self.git("add", ".", cwd=publisher)
@@ -137,13 +138,13 @@ class ProducerTests(unittest.TestCase):
             implementation = self.git("rev-parse", "HEAD", cwd=publisher)
             command = [sys.executable, str(publisher / "scripts/check-publication.py"),
                        "--publisher", str(publisher), "--publisher-sha", implementation,
-                       "--source", str(self.source), "--source-sha", self.baseline,
+                       "--source", str(self.source), "--source-sha", release_source,
                        "--base", self.baseline]
             output = subprocess.check_output(command, env=self.env)
             result = json.loads(output)
-            self.assertEqual(result["source_sha"], self.baseline)
+            self.assertEqual(result["source_sha"], release_source)
             self.assertEqual(result["publisher_sha"], implementation)
-            self.assertEqual(result["status"], ["NO_PACKAGE_CHANGE"])
+            self.assertEqual(result["status"], ["CANDIDATE_VALID"])
             command[command.index("--publisher-sha") + 1] = "0" * 40
             failed = subprocess.run(command, env=self.env, capture_output=True)
             self.assertNotEqual(failed.returncode, 0)
