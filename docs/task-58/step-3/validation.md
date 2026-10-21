@@ -36,8 +36,8 @@ repos receive no create or metadata mutation. No-op/retained tags skip creation;
 source/CI/version/rights/export/dependencies and secret-free native staging precede
 create. Empty-repo initialization, public readback, race/ambiguous transport
 reconciliation, immutable tags, atomic non-force main/tag push and same-source
-retry remain. No token value, secret setting or actual destination was accessed
-or changed to qualify this implementation.
+retry remain. No token value or secret setting was accessed or changed, and no
+real distribution destination was changed to qualify this implementation.
 
 Current primary GitHub documentation inspected on 2026-10-21:
 
@@ -101,9 +101,20 @@ and local Git publication are real disposable operations.
 
 An initial test run caught misuse of the exact-source validator while recording
 implementation HEAD; the implementation now resolves its own Git HEAD separately.
-The affected full publisher suite was rerun successfully. Later evidence-only
-commits do not alter tested implementation bytes. Exact final-head Actions and
-source qualification are identified in the canonical Outcome.
+The affected full publisher suite was rerun successfully, including the stricter
+missing-identity guard at `954f02987f1e5d935286144ed62c0cb690ede8f6`.
+Initial hosted checks then identified a stale producer fixture invocation missing
+the new checkout assertion, and an unavailable `job` context at job-level env.
+The fixture now uses the executing workflow revision and the real CLI signature;
+workflow identity is passed at step env, where GitHub supports it. These fixes
+are in `d7837a76e67256a37f40a1c912232fccf1361637`; publisher Python bytes are
+unchanged from the completed native run. This is correction within the same Step.
+An actual selected-package candidate invocation returns
+[NO_PACKAGE_CHANGE](logs/candidate-noop.log). The disposable clone's source-main
+reference was explicitly set to the accepted SHA before that candidate check;
+the user's local historical main branch was preserved. Later evidence-only
+commits do not alter implementation bytes. Exact final-head Actions and source
+qualification are identified in the canonical Outcome.
 
 No live provisioning, injected-token capability/approval, private producer caller
 or production release was tested. The owner's complete visibility is an explicit

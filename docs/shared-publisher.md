@@ -69,7 +69,8 @@ successful `/user` response introspects the injected token's repository selectio
 Do not use a selected-repository, public-only or otherwise visibility-limited
 credential for missing destinations. If the premise is no longer established,
 stop for owner disposition before this path; do not substitute/escalate tokens.
-The owner explicitly confirmed both user and token coverage during Task 58 Step 3.
+The owner explicitly confirmed both user and token coverage during
+[Task 58 Step 3](https://github.com/jresearchsoftware/shared-governance/issues/58#issuecomment-6316903618).
 
 Under that premise, finalization verifies authenticated user identity with
 `GET /user`, rejects malformed/failed/SSO-restricted authentication and refreshes
