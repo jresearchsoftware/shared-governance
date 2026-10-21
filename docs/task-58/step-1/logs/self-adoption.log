@@ -1,0 +1,18 @@
+test_clean_checkout_is_ready_without_runtime_or_publication (__main__.NativeAdoptionTests.test_clean_checkout_is_ready_without_runtime_or_publication) ... ok
+test_corrupt_slot_and_git_restore (__main__.NativeAdoptionTests.test_corrupt_slot_and_git_restore) ... ok
+test_forged_slot_metadata_rejected (__main__.NativeAdoptionTests.test_forged_slot_metadata_rejected) ... ok
+test_generated_location_and_timestamp_are_not_content_authority (__main__.NativeAdoptionTests.test_generated_location_and_timestamp_are_not_content_authority) ... ok
+test_generated_member_route_and_root_overlay (__main__.NativeAdoptionTests.test_generated_member_route_and_root_overlay) ... ok
+test_lock_hash_version_and_source_kind_rejected (__main__.NativeAdoptionTests.test_lock_hash_version_and_source_kind_rejected) ... ok
+test_manifest_range_or_link_change_rejected (__main__.NativeAdoptionTests.test_manifest_range_or_link_change_rejected) ... ok
+test_manual_readiness_rule_is_accessible_through_native_and_local_routes (__main__.NativeAdoptionTests.test_manual_readiness_rule_is_accessible_through_native_and_local_routes) ... ok
+test_missing_or_wrong_index_rejected (__main__.NativeAdoptionTests.test_missing_or_wrong_index_rejected) ... ok
+test_missing_slot_rejected (__main__.NativeAdoptionTests.test_missing_slot_rejected) ... ok
+test_native_export_regenerates_proposals_and_preserves_unexpected_content (__main__.NativeAdoptionTests.test_native_export_regenerates_proposals_and_preserves_unexpected_content) ... ok
+test_registry_source_mutation_and_missing_file_rejected (__main__.NativeAdoptionTests.test_registry_source_mutation_and_missing_file_rejected) ... ok
+test_uncommitted_and_committed_authored_change_cannot_hide_behind_old_url (__main__.NativeAdoptionTests.test_uncommitted_and_committed_authored_change_cannot_hide_behind_old_url) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 5.596s
+
+OK
