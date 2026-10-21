@@ -86,12 +86,12 @@ Public candidate checks for a push to source main. It binds the accepted merge
 or squash SHA (ordinary merge, rebase and eligible direct-main also work), checks
 first-parent source-main membership and the version/payload transition, and
 qualifies that exact accepted source. Unchanged packages skip. The candidate
-caller delegates staging and publication to the accepted shared workflow pinned
-to `5a1e5de66388501235fc9ffd23d45efb34df2b85`, passing only the exact triggering
+caller delegates staging and publication to `./.github/workflows/vibe-publisher.yml`
+from its own executing workflow revision, passing only the exact triggering
 `source_sha` and its committed [producer binding](../vibe-publisher.json).
 There is no independent producer-policy SHA or PR/integrator eligibility gate.
 
-An unprivileged readiness job uses that same pinned planner and checks the
+An unprivileged readiness job uses that same workflow revision's planner and checks the
 producer's affirmative MIT redistribution acknowledgement for changed packages.
 The accepted governance adapter already checks license bytes/metadata, exact
 export inventory and the dependency-free passive contract; its early return
@@ -133,13 +133,16 @@ ordinary `GITHUB_TOKEN` cannot write across repositories. Keep allowed writers
 with authorized maintainers/workflows; changes to credential access are an
 owner/account action, not inferred from GitHub admin access. New producers reuse
 the shared secret instead of creating their own tokens.
-The current pinned workflow uses the token only by Git askpass in finalization.
+The local reusable workflow receives the token only in finalization.
 Task 58's [shared credential/provisioning implementation](shared-publisher.md#shared-credential-and-destination-provisioning)
-also uses it for bound destination API operations after native staging, when a
-producer separately adopts that reviewed workflow pin. The existing named
+uses it for bound destination API operations after native staging. The existing named
 organization secret is shared with authorized producer repositories; do not
 create project-specific tokens or assume another repository's secret is visible.
-This change does not activate a new publisher pin or mutate secret access.
+This caller follows accepted publisher changes centrally; external producers use
+`@main` after their separately authorized migration. Readiness and reusable code
+resolve their implementation from `job.workflow_sha`, independently of the exact
+producer release source. No secret access is changed. The full-organization
+visibility premise for missing destinations is documented in the shared contract.
 The token is never placed
 in a remote URL, persisted config, artifact or log. PR checks receive no publisher
 secret. No environment approval gate or second release approval is added.

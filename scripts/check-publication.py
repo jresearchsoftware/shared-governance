@@ -4,17 +4,17 @@ import argparse
 import importlib.util
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
-PUBLISHER_SHA = "5a1e5de66388501235fc9ffd23d45efb34df2b85"
 BINDING = "vibe-publisher.json"
 COORDINATE = "org.jresearch.ai/development-governance"
 
 
 def check(publisher, source, revision, base=None, api=None, main="origin/main"):
-    """Use the pin's actual transition; apply this adapter's rights acknowledgement."""
+    """Use the executing workflow's transition and producer rights acknowledgement."""
     binding = publisher.binding_at(source, revision, BINDING)
     api = api or publisher.GitHub(binding["repository"], os.environ.get("GH_TOKEN"))
     result = publisher.plan(source, revision, main, binding, api, BINDING,
@@ -42,20 +42,22 @@ def check(publisher, source, revision, base=None, api=None, main="origin/main"):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--publisher", type=Path, required=True)
+    parser.add_argument("--publisher-sha", required=True)
+    parser.add_argument("--source", type=Path, default=ROOT)
     parser.add_argument("--source-sha", required=True)
     parser.add_argument("--base")
     args = parser.parse_args()
     actual = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=args.publisher).decode().strip()
-    if actual != PUBLISHER_SHA:
-        raise SystemExit("Accepted publisher checkout mismatch")
+    if not re.fullmatch(r"[0-9a-f]{40}", args.publisher_sha) or actual != args.publisher_sha:
+        raise SystemExit("Executing workflow publisher checkout mismatch")
     spec = importlib.util.spec_from_file_location("accepted_publisher", args.publisher / "tooling/vibe-publisher/publisher.py")
     publisher = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(publisher)
     try:
-        result, changed = check(publisher, ROOT, args.source_sha, args.base)
+        result, changed = check(publisher, args.source, args.source_sha, args.base)
     except (ValueError, KeyError, OSError, subprocess.SubprocessError):
         raise SystemExit("Producer readiness failed; inspect exact source binding, MIT rights and push CI.") from None
-    print(json.dumps({"source_sha": args.source_sha, "changed": changed,
+    print(json.dumps({"source_sha": args.source_sha, "publisher_sha": actual, "changed": changed,
                       "status": [item["status"] for item in result["packages"]]}))
     if os.environ.get("GITHUB_OUTPUT"):
         with open(os.environ["GITHUB_OUTPUT"], "a") as output:
