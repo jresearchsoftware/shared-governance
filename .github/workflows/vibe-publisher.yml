@@ -24,8 +24,11 @@ on:
         type: boolean
         default: false
     secrets:
+      DEVELOPMENT_GOVERNANCE_PUBLISH_TOKEN:
+        description: Established shared publication credential, visible to the caller via its organization or repository secret
+        required: false
       publish_token:
-        description: Contents-write credential for this one destination only
+        description: Compatibility alias for existing callers; prefer DEVELOPMENT_GOVERNANCE_PUBLISH_TOKEN
         required: false
 
 permissions:
@@ -96,7 +99,7 @@ jobs:
       - name: Check named-secret isolation with a synthetic value
         if: inputs.mode == 'fixture'
         env:
-          PUBLISH_TOKEN: ${{ secrets.publish_token }}
+          PUBLISH_TOKEN: ${{ secrets.DEVELOPMENT_GOVERNANCE_PUBLISH_TOKEN || secrets.publish_token }}
         run: test "$PUBLISH_TOKEN" = 'task45-fixture-sentinel'
       - name: Plan the exact source transition and push CI
         id: plan
@@ -152,7 +155,7 @@ jobs:
         id: finalize
         if: inputs.mode == 'publish' && steps.stage.outputs.staged == 'true'
         env:
-          PUBLISH_TOKEN: ${{ secrets.publish_token }}
+          PUBLISH_TOKEN: ${{ secrets.DEVELOPMENT_GOVERNANCE_PUBLISH_TOKEN || secrets.publish_token }}
         run: |
           test -n "$PUBLISH_TOKEN"
           cat > "$RUNNER_TEMP/publisher-askpass" <<'SH'

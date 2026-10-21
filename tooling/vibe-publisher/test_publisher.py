@@ -12,6 +12,7 @@ import sys
 import tempfile
 import textwrap
 import unittest
+import urllib.error
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -19,6 +20,150 @@ import publisher as P
 
 VIBE = None
 CODE_SHA = "a" * 40
+
+
+class DestinationEvidence:
+    token = "synthetic-publication-marker"
+
+    def __init__(self, exists=False):
+        self.exists = exists
+        self.calls = []
+        self.repository = "jrs-vibevm/org.fixture.example"
+        self.metadata = {"full_name": self.repository, "private": False,
+                         "visibility": "public", "owner": {"login": "jrs-vibevm"}}
+        self.get_status = None
+        self.membership = {"state": "active", "role": "admin"}
+        self.headers = {"X-OAuth-Scopes": "repo, read:org"}
+        self.create_status = 201
+        self.on_create = lambda: None
+
+    def request(self, method, path, data=None):
+        self.calls.append((method, path, data))
+        if method == "POST":
+            if self.create_status in (0, 201, 422, 503):
+                self.on_create()
+                self.exists = True
+            return self.create_status, self.metadata, {}
+        if path.startswith("user/memberships/"):
+            return 200, self.membership, self.headers
+        return (self.get_status or (200 if self.exists else 404)), self.metadata, {}
+
+
+class ProvisioningTests(unittest.TestCase):
+    def setUp(self):
+        self.api = DestinationEvidence()
+
+    def test_exact_namespace_only(self):
+        self.assertEqual(P.provisioned_repository("https://github.com/" + self.api.repository + ".git"), self.api.repository)
+        for url in ("https://github.com/other/name.git", "https://user@github.com/jrs-vibevm/name.git",
+                    "https://github.com/jrs-vibevm/../name.git", "https://github.com/jrs-vibevm/name.git?x=1",
+                    "https://github.com/jrs-vibevm/..git", "file:///tmp/name.git"):
+            self.assertIsNone(P.provisioned_repository(url))
+
+    def test_absent_public_destination_is_created_once_and_read_back(self):
+        P.ensure_destination(self.api.repository, self.api)
+        self.assertEqual([c for c in self.api.calls if c[0] == "POST"], [
+            ("POST", "orgs/jrs-vibevm/repos", {"name": "org.fixture.example", "private": False, "auto_init": False})])
+        self.assertEqual(self.api.calls[-1][:2], ("GET", "repos/" + self.api.repository))
+        self.api.calls.clear()
+        P.ensure_destination(self.api.repository, self.api)
+        self.assertEqual(len(self.api.calls), 1)  # Retry: no metadata/setup mutation.
+
+    def test_existing_repository_needs_no_create_or_owner_visibility_proof(self):
+        self.api.exists = True
+        self.api.membership = {}
+        P.ensure_destination(self.api.repository, self.api)
+        self.assertEqual(len(self.api.calls), 1)
+
+    def test_forbidden_transient_and_redirect_do_not_create(self):
+        for status in (0, 301, 403, 429, 500, 503):
+            with self.subTest(status=status):
+                self.api = DestinationEvidence()
+                # Zero means transport failure; override request for that case.
+                self.api.get_status = status
+                with patch.object(self.api, "request", return_value=(status, {}, {})):
+                    with self.assertRaises(ValueError):
+                        P.ensure_destination(self.api.repository, self.api)
+
+    def test_hidden_private_or_wrong_identity_never_mutated(self):
+        for change in ({"private": True}, {"visibility": "private"}, {"full_name": "other/repo"}):
+            self.api = DestinationEvidence(exists=True)
+            self.api.metadata.update(change)
+            with self.assertRaises(ValueError):
+                P.ensure_destination(self.api.repository, self.api)
+            self.assertFalse(any(c[0] == "POST" for c in self.api.calls))
+        for membership, headers in (({"state": "active", "role": "member"}, self.api.headers),
+                                    ({"state": "pending", "role": "admin"}, self.api.headers),
+                                    ({"state": "active", "role": "admin"}, {}),
+                                    ({"state": "active", "role": "admin"}, {"X-OAuth-Scopes": "public_repo"}),
+                                    ({"state": "active", "role": "admin"}, {"X-OAuth-Scopes": "repo", "X-GitHub-SSO": "required"})):
+            self.api = DestinationEvidence()
+            self.api.membership, self.api.headers = membership, headers
+            with self.assertRaises(ValueError):
+                P.ensure_destination(self.api.repository, self.api)
+            self.assertFalse(any(c[0] == "POST" for c in self.api.calls))
+
+    def test_create_race_and_ambiguous_transport_reconcile_without_reposting(self):
+        for status in (422, 0, 503):
+            self.api = DestinationEvidence()
+            self.api.create_status = status
+            P.ensure_destination(self.api.repository, self.api)
+            self.assertEqual(sum(c[0] == "POST" for c in self.api.calls), 1)
+
+    def test_failed_create_and_failed_readback_stay_pending(self):
+        for status in (403, 422, 0, 503):
+            self.api = DestinationEvidence()
+            self.api.create_status = status
+            self.api.on_create = lambda: setattr(self.api, "get_status", 404)
+            with self.assertRaises(ValueError):
+                P.ensure_destination(self.api.repository, self.api)
+        self.api = DestinationEvidence()
+        self.api.on_create = lambda: self.api.metadata.update(private=True)
+        with self.assertRaises(ValueError):
+            P.ensure_destination(self.api.repository, self.api)
+
+    def test_nonstaged_noops_never_access_destination_or_credentials(self):
+        for status in ("NO_PACKAGE_CHANGE", "ALREADY_PUBLISHED", "AUTHORIZATION_PENDING", "READY", "FAILED_OR_PENDING"):
+            row = {"status": status}
+            with patch.object(P, "ensure_destination", side_effect=AssertionError("no provisioning")):
+                self.assertEqual(P.finalize(row), row)
+            if status != "READY":
+                with patch.object(P, "DestinationAPI", side_effect=AssertionError("no API in no-op staging")):
+                    self.assertEqual(P.stage(None, None, row, None, None), row)
+
+    def test_sso_masked_404_and_unavailable_post_readback_do_not_push(self):
+        with patch.object(self.api, "request", return_value=(404, {}, {"X-GitHub-SSO": "required"})) as request:
+            with self.assertRaises(ValueError):
+                P.ensure_destination(self.api.repository, self.api)
+            self.assertEqual(request.call_count, 1)
+        self.api.on_create = lambda: setattr(self.api, "get_status", 503)
+        with self.assertRaises(ValueError):
+            P.ensure_destination(self.api.repository, self.api)
+        self.assertEqual(sum(c[0] == "POST" for c in self.api.calls), 1)
+
+    def test_provision_failure_prevents_push_and_has_redacted_diagnostic(self):
+        row = {"status": "STAGED", "destination": "https://github.com/" + self.api.repository + ".git",
+               "tag": "v1.0.0", "staging": "unused"}
+        with patch.object(P, "ensure_destination", side_effect=ValueError("PRIVATE_SENTINEL")), \
+                patch.object(P, "remote_refs", side_effect=AssertionError("no push or Git access")):
+            result = P.finalize(row, destination_api=self.api)
+        self.assertEqual(result["status"], "FAILED_OR_PENDING")
+        self.assertEqual(P.operator_diagnostic(result)[0], "DESTINATION_PROVISIONING_PENDING")
+        self.assertNotIn("PRIVATE_SENTINEL", json.dumps(result))
+
+    def test_api_status_and_transport_are_redacted_and_redirects_disabled(self):
+        api = P.DestinationAPI("PRIVATE_TOKEN_SENTINEL")
+        opener = unittest.mock.Mock()
+        opener.open.side_effect = urllib.error.HTTPError("https://api.github.com/hidden", 403, "private", {}, None)
+        with patch.object(P.urllib.request, "build_opener", return_value=opener) as build:
+            self.assertEqual(api.request("GET", "repos/hidden/repo"), (403, {}, {}))
+            handler = build.call_args.args[0]()
+            self.assertIsNone(handler.redirect_request(None, None, 301, "", {}, "https://example.invalid"))
+            request = opener.open.call_args.args[0]
+            self.assertEqual(request.get_header("Authorization"), "Bearer PRIVATE_TOKEN_SENTINEL")
+        opener.open.side_effect = OSError("PRIVATE_TOKEN_SENTINEL")
+        with patch.object(P.urllib.request, "build_opener", return_value=opener):
+            self.assertEqual(api.request("POST", "orgs/jrs-vibevm/repos", {}), (0, {}, {}))
 
 
 class Evidence:
@@ -770,6 +915,68 @@ class NativeTests(Fixture):
         report = self.plan()
         return P.stage(self.source, self.packages[index], report["packages"][index], VIBE,
                        self.directory / (suffix + str(index)))
+
+    def test_native_absent_destination_stages_before_create_and_atomic_first_push(self):
+        api = DestinationEvidence()
+        destination = "https://github.com/" + api.repository + ".git"
+        local = self.directory / "new-distribution.git"
+        self.packages[0]["destination"] = destination
+        self.save_binding()
+        self.commit()  # Accepted mapping precedes this package transition.
+        self.revision = self.change(0)
+        row = self.plan()["packages"][0]
+        original_refs, original_git = P.remote_refs, P.git
+
+        def mapped_refs(url, tag):
+            return original_refs(local.as_uri() if url == destination else url, tag)
+
+        def push(root, *args):
+            self.assertEqual(args[:3], ("push", "--atomic", "--"))
+            self.assertEqual(args[3], destination)
+            return original_git(root, *args[:3], local.as_uri(), *args[4:])
+
+        with patch.object(P, "destination_exists", return_value=False):
+            staged = P.stage(self.source, self.packages[0], row, VIBE, self.directory / "absent-stage")
+        self.assertEqual(staged["status"], "STAGED")
+        self.assertFalse(local.exists())
+        self.assertEqual(api.calls, [])
+        api.on_create = lambda: self.git("init", "-q", "--bare", "--initial-branch=main", str(local))
+        def fail_push(*args):
+            raise ValueError("injected transport failure before push")
+
+        with patch.object(P, "remote_refs", side_effect=mapped_refs):
+            self.assertEqual(P.finalize(staged, push=fail_push, destination_api=api)["status"], "FAILED_OR_PENDING")
+            self.assertTrue(local.exists())
+            published = P.finalize(staged, push=push, destination_api=api)
+        self.assertEqual(published["status"], "PUBLISHED")
+        self.assertEqual(sum(c[0] == "POST" for c in api.calls), 1)
+        self.assertEqual(self.git("rev-parse", "refs/tags/v1.0.1", cwd=local), staged["expected_tag"])
+        api.calls.clear()
+        with patch.object(P, "remote_refs", side_effect=mapped_refs):
+            self.assertEqual(P.finalize(staged, push=push, destination_api=api)["status"], "ALREADY_PUBLISHED")
+        self.assertEqual(len(api.calls), 1)
+
+    def test_native_failure_on_absent_destination_cannot_create(self):
+        api = DestinationEvidence()
+        self.packages[0]["destination"] = "https://github.com/" + api.repository + ".git"
+        self.save_binding()
+        self.commit()
+        self.revision = self.change(0)
+        row = self.plan()["packages"][0]
+        original_run = P.subprocess.run
+
+        def fail_native(command, *args, **kwargs):
+            if command[0] == str(VIBE):
+                self.assertNotIn("PUBLISH_TOKEN", kwargs["env"])
+                return subprocess.CompletedProcess(command, 1)
+            return original_run(command, *args, **kwargs)
+
+        with patch.object(P, "destination_exists", return_value=False), \
+                patch.object(P.subprocess, "run", side_effect=fail_native), \
+                patch.object(P, "ensure_destination", side_effect=AssertionError("no provisioning in stage")):
+            with self.assertRaisesRegex(ValueError, "native staging failed"):
+                P.stage(self.source, self.packages[0], row, VIBE, self.directory / "failed-absent-stage")
+        self.assertEqual(api.calls, [])
 
     def test_native_selected_b_stages_its_own_payload_and_destination(self):
         self.revision = self.change(1)

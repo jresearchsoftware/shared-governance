@@ -8,6 +8,71 @@ producer-specific readiness, cutover and historical-source recovery. Its migrati
 PR requires independent acceptance and authorized integration before activation.
 Installing a package does not activate publication.
 
+## Shared credential and destination provisioning
+
+For producers in the approved `jrs-vibevm` public distribution namespace, use the
+existing **`DEVELOPMENT_GOVERNANCE_PUBLISH_TOKEN`**. No project-specific token is
+needed. A caller using a reviewed full-SHA publisher pin passes the named secret:
+
+```yaml
+jobs:
+  publish:
+    uses: jresearchsoftware/shared-governance/.github/workflows/vibe-publisher.yml@FULL_REVIEWED_COMMIT_SHA
+    with:
+      mode: publish
+      source_sha: ${{ github.event.workflow_run.head_sha || inputs.source_sha }}
+      binding: vibe-publisher.json
+      package: org.example/package
+    secrets:
+      DEVELOPMENT_GOVERNANCE_PUBLISH_TOKEN: ${{ secrets.DEVELOPMENT_GOVERNANCE_PUBLISH_TOKEN }}
+```
+
+The caller still owns its event filtering and source/readiness checks. The secret
+must be visible **in that caller repository** through the existing organization
+Actions secret's repository-access policy (or the existing repository arrangement).
+A secret stored only in Shared Governance is not available to another producer,
+and reusable workflows do not automatically receive caller secrets. The existing
+`publish_token` mapping remains a compatibility alias; the established named input
+takes precedence if both are supplied. Never use `secrets: inherit`, copy a token
+into source, or create a separate token for each producer. An authorized secret
+administrator can extend access to the existing organization secret when needed;
+this implementation does not change secrets/settings. See GitHub's
+[secret access rules](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets)
+and [reusable workflow secret mapping](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows).
+
+Only an exact source-bound `https://github.com/jrs-vibevm/NAME.git` destination
+is eligible for automatic creation. Other existing destinations keep their prior
+publication path; this is not general organization provisioning. For a qualified
+changed package, credential-free staging reads the public destination. An absent
+destination is represented by an empty local bare repository with `main` as HEAD.
+The pinned native publisher must finish successfully before any remote create.
+No bootstrap commit or remote initialization push is needed: the normal single
+atomic non-force push publishes both main and the new immutable tag.
+
+Finalization uses the injected token to verify the exact destination and public
+visibility. Existing repositories receive no creation or metadata request. Before
+creating an absent repository, distinguish GitHub's masked private-resource 404
+from absence: the current supported proof is an active destination-organization
+owner membership plus the classic token's `repo` scope, with no SSO restriction
+response. This proof is checked only for absent destinations. A limited token or
+an unavailable membership/scope proof leaves absence ambiguous and returns
+`DESTINATION_PROVISIONING_PENDING` without POST; existing public publication does
+not acquire an owner-membership prerequisite. Do not rotate/escalate credentials
+automatically. Owner disposition is needed if the established token cannot prove
+absence under this supported path. GitHub documents the
+[masked 404 behavior](https://docs.github.com/en/rest/using-the-rest-api/troubleshooting-the-rest-api#404-not-found-for-an-existing-resource).
+
+After a refreshed 404, POST only the bound repository name with `private=false`
+and `auto_init=false`, then verify its identity/public visibility by readback.
+403, redirects, throttling, transient GET failures, private resources and wrong
+identities never become creation permission. A 422 name race or ambiguous POST
+transport is reconciled by exact public destination readback before any push;
+failed readback stays pending. There is no blind create retry, visibility change,
+deletion, force push or metadata repair. A created empty repo may remain after a
+later failure; rerun the same source/workflow pin to reuse it. No-op and existing
+release tags do not create repositories. API errors and reports expose safe codes
+without raw response bodies or credentials.
+
 ## Invocation and source eligibility
 
 A producer accepts its own source-committed JSON binding and thin caller. Pin
@@ -150,8 +215,9 @@ or publication authority. `GH_TOKEN` is for read-only source CI, never distribut
 invocation. Otherwise clone the distribution into disposable bare staging, recheck
 the tag, and publish exact exported bytes there using the pinned VibeVM 1.0.7 musl
 binary. Native subprocesses receive isolated settings and no API/publication token,
-askpass or global Git credentials. `finalize --report ...` alone receives the named
-destination token through ephemeral askpass. One call covers one coordinate; never
+askpass or global Git credentials. `finalize --report ...` alone receives the shared
+publication token for API verification/creation and ephemeral Git askpass.
+One call covers one coordinate; never
 use `secrets: inherit`. Tokens are not stored in URLs, artifacts or logs.
 
 Push main and the new tag with one atomic non-force push. A concurrent tag creation

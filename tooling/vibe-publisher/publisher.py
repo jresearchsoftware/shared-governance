@@ -13,6 +13,7 @@ import re
 import subprocess
 import tomllib
 import urllib.request
+import urllib.error
 
 ROOT = Path(__file__).resolve().parents[2]
 SHA = re.compile(r"[0-9a-f]{40}")
@@ -42,6 +43,7 @@ AUTHORIZATION_FALLBACK = (
     "The publisher could not establish package, source, owner or CI eligibility. Resolve the trusted evidence or owner disposition before retrying.")
 
 DIAGNOSTIC_MESSAGES = {
+    "DESTINATION_PROVISIONING_PENDING": "The bound public destination could not be safely verified or created. Check shared credential access and destination visibility, then retry the same source and workflow pin; no release push was attempted.",
     "NO_PACKAGE_CHANGE": "No approved package payload changed; no publication was attempted.",
     "ELIGIBLE_NOT_PUBLISHED": "Eligibility checks passed, but publication has not run.",
     "STAGED_NOT_PUBLISHED": "The native release is staged locally; destination publication is not confirmed.",
@@ -659,6 +661,92 @@ def remote_refs(destination, tag):
                "refs/tags/" + tag + "^{}").decode().splitlines()
 
 
+def provisioned_repository(destination):
+    """Only exact HTTPS destinations in the owner-approved namespace may be created."""
+    match = re.fullmatch(r"https://github\.com/(jrs-vibevm)/([A-Za-z0-9_.-]+)\.git", destination)
+    if not match or match[2] in (".", ".."):
+        return None
+    return match[1] + "/" + match[2]
+
+
+class DestinationAPI:
+    """Small finalization-only API; never include response bodies/tokens in errors."""
+    def __init__(self, token=None):
+        self.token = token
+
+    def request(self, method, path, data=None):
+        headers = {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"}
+        if self.token:
+            headers["Authorization"] = "Bearer " + self.token
+        body = None if data is None else json.dumps(data).encode()
+        if body is not None:
+            headers["Content-Type"] = "application/json"
+        request = urllib.request.Request("https://api.github.com/" + path, data=body,
+                                         headers=headers, method=method)
+        # Do not forward authorization through redirects, including renamed repos.
+        class NoRedirect(urllib.request.HTTPRedirectHandler):
+            def redirect_request(self, req, fp, code, msg, headers, newurl):
+                return None
+        try:
+            with urllib.request.build_opener(NoRedirect).open(request, timeout=60) as response:
+                data = json.load(response)
+                if not isinstance(data, dict):
+                    return 0, {}, {}
+                return response.status, data, dict(response.headers)
+        except urllib.error.HTTPError as error:
+            return error.code, {}, dict(error.headers)
+        except (OSError, ValueError):
+            return 0, {}, {}
+
+
+def public_repository(data, repository):
+    return (data.get("full_name") == repository and data.get("private") is False
+            and data.get("visibility", "public") == "public"
+            and data.get("owner", {}).get("login") == repository.split("/")[0])
+
+
+def destination_exists(repository, api):
+    status, data, headers = api.request("GET", "repos/" + repository)
+    if status == 200 and public_repository(data, repository):
+        return True
+    if status == 404 and not any(k.lower() == "x-github-sso" for k in headers):
+        return False
+    raise ValueError("destination visibility unavailable")
+
+
+def ensure_destination(repository, api):
+    """Run only after native qualification, with the injected publication token."""
+    if provisioned_repository("https://github.com/" + repository + ".git") != repository:
+        raise ValueError("destination creation outside approved namespace")
+    if destination_exists(repository, api):
+        return
+    # GitHub deliberately masks inaccessible private repositories as 404. A
+    # classic full-repo token held by an active org owner can distinguish absence.
+    # Other credentials still publish to existing public repos; ambiguous absence
+    # must fail closed, rather than attempting a create against a hidden name.
+    status, membership, headers = api.request("GET", "user/memberships/orgs/jrs-vibevm")
+    scopes = {s.strip() for k, v in headers.items() if k.lower() == "x-oauth-scopes"
+              for s in v.split(",")}
+    if (status != 200 or membership.get("state") != "active"
+            or membership.get("role") != "admin" or "repo" not in scopes
+            or any(k.lower() == "x-github-sso" for k in headers)):
+        raise ValueError("destination absence is ambiguous")
+    # Refresh after the visibility proof: another writer may have created it.
+    if destination_exists(repository, api):
+        return
+    status, data, _ = api.request("POST", "orgs/jrs-vibevm/repos",
+                                 {"name": repository.split("/")[1], "private": False,
+                                  "auto_init": False})
+    if status == 201:
+        if not public_repository(data, repository):
+            raise ValueError("created destination identity mismatch")
+    elif status not in (0, 422) and status < 500:
+        raise ValueError("destination creation failed")
+    # Includes name races and ambiguous POST transport: never blindly POST again.
+    if not destination_exists(repository, api):
+        raise ValueError("destination creation readback unavailable")
+
+
 def tag_oid(refs, tag):
     return next((line.split()[0] for line in refs if line.split()[1] == "refs/tags/" + tag), None)
 
@@ -681,7 +769,11 @@ def stage(root, package, decision, vibe, directory):
     result = dict(decision)
     tag = "v" + result["version"]
     result["tag"] = tag
-    refs = remote_refs(package["destination"], tag)
+    if result["destination"] != package["destination"]:
+        raise ValueError("planned destination differs from source binding")
+    repository = provisioned_repository(package["destination"])
+    exists = not repository or destination_exists(repository, DestinationAPI())
+    refs = remote_refs(package["destination"], tag) if exists else []
     if tag_oid(refs, tag):
         result.update(status="ALREADY_PUBLISHED", remote_refs=refs,
                       warning="Existing identity retained; this does not prove this retry source was published.")
@@ -701,7 +793,12 @@ def stage(root, package, decision, vibe, directory):
         target = payload_root / safe_path(relative)
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(data)
-    git(None, "clone", "--bare", "--", package["destination"], str(staging))
+    if exists:
+        git(None, "clone", "--bare", "--", package["destination"], str(staging))
+    else:
+        # Native VibeVM supports an empty local bare repo. No remote initialization
+        # commit, metadata mutation or secret is needed before the atomic push.
+        git(None, "init", "--bare", "--initial-branch=main", str(staging))
     if tag_oid(remote_refs(staging.as_uri(), tag), tag):
         result.update(status="ALREADY_PUBLISHED", remote_refs=remote_refs(package["destination"], tag),
                       warning="Existing identity retained; the retry source has not been proven published.")
@@ -718,12 +815,22 @@ def stage(root, package, decision, vibe, directory):
     return result
 
 
-def finalize(staged, push=None):
-    """Only this operation may receive a narrowly scoped destination credential."""
+def finalize(staged, push=None, destination_api=None):
+    """Only this operation receives the shared credential, for one bound destination."""
     if staged["status"] != "STAGED":
         return staged
     result = {key: value for key, value in staged.items() if key != "staging"}
     destination, tag = staged["destination"], staged["tag"]
+    repository = provisioned_repository(destination)
+    if repository:
+        try:
+            api = destination_api or DestinationAPI(os.environ.get("PUBLISH_TOKEN"))
+            if not api.token:
+                raise ValueError("publication credential missing")
+            ensure_destination(repository, api)
+        except (ValueError, OSError):
+            result.update(status="FAILED_OR_PENDING", failure_code="DESTINATION_PROVISIONING_PENDING")
+            return result
     try:
         refs = remote_refs(destination, tag)
         if tag_oid(refs, tag):

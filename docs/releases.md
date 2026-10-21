@@ -132,7 +132,14 @@ authorized fine-grained token granting Contents write on the distribution
 repository only. The source repository's ordinary `GITHUB_TOKEN` cannot write
 across repositories. Keep allowed writers with authorized maintainers/workflows;
 credential setup is an owner/account action, not inferred from GitHub admin access.
-The token is used only by Git askpass in shared finalization; it is never placed
+The current pinned workflow uses the token only by Git askpass in finalization.
+Task 58's [shared credential/provisioning implementation](shared-publisher.md#shared-credential-and-destination-provisioning)
+also uses it for bound destination API operations after native staging, when a
+producer separately adopts that reviewed workflow pin. The existing named
+organization secret is shared with authorized producer repositories; do not
+create project-specific tokens or assume another repository's secret is visible.
+This change does not activate a new publisher pin or mutate secret access.
+The token is never placed
 in a remote URL, persisted config, artifact or log. PR checks receive no publisher
 secret. No environment approval gate or second release approval is added.
 
