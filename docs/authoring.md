@@ -84,9 +84,10 @@ assessments; other consumers own their separate topic choices and migration.
 ## Semantic completeness
 
 Tasks 60/62 jointly propose 5.0.0: [authority coverage/scenarios](task-60/step-1/README.md)
-and [ChatGPT receipt/application design](task-62/step-1/README.md). RA owns the
-common authority principle; TH/IR apply it. The minimal ownership receipt avoids
-circular SHA churn while retaining native validation and safe local rewrites.
+and [ChatGPT content/application design](task-62/step-2/README.md). RA owns the
+common authority principle; TH/IR apply it. [Step 2 corrections](task-60/step-2/README.md)
+remove the unapproved publication checklist and ChatGPT projection receipt;
+content-based generation retains accepted-source/native validation and path safety.
 TH-029 is conditional on Tasks including live application; source generation
 alone adds no settings obligation. Both Tasks retain separate Step chronology.
 

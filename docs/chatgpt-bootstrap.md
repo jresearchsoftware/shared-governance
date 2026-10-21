@@ -6,13 +6,13 @@ from their existing pinned VibeVM slot; there is no copied generator or per-proj
 export procedure. VibeVM owns dependency resolution and materialization.
 
 Each consumer reviews its small binding plus **custom Markdown**, then checks in
-one complete generated Instructions file and its receipt. Shared Governance's
+one complete generated Instructions file. Shared Governance's
 canonical desired state is [chatgpt/instructions.md](../chatgpt/instructions.md),
 with [custom.md](../chatgpt/custom.md) and [binding.json](../chatgpt/binding.json).
 The generated source is not proof of installed ChatGPT settings.
 
 The package interface documents check/update, exact owner-export comparison,
-optional selected Sources snapshots, stale detection, safe rewrite, no-op,
+optional selected Sources snapshots, content-based stale detection, update, no-op,
 unsupported formats and authority limits. The producer convenience entry
 `python scripts/project-chatgpt.py` delegates to that same canonical code.
 
@@ -22,10 +22,13 @@ The independently accepted source for this effort remains frozen separately;
 new package and generated content are proposals until accepted. Existing
 protocols and topic adoptions are unchanged. A stable navigation URL never
 establishes acceptance: each effort must independently establish its exact
-accepted revision. An unrelated accepted commit changes neither effective Instructions nor the
-minimal ownership receipt. Exact accepted-source identities belong to invocation
-evidence, not a circular containing-commit pin. Schema-2 receipts migrate once
-on intentional update; historical inventory needs no recurring refresh.
+accepted revision. An unrelated accepted commit does not change effective Instructions.
+Exact accepted-source identities belong to invocation evidence, not a circular
+containing-commit pin. There is no ChatGPT projection receipt or ownership gate;
+adopting consumers remove their old receipt in the same reviewed adoption PR.
+Native VibeVM slot receipts remain intact. Status schema 4 distinguishes content
+changes from NO_OP and keeps application conditional on Task scope; generation
+alone requires no live Settings action.
 
 The prior [Step 4](task-32/step-4/README.md) schema-1 prototype and its limitations
 remain historical at its exact result commit. Its old reproduction commands
