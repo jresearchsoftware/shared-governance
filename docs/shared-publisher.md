@@ -43,14 +43,20 @@ and [reusable workflow secret mapping](https://docs.github.com/en/actions/how-to
 Only an exact source-bound `https://github.com/jrs-vibevm/NAME.git` destination
 is eligible for automatic creation. Other existing destinations keep their prior
 publication path; this is not general organization provisioning. For a qualified
-changed package, credential-free staging reads the public destination. An absent
-destination is represented by an empty local bare repository with `main` as HEAD.
+changed package, credential-free staging first reads the public destination via
+Git. A Git-accessible existing destination uses ordinary clone/stage/publication
+without REST lookup, including when REST is forbidden, rate-limited or unavailable.
+Only failed Git access enters the extra REST path. An unauthenticated 404 permits
+local staging against an empty bare repository with `main` as HEAD; it does not
+prove absence or authorize creation.
 The pinned native publisher must finish successfully before any remote create.
 No bootstrap commit or remote initialization push is needed: the normal single
 atomic non-force push publishes both main and the new immutable tag.
 
-Finalization uses the injected token to verify the exact destination and public
-visibility. Existing repositories receive no creation or metadata request. Before
+Finalization first reads Git refs and follows the ordinary atomic push/readback
+path when accessible. Existing Git-accessible repositories receive no REST,
+creation or metadata request. If Git access fails, finalization uses the injected
+token to verify the exact destination and public visibility. Before
 creating an absent repository, distinguish GitHub's masked private-resource 404
 from absence: the current supported proof is an active destination-organization
 owner membership plus the classic token's `repo` scope, with no SSO restriction
@@ -64,7 +70,7 @@ absence under this supported path. GitHub documents the
 
 After a refreshed 404, POST only the bound repository name with `private=false`
 and `auto_init=false`, then verify its identity/public visibility by readback.
-403, redirects, throttling, transient GET failures, private resources and wrong
+On this fallback path, 403, redirects, throttling, transient GET failures, private resources and wrong
 identities never become creation permission. A 422 name race or ambiguous POST
 transport is reconciled by exact public destination readback before any push;
 failed readback stays pending. There is no blind create retry, visibility change,

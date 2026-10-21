@@ -46,7 +46,7 @@ class DestinationEvidence:
             return self.create_status, self.metadata, {}
         if path.startswith("user/memberships/"):
             return 200, self.membership, self.headers
-        return (self.get_status or (200 if self.exists else 404)), self.metadata, {}
+        return (self.get_status if self.get_status is not None else (200 if self.exists else 404)), self.metadata, {}
 
 
 class ProvisioningTests(unittest.TestCase):
@@ -145,11 +145,28 @@ class ProvisioningTests(unittest.TestCase):
         row = {"status": "STAGED", "destination": "https://github.com/" + self.api.repository + ".git",
                "tag": "v1.0.0", "staging": "unused"}
         with patch.object(P, "ensure_destination", side_effect=ValueError("PRIVATE_SENTINEL")), \
-                patch.object(P, "remote_refs", side_effect=AssertionError("no push or Git access")):
+                patch.object(P, "remote_refs", side_effect=ValueError("Git unavailable")), \
+                patch.object(P, "git", side_effect=AssertionError("no push")):
             result = P.finalize(row, destination_api=self.api)
         self.assertEqual(result["status"], "FAILED_OR_PENDING")
         self.assertEqual(P.operator_diagnostic(result)[0], "DESTINATION_PROVISIONING_PENDING")
         self.assertNotIn("PRIVATE_SENTINEL", json.dumps(result))
+
+    def test_git_failure_and_ambiguous_rest_never_stage_or_push(self):
+        destination = "https://github.com/" + self.api.repository + ".git"
+        for status in (0, 301, 403, 429, 503):
+            with self.subTest(status=status), \
+                    patch.object(P, "remote_refs", side_effect=ValueError("Git unavailable")), \
+                    patch.object(P, "git", side_effect=AssertionError("no push")), \
+                    patch.object(P, "DestinationAPI", return_value=self.api), \
+                    patch.object(self.api, "request", return_value=(status, {}, {})) as request:
+                row = {"status": "READY", "version": "1.0.0", "destination": destination}
+                with self.assertRaises(ValueError):
+                    P.stage(None, {"destination": destination}, row, None, None)
+                row.update(status="STAGED", tag="v1.0.0", staging="unused")
+                self.assertEqual(P.finalize(row, destination_api=self.api)["status"], "FAILED_OR_PENDING")
+                self.assertTrue(all(call.args[0] == "GET" for call in request.call_args_list))
+                self.assertFalse(any(c[0] == "POST" for c in self.api.calls))
 
     def test_api_status_and_transport_are_redacted_and_redirects_disabled(self):
         api = P.DestinationAPI("PRIVATE_TOKEN_SENTINEL")
@@ -916,6 +933,36 @@ class NativeTests(Fixture):
         return P.stage(self.source, self.packages[index], report["packages"][index], VIBE,
                        self.directory / (suffix + str(index)))
 
+    def test_existing_git_destination_stages_and_finalizes_without_rest(self):
+        local = self.directory / "existing-distribution.git"
+        self.git("init", "-q", "--bare", "--initial-branch=main", str(local))
+        api = DestinationEvidence(exists=True)
+        destination = "https://github.com/" + api.repository + ".git"
+        self.packages[0]["destination"] = destination
+        self.save_binding()
+        self.commit()
+        original_git = P.git
+
+        def mapped_git(root, *args):
+            return original_git(root, *(local.as_uri() if arg == destination else arg for arg in args))
+
+        for index, status in enumerate((403, 429, 503, 0)):
+            with self.subTest(rest_status=status):
+                api.get_status = status
+                api.calls.clear()
+                self.revision = self.change(0, version="1.0." + str(index + 1))
+                with patch.object(P, "git", side_effect=mapped_git), \
+                        patch.object(P, "DestinationAPI", return_value=api):
+                    staged = self.stage(suffix="existing-" + str(index))
+                    self.assertEqual(staged["status"], "STAGED")
+                    published = P.finalize(staged, destination_api=api)
+                    self.assertEqual(published["status"], "PUBLISHED")
+                    self.assertEqual(P.finalize(staged, destination_api=api)["status"], "ALREADY_PUBLISHED")
+                    # The stage retry must also skip the retained tag before native work.
+                    self.assertEqual(self.stage(suffix="retained-" + str(index))["status"], "ALREADY_PUBLISHED")
+                self.assertEqual(api.calls, [])
+                self.assertEqual(self.git("rev-parse", "refs/tags/" + staged["tag"], cwd=local), staged["expected_tag"])
+
     def test_native_absent_destination_stages_before_create_and_atomic_first_push(self):
         api = DestinationEvidence()
         destination = "https://github.com/" + api.repository + ".git"
@@ -935,7 +982,8 @@ class NativeTests(Fixture):
             self.assertEqual(args[3], destination)
             return original_git(root, *args[:3], local.as_uri(), *args[4:])
 
-        with patch.object(P, "destination_exists", return_value=False):
+        with patch.object(P, "destination_exists", return_value=False), \
+                patch.object(P, "remote_refs", side_effect=mapped_refs):
             staged = P.stage(self.source, self.packages[0], row, VIBE, self.directory / "absent-stage")
         self.assertEqual(staged["status"], "STAGED")
         self.assertFalse(local.exists())
@@ -954,7 +1002,7 @@ class NativeTests(Fixture):
         api.calls.clear()
         with patch.object(P, "remote_refs", side_effect=mapped_refs):
             self.assertEqual(P.finalize(staged, push=push, destination_api=api)["status"], "ALREADY_PUBLISHED")
-        self.assertEqual(len(api.calls), 1)
+        self.assertEqual(api.calls, [])
 
     def test_native_failure_on_absent_destination_cannot_create(self):
         api = DestinationEvidence()
@@ -971,7 +1019,14 @@ class NativeTests(Fixture):
                 return subprocess.CompletedProcess(command, 1)
             return original_run(command, *args, **kwargs)
 
+        original_refs = P.remote_refs
+        def missing_destination(url, tag):
+            if url == self.packages[0]["destination"]:
+                raise ValueError("Git unavailable")
+            return original_refs(url, tag)
+
         with patch.object(P, "destination_exists", return_value=False), \
+                patch.object(P, "remote_refs", side_effect=missing_destination), \
                 patch.object(P.subprocess, "run", side_effect=fail_native), \
                 patch.object(P, "ensure_destination", side_effect=AssertionError("no provisioning in stage")):
             with self.assertRaisesRegex(ValueError, "native staging failed"):

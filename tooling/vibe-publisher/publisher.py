@@ -772,8 +772,15 @@ def stage(root, package, decision, vibe, directory):
     if result["destination"] != package["destination"]:
         raise ValueError("planned destination differs from source binding")
     repository = provisioned_repository(package["destination"])
-    exists = not repository or destination_exists(repository, DestinationAPI())
-    refs = remote_refs(package["destination"], tag) if exists else []
+    exists = True
+    try:
+        # Preserve the ordinary public Git path even when REST is unavailable.
+        refs = remote_refs(package["destination"], tag)
+    except ValueError:
+        if not repository or destination_exists(repository, DestinationAPI()):
+            raise
+        # An unauthenticated 404 only permits local staging, never creation.
+        exists, refs = False, []
     if tag_oid(refs, tag):
         result.update(status="ALREADY_PUBLISHED", remote_refs=refs,
                       warning="Existing identity retained; this does not prove this retry source was published.")
@@ -822,7 +829,12 @@ def finalize(staged, push=None, destination_api=None):
     result = {key: value for key, value in staged.items() if key != "staging"}
     destination, tag = staged["destination"], staged["tag"]
     repository = provisioned_repository(destination)
-    if repository:
+    try:
+        refs = remote_refs(destination, tag)
+    except ValueError:
+        if not repository:
+            result.update(status="FAILED_OR_PENDING", reason="Publication readback unavailable; inspect and retry the same source SHA and workflow implementation pin.")
+            return result
         try:
             api = destination_api or DestinationAPI(os.environ.get("PUBLISH_TOKEN"))
             if not api.token:
@@ -831,8 +843,12 @@ def finalize(staged, push=None, destination_api=None):
         except (ValueError, OSError):
             result.update(status="FAILED_OR_PENDING", failure_code="DESTINATION_PROVISIONING_PENDING")
             return result
+        try:
+            refs = remote_refs(destination, tag)
+        except ValueError:
+            result.update(status="FAILED_OR_PENDING", reason="Publication readback unavailable; inspect and retry the same source SHA and workflow implementation pin.")
+            return result
     try:
-        refs = remote_refs(destination, tag)
         if tag_oid(refs, tag):
             result.update(status="ALREADY_PUBLISHED", remote_refs=refs,
                           warning="Existing identity retained; compare its original provenance if recovery differs.")
