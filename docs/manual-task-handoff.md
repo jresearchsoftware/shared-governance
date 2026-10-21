@@ -185,6 +185,12 @@ split results and same-Outcome recovery; earlier walks retain historical meaning
 Source-controlled
 [ChatGPT Instructions](../chatgpt/instructions.md) are desired state; the owner
 manually applies and verifies live settings under the existing client procedure.
+For Tasks explicitly including application, compare accepted desired complete text
+with supported live evidence; if different, present the whole replacement for
+owner application and obtain supported confirmation/readback before closure.
+Disclose inaccessible live settings as a gap. Unchanged effective text with no
+known application gap needs no manual action; generation-only Tasks add none.
+Receipt/source SHA changes alone never require re-pasting settings.
 
 [Task 14 Step 2](task-14/step-2/README.md) is historical evidence of a new admitted
 Step correcting the same PR. [Task 26 Step 1 walks](task-26/step-1/scenarios.md)

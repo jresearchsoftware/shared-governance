@@ -195,16 +195,9 @@ def project(source_repository, binding, custom, accepted_sha, authority_anchor):
         for path in binding["cache_selection"]:
             parts.append(f'\n## {path}\n\nSource: {base}{path}\n\n' + source.read(path).decode())
         artifacts["sources.md"] = "".join(parts).encode()
-    tool_files = {name: digest((TEMPLATE.parent / name).read_bytes()) for name in ("project.py", "base.md")}
-    package = tomllib.loads((TEMPLATE.parents[2] / "vibe.toml").read_text(encoding="utf-8"))["package"]
-    receipt = {"schema": 2, "generator": GENERATOR, "repository": binding["repository"],
-               "accepted_sha": accepted_sha, "authority_anchor": authority_anchor,
-               "acceptance_verification": "external owner/review evidence required; consistency only",
-               "tool": {"package": package["group"] + "/" + package["name"],
-                        "version": package["version"], "files": tool_files},
-               "binding_sha256": digest(encoded(binding)), "custom_sha256": digest(custom.encode()),
-               "unicode_characters": len(text), "source_files": inputs, "native_entries": entries,
-               "condition_disposition": "preserved, not evaluated or adopted by projector",
+    # Ownership only: detect valuable manual edits before replacing/deleting outputs.
+    # Git and explicit invocation evidence own source/tool provenance, not this file.
+    receipt = {"schema": 3, "generator": GENERATOR, "repository": binding["repository"],
                "artifacts": {name: digest(data) for name, data in artifacts.items()}}
     return artifacts, receipt
 
@@ -227,7 +220,7 @@ def maintain(root, binding_path, source_repository, accepted_sha, authority_anch
     previous = json.loads(receipt_path.read_text(encoding="utf-8")) if receipt_path.exists() else None
     owned = {}
     if previous is not None:
-        require(previous.get("schema") == 2 and previous.get("generator") == GENERATOR
+        require(previous.get("schema") in (2, 3) and previous.get("generator") == GENERATOR
                 and previous.get("repository") == binding["repository"], "Unknown or foreign receipt; preserve it")
         owned = previous["artifacts"]
         require(isinstance(owned, dict) and set(owned) <= {"instructions.md", "sources.md", "sources-manifest.json"},
@@ -245,14 +238,11 @@ def maintain(root, binding_path, source_repository, accepted_sha, authority_anch
             changes.append(name)
             diffs[name] = difference(actual, desired, name)
     evidence_changed = not receipt_path.exists() or receipt_path.read_bytes() != encoded(receipt)
-    before, after = previous["source_files"] if previous else {}, receipt["source_files"]
-    status = {"schema": 2, "effective_content": "CHANGED" if changes else "NO_OP",
+    status = {"schema": 3, "effective_content": "CHANGED" if changes else "NO_OP",
               "instructions": "CHANGED" if "instructions.md" in changes else "NO_OP",
               "sources": ("CHANGED" if any(name.startswith("sources") for name in changes) else
                           "NO_OP" if binding["cache_enabled"] else "DISABLED"),
               "maintenance_evidence": "CHANGED" if evidence_changed else "NO_OP",
-              "source_changes": [path for path in sorted(before.keys() | after.keys())
-                                 if before.get(path) != after.get(path)],
               "diffs": diffs, "live_settings_verified": False,
               "application": "owner reviews/applies/readbacks; preserve unknown live rules"}
     if update:
@@ -287,7 +277,7 @@ def main():
     parser.add_argument("--binding", type=Path, required=True)
     parser.add_argument("--source-repository", type=Path, help="Optional separate read-only Git object store")
     parser.add_argument("--accepted-sha", help="Independently verified exact authority, never inferred")
-    parser.add_argument("--authority-anchor", help="Current owner/review evidence, receipt only")
+    parser.add_argument("--authority-anchor", help="Independent owner/review evidence for this invocation")
     parser.add_argument("--live-export", type=Path)
     parser.add_argument("--live-format", choices=("raw", "fenced"), default="raw")
     args = parser.parse_args()

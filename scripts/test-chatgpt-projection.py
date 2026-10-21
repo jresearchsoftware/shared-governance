@@ -165,6 +165,40 @@ class ProjectionTests(unittest.TestCase):
         self.assertEqual(self.tree(), before)
         self.assertEqual((self.config / "custom.md").read_bytes(), custom)
 
+    def test_legacy_receipt_migration_is_once_and_preserves_modified_output(self):
+        self.maintain(True)
+        path = self.config / "receipt.json"
+        legacy = json.loads(path.read_bytes())
+        legacy.update(schema=2, accepted_sha=self.sha, source_files={"old/2.7.0": "old"},
+                      authority_anchor=self.anchor, tool={"version": "4.0.0"})
+        path.write_bytes(projection.encoded(legacy))
+        self.assertTrue(self.maintain()[1])
+        before = self.tree()
+        self.write("chatgpt/instructions.md", "Valuable manual edit\n")
+        modified = self.tree()
+        self.assertEqual(self.cli("update").returncode, 2)
+        self.assertEqual(self.tree(), modified)
+        (self.config / "instructions.md").write_bytes(before["instructions.md"])
+        self.maintain(True)
+        self.assertEqual(json.loads(path.read_bytes())["schema"], 3)
+        stable = self.tree()
+        self.commit()  # Receipt's own containing commit must not cause self-pin churn.
+        self.assertEqual(self.cli().returncode, 0)
+        self.assertEqual(self.cli("update").returncode, 0)
+        self.assertEqual(self.tree(), stable)
+
+    def test_generator_only_upgrade_does_not_churn_ownership(self):
+        self.maintain(True)
+        before = self.tree()
+        package = self.root / "same-output-package"
+        shutil.copytree(self.distribution, package)
+        tool = package / "tools/chatgpt/project.py"
+        tool.write_text(tool.read_text() + "\n# No effective text change.\n")
+        result = self.cli(tool=tool)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.cli("update", tool=tool).returncode, 0)
+        self.assertEqual(self.tree(), before)
+
     def test_missing_generated_check_is_read_only_and_stale(self):
         before = self.tree()
         self.assertEqual(self.cli().returncode, 1)
@@ -213,9 +247,9 @@ class ProjectionTests(unittest.TestCase):
         self.write("unrelated.md", "Source-only note\n")
         self.commit()
         status, stale = self.maintain()
-        self.assertTrue(stale)  # Exact maintenance evidence advances separately.
+        self.assertFalse(stale)
+        self.assertEqual(status["maintenance_evidence"], "NO_OP")
         self.assertEqual(status["effective_content"], "NO_OP")
-        self.assertEqual(status["source_changes"], [])
         self.maintain(True)
         self.assertEqual((self.config / "instructions.md").read_bytes(), before)
 
@@ -227,9 +261,8 @@ class ProjectionTests(unittest.TestCase):
         self.commit()
         status, _ = self.maintain()
         self.assertEqual(status["instructions"], "NO_OP")
-        self.assertIn("boot.md", status["source_changes"])
-        self.assertIn("vibe.lock", status["source_changes"])
-        self.assertTrue(any("third.md" in p for p in status["source_changes"]))
+        self.assertEqual(status["maintenance_evidence"], "NO_OP")
+        self.assertFalse(self.maintain()[1])
 
     def test_no_governance_injected_into_non_adopting_consumer(self):
         artifacts, receipt = self.render()
@@ -237,7 +270,7 @@ class ProjectionTests(unittest.TestCase):
         for word in ("Task", "Outcome", "BLOCKED", "Deliberative", "APPROVE", "task-handoff", "independent-review"):
             self.assertNotIn(word, text)
         self.assertNotIn(self.sha, text)
-        self.assertEqual(receipt["accepted_sha"], self.sha)
+        self.assertEqual(set(receipt), {"schema", "generator", "repository", "artifacts"})
         self.assertIn("adopts no topic", text)
 
     def test_real_producer_output_and_accepted_workflow_routing(self):
@@ -247,13 +280,14 @@ class ProjectionTests(unittest.TestCase):
         # no owner acceptance: that authority still requires external evidence.
         artifacts, receipt = projection.project(
             ROOT, binding, (ROOT / "chatgpt/custom.md").read_text(),
-            recorded["accepted_sha"], recorded["authority_anchor"]
+            subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT).decode().strip(),
+            "https://github.com/jresearchsoftware/shared-governance/issues/62"
         )
         self.assertEqual(artifacts["instructions.md"], (ROOT / "chatgpt/instructions.md").read_bytes())
         self.assertEqual(receipt, recorded)
         for text in ("accepted manual client binding", "BLOCKED", "Deliberative", "self-checks"):
             self.assertIn(text, artifacts["instructions.md"].decode())
-        self.assertLess(receipt["unicode_characters"], 7000)
+        self.assertLess(len(artifacts["instructions.md"].decode()), 7000)
 
     def test_candidate_source_is_not_active_policy(self):
         before = self.render()
@@ -266,11 +300,10 @@ class ProjectionTests(unittest.TestCase):
         self.write(projection.INDEX, 'schema = 1\n[[entry]]\npath = "boot.md"\nkind = "static"\n'
                    '[[entry]]\npath = "conditional.md"\nkind = "dynamic"\nwhen = "future:unknown"\n')
         self.commit()
-        _, receipt = self.render()
-        self.assertEqual([e["path"] for e in receipt["native_entries"]], ["boot.md", "conditional.md"])
-        self.assertEqual(receipt["native_entries"][1]["when"], "future:unknown")
-        self.assertIn(projection.STATIC, receipt["source_files"])
-        self.assertIn("not evaluated", receipt["condition_disposition"])
+        paths, entries = projection.native_inventory(projection.Snapshot(self.repo, self.sha))
+        self.assertEqual([e["path"] for e in entries], ["boot.md", "conditional.md"])
+        self.assertEqual(entries[1]["when"], "future:unknown")
+        self.assertIn(projection.STATIC, paths)
 
     def test_optional_sources_selection_changes_noop_and_disable(self):
         self.binding["cache_enabled"] = True
@@ -379,8 +412,8 @@ class ProjectionTests(unittest.TestCase):
         self.commit()
         positive = self.cli("update")
         self.assertEqual(positive.returncode, 0, positive.stderr)
-        _, receipt = self.render()
-        self.assertEqual(receipt["native_entries"], [{"path": declared, "kind": "static"}])
+        _, entries = projection.native_inventory(projection.Snapshot(self.repo, self.sha))
+        self.assertEqual(entries, [{"path": declared, "kind": "static"}])
         self.write(extra, "Committed extra file outside alpha's receipt\n")
         self.write(projection.INDEX, index + f'[[entry]]\npath="{extra}"\nkind="dynamic"\n'
                    'when="future:unknown"\n')
@@ -424,7 +457,7 @@ class ProjectionTests(unittest.TestCase):
             self.render()
         self.git("rm", "-qr", "vibevm", "vibe.lock")
         self.commit()
-        self.assertEqual(self.render()[1]["native_entries"], [])
+        self.assertIn("instructions.md", self.render()[0])
 
     def test_unsupported_actions_do_not_write(self):
         before = self.tree()

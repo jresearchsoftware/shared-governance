@@ -22,8 +22,10 @@ The independently accepted source for this effort remains frozen separately;
 new package and generated content are proposals until accepted. Existing
 protocols and topic adoptions are unchanged. A stable navigation URL never
 establishes acceptance: each effort must independently establish its exact
-accepted revision. An unrelated accepted commit changes maintenance evidence,
-not effective Instructions or live settings.
+accepted revision. An unrelated accepted commit changes neither effective Instructions nor the
+minimal ownership receipt. Exact accepted-source identities belong to invocation
+evidence, not a circular containing-commit pin. Schema-2 receipts migrate once
+on intentional update; historical inventory needs no recurring refresh.
 
 The prior [Step 4](task-32/step-4/README.md) schema-1 prototype and its limitations
 remain historical at its exact result commit. Its old reproduction commands

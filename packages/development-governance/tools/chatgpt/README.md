@@ -35,8 +35,8 @@ check --repository . --binding chatgpt/binding.json --accepted-sha <independentl
 ```
 
 Use `update` instead of `check` for an intentional local write. Both report exact
-Instructions/cache diffs, source changes, effective `CHANGED`/`NO_OP`, and
-maintenance-evidence changes separately. Check is read-only: exit 0 is current,
+Instructions/cache diffs, effective `CHANGED`/`NO_OP`, and
+ownership-receipt changes separately (status schema 3; no `source_changes`). Check is read-only: exit 0 is current,
 1 is stale/missing generated output or receipt, 2 is invalid/unavailable input.
 It can be opted into consumer CI; this package imposes no universal gate.
 Update validates the complete plan before writing. Existing generated files
@@ -76,21 +76,33 @@ separate read-only Git object store; the default is `--repository`. A matching
 object/URL proves consistency, not repository provenance or owner acceptance.
 There is no fetch, authority oracle or latest-version lookup.
 
-The generated Instructions use stable discovery links and require each effort
-to establish/freeze its own independently accepted revision. Exact SHA, source
-hashes, ordered native conditions, custom/binding/tool identity and generated
-hashes live in the receipt. A new unrelated accepted commit leaves effective
-Instructions unchanged (`NO_OP`); refreshing its maintenance receipt is separate
-from re-pasting settings. A changed relevant source/materialized route is
-reported in `source_changes` and loaded JIT. It need not alter Instructions
-unless base, custom or client routing changes. An enabled cache refreshes its
-exact versioned snapshot/manifest and reports a separate cache diff.
+The generated Instructions use stable discovery links such as `main`; each effort
+establishes/freeze its independently accepted exact revision. That SHA is an
+invocation/provenance anchor, never the containing commit of the generated file.
+Git records reviewed generator version, binding/custom inputs and output together;
+record exact invocation/source/authority evidence in the normal Task/PR as needed.
+The projector still validates committed native inputs at the explicit accepted SHA,
+even if the effective output is unchanged. Candidate guidance cannot accept itself.
 
-Run this same command after relevant accepted guidance/materialization, base,
-custom, binding or selected-cache changes. During dependency upgrades regenerate
-in the same consumer PR and inspect the generated diff. Unchanged bytes are not
-rewritten. Do not poll each message, add periodic live checks, or use an old
-receipt as today's authority. Active efforts retain their frozen binding.
+Receipt schema 3 retains only `schema`, `generator`, `repository` and generated
+`artifacts` hashes. This has one concrete purpose beyond Git: prevent `update`
+from silently overwriting valuable local generated-file edits (or deleting a
+modified cache on disable). It is not an acceptance record, source inventory or
+live-settings receipt. A schema-2 receipt is read for the same ownership check and
+replaced once during an intentional update, preserving unknown/modified files.
+No source/tool/version/SHA metadata refresh is required when output is unchanged.
+A substantive dependency upgrade is validated/regenerated in the same normal PR;
+if Instructions remain identical, no receipt or settings action follows merely
+because routes or main advanced. No stale historical source inventory survives
+in schema 3 and no circular self-pin or recurring receipt-only commit is needed.
+
+Regenerate/check after effective base, custom, binding, relevant accepted guidance
+or materialization changes and review the output in the same normal PR. A pinned
+new generator plus accepted-source validation can qualify unchanged output. Active
+efforts retain their frozen authority; Git preserves historical provenance. An
+explicitly enabled cache remains a versioned exact-source snapshot and changes
+when its selected snapshot/identity changes; it is optional, not a closure gate.
+Do not poll each message or add periodic live checks. Unchanged bytes are not rewritten.
 
 Native support is bounded to INDEX schema 1, lock schema 7 and slot receipt
 schema 1. Each INDEX path inside a materialized locked slot must be declared
@@ -105,7 +117,14 @@ unsupported formats; this tool neither solves ranges/edges nor installs files.
 
 Generated raw `instructions.md` is complete desired text, including its generated
 marker, not a UI installation receipt. The owner reviews and manually applies
-and reads back changed text, preserving unknown live rules. On demand:
+and reads back changed text, preserving unknown live rules. When the Task includes
+application, compare the accepted desired text with supported live evidence, surface
+the **complete** replacement for manual application if different, and obtain
+supported confirmation/readback before claiming application or Task closure.
+Disclose unavailable live reads or uncertain confirmation; a supplied export alone
+proves comparison, not UI currentness. If effective text is unchanged and no known
+application gap remains, no manual settings action is needed. Generation-only
+Tasks acquire no settings-application obligation. On demand:
 
 ```text
 compare --repository . --binding chatgpt/binding.json --live-export <owner-export.md> --live-format raw

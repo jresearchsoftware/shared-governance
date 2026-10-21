@@ -1,5 +1,19 @@
 # Development Governance changelog
 
+## 5.0.0
+
+MAJOR: RA-006 prevents agent-authored obligation expansion across Task authoring,
+acceptance, execution and continuation; TH-002/026 and IR-013 apply that principle.
+TH-029 conditionally requires supported live settings reconciliation for Tasks
+that include applying generated instructions. Existing topic adoption remains local.
+ChatGPT receipt schema 3 retains only generated-file ownership hashes; schema 2
+is migrated safely on deliberate update. Exact accepted-source validation remains,
+but unrelated main/tool/source changes no longer create receipt-only commits.
+Status no longer carries duplicated source inventory; Git/invocation evidence owns
+provenance. Optional exact-source caches retain their snapshot contract.
+No consumer adoption, live settings change or additional publication stage follows.
+
+
 This file ships in the frozen distribution and installed package from 3.0.0.
 Earlier entries are bounded reconstructions from committed manifests, protocols
 and READMEs; they change no old payloads and assert no publication dates.
