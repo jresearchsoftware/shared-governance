@@ -89,7 +89,7 @@ class DistributionTests(unittest.TestCase):
         # PC gained a normative rule after 3.0.0; check that accepted prefix
         # separately instead of asserting the old annotation-only transition.
         unchanged = set(protocols) - {DISTRIBUTION.HANDOFF, DISTRIBUTION.INDEPENDENT_REVIEW,
-                                      DISTRIBUTION.VERSIONING, DISTRIBUTION.PROTOCOL}
+                                      DISTRIBUTION.VERSIONING, DISTRIBUTION.PROTOCOL, DISTRIBUTION.AUTHORITY}
         unchanged.update({DISTRIBUTION.ONBOARDING, DISTRIBUTION.ENGINEERING_METHODS})
         for name in unchanged:
             with self.subTest(meaning=name):
@@ -97,7 +97,8 @@ class DistributionTests(unittest.TestCase):
                 self.assertEqual(stripped, historical[name])
 
     def test_review_scope_change_preserves_accepted_rules_and_unaffected_protocols(self):
-        files = self.current_export()
+        # Historical Task 52 transition; future authorized edits do not redefine it.
+        files, _ = DISTRIBUTION.snapshot("99034dd708e5d0201060986b561ada4d2cffd453")
         accepted, _ = DISTRIBUTION.snapshot("e654d9e20a7c42c50cc05786dc83a4f7a16f84e4")
         # Seven untouched protocols and all earlier PC rules keep exact bytes.
         for name in files:
@@ -113,6 +114,33 @@ class DistributionTests(unittest.TestCase):
         owners = [name for name, content in files.items() if b'<a id="PC-013"></a>' in content]
         self.assertEqual(owners, [DISTRIBUTION.PROTOCOL])
         DISTRIBUTION.validate_payload(files, files["LICENSE"])
+
+    def test_joint_authority_settings_change_preserves_unaffected_contracts(self):
+        files = self.current_export()
+        accepted, _ = DISTRIBUTION.snapshot("61aa3444365b02a27c392d48aa9ea33e85c5d5d4")
+        changed = {DISTRIBUTION.AUTHORITY, DISTRIBUTION.HANDOFF, DISTRIBUTION.INDEPENDENT_REVIEW}
+        for name in files:
+            if name.startswith("vibevm/vibespecs/protocols/") and name not in changed:
+                with self.subTest(protocol=name):
+                    self.assertEqual(files[name], accepted[name])
+        self.assertTrue(files[DISTRIBUTION.AUTHORITY].startswith(accepted[DISTRIBUTION.AUTHORITY]))
+        anchors = lambda value: set(re.findall(rb'<a id="([A-Z]+-[0-9]{3})"></a>', value))
+        for name, new in ((DISTRIBUTION.AUTHORITY, {b"RA-006"}),
+                          (DISTRIBUTION.HANDOFF, {b"TH-029"}),
+                          (DISTRIBUTION.INDEPENDENT_REVIEW, set())):
+            self.assertEqual(anchors(files[name]), anchors(accepted[name]) | new)
+        # Retain every accepted TH/IR paragraph except the three bounded applications.
+        th = files[DISTRIBUTION.HANDOFF].split(b'\n<a id="TH-029"></a>')[0]
+        th = th.replace(b'Apply [RA-006](requirement-authority.md#RA-006) when authoring the Task and its\n'
+                        b'acceptance/completion criteria; agent-written gates cannot authorize themselves.\n\n', b'')
+        th = th.replace(b'Apply [RA-006](requirement-authority.md#RA-006) before admitting continuation;\n'
+                        b'reconcile apparent self-expansion through existing Decisions. ', b'')
+        self.assertEqual(th, accepted[DISTRIBUTION.HANDOFF])
+        ir = files[DISTRIBUTION.INDEPENDENT_REVIEW].replace(
+            b'Apply [RA-006](requirement-authority.md#RA-006) to finding classification, blocker\n'
+            b'decisions and recommendations, preserving initiative and explicit per-finding\n'
+            b'owner dispositions without turning proposals into obligations.\n\n', b'')
+        self.assertEqual(ir, accepted[DISTRIBUTION.INDEPENDENT_REVIEW])
 
     def test_rule_links_survive_paragraph_and_section_insertion(self):
         files = self.current_export()
@@ -131,7 +159,7 @@ class DistributionTests(unittest.TestCase):
                               .read_text(encoding="utf-8"))
         anchors = lambda value: set(re.findall(rb'<a id="(TH-[0-9]{3})"></a>', value))
         self.assertEqual(anchors(files[DISTRIBUTION.HANDOFF]),
-                         {value.encode() for value in previous["anchors"]} | {b"TH-028"})
+                         {value.encode() for value in previous["anchors"]} | {b"TH-028", b"TH-029"})
         for heading in previous["headings"]:
             self.assertIn(heading.encode(), files[DISTRIBUTION.HANDOFF])
         owners = [name for name, content in files.items() if b'<a id="TH-028"></a>' in content]
