@@ -1,5 +1,5 @@
 schema = 1
-source_hash = "sha256:1f340210fc296d83fa25c825ef6b1f995b15eb7f539bdb597490108f64b326ee"
+source_hash = "sha256:d4dd63fa5c7d62e88f5c8d651d85c90e82889beee7fa60152998b77d1c418a38"
 spec_format = "mixed"
 
 [[file]]
@@ -20,7 +20,7 @@ sha256 = "ac7eb31ad86d2a1660852e8b9272369ac5e6368d49dc4c857d8541ccfe6eefcf"
 
 [[file]]
 path = "tools/chatgpt/base.md"
-sha256 = "2c32203f3eac74e1ddea4f5e6ce40346c5cbaa4872ffd0aa08cf480ea488f274"
+sha256 = "4479c0afc65ab4f2c7ba1f7441ad093e2af9feff1cf16d9a2c730edfa62fb986"
 
 [[file]]
 path = "tools/chatgpt/project.py"
