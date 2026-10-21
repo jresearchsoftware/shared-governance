@@ -1,0 +1,79 @@
+test_existing_git_destination_stages_and_finalizes_without_rest (__main__.NativeTests.test_existing_git_destination_stages_and_finalizes_without_rest) ... 
+  test_existing_git_destination_stages_and_finalizes_without_rest (__main__.NativeTests.test_existing_git_destination_stages_and_finalizes_without_rest) (rest_status=403) ... ERROR
+  test_existing_git_destination_stages_and_finalizes_without_rest (__main__.NativeTests.test_existing_git_destination_stages_and_finalizes_without_rest) (rest_status=429) ... ERROR
+  test_existing_git_destination_stages_and_finalizes_without_rest (__main__.NativeTests.test_existing_git_destination_stages_and_finalizes_without_rest) (rest_status=503) ... ERROR
+  test_existing_git_destination_stages_and_finalizes_without_rest (__main__.NativeTests.test_existing_git_destination_stages_and_finalizes_without_rest) (rest_status=0) ... FAIL
+
+======================================================================
+ERROR: test_existing_git_destination_stages_and_finalizes_without_rest (__main__.NativeTests.test_existing_git_destination_stages_and_finalizes_without_rest) (rest_status=403)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/task58-step2-01a15e64/repo/tooling/vibe-publisher/test_publisher.py", line 955, in test_existing_git_destination_stages_and_finalizes_without_rest
+    staged = self.stage(suffix="existing-" + str(index))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/task58-step2-01a15e64/repo/tooling/vibe-publisher/test_publisher.py", line 932, in stage
+    return P.stage(self.source, self.packages[index], report["packages"][index], VIBE,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/task58-step2-01a15e64/repo/tooling/vibe-publisher/publisher.py", line 775, in stage
+    exists = not repository or destination_exists(repository, DestinationAPI())
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/task58-step2-01a15e64/repo/tooling/vibe-publisher/publisher.py", line 714, in destination_exists
+    raise ValueError("destination visibility unavailable")
+ValueError: destination visibility unavailable
+
+======================================================================
+ERROR: test_existing_git_destination_stages_and_finalizes_without_rest (__main__.NativeTests.test_existing_git_destination_stages_and_finalizes_without_rest) (rest_status=429)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/task58-step2-01a15e64/repo/tooling/vibe-publisher/test_publisher.py", line 955, in test_existing_git_destination_stages_and_finalizes_without_rest
+    staged = self.stage(suffix="existing-" + str(index))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/task58-step2-01a15e64/repo/tooling/vibe-publisher/test_publisher.py", line 932, in stage
+    return P.stage(self.source, self.packages[index], report["packages"][index], VIBE,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/task58-step2-01a15e64/repo/tooling/vibe-publisher/publisher.py", line 775, in stage
+    exists = not repository or destination_exists(repository, DestinationAPI())
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/task58-step2-01a15e64/repo/tooling/vibe-publisher/publisher.py", line 714, in destination_exists
+    raise ValueError("destination visibility unavailable")
+ValueError: destination visibility unavailable
+
+======================================================================
+ERROR: test_existing_git_destination_stages_and_finalizes_without_rest (__main__.NativeTests.test_existing_git_destination_stages_and_finalizes_without_rest) (rest_status=503)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/task58-step2-01a15e64/repo/tooling/vibe-publisher/test_publisher.py", line 955, in test_existing_git_destination_stages_and_finalizes_without_rest
+    staged = self.stage(suffix="existing-" + str(index))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/task58-step2-01a15e64/repo/tooling/vibe-publisher/test_publisher.py", line 932, in stage
+    return P.stage(self.source, self.packages[index], report["packages"][index], VIBE,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/task58-step2-01a15e64/repo/tooling/vibe-publisher/publisher.py", line 775, in stage
+    exists = not repository or destination_exists(repository, DestinationAPI())
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/task58-step2-01a15e64/repo/tooling/vibe-publisher/publisher.py", line 714, in destination_exists
+    raise ValueError("destination visibility unavailable")
+ValueError: destination visibility unavailable
+
+======================================================================
+FAIL: test_existing_git_destination_stages_and_finalizes_without_rest (__main__.NativeTests.test_existing_git_destination_stages_and_finalizes_without_rest) (rest_status=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/task58-step2-01a15e64/repo/tooling/vibe-publisher/test_publisher.py", line 962, in test_existing_git_destination_stages_and_finalizes_without_rest
+    self.assertEqual(api.calls, [])
+AssertionError: Lists differ: [('GET', 'repos/jrs-vibevm/org.fixture.exa[173 chars]one)] != []
+
+First list contains 4 additional elements.
+First extra element 0:
+('GET', 'repos/jrs-vibevm/org.fixture.example', None)
+
++ []
+- [('GET', 'repos/jrs-vibevm/org.fixture.example', None),
+-  ('GET', 'repos/jrs-vibevm/org.fixture.example', None),
+-  ('GET', 'repos/jrs-vibevm/org.fixture.example', None),
+-  ('GET', 'repos/jrs-vibevm/org.fixture.example', None)]
+
+----------------------------------------------------------------------
+Ran 1 test in 0.515s
+
+FAILED (failures=1, errors=3)
