@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: jresearchsoftware/shared-governance
-          ref: 5a1e5de66388501235fc9ffd23d45efb34df2b85
+          ref: ${{ job.workflow_sha }}
           path: publisher
           fetch-depth: 0
           persist-credentials: false
@@ -36,11 +36,12 @@ jobs:
         env:
           SOURCE_SHA: ${{ github.event.pull_request.head.sha }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
-        run: python3 producer/scripts/check-publication.py --publisher publisher --source-sha "$SOURCE_SHA" --base "$BASE_SHA"
+          PUBLISHER_SHA: ${{ job.workflow_sha }}
+        run: python3 publisher/scripts/check-publication.py --publisher publisher --publisher-sha "$PUBLISHER_SHA" --source producer --source-sha "$SOURCE_SHA" --base "$BASE_SHA"
       - name: Read-only actual exact-source push CI evidence
         env:
           GH_TOKEN: ${{ github.token }}
           SOURCE_SHA: ${{ github.event.pull_request.head.sha }}
         run: python3 producer/scripts/probe-publication.py --publisher publisher --candidate "$SOURCE_SHA"
-      - name: Accepted shared implementation regressions without destination credentials
+      - name: Executing shared implementation regressions without destination credentials
         run: python3 publisher/tooling/vibe-publisher/test_publisher.py

@@ -36,7 +36,6 @@ jobs:
     timeout-minutes: 10
     env:
       SOURCE_SHA: ${{ github.event.workflow_run.head_sha || inputs.source_sha }}
-      PUBLISHER_SHA: ${{ job.workflow_sha }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -55,6 +54,7 @@ jobs:
         id: readiness
         env:
           GH_TOKEN: ${{ github.token }}
+          PUBLISHER_SHA: ${{ job.workflow_sha }}
         run: python3 publisher/scripts/check-publication.py --publisher publisher --publisher-sha "$PUBLISHER_SHA" --source producer --source-sha "$SOURCE_SHA"
       - name: Qualify the exact changed accepted payload
         if: steps.readiness.outputs.changed == 'true'
