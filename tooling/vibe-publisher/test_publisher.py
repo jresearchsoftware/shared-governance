@@ -834,13 +834,18 @@ class SourceCliTests(Fixture):
 
     def test_finalize_rejects_report_from_different_implementation_before_destination_access(self):
         report = self.directory / "mismatched.json"
+        for identity in (None, {"repository": "jresearchsoftware/shared-governance", "sha": "0" * 40}):
+            report.write_text(json.dumps({"publisher": identity, "packages": [{"status": "STAGED"}]}))
+            result = subprocess.run([sys.executable, str(Path(P.__file__)), "finalize", "--report", str(report)],
+                                    env=self.env, capture_output=True)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertEqual(json.loads(report.read_text())["packages"][0]["status"], "STAGED")
         report.write_text(json.dumps({"publisher": {"repository": "jresearchsoftware/shared-governance",
-                                                   "sha": "0" * 40},
-                                      "packages": [{"status": "STAGED"}]}))
+                                                   "sha": P.git(P.ROOT, "rev-parse", "HEAD").decode().strip()},
+                                      "packages": [{"package": "org.fixture/noop", "status": "NO_PACKAGE_CHANGE"}]}))
         result = subprocess.run([sys.executable, str(Path(P.__file__)), "finalize", "--report", str(report)],
                                 env=self.env, capture_output=True)
-        self.assertNotEqual(result.returncode, 0)
-        self.assertEqual(json.loads(report.read_text())["packages"][0]["status"], "STAGED")
+        self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_source_time_cli_validates_a_candidate_without_api_or_distribution(self):
         self.git("switch", "-qc", "candidate")
