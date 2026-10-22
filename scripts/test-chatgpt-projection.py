@@ -165,6 +165,27 @@ class ProjectionTests(unittest.TestCase):
         self.assertEqual(self.tree(), before)
         self.assertEqual((self.config / "custom.md").read_bytes(), custom)
 
+    def test_generated_outputs_need_no_receipt_or_containing_commit_pin(self):
+        self.assertEqual(self.cli("update").returncode, 0)
+        self.assertEqual(set(self.tree()), {"binding.json", "custom.md", "instructions.md"})
+        stable = self.tree()
+        self.commit()
+        self.assertEqual(self.cli().returncode, 0)
+        self.assertEqual(self.cli("update").returncode, 0)
+        self.assertEqual(self.tree(), stable)
+
+    def test_generator_only_upgrade_does_not_churn_output(self):
+        self.maintain(True)
+        before = self.tree()
+        package = self.root / "same-output-package"
+        shutil.copytree(self.distribution, package)
+        tool = package / "tools/chatgpt/project.py"
+        tool.write_text(tool.read_text() + "\n# No effective text change.\n")
+        result = self.cli(tool=tool)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.cli("update", tool=tool).returncode, 0)
+        self.assertEqual(self.tree(), before)
+
     def test_missing_generated_check_is_read_only_and_stale(self):
         before = self.tree()
         self.assertEqual(self.cli().returncode, 1)
@@ -213,9 +234,8 @@ class ProjectionTests(unittest.TestCase):
         self.write("unrelated.md", "Source-only note\n")
         self.commit()
         status, stale = self.maintain()
-        self.assertTrue(stale)  # Exact maintenance evidence advances separately.
+        self.assertFalse(stale)
         self.assertEqual(status["effective_content"], "NO_OP")
-        self.assertEqual(status["source_changes"], [])
         self.maintain(True)
         self.assertEqual((self.config / "instructions.md").read_bytes(), before)
 
@@ -227,33 +247,30 @@ class ProjectionTests(unittest.TestCase):
         self.commit()
         status, _ = self.maintain()
         self.assertEqual(status["instructions"], "NO_OP")
-        self.assertIn("boot.md", status["source_changes"])
-        self.assertIn("vibe.lock", status["source_changes"])
-        self.assertTrue(any("third.md" in p for p in status["source_changes"]))
+        self.assertFalse(self.maintain()[1])
 
     def test_no_governance_injected_into_non_adopting_consumer(self):
-        artifacts, receipt = self.render()
+        artifacts = self.render()
         text = artifacts["instructions.md"].decode()
         for word in ("Task", "Outcome", "BLOCKED", "Deliberative", "APPROVE", "task-handoff", "independent-review"):
             self.assertNotIn(word, text)
         self.assertNotIn(self.sha, text)
-        self.assertEqual(receipt["accepted_sha"], self.sha)
+        self.assertEqual(set(artifacts), {"instructions.md"})
         self.assertIn("adopts no topic", text)
 
     def test_real_producer_output_and_accepted_workflow_routing(self):
         binding = json.loads((ROOT / "chatgpt/binding.json").read_text())
-        recorded = json.loads((ROOT / "chatgpt/receipt.json").read_text())
-        # Reproduce the recorded maintenance inputs. Receipt consistency proves
-        # no owner acceptance: that authority still requires external evidence.
-        artifacts, receipt = projection.project(
+        # Output consistency proves no owner acceptance; that needs external evidence.
+        artifacts = projection.project(
             ROOT, binding, (ROOT / "chatgpt/custom.md").read_text(),
-            recorded["accepted_sha"], recorded["authority_anchor"]
+            subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT).decode().strip(),
+            "https://github.com/jresearchsoftware/shared-governance/issues/62"
         )
         self.assertEqual(artifacts["instructions.md"], (ROOT / "chatgpt/instructions.md").read_bytes())
-        self.assertEqual(receipt, recorded)
+        self.assertFalse((ROOT / "chatgpt/receipt.json").exists())
         for text in ("accepted manual client binding", "BLOCKED", "Deliberative", "self-checks"):
             self.assertIn(text, artifacts["instructions.md"].decode())
-        self.assertLess(receipt["unicode_characters"], 7000)
+        self.assertLess(len(artifacts["instructions.md"].decode()), 7000)
 
     def test_candidate_source_is_not_active_policy(self):
         before = self.render()
@@ -266,11 +283,10 @@ class ProjectionTests(unittest.TestCase):
         self.write(projection.INDEX, 'schema = 1\n[[entry]]\npath = "boot.md"\nkind = "static"\n'
                    '[[entry]]\npath = "conditional.md"\nkind = "dynamic"\nwhen = "future:unknown"\n')
         self.commit()
-        _, receipt = self.render()
-        self.assertEqual([e["path"] for e in receipt["native_entries"]], ["boot.md", "conditional.md"])
-        self.assertEqual(receipt["native_entries"][1]["when"], "future:unknown")
-        self.assertIn(projection.STATIC, receipt["source_files"])
-        self.assertIn("not evaluated", receipt["condition_disposition"])
+        paths, entries = projection.native_inventory(projection.Snapshot(self.repo, self.sha))
+        self.assertEqual([e["path"] for e in entries], ["boot.md", "conditional.md"])
+        self.assertEqual(entries[1]["when"], "future:unknown")
+        self.assertIn(projection.STATIC, paths)
 
     def test_optional_sources_selection_changes_noop_and_disable(self):
         self.binding["cache_enabled"] = True
@@ -297,27 +313,60 @@ class ProjectionTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Missing accepted"):
             self.render()
 
-    def test_unknown_and_modified_generated_files_preserved(self):
+    def test_local_generated_edits_are_diffed_and_regenerated_without_gate(self):
         self.write("chatgpt/instructions.md", "Unknown valuable rules\n")
         before = self.tree()
-        self.assertEqual(self.cli("update").returncode, 2)
+        check = self.cli()
+        self.assertEqual(check.returncode, 1)
+        self.assertIn("-Unknown valuable rules", json.loads(check.stdout)["diffs"]["instructions.md"])
         self.assertEqual(self.tree(), before)
-        (self.config / "instructions.md").unlink()
-        self.maintain(True)
+        self.assertEqual(self.cli("update").returncode, 0)
         self.write("chatgpt/instructions.md", "Locally modified rules\n")
-        before = self.tree()
-        self.assertEqual(self.cli("update").returncode, 2)
-        self.assertEqual(self.tree(), before)
+        self.assertEqual(self.cli("update").returncode, 0)
+        self.assertEqual(self.cli().returncode, 0)
+        self.assertEqual(set(self.tree()), {"binding.json", "custom.md", "instructions.md"})
 
-    def test_all_outputs_validated_before_any_write(self):
+    def test_disabled_cache_removes_only_fixed_outputs_without_ownership_gate(self):
+        self.write("chatgpt/sources.md", "Locally edited cache\n")
+        self.write("chatgpt/sources-manifest.json", "")
+        self.write("chatgpt/notes.md", "Local non-output\n")
+        self.assertEqual(self.cli("update").returncode, 0)
+        self.assertFalse((self.config / "sources.md").exists())
+        self.assertFalse((self.config / "sources-manifest.json").exists())
+        self.assertEqual((self.config / "notes.md").read_text(), "Local non-output\n")
+
+    def test_all_local_output_paths_validated_before_any_write(self):
         self.maintain(True)
         self.binding["cache_enabled"] = True
         self.save_binding()
         self.write("chatgpt/custom.md", "Changed custom\n")
-        self.write("chatgpt/sources.md", "Unknown cache must survive\n")
+        (self.config / "sources.md").mkdir()
         before = self.tree()
         self.assertEqual(self.cli("update").returncode, 2)
         self.assertEqual(self.tree(), before)
+
+    def test_application_status_is_conditional_for_check_update_noop_and_cache_only(self):
+        for action in ("check", "update"):
+            result = self.cli(action)
+            status = json.loads(result.stdout)
+            self.assertEqual(status["schema"], 4)
+            self.assertEqual(status["instructions"], "CHANGED")
+            self.assertIn("generation alone creates no settings-application duty", status["application"])
+            self.assertIn("only a Task including", status["application"])
+            self.assertIn("supported confirmation/readback", status["application"])
+            self.assertFalse(status["live_settings_verified"])
+            self.assertNotIn("maintenance_evidence", status)
+        for action in ("check", "update"):
+            status = json.loads(self.cli(action).stdout)
+            self.assertIn("unchanged Instructions require no new application", status["application"])
+            self.assertIn("gap remains unresolved", status["application"])
+            self.assertFalse(status["live_settings_verified"])
+        self.binding["cache_enabled"] = True
+        self.save_binding()
+        status = json.loads(self.cli("update").stdout)
+        self.assertEqual(status["instructions"], "NO_OP")
+        self.assertEqual(status["sources"], "CHANGED")
+        self.assertIn("require no new application", status["application"])
 
     def test_live_export_exact_diff_and_noop_with_unknown_rules(self):
         self.maintain(True)
@@ -379,8 +428,8 @@ class ProjectionTests(unittest.TestCase):
         self.commit()
         positive = self.cli("update")
         self.assertEqual(positive.returncode, 0, positive.stderr)
-        _, receipt = self.render()
-        self.assertEqual(receipt["native_entries"], [{"path": declared, "kind": "static"}])
+        _, entries = projection.native_inventory(projection.Snapshot(self.repo, self.sha))
+        self.assertEqual(entries, [{"path": declared, "kind": "static"}])
         self.write(extra, "Committed extra file outside alpha's receipt\n")
         self.write(projection.INDEX, index + f'[[entry]]\npath="{extra}"\nkind="dynamic"\n'
                    'when="future:unknown"\n')
@@ -424,7 +473,7 @@ class ProjectionTests(unittest.TestCase):
             self.render()
         self.git("rm", "-qr", "vibevm", "vibe.lock")
         self.commit()
-        self.assertEqual(self.render()[1]["native_entries"], [])
+        self.assertIn("instructions.md", self.render())
 
     def test_unsupported_actions_do_not_write(self):
         before = self.tree()
