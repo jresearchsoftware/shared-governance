@@ -52,6 +52,15 @@ boot/slot routes, preserving their conditional applicability:
   activities. Its methodology is mandatory for this producer's independent
   assessments; unrelated tasks skip it. Task Handoff retains lifecycle ownership.
 
+For Codex Relay product work in this repository, use the pinned standalone Skill
+at [.agents/skills/codex-relay/SKILL.md](.agents/skills/codex-relay/SKILL.md)
+when its workflow is relevant. The Skill supplies Relay product guidance. Its
+bundled Shared Governance 4.0.0 references do not replace this repository's
+accepted Shared Governance 5.0.0 route or [manual client binding](docs/manual-task-handoff.md)
+for local Task/Step authority, Outcomes, PR state, review and merge. Manual Codex
+remains an execution option. This proposed Skill route does not activate Relay
+workflows or transfer runner-group, review, merge or closure authority; see
+[Relay Skill integration](docs/relay-skill.md).
 For producer self-adoption work, this producer also explicitly adopts
 `self-adoption.md` from that same accepted flow. Unrelated tasks skip the
 corresponding protocol. This adoption grants no Task,
