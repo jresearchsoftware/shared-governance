@@ -1,0 +1,3 @@
+historical-source [{"status": "AUTHORIZATION_PENDING", "reason_code": "HISTORICAL_BINDING_UNRESOLVED"}, {"status": "AUTHORIZATION_PENDING", "reason_code": "HISTORICAL_BINDING_UNRESOLVED"}]
+binding-integration [{"status": "AUTHORIZATION_PENDING", "reason_code": "HISTORICAL_BINDING_UNRESOLVED"}, {"status": "AUTHORIZATION_PENDING", "reason_code": "HISTORICAL_BINDING_UNRESOLVED"}]
+later-evidence ["NO_PACKAGE_CHANGE", "NO_PACKAGE_CHANGE"]

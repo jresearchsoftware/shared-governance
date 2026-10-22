@@ -3,6 +3,7 @@
 import hashlib
 import importlib.util
 import json
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -25,6 +26,160 @@ SLOT = "vibevm/vibedeps/org.jresearch.ai.development-governance/2.2.0"
 
 
 class DistributionTests(unittest.TestCase):
+    def current_export(self):
+        DISTRIBUTION.ROOT = REPOSITORY
+        revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPOSITORY).decode().strip()
+        files, _ = DISTRIBUTION.snapshot(revision)
+        files.pop(DISTRIBUTION.RECEIPT)
+        return files
+
+    def test_current_changelog_is_exported_verified_and_required(self):
+        files = self.current_export()
+        self.assertIn(DISTRIBUTION.CHANGELOG, files)
+        self.assertIn(b"2.7.0", files[DISTRIBUTION.CHANGELOG])
+        self.assertIn(b"3.0.0", files[DISTRIBUTION.CHANGELOG])
+        revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPOSITORY).decode().strip()
+        destination = self.directory / "current-package"
+        DISTRIBUTION.prepare(revision, destination)
+        DISTRIBUTION.verify(revision, destination)
+        (destination / DISTRIBUTION.CHANGELOG).unlink()
+        with self.assertRaisesRegex(ValueError, "file set differs"):
+            DISTRIBUTION.verify(revision, destination)
+        for content in (None, b"", b" \n"):
+            with self.subTest(content=content):
+                changed = dict(files)
+                if content is None:
+                    del changed[DISTRIBUTION.CHANGELOG]
+                else:
+                    changed[DISTRIBUTION.CHANGELOG] = content
+                with self.assertRaises(ValueError):
+                    DISTRIBUTION.validate_payload(changed, files["LICENSE"])
+        historical, _ = DISTRIBUTION.snapshot("ec048fb39ae28cf2d747101466a603ddd062b1b0")
+        historical.pop(DISTRIBUTION.RECEIPT)
+        self.assertNotIn(DISTRIBUTION.CHANGELOG, historical)
+        historical[DISTRIBUTION.CHANGELOG] = files[DISTRIBUTION.CHANGELOG]
+        with self.assertRaises(ValueError):
+            DISTRIBUTION.validate_payload(historical, files["LICENSE"])
+
+    def test_rule_addresses_reject_collisions_missing_routes_and_wrong_targets(self):
+        files = self.current_export()
+        for path, suffix in (
+                (DISTRIBUTION.HANDOFF, b'\n<a id="TH-006"></a>\n'),
+                (DISTRIBUTION.INDEPENDENT_REVIEW, b'\n<a id="TH-006"></a>\n'),
+                ("README.md", b'\n[Missing](vibevm/vibespecs/protocols/task-handoff.md#TH-999)\n'),
+                ("README.md", b'\n[Wrong owner](vibevm/vibespecs/protocols/independent-review.md#TH-006)\n')):
+            with self.subTest(path=path, suffix=suffix):
+                changed = dict(files)
+                changed[path] += suffix
+                with self.assertRaises(ValueError):
+                    DISTRIBUTION.validate_payload(changed, files["LICENSE"])
+        changed = dict(files)
+        changed[DISTRIBUTION.HANDOFF] = re.sub(rb'<a id="TH-[0-9]{3}"></a>', b"", files[DISTRIBUTION.HANDOFF])
+        with self.assertRaises(ValueError):
+            DISTRIBUTION.validate_payload(changed, files["LICENSE"])
+
+    def test_legacy_heading_links_and_annotation_only_semantics_are_preserved(self):
+        files = self.current_export()
+        historical, _ = DISTRIBUTION.snapshot("ec048fb39ae28cf2d747101466a603ddd062b1b0")
+        protocols = [name for name in files if name.startswith("vibevm/vibespecs/protocols/")]
+        for name in protocols:
+            with self.subTest(protocol=name):
+                headings = re.findall(rb"^#{1,6} .+$", historical[name], re.M)
+                self.assertTrue(set(headings) <= set(re.findall(rb"^#{1,6} .+$", files[name], re.M)))
+        # PC gained a normative rule after 3.0.0; check that accepted prefix
+        # separately instead of asserting the old annotation-only transition.
+        unchanged = set(protocols) - {DISTRIBUTION.HANDOFF, DISTRIBUTION.INDEPENDENT_REVIEW,
+                                      DISTRIBUTION.VERSIONING, DISTRIBUTION.PROTOCOL, DISTRIBUTION.AUTHORITY}
+        # Task 62 removes the ChatGPT receipt reference from the current guide;
+        # retain the annotation-only historical guide comparison at accepted 3.0.0.
+        annotated, _ = DISTRIBUTION.snapshot("e654d9e20a7c42c50cc05786dc83a4f7a16f84e4")
+        stripped = re.sub(rb'\n<a id="[A-Z]+-[0-9]{3}"></a>\n\*\*[^\n]+\*\*\n\n', b"\n",
+                          annotated[DISTRIBUTION.ONBOARDING])
+        self.assertEqual(stripped, historical[DISTRIBUTION.ONBOARDING])
+        unchanged.add(DISTRIBUTION.ENGINEERING_METHODS)
+        for name in unchanged:
+            with self.subTest(meaning=name):
+                stripped = re.sub(rb'\n<a id="[A-Z]+-[0-9]{3}"></a>\n\*\*[^\n]+\*\*\n\n', b"\n", files[name])
+                self.assertEqual(stripped, historical[name])
+
+    def test_review_scope_change_preserves_accepted_rules_and_unaffected_protocols(self):
+        # Historical Task 52 transition; future authorized edits do not redefine it.
+        DISTRIBUTION.ROOT = REPOSITORY
+        files, _ = DISTRIBUTION.snapshot("99034dd708e5d0201060986b561ada4d2cffd453")
+        files.pop(DISTRIBUTION.RECEIPT)
+        accepted, _ = DISTRIBUTION.snapshot("e654d9e20a7c42c50cc05786dc83a4f7a16f84e4")
+        # Seven untouched protocols and all earlier PC rules keep exact bytes.
+        for name in files:
+            if name.startswith("vibevm/vibespecs/protocols/") and name not in {
+                    DISTRIBUTION.PROTOCOL, DISTRIBUTION.INDEPENDENT_REVIEW}:
+                with self.subTest(protocol=name):
+                    self.assertEqual(files[name], accepted[name])
+        self.assertTrue(files[DISTRIBUTION.PROTOCOL].startswith(accepted[DISTRIBUTION.PROTOCOL]))
+        anchors = lambda value: set(re.findall(rb'<a id="([A-Z]+-[0-9]{3})"></a>', value))
+        for name, new in ((DISTRIBUTION.PROTOCOL, {b"PC-013"}),
+                          (DISTRIBUTION.INDEPENDENT_REVIEW, set())):
+            self.assertEqual(anchors(files[name]), anchors(accepted[name]) | new)
+        owners = [name for name, content in files.items() if b'<a id="PC-013"></a>' in content]
+        self.assertEqual(owners, [DISTRIBUTION.PROTOCOL])
+        DISTRIBUTION.validate_payload(files, files["LICENSE"])
+
+    def test_joint_authority_settings_change_preserves_unaffected_contracts(self):
+        files = self.current_export()
+        accepted, _ = DISTRIBUTION.snapshot("61aa3444365b02a27c392d48aa9ea33e85c5d5d4")
+        guide = files[DISTRIBUTION.ONBOARDING].replace(b'its content check/diff', b'its check/diff/receipt')
+        guide = guide.replace(b'remain separate and conditional on application scope.', b'remain separate.')
+        self.assertEqual(guide, accepted[DISTRIBUTION.ONBOARDING])
+        changed = {DISTRIBUTION.AUTHORITY, DISTRIBUTION.HANDOFF, DISTRIBUTION.INDEPENDENT_REVIEW}
+        for name in files:
+            if name.startswith("vibevm/vibespecs/protocols/") and name not in changed:
+                with self.subTest(protocol=name):
+                    self.assertEqual(files[name], accepted[name])
+        self.assertTrue(files[DISTRIBUTION.AUTHORITY].startswith(accepted[DISTRIBUTION.AUTHORITY]))
+        anchors = lambda value: set(re.findall(rb'<a id="([A-Z]+-[0-9]{3})"></a>', value))
+        for name, new in ((DISTRIBUTION.AUTHORITY, {b"RA-006"}),
+                          (DISTRIBUTION.HANDOFF, {b"TH-029"}),
+                          (DISTRIBUTION.INDEPENDENT_REVIEW, set())):
+            self.assertEqual(anchors(files[name]), anchors(accepted[name]) | new)
+        # Retain every accepted TH/IR paragraph except the three bounded applications.
+        th = files[DISTRIBUTION.HANDOFF].split(b'\n<a id="TH-029"></a>')[0]
+        th = th.replace(b'Apply [RA-006](requirement-authority.md#RA-006) when authoring the Task and its\n'
+                        b'acceptance/completion criteria; agent-written gates cannot authorize themselves.\n\n', b'')
+        th = th.replace(b'Apply [RA-006](requirement-authority.md#RA-006) before admitting continuation;\n'
+                        b'reconcile apparent self-expansion through existing Decisions. ', b'')
+        self.assertEqual(th, accepted[DISTRIBUTION.HANDOFF])
+        ir = files[DISTRIBUTION.INDEPENDENT_REVIEW].replace(
+            b'Apply [RA-006](requirement-authority.md#RA-006) to finding classification, blocker\n'
+            b'decisions and recommendations, preserving initiative and explicit per-finding\n'
+            b'owner dispositions without turning proposals into obligations.\n\n', b'')
+        self.assertEqual(ir, accepted[DISTRIBUTION.INDEPENDENT_REVIEW])
+
+    def test_rule_links_survive_paragraph_and_section_insertion(self):
+        files = self.current_export()
+        changed = dict(files)
+        changed[DISTRIBUTION.HANDOFF] = files[DISTRIBUTION.HANDOFF].replace(
+            b'<a id="TH-006"></a>', b'## Additional explanatory section\n\nExplanation.\n\n<a id="TH-006"></a>')
+        # Rule lookup follows the explicit ID, not the generated heading slug or order.
+        changed["README.md"] += b'\n[Execution cycle](vibevm/vibespecs/protocols/task-handoff.md#TH-006)\n'
+        DISTRIBUTION.validate_payload(changed, files["LICENSE"])
+
+    def test_pr_readiness_rule_keeps_prior_addresses_and_its_lifecycle_owner(self):
+        files = self.current_export()
+        # The prior candidate commit need not survive squash integration. Keep
+        # its structural contract in-tree instead of looking up a PR-only object.
+        previous = json.loads((REPOSITORY / "scripts/fixtures/task-handoff-before-th-028.json")
+                              .read_text(encoding="utf-8"))
+        anchors = lambda value: set(re.findall(rb'<a id="(TH-[0-9]{3})"></a>', value))
+        self.assertEqual(anchors(files[DISTRIBUTION.HANDOFF]),
+                         {value.encode() for value in previous["anchors"]} | {b"TH-028", b"TH-029"})
+        for heading in previous["headings"]:
+            self.assertIn(heading.encode(), files[DISTRIBUTION.HANDOFF])
+        owners = [name for name, content in files.items() if b'<a id="TH-028"></a>' in content]
+        self.assertEqual(owners, [DISTRIBUTION.HANDOFF])
+        self.assertIn(b"#TH-028", files[DISTRIBUTION.CHANGELOG])
+        self.assertIn(b"#TH-028", files["README.md"])
+        # Product commands stay in the producer binding, outside the passive flow.
+        self.assertNotIn(b"gh pr ready", files[DISTRIBUTION.HANDOFF])
+
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory(prefix="governance-distribution-test-")
         self.addCleanup(self.temporary.cleanup)

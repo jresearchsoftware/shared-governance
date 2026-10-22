@@ -23,7 +23,7 @@ No rebase or accepted-governance repin occurred.
 | --- | --- |
 | Shared client mechanics | Package [base](../../../packages/development-governance/tools/chatgpt/base.md) and [projector](../../../packages/development-governance/tools/chatgpt/project.py), one producer-owned version. |
 | Project-specific client text | Producer [custom Markdown](../../../chatgpt/custom.md) and [small binding](../../../chatgpt/binding.json); consumers own their equivalent files. |
-| Complete desired state | Producer [generated Instructions](../../../chatgpt/instructions.md) and [receipt](../../../chatgpt/receipt.json), committed alongside custom/binding. |
+| Complete desired state | Producer [generated Instructions](../../../chatgpt/instructions.md) and [historical receipt](https://github.com/jresearchsoftware/shared-governance/blob/61aa3444365b02a27c392d48aa9ea33e85c5d5d4/chatgpt/receipt.json), committed alongside custom/binding. |
 | Common maintenance | [Package interface](../../../packages/development-governance/tools/chatgpt/README.md): `check`, `update`, `compare`, optional selected Sources. |
 | Historical different consumer | [Relay read-only preview](relay-preview/instructions.md), [custom](relay-preview/custom.md), [binding](relay-preview/binding.json) and selected cache. Same implementation, no consumer edit. |
 | Qualification | [Evidence](evidence/validation.md), [semantic coverage](semantic-coverage.md), and optional [native fixture](../../../scripts/qualify-chatgpt.py). |

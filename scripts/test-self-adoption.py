@@ -45,6 +45,10 @@ class NativeAdoptionTests(unittest.TestCase):
         self.assertEqual(self.receipt["version"], manifest["package"]["version"])
         self.assertFalse((self.slot / EXPORTER.RECEIPT).exists())
         self.assertFalse((self.source / EXPORTER.RECEIPT).exists())
+        self.assertEqual((self.slot / EXPORTER.CHANGELOG).read_bytes(),
+                         (self.work / EXPORTER.PACKAGE / EXPORTER.CHANGELOG).read_bytes())
+        self.assertIn('Read the full `independent-review.md`', (self.work / "AGENTS.md").read_text())
+        self.assertIn('id="IR-005"', (self.slot / EXPORTER.INDEPENDENT_REVIEW).read_text())
 
     def test_registry_source_mutation_and_missing_file_rejected(self):
         target = self.source / EXPORTER.HANDOFF
@@ -54,6 +58,22 @@ class NativeAdoptionTests(unittest.TestCase):
         target.write_bytes(original)
         target.unlink()
         self.reject()
+
+    def test_manual_readiness_rule_is_accessible_through_native_and_local_routes(self):
+        authored = self.work / EXPORTER.PACKAGE / EXPORTER.HANDOFF
+        installed = (self.slot / EXPORTER.HANDOFF).read_bytes()
+        self.assertEqual(installed, authored.read_bytes())
+        self.assertIn(b'<a id="TH-028"></a>', installed)
+        self.assertIn(b"Executor-to-review artifact readiness", installed)
+        # The human-owned agent route discovers the usable producer operations.
+        root = (self.work / "AGENTS.md").read_text()
+        self.assertIn("docs/manual-task-handoff.md", root)
+        self.assertIn("PR Draft/Ready operations", root)
+        binding = (self.work / "docs/manual-task-handoff.md").read_text()
+        self.assertIn("gh pr ready N --repo jresearchsoftware/shared-governance --undo", binding)
+        self.assertIn("gh pr ready N --repo jresearchsoftware/shared-governance\n", binding)
+        self.assertIn("headRefOid", binding)
+        self.assertIn("task-45/step-7/scenarios.md", binding)
 
     def test_corrupt_slot_and_git_restore(self):
         target = self.slot / EXPORTER.HANDOFF

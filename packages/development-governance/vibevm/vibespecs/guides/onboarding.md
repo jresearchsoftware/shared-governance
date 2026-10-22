@@ -1,5 +1,8 @@
 # Onboard a project to Shared Governance
 
+<a id="ON-001"></a>
+**ON-001 — Explicit onboarding request and scope.**
+
 Start with an ordinary request: **“Onboard this project to Shared Governance.”**
 An agent or human operator can follow this procedure for a new or existing
 software project. Use the project's existing Task, change or owner record;
@@ -15,6 +18,9 @@ Use existing authorization where it covers an action; this procedure creates
 no additional approval gate or permission to mutate another project.
 
 ## 1. Discover the project and agree the intended scope
+
+<a id="ON-002"></a>
+**ON-002 — Discover accepted project authority.**
 
 Read accepted project instructions and boot entrypoints, the onboarding request
 and applicable owner Decisions. Establish the actual repository/tracker and
@@ -53,6 +59,9 @@ JIT loading does not waive required chronology, source or evidence completeness.
 
 ## 2. Recommend topics and identify their local bindings
 
+<a id="ON-003"></a>
+**ON-003 — Recommend topics with explicit local choices.**
+
 Review the available package's compact boot/catalog at an identified accepted
 revision. The following catalog covers Development Governance 2.6.0's nine
 topics. Consider every available topic for relevance, then read full protocols
@@ -83,6 +92,9 @@ package can make all topics available while the project adopts only some.
 
 ## 3. Reconcile local rules before proposing authority transfer
 
+<a id="ON-004"></a>
+**ON-004 — Reconcile complete local rules and ownership.**
+
 For new projects, state where durable owner choices and local bindings will
 live. For existing projects, establish the bounded complete accepted baseline
 for each domain being migrated: relevant instructions, routes, exceptions and
@@ -105,6 +117,9 @@ same reviewed change, preserving local bindings. Test the proposed route without
 residual duplicates and inspect the original project's retained exceptions.
 
 ## 4. Present choices and a concrete setup plan
+
+<a id="ON-005"></a>
+**ON-005 — Concrete authorized setup plan.**
 
 Summarize the recommended profile, selected/retained/declined/deferred topics,
 local rules and exceptions. For each needed change, name its owner, effect,
@@ -132,6 +147,9 @@ each routine implementation correction into a new approval ceremony.
 
 ## 5. Verify the chosen scope through its ordinary entrypoints
 
+<a id="ON-006"></a>
+**ON-006 — Verify through ordinary entrypoints.**
+
 Prefer read-only inspection and fresh existing proof. Record the actual source,
 revision/ref, time and environment for mutable observations. A proposed setting,
 configured check name, stale receipt or reported success is not demonstration.
@@ -142,7 +160,7 @@ Select the following checks by the chosen scope; do not create unrelated gates.
 | Selected guidance | Open the exact accepted full files via the intended manual/client route. Confirm adoption and local binding, not just file presence. Check material local/shared obligations after proposed duplicate removal. |
 | Native dependency/boot, if used | Compare requirement, selected lock version/content identity, installed manifest/slot receipt and canonical payload using existing exporter/integrity tooling. Read STATIC if present, then every applicable INDEX entry in order and its conditional protocol links. Check committed ready files from a clean checkout where that is the project's contract. A package check/installer return code alone cannot establish effective routing. |
 | Codex or another repository agent, if used | Inspect actual root/inherited/nested instruction routes and generated blocks without replacing custom text. Use supported read-only client observations/probes when needed for the intended claim. Report unavailable startup/platform/model evidence; static files do not prove model compliance or runtime identity. |
-| ChatGPT, if used | Preserve reviewed custom instructions and source-controlled desired text. If selecting the package's optional maintenance tool (package-root `tools/chatgpt/README.md`), use the pinned slot's one projector with the consumer's binding/custom files; inspect its check/diff/receipt rather than copying a per-project generator. Owner application and supported readback of Instructions/Sources remain separate. A raw owner export comparison proves that comparison, not live UI currentness or reliable model loading. Canonical access need not depend on optional Sources caches. |
+| ChatGPT, if used | Preserve reviewed custom instructions and source-controlled desired text. If selecting the package's optional maintenance tool (package-root `tools/chatgpt/README.md`), use the pinned slot's one projector with the consumer's binding/custom files; inspect its content check/diff rather than copying a per-project generator. Owner application and supported readback of Instructions/Sources remain separate and conditional on application scope. A raw owner export comparison proves that comparison, not live UI currentness or reliable model loading. Canonical access need not depend on optional Sources caches. |
 | Task, review and validation | Walk a normal change using the local tracker/authority, result and review path. Inspect meaningful check triggers, exact-head run/results and warning evidence, reviewer availability/identity and continuation permissions. A single-account attributed assessment does not satisfy a distinct native reviewer rule. A new project without runs reports proposed validation as unverified; no artificial mutation is needed. |
 | GitHub, if used | Follow the adopted [repository protocol](../protocols/github-repository-governance.md#verify-what-github-actually-enforces), or the local equivalent: inspect merge/delete options, classic protection, applicable inherited branch/tag rulesets, enforcement, targeting and bypass details with existing access. Inspect required checks/review identities and allowed writers for both source and publication paths. An empty branch-rules result does not inspect tag/classic protection; inaccessible or ambiguous 404 evidence is unverified. |
 | Publication or another host, if used | Trace the accepted-source-to-artifact/version route and writer scope through existing evidence. Preserve retained branches and immutable published refs; use the host's own permission/review interfaces or durable manual records. No GitHub or Relay adapter is required. |
@@ -158,6 +176,9 @@ If visibility is missing, name the evidence the authorized administrator can
 supply and the cheaper acceptable alternative or blocked invariant.
 
 ## 6. Return a scoped verdict and the next useful action
+
+<a id="ON-007"></a>
+**ON-007 — Scoped readiness verdict.**
 
 Keep a concise handoff in the existing onboarding/Task/change record. Include:
 
@@ -186,6 +207,9 @@ blocker, or **PLAN COMPLETE; SETUP DEFERRED** when discovery/planning is the
 agreed result. Partial readiness is useful: a manual path may work while a
 ChatGPT or publication path remains unqualified. An unobserved live-client
 guarantee cannot be inferred from a static validator or prose walkthrough.
+
+<a id="ON-008"></a>
+**ON-008 — Event-directed upkeep.**
 
 Retain stable choices/routing in accepted project guidance and dated mutable
 observations in existing records. Reuse sufficient unchanged evidence. Recheck

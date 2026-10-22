@@ -16,6 +16,10 @@ Package-versioning and task-handoff require explicit project adoption and preser
 existing locally owned policies. [Manual task handoff](docs/manual-task-handoff.md)
 and [native self-adoption](docs/self-adoption.md)
 illustrates this repository's Issue-owned execution path and local client binding.
+For its independent assessments this producer explicitly adopts the full accepted
+Independent Review protocol. Other consumers still select that topic separately.
+The installed [package changelog](packages/development-governance/CHANGELOG.md)
+records version contracts, stable rule addresses and adoption implications.
 
 [Version tags](https://github.com/jrs-vibevm/org.jresearch.ai.development-governance/tags)
 and [publication runs](https://github.com/jresearchsoftware/shared-governance/actions/workflows/publish.yml)

@@ -91,10 +91,28 @@ class ReleaseTests(ReleaseFixture):
                              "NO_PACKAGE_CHANGE")
 
     def test_same_version_content_change_is_rejected(self):
+        # Accepted main already freezes the payload; no remote tag is needed.
+        self.assertEqual(self.git("tag"), "")
         readme = self.source / RELEASE.PREPARATION.PACKAGE / "README.md"
         readme.write_text(readme.read_text() + "\nChanged contract.\n")
         with self.assertRaisesRegex(ValueError, "without a new"):
             RELEASE.transition(self.revision, self.commit(), "patch")
+
+    def test_source_time_license_readiness_precedes_publication(self):
+        root = self.source / RELEASE.PREPARATION.PACKAGE
+        for defect in ("missing", "empty", "metadata"):
+            with self.subTest(defect=defect):
+                self.git("reset", "--hard", self.revision)
+                if defect == "missing":
+                    (root / "LICENSE").unlink()
+                elif defect == "empty":
+                    (root / "LICENSE").write_text("")
+                else:
+                    manifest = root / "vibe.toml"
+                    manifest.write_text(manifest.read_text().replace('license = "MIT"', 'license = "UNRESOLVED"'))
+                with self.assertRaises(ValueError):
+                    RELEASE.transition(self.revision, self.commit(), "patch")
+                self.assertEqual(self.git("tag"), "")
 
     def test_stale_parallel_bump_is_recomputed(self):
         self.assertEqual(RELEASE.bump("1.95.0", "major"), "2.0.0")

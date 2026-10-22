@@ -1,0 +1,37 @@
+[start] Installing packages
+[start] Resolving dependencies
+  → re-resolving — `org.jresearch.ai/development-governance` is declared in `.` but absent from vibe.lock
+Resolving 1 root package…
+[done] Resolving dependencies [1ms]
+[start] Fetching package content
+[start] Fetching org.jresearch.ai/development-governance
+[done] Fetching org.jresearch.ai/development-governance [3ms]
+[progress] Fetching package content: 1 packages [3ms]
+[progress] Fetching package content: 1/1 packages [3ms]
+[done] Fetching package content [3ms]
+
+Materialising 1 package into vibedeps/:
+  org.jresearch.ai/development-governance@3.0.0
+
+[start] Applying resolved packages
+[progress] Applying resolved packages: 0/1 packages [0ms]
+[start] Materialising dependency slots
+[progress] Materialising dependency slots: 0/1 packages [0ms]
+[start] Materialising org.jresearch.ai/development-governance@3.0.0
+[done] Materialising org.jresearch.ai/development-governance@3.0.0 [11ms]
+[progress] Materialising dependency slots: 1/1 packages [11ms]
+[done] Materialising dependency slots [11ms]
+[start] Generating boot artifacts
+[progress] Generating boot artifacts: 0/2 nodes [0ms]
+[progress] Generating boot artifacts: 2/2 nodes [15ms]
+[done] Generating boot artifacts [15ms]
+[progress] Applying resolved packages: 1/1 packages [28ms]
+[done] Applying resolved packages [28ms]
+[start] Recording installation state
+[done] Recording installation state [0ms]
+closure diff:
+  → + org.jresearch.ai/development-governance@3.0.0 (root-edge)
+
+Materialised 1 package into vibedeps/; regenerated boot artifacts for 2 node(s).
+  → 3 stale slot(s) pruned
+[done] Installing packages [44ms]

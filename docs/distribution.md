@@ -31,6 +31,12 @@ not a mandatory recurring remote per-file hash ritual. Native-Skill export is
 historical only. Pinned VibeVM emits a static INDEX entry for the compact boot;
 its protocol reads are conditional.
 
+From 3.0.0 the exact payload also contains `CHANGELOG.md`, linked from the current
+README, and stable rule anchors in the installed Markdown. The version-aware
+allowlist retains earlier export shapes without adding files to frozen versions.
+The exporter detects duplicate rule IDs and broken local rule references; semantic
+identity, migration mappings and preserved obligations still require review.
+
 This producer's native in-tree source and committed projection use the same
 exporter via `--producer-source` / `--verify-producer`, omitting the public
 release-only receipt and generated member routing from the package payload.

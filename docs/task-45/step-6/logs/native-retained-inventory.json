@@ -1,0 +1,30 @@
+{
+  "ok": true,
+  "command": "check",
+  "project": "/tmp/shared-governance-step6.q7KkYR/qualified",
+  "summary": {
+    "error": 0,
+    "warning": 3,
+    "info": 0
+  },
+  "findings": [
+    {
+      "check": "lockfile_files",
+      "severity": "warning",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0",
+      "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0` is a vibedeps/ slot no lockfile entry claims (orphan) — `vibe install` prunes these"
+    },
+    {
+      "check": "lockfile_files",
+      "severity": "warning",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0",
+      "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0` is a vibedeps/ slot no lockfile entry claims (orphan) — `vibe install` prunes these"
+    },
+    {
+      "check": "lockfile_files",
+      "severity": "warning",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.7.0",
+      "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/2.7.0` is a vibedeps/ slot no lockfile entry claims (orphan) — `vibe install` prunes these"
+    }
+  ]
+}

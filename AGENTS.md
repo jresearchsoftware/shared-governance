@@ -36,7 +36,7 @@ read without installation, downloads or bootstrap. Source acceptance and public
 publication are distinct. See [self-adoption](docs/self-adoption.md) for the
 supported manual binding, generation, qualification limits and Git recovery.
 
-This producer explicitly retains these four topics through the accepted native
+This producer explicitly adopts these five topics through the accepted native
 boot/slot routes, preserving their conditional applicability:
 
 - Read `proportional-controls.md` for proposed security, validation or operator
@@ -46,7 +46,11 @@ boot/slot routes, preserving their conditional applicability:
 - Read `package-versioning.md` for package lifecycle work, together with this
   producer's [release policy](docs/releases.md).
 - Read `task-handoff.md` for governed execution, handoff or continuation, together
-  with the [manual client binding](docs/manual-task-handoff.md).
+  with the [manual client binding](docs/manual-task-handoff.md), including its
+  executor-owned PR Draft/Ready operations and verified Outcome recovery.
+- Read the full `independent-review.md` for relevant independent review
+  activities. Its methodology is mandatory for this producer's independent
+  assessments; unrelated tasks skip it. Task Handoff retains lifecycle ownership.
 
 For producer self-adoption work, this producer also explicitly adopts
 `self-adoption.md` from that same accepted flow. Unrelated tasks skip the

@@ -30,6 +30,8 @@ jobs:
         run: python3 scripts/test-self-adoption.py
       - name: Check content-agnostic ChatGPT projection
         run: python3 scripts/test-chatgpt-projection.py
+      - name: Check producer migration and accepted publisher parity
+        run: python3 scripts/test-publication.py
       - name: Check whole-package bump against current accepted main
         env:
           PR_BODY: ${{ github.event.pull_request.body }}
