@@ -9,7 +9,9 @@ One passive VibeVM flow is authored at the stable
 Its manifest owns the whole-package version. Ordinary proportional-controls,
 requirement-authority, package-versioning, task-handoff and producer self-adoption
 use compact conditional
-boot routing, with no native Codex Skills or executable capabilities.
+boot routing. The shared package grants no executable capabilities. This
+repository separately carries the pinned standalone Relay product Skill at
+[.agents/skills/codex-relay](.agents/skills/codex-relay/SKILL.md).
 Workflow-aware GitHub repository governance is an additional explicitly adopted
 topic with conditional setup/protection guidance; it does not apply settings.
 Package-versioning and task-handoff require explicit project adoption and preserve
@@ -42,5 +44,5 @@ Python 3.11+ and Git suffice for ordinary source/export checks. Optional VibeVM
 integration tooling is pinned in [toolchain/vibevm.json](toolchain/vibevm.json).
 Content is [MIT](LICENSE) licensed.
 
-See the [optional Relay workflow proposal](docs/relay-workflows.md) for its
-preparation provenance and separate acceptance/activation boundary.
+See the [optional Codex Relay integration](docs/relay-workflows.md) for the
+pinned Skill release, workflow projection, and separate activation boundary.
