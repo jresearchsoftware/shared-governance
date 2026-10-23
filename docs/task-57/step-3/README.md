@@ -39,6 +39,11 @@ Exact native content hashes:
 
 ## Validation and limits
 
+Offline native discovery found one Skill; repeat dry-run returned `unchanged`.
+Native uninstall returned `removed`; reinstall returned `created`, with no Git
+diff afterward. A disposable Git revert of the integration returned a tree with
+no diff against the frozen predecessor. The candidate and restored baseline
+both report exactly five historical orphan-slot warnings and zero errors.
 Final command results and exact-head CI are recorded in the canonical PR Outcome.
 Qualification covers file/CLI resolution, reachability, routing and projection,
 not fresh model compliance or desktop discovery. This session uses frozen accepted

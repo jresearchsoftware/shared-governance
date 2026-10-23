@@ -43,7 +43,6 @@ class NativeAdoptionTests(unittest.TestCase):
         import tomllib
         manifest = tomllib.loads((self.work / EXPORTER.PACKAGE / "vibe.toml").read_text())
         self.assertEqual(self.receipt["version"], manifest["package"]["version"])
-        import tomllib
         native_relay = "flow:org.jresearch.ai/codex-relay" in tomllib.loads((self.work / "vibe.toml").read_text())["requires"]["packages"]
         self.assertEqual(native_relay, (self.slot / EXPORTER.RECEIPT).exists())
         self.assertFalse((self.source / EXPORTER.RECEIPT).exists())
@@ -97,7 +96,7 @@ class NativeAdoptionTests(unittest.TestCase):
         original = path.read_text()
         for before, after in [('content_hash = "sha256:', 'content_hash = "sha256:forged'),
                               ('version = "' + self.receipt["version"] + '"', 'version = "0.0.0"'),
-                              ('source_kind = "registry"', 'source_kind = "git"')]:
+                              ('source_kind = "', 'source_kind = "invalid-')]:
             with self.subTest(before=before):
                 path.write_text(original.replace(before, after))
                 self.reject()
