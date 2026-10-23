@@ -52,6 +52,14 @@ boot/slot routes, preserving their conditional applicability:
   activities. Its methodology is mandatory for this producer's independent
   assessments; unrelated tasks skip it. Task Handoff retains lifecycle ownership.
 
+For relevant Codex Relay product workflows, the native boot routes to the pinned
+3.0.0 Skill; its projected copy is [.agents/skills/codex-relay/SKILL.md](.agents/skills/codex-relay/SKILL.md).
+Its shared protocol references use this consumer's single locked Development
+Governance 5.0.0 slot. Preserve the topic applicability above and the
+[manual client binding](docs/manual-task-handoff.md); Manual Codex remains supported.
+Skill installation grants no automatic execution or operational authority.
+See [native Relay integration](docs/relay-skill.md) for maintenance and rollback.
+
 For producer self-adoption work, this producer also explicitly adopts
 `self-adoption.md` from that same accepted flow. Unrelated tasks skip the
 corresponding protocol. This adoption grants no Task,

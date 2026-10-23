@@ -2,6 +2,7 @@
 """Prepare or verify one passive package from a full local source commit; never publish."""
 import argparse
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 import posixpath
@@ -330,26 +331,35 @@ def verify_producer(revision, directory=ROOT):
         raise ValueError("producer authored bytes differ from the selected Git export")
     source = directory / "vibevm/vibepacks" / COORDINATE / ("v" + version)
     verify(revision, source, native=True)
-    verify(revision, directory / slot(version), installed=True, native=True)
     manifest = tomllib.loads((directory / "vibe.toml").read_text(encoding="utf-8"))
     requirement = manifest.get("requires", {}).get("packages", {})
-    if requirement != {"flow:" + COORDINATE: {"version": "=" + version, "link": "dynamic"}}:
+    relay = "flow:org.jresearch.ai/codex-relay" in requirement
+    if relay:
+        spec = importlib.util.spec_from_file_location("relay_skill", ROOT / "scripts/relay-skill.py")
+        integration = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(integration)
+        integration.check(directory, files, vibe_hash)
+    else:
+        verify(revision, directory / slot(version), installed=True, native=True)
+    if not relay and requirement != {"flow:" + COORDINATE: {"version": "=" + version, "link": "dynamic"}}:
         raise ValueError("producer must declare one exact-version dynamic flow")
     lock = tomllib.loads((directory / "vibe.lock").read_text(encoding="utf-8"))
-    if lock.get("meta", {}).get("schema_version") != 7 or lock["meta"].get("root_dependencies") != ["flow:" + COORDINATE + "@=" + version]:
+    if not relay and (lock.get("meta", {}).get("schema_version") != 7 or lock["meta"].get("root_dependencies") != ["flow:" + COORDINATE + "@=" + version]):
         raise ValueError("producer lock root identity differs")
     entries = lock.get("package", [])
-    if len(entries) != 1 or any(entries[0].get(key) != value for key, value in {
+    if not relay and (len(entries) != 1 or any(entries[0].get(key) != value for key, value in {
             "kind": "flow", "group": "org.jresearch.ai", "name": "development-governance",
-            "version": version, "content_hash": vibe_hash(files), "source_kind": "registry"}.items()):
+            "version": version, "content_hash": vibe_hash(files), "source_kind": "registry"}.items())):
         raise ValueError("producer lock differs from exact authored content")
     url = entries[0].get("source_url", "")
-    if not url.startswith("file://") or not url.endswith("/vibevm/vibepacks/" + COORDINATE + "/v" + version):
+    if not relay and (not url.startswith("file://") or not url.endswith("/vibevm/vibepacks/" + COORDINATE + "/v" + version)):
         raise ValueError("producer lock source is not a generated in-tree registry URL")
     roots = (directory, directory / PACKAGE)
     expected = ([{"path": "vibevm/vibespecs/boot/00-authoring.md", "kind": "static"},
                  {"path": slot(version) + "/vibevm/vibespecs/boot/development-governance.md", "kind": "static"}],
                 [{"path": PACKAGE + "/vibevm/vibespecs/boot/development-governance.md", "kind": "static"}])
+    if relay:
+        expected[0].append({"path": integration.SLOT + "/vibevm/vibespecs/boot/codex-relay.md", "kind": "static"})
     for root, routes in zip(roots, expected):
         index = root / BOOT_INDEX
         if index.is_symlink() or not index.is_file():

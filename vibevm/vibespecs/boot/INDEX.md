@@ -18,3 +18,7 @@ kind = "static"
 [[entry]]
 path = "vibevm/vibedeps/org.jresearch.ai.development-governance/5.0.0/vibevm/vibespecs/boot/development-governance.md"
 kind = "static"
+
+[[entry]]
+path = "vibevm/vibedeps/org.jresearch.ai.codex-relay/3.0.0/vibevm/vibespecs/boot/codex-relay.md"
+kind = "static"
