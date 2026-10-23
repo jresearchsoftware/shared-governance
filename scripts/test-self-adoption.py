@@ -43,7 +43,9 @@ class NativeAdoptionTests(unittest.TestCase):
         import tomllib
         manifest = tomllib.loads((self.work / EXPORTER.PACKAGE / "vibe.toml").read_text())
         self.assertEqual(self.receipt["version"], manifest["package"]["version"])
-        self.assertFalse((self.slot / EXPORTER.RECEIPT).exists())
+        import tomllib
+        native_relay = "flow:org.jresearch.ai/codex-relay" in tomllib.loads((self.work / "vibe.toml").read_text())["requires"]["packages"]
+        self.assertEqual(native_relay, (self.slot / EXPORTER.RECEIPT).exists())
         self.assertFalse((self.source / EXPORTER.RECEIPT).exists())
         self.assertEqual((self.slot / EXPORTER.CHANGELOG).read_bytes(),
                          (self.work / EXPORTER.PACKAGE / EXPORTER.CHANGELOG).read_bytes())
@@ -105,7 +107,8 @@ class NativeAdoptionTests(unittest.TestCase):
         path = self.work / "vibe.lock"
         text = path.read_text()
         import re
-        text = re.sub(r'source_url = ".*?"', 'source_url = "file:///unreachable/windows/vibevm/vibepacks/' + EXPORTER.COORDINATE + '/v' + self.receipt["version"] + '"', text)
+        if 'source_kind = "git"' not in text:
+            text = re.sub(r'source_url = ".*?"', 'source_url = "file:///unreachable/windows/vibevm/vibepacks/' + EXPORTER.COORDINATE + '/v' + self.receipt["version"] + '"', text)
         text = re.sub(r'generated_at = ".*?"', 'generated_at = "2000-01-01T00:00:00Z"', text)
         path.write_text(text)
         EXPORTER.verify_producer(self.revision, self.work)
@@ -116,6 +119,30 @@ class NativeAdoptionTests(unittest.TestCase):
         path.unlink()
         self.reject()
         path.write_bytes(original.replace(self.receipt["version"].encode(), b'0.0.0'))
+        self.reject()
+
+    def test_relay_projection_and_inert_closure_drift_rejected(self):
+        skill = self.work / ".agents/skills/codex-relay/SKILL.md"
+        if not skill.exists():
+            self.skipTest("historical producer has no native Relay integration")
+        original = skill.read_bytes()
+        skill.write_bytes(original + b"\nDrift\n")
+        self.reject()
+        skill.write_bytes(original)
+        closure = self.work / "vibevm/vibedeps/org.jresearch.ai.codex-relay/3.0.0/vibe.lock"
+        closure.write_bytes(closure.read_bytes() + b"\n# changed evidence\n")
+        self.reject()
+
+    def test_relay_source_revision_and_projection_receipt_rejected(self):
+        path = self.work / ".agents/skills/.codex-relay.vibe-skill-receipt.toml"
+        if not path.exists():
+            self.skipTest("historical producer has no native Relay integration")
+        lock = self.work / "vibe.lock"
+        original = lock.read_text()
+        lock.write_text(original.replace("325c96371783e2d628bfa9903b3244468c688fe6", "0" * 40))
+        self.reject()
+        lock.write_text(original)
+        path.write_text(path.read_text().replace('skill = "codex-relay"', 'skill = "other"'))
         self.reject()
 
     def test_generated_member_route_and_root_overlay(self):

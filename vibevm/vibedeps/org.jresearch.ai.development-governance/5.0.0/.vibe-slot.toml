@@ -1,10 +1,14 @@
 schema = 1
-source_hash = "sha256:da18ef62634a8203064103a7454f346d6c46c1e3d1a64f16e8280390c637b5af"
+source_hash = "sha256:e686314f26c82f32f55958a242481d792e9fcd0d755a6eebf933431f3e0875d9"
 spec_format = "mixed"
 
 [[file]]
 path = "CHANGELOG.md"
 sha256 = "3ed7cbc90cca1b856df14a8fb810d7812fa73b7c144683abfc9c1fa65419a10e"
+
+[[file]]
+path = "DISTRIBUTION.json"
+sha256 = "45f43dcdb48ff9dfcfc114284cd8c25bdeda3f870883633f08057504edf98bc9"
 
 [[file]]
 path = "LICENSE"
