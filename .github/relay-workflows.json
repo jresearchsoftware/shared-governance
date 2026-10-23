@@ -1,0 +1,10 @@
+{
+  "consumerRepository": "jresearchsoftware/shared-governance",
+  "files": {
+    ".github/workflows/codex-relay-routing.yml": "e0d5798cc2dacf3468804f7000918156acf2bcf0828f3687d893b12bb70a8527",
+    ".github/workflows/manual-writer-publication-recovery.yml": "4e8a056b6c703240c30d8695477492d0ab737faa97f07fc2f15c0e7cdb21ec5d"
+  },
+  "schemaVersion": 2,
+  "sourceRepository": "https://github.com/jresearchsoftware/codex-relay.git",
+  "workflowContract": "relay-workflows-v4"
+}

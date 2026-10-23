@@ -41,3 +41,6 @@ Relay, Documentation, Model Landscape or other consumers automatically.
 Python 3.11+ and Git suffice for ordinary source/export checks. Optional VibeVM
 integration tooling is pinned in [toolchain/vibevm.json](toolchain/vibevm.json).
 Content is [MIT](LICENSE) licensed.
+
+See the [optional Codex Relay workflow projection](docs/relay-workflows.md)
+for its source, manifest, and separate activation boundary.
