@@ -398,6 +398,42 @@ reconcile apparent self-expansion through existing Decisions. Reassess concrete
 completion conditions, remaining work and holds at meaningful transitions; do
 not close with known remaining work or copy a stale disposition indefinitely.
 
+Where a project uses `close-authorized`, it means unconditional permission to
+close **after actual Task completion**, not permission to close prematurely.
+Required independent acceptance/integration, concrete completion conditions and
+protected obligations still apply. With no remaining Task work or hold, use the
+existing authorized owner continuation without another discretionary owner
+prompt, closure-specific test or operator ritual.
+
+An explicitly selected `keep-open` is a temporary closure hold: identify the
+concrete remaining condition, evidence sufficient to verify it and the subsequent
+action already authorized by the owner. When those preauthorized conditions are
+verified, the owner-facing assistant may record the existing trusted Task-scoped
+Decision releasing the hold (to effective `close-authorized` where used), then
+perform the ordinary owner-controlled completion/closure sequence. Condition
+satisfaction does not silently mutate policy. Current canonical authority and
+the project's native Task/Decision identity and publication capability must
+support that transition; report a missing capability or authority instead of
+bypassing it. No new owner message is needed solely to repeat prior permission.
+
+Missing, invalid or conflicting closure metadata remains safe `keep-open` where
+that is the project's fail-safe binding; never infer closure permission. At the
+first substantive review of a completed/result-producing Task with missing
+closure reasons or conditions, explicitly flag the gap, ask the owner to identify
+what remains or authorize `close-authorized`, and record the resulting authority
+through the existing Task Decision process. Invent neither conditions nor
+retroactive approval; no universal form or checker is introduced.
+
+For example, reviewed and merged code may remain `keep-open` pending an
+owner-run Apply. After the owner runs the normal workflow and shares its result,
+check the actual run, intended deployed revision/target and material warnings.
+A failed or unknown Apply does not release the hold. Verified preauthorized
+conditions and no related Task work/PR permit the trusted transition and normal
+owner continuation; unrelated repository PRs are not a blanket closure blocker.
+An owner Decision may revise a genuine condition without claiming omitted work
+occurred. Executors, CRs and reviewers cannot silently waive it. Optional future
+use/observation must not become an indefinite hold without accepted authority.
+
 <a id="TH-027"></a>
 **TH-027 — Proportionate local bindings.**
 

@@ -172,6 +172,31 @@ implementer stops for independent assessment; self-checks do not accept the resu
 Acceptance, recommendation selection, owner-authorized integration, publication,
 further execution and closure remain distinct.
 
+### Completion and closure disposition
+
+Use accepted TH-026/RA-006 for closure meaning. Here `close-authorized` permits
+ordinary owner-controlled closure after actual Task completion, required
+independent acceptance/integration and no remaining Task work or protected hold.
+It adds no closure-specific test or repeated owner prompt. Manual executors do
+not gain merge or closure authority from their Outcome.
+
+For explicit `keep-open`, record what remains, sufficient evidence and the
+owner-preauthorized next action. Once verified, the owner-facing assistant may
+publish the existing Task-scoped Decision changing effective policy to
+`close-authorized`, then use the existing owner continuation. In Relay-bound
+Tasks this must use the qualified trusted native Decision mechanism and current
+Task identity; unavailable authority/capability is a reported gap. A local note,
+Outcome, CR or review cannot substitute or silently mutate policy.
+
+Missing/invalid/conflicting metadata safely retains `keep-open`. At the first
+substantive completed/result-producing Task review with absent reasons or
+conditions, flag that gap and ask the owner what remains or whether to authorize
+`close-authorized`; record the answer through the existing Decision mechanism.
+An owner-run Apply hold requires the actual run, intended revision/target and
+material warning disposition; a failed/unknown run does not satisfy it. Other
+unrelated repository PRs do not block this Task. Optional later usage needs no
+synthetic exercise to close. See [Task 68 scenarios](task-68/step-2/scenarios.md).
+
 For relevant independent review, root AGENTS explicitly adopts the full accepted
 materialized Independent Review protocol. It owns affected-behavior completeness,
 primary evidence, finding severity/provenance, owner-facing report content and

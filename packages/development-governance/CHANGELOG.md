@@ -1,5 +1,19 @@
 # Development Governance changelog
 
+## 6.0.0
+
+MAJOR: TH-026 makes explicit keep-open holds concrete and releasable through an
+already owner-authorized trusted Task Decision after verified conditions. It
+requires visible owner resolution of missing closure reasons/conditions at the
+first substantive result review, preserving fail-safe keep-open. These are new
+mandatory authoring/review duties against 5.0.0, despite reducing repeated owner
+prompts. Close-authorized permits closure only after actual completion, required
+acceptance/integration and satisfied protected obligations; it adds no separate
+closure test or ritual. RA-006 applies existing obligation provenance to closure.
+Consumers reconcile adopted Task Handoff and local closure bindings in their own
+reviewed migration. No product state machine, automatic policy mutation, consumer
+runtime change, new topic adoption or live settings application follows.
+
 ## 5.0.0
 
 MAJOR: RA-006 prevents agent-authored obligation expansion across Task authoring,
