@@ -68,6 +68,8 @@ together. Shared source authoring still uses the existing exporter/staging
 procedure in [self-adoption](self-adoption.md); a changed package needs its own
 version and matching materialization, not reuse of these frozen public bytes.
 Qualification must be updated for an intentionally selected new graph.
+For mixed local Shared/public Relay regeneration, use that procedure's isolated
+`registry.toml`, rather than the local-only `--registry` shortcut.
 
 Rollback uses ordinary Git revert of the complete integration (or checkout of
 the accepted predecessor), restoring graph, slots, projection, receipts and

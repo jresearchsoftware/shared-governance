@@ -41,12 +41,13 @@ def check(root, authored, vibe_hash):
     requirements = manifest["requires"]["packages"]
     require(set(requirements) == set(PINS), "unexpected root graph")
     lock = tomllib.loads((root / "vibe.lock").read_text(encoding="utf-8"))
-    require(lock["meta"]["schema_version"] == 7 and
-            lock["meta"]["root_dependencies"] == sorted(PINS), "lock root identity")
+    require(lock["meta"]["schema_version"] == 7, "lock schema")
     entries = lock["package"]
     require(len(entries) == 2, "expected two unique locked packages")
     authored_version = tomllib.loads(authored["vibe.toml"].decode())["package"]["version"]
     local_shared = requirements[SHARED] == dict(version="=" + authored_version, link="dynamic")
+    expected_roots = [SHARED + "@=" + authored_version, RELAY] if local_shared else sorted(PINS)
+    require(lock["meta"]["root_dependencies"] == expected_roots, "lock root identity")
     pins = dict(PINS)
     if local_shared:
         pins[SHARED] = (authored_version, None, vibe_hash(authored))
