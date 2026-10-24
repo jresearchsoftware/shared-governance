@@ -1,5 +1,19 @@
 # Development Governance changelog
 
+## 5.1.0
+
+MINOR: TH-026 adds compatible guidance and examples for owner-selected temporary
+keep-open holds, verified preauthorized release through existing trusted Task
+Decisions, and resolving missing closure conditions in existing result review.
+Accepted 5.0.0 already requires actual completion, hold reassessment, no repeated
+authorization and no agent-invented gates. This addition preserves those duties
+and local timing/mechanisms; it introduces no universal authoring field, new
+review duty or completion gate. Close-authorized still waits for completion,
+acceptance/integration and protected obligations. RA-006 applies its existing
+obligation provenance rule to closure. Consumers retain their local authority and
+separately reviewed adoption; no runtime/state-machine change, automatic policy
+mutation, topic adoption or live settings application follows.
+
 ## 5.0.0
 
 MAJOR: RA-006 prevents agent-authored obligation expansion across Task authoring,

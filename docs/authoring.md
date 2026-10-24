@@ -83,6 +83,15 @@ assessments; other consumers own their separate topic choices and migration.
 
 ## Semantic completeness
 
+Task 68 proposes 5.1.0: [compatible closure coverage](task-68/step-3/compatibility.md)
+extends TH-026 and applies RA-006 to owner-selected temporary holds,
+preauthorized trusted release and missing-condition resolution in existing review.
+MINOR classification preserves accepted 5.0.0 duties and local mechanisms without
+new universal authoring/review gates or repeated permission rituals. Step 2's
+major rationale is retained as superseded execution history. Producer
+self-adoption uses the in-tree authored source with the unchanged public Relay
+3.0.0 Skill; downstream consumer adoption remains separate.
+
 Tasks 60/62 jointly propose 5.0.0: [authority coverage/scenarios](task-60/step-1/README.md)
 and [ChatGPT content/application design](task-62/step-2/README.md). RA owns the
 common authority principle; TH/IR apply it. [Step 2 corrections](task-60/step-2/README.md)
