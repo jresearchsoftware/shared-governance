@@ -88,3 +88,34 @@ No live ChatGPT Settings readback or owner application was available/performed b
 the executor. Independent review, integration and post-integration full-text owner
 reconciliation remain required. This Step returns the reviewable implementation;
 it does not claim whole-Task completion, live settings match, publication or closure.
+
+## Verified implementation evidence
+
+- Source/export/native parity qualifier: PASS (1,103 tracked files, 2,388 local
+  links; bounded credential-marker scan). All 10 protocols are exported.
+- ChatGPT projection: 29 tests PASS at `cd750280bd37c654e8272b31d8cd599fd5b86a4b`.
+  Native installed-tool lifecycle: PASS at that same source, including install,
+  synthetic 6.0.1 update, preserved custom text and non-adopting consumer scenario.
+- Self-adoption: 17 tests PASS at `cd750280bd37c654e8272b31d8cd599fd5b86a4b`.
+  Later changes only scope historical distribution tests and add this evidence;
+  package/source/native projection bytes remain identical to that tested revision.
+- Distribution: 52 tests PASS at `56c17d3959bf076a0c0c560d859926b2490e0f6e`.
+  Historical 5.1.0 and 5.2.0 transition checks bind their accepted revisions;
+  the new current-head check permits only TH-029 to differ from reconciled main.
+- Release: 17 tests PASS with the pinned native binary (no skips) at `cd750280b`.
+  Publication fixtures: 11 PASS, one optional native fixture SKIP (12 total)
+  at `56c17d3959bf076a0c0c560d859926b2490e0f6e`; no production publication.
+- Whole-package transition against accepted main 5.2.0: PASS, MAJOR to 6.0.0;
+  no existing public 6.0.0 tag. Whitespace check: PASS.
+- Final generated Instructions: 6,963 Unicode characters; accepted-source-bound
+  check returns NO_OP, with `live_settings_verified=false`. Candidate package
+  export payload digest: `28d7badafb45bf35a9817cd92483c53a0ad46b68f4fec800eba8bb5d8f2892a3`.
+
+Earlier changing-head test attempts are superseded by the stable-revision results
+above. The first fixed-head projection test found a 7,051-character output beyond
+the existing 7,000-character fixture limit; equivalent wording was shortened and
+requalified without relaxing that limit. Historical transition assertions caught
+intentional TH-029 differences; preserving those tests at historical accepted
+revisions plus a new bounded current comparison resolved the false regressions.
+Live UI application/readback, integration, release and independent acceptance remain
+unperformed and are not inferred from these checks.
