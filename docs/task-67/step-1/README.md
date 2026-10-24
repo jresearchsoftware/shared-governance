@@ -112,7 +112,21 @@ python3 scripts/test-chatgpt-projection.py
 git diff --check ac85342bf9f9fdf3f414bdbfba284a76e50949a2 HEAD
 ```
 
-Exact results/logs and final-head CI are recorded in the canonical PR Outcome.
+At code/test commit `33daf2581f7a28cec5025e47a23aad7708d707b3`, Debian WSL
+Python 3.11 and the hash-checked pinned musl binary produced:
+
+| Check | Result and log |
+| --- | --- |
+| Full publisher with native staging/consumers | [100 passed, zero skips](logs/publisher.log) |
+| Release/dependency native integration | [17 passed, zero skips](logs/release.log) |
+| Producer publication native integration | [12 passed, zero skips](logs/publication.log) |
+| Distribution | [49 passed](logs/distribution.log) |
+| Self-adoption | [15 passed](logs/self-adoption.log) |
+| ChatGPT projection | [28 passed](logs/chatgpt.log) |
+
+Later evidence commits do not change the tested implementation/test bytes.
+Final exact-head source qualification, unchanged 5.0.0 release boundary, whitespace
+and CI are bound in the canonical PR Outcome.
 Local fixtures establish cold native Git acquisition, not Internet publication or
 availability of every producer's dependency source. No public release/tag write,
 consumer migration, service/configuration change, merge or Task closure is performed.
