@@ -43,8 +43,8 @@ class NativeAdoptionTests(unittest.TestCase):
         import tomllib
         manifest = tomllib.loads((self.work / EXPORTER.PACKAGE / "vibe.toml").read_text())
         self.assertEqual(self.receipt["version"], manifest["package"]["version"])
-        shared_requirement = tomllib.loads((self.work / "vibe.toml").read_text())["requires"]["packages"]["flow:org.jresearch.ai/development-governance"]
-        self.assertEqual("git" in shared_requirement, (self.slot / EXPORTER.RECEIPT).exists())
+        requirement = tomllib.loads((self.work / "vibe.toml").read_text())["requires"]["packages"]["flow:" + EXPORTER.COORDINATE]
+        self.assertEqual("git" in requirement, (self.slot / EXPORTER.RECEIPT).exists())
         self.assertFalse((self.source / EXPORTER.RECEIPT).exists())
         self.assertEqual((self.slot / EXPORTER.CHANGELOG).read_bytes(),
                          (self.work / EXPORTER.PACKAGE / EXPORTER.CHANGELOG).read_bytes())
@@ -59,6 +59,17 @@ class NativeAdoptionTests(unittest.TestCase):
         target.write_bytes(original)
         target.unlink()
         self.reject()
+
+    def test_small_improvement_protocol_and_guide_survive_native_route_and_detect_drift(self):
+        for name in (EXPORTER.SMALL_IMPROVEMENTS, EXPORTER.SMALL_IMPROVEMENTS_GUIDE):
+            with self.subTest(path=name):
+                target = self.slot / name
+                original = target.read_bytes()
+                self.assertEqual(original, (self.work / EXPORTER.PACKAGE / name).read_bytes())
+                target.write_bytes(original + b"\nUnreviewed drift\n")
+                self.reject()
+                target.write_bytes(original)
+        EXPORTER.verify_producer(self.revision, self.work)
 
     def test_manual_readiness_rule_is_accessible_through_native_and_local_routes(self):
         authored = self.work / EXPORTER.PACKAGE / EXPORTER.HANDOFF
@@ -106,29 +117,34 @@ class NativeAdoptionTests(unittest.TestCase):
         path = self.work / "vibe.lock"
         text = path.read_text()
         import re
-        if 'source_kind = "git"' not in text:
-            text = re.sub(r'source_url = ".*?"', 'source_url = "file:///unreachable/windows/vibevm/vibepacks/' + EXPORTER.COORDINATE + '/v' + self.receipt["version"] + '"', text)
+        import tomllib
+        shared = next(entry for entry in tomllib.loads(text)["package"]
+                      if entry["name"] == "development-governance")
+        if shared["source_kind"] == "registry":
+            text = text.replace(shared["source_url"], "file:///unreachable/windows/vibevm/vibepacks/" +
+                                EXPORTER.COORDINATE + "/v" + self.receipt["version"])
         text = re.sub(r'generated_at = ".*?"', 'generated_at = "2000-01-01T00:00:00Z"', text)
         path.write_text(text)
         EXPORTER.verify_producer(self.revision, self.work)
 
-    def test_local_shared_registry_source_and_receipt_are_bound(self):
+    def test_local_shared_source_identity_and_duplicate_lock_rejected(self):
         import tomllib
         path = self.work / "vibe.lock"
         original = path.read_text()
         shared = next(entry for entry in tomllib.loads(original)["package"]
                       if entry["name"] == "development-governance")
         if shared["source_kind"] != "registry":
-            self.skipTest("historical public Shared source uses immutable Git checks")
-        for before, after in [(shared["source_url"], "file:///unrelated/source"),
-                              ('source_kind = "registry"', 'source_kind = "git"')]:
-            with self.subTest(before=before):
-                path.write_text(original.replace(before, after))
+            self.skipTest("historical producer uses public Shared source")
+        for changed in [
+                original.replace(shared["source_url"], "https://example.invalid/shared.git"),
+                original.replace('source_kind = "registry"',
+                                 'source_kind = "registry"\nsource_ref = "' + "0" * 40 + '"'),
+                original + '\n[[package]]\nkind = "flow"\ngroup = "org.jresearch.ai"\n'
+                           'name = "development-governance"\nversion = "0.0.0"\n']:
+            with self.subTest(changed=changed[-100:]):
+                path.write_text(changed)
                 self.reject()
         path.write_text(original)
-        # A release receipt cannot be injected into receipt-free producer state.
-        (self.slot / EXPORTER.RECEIPT).write_text('{}\n')
-        self.reject()
 
     def test_missing_or_wrong_index_rejected(self):
         path = self.work / EXPORTER.BOOT_INDEX

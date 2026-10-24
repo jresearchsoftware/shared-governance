@@ -81,7 +81,7 @@ class DistributionTests(unittest.TestCase):
     def test_legacy_heading_links_and_annotation_only_semantics_are_preserved(self):
         files = self.current_export()
         historical, _ = DISTRIBUTION.snapshot("ec048fb39ae28cf2d747101466a603ddd062b1b0")
-        protocols = [name for name in files if name.startswith("vibevm/vibespecs/protocols/")]
+        protocols = [name for name in files if name.startswith("vibevm/vibespecs/protocols/") and name in historical]
         for name in protocols:
             with self.subTest(protocol=name):
                 headings = re.findall(rb"^#{1,6} .+$", historical[name], re.M)
@@ -124,7 +124,10 @@ class DistributionTests(unittest.TestCase):
         DISTRIBUTION.validate_payload(files, files["LICENSE"])
 
     def test_joint_authority_settings_change_preserves_unaffected_contracts(self):
-        files = self.current_export()
+        # Historical Tasks 60/62 transition; later authorized TH-026 edits do not
+        # redefine the accepted 5.0.0 contract this regression protects.
+        DISTRIBUTION.ROOT = REPOSITORY
+        files, _ = DISTRIBUTION.snapshot("414077e956aa47b18ddc436f68c3245b508baf46")
         accepted, _ = DISTRIBUTION.snapshot("61aa3444365b02a27c392d48aa9ea33e85c5d5d4")
         guide = files[DISTRIBUTION.ONBOARDING].replace(b'its content check/diff', b'its check/diff/receipt')
         guide = guide.replace(b'remain separate and conditional on application scope.', b'remain separate.')
@@ -152,6 +155,31 @@ class DistributionTests(unittest.TestCase):
             b'decisions and recommendations, preserving initiative and explicit per-finding\n'
             b'owner dispositions without turning proposals into obligations.\n\n', b'')
         self.assertEqual(ir, accepted[DISTRIBUTION.INDEPENDENT_REVIEW])
+
+    def test_closure_change_preserves_all_other_accepted_rules(self):
+        files = self.current_export()
+        accepted, _ = DISTRIBUTION.snapshot("414077e956aa47b18ddc436f68c3245b508baf46")
+        changed_rules = {DISTRIBUTION.HANDOFF: b"TH-026", DISTRIBUTION.AUTHORITY: b"RA-006"}
+        for name, before in accepted.items():
+            if not name.startswith("vibevm/vibespecs/protocols/"):
+                continue
+            with self.subTest(protocol=name):
+                if name not in changed_rules:
+                    self.assertEqual(files[name], before)
+                    continue
+                # Stable rule addresses bind the scope, independent of paragraph
+                # wording. No other accepted rule may be silently rewritten.
+                rule = changed_rules[name]
+                def parts(value):
+                    pieces = re.split(rb'(<a id="[A-Z]+-[0-9]{3}"></a>)', value)
+                    return dict(zip(pieces[1::2], pieces[2::2]))
+                old, new = parts(before), parts(files[name])
+                self.assertEqual(set(old), set(new))
+                for anchor in old:
+                    if anchor == b'<a id="' + rule + b'"></a>':
+                        self.assertNotEqual(old[anchor], new[anchor])
+                    else:
+                        self.assertEqual(old[anchor], new[anchor])
 
     def test_rule_links_survive_paragraph_and_section_insertion(self):
         files = self.current_export()
@@ -435,7 +463,7 @@ class DistributionTests(unittest.TestCase):
         self.revision = self.commit()
         return self.package / DISTRIBUTION.CONTEXT_LOADING
 
-    def test_current_context_loading_flow_exports_nine_protocols(self):
+    def test_current_flow_exports_complete_protocol_set(self):
         # Exercise the actual committed candidate, not a relabelled older payload.
         DISTRIBUTION.ROOT = REPOSITORY
         revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPOSITORY).decode().strip()
@@ -446,7 +474,8 @@ class DistributionTests(unittest.TestCase):
                                        "vibe.toml").read_text())["package"]["version"]
         self.assertEqual(receipt["version"], source_version)
         self.assertGreaterEqual(tuple(map(int, source_version.split("."))), (2, 5, 0))
-        self.assertEqual(sum(name.startswith("vibevm/vibespecs/protocols/") for name in files), 9)
+        expected = 10 if tuple(map(int, source_version.split("."))) >= (5, 2, 0) else 9
+        self.assertEqual(sum(name.startswith("vibevm/vibespecs/protocols/") for name in files), expected)
         self.assertEqual(files[DISTRIBUTION.CONTEXT_LOADING],
                          (REPOSITORY / DISTRIBUTION.PACKAGE / DISTRIBUTION.CONTEXT_LOADING).read_bytes())
         self.assertEqual({name for name in files if name.startswith("tools/")},
@@ -454,6 +483,40 @@ class DistributionTests(unittest.TestCase):
         metadata = tomllib.loads(files["vibe.toml"].decode())
         self.assertIs(metadata["package"]["frozen"], True)
         self.assertEqual(set(metadata), {"package", "boot_snippet"})
+
+    def test_small_improvement_addition_preserves_existing_protocols_and_requires_complete_export(self):
+        files = self.current_export()
+        accepted, _ = DISTRIBUTION.snapshot("2361868c41a916871d687aa8eea8f14573e2c82e")
+        for name, content in accepted.items():
+            if name.startswith("vibevm/vibespecs/protocols/"):
+                with self.subTest(preserved=name):
+                    self.assertEqual(files[name], content)
+        new_files = (DISTRIBUTION.SMALL_IMPROVEMENTS, DISTRIBUTION.SMALL_IMPROVEMENTS_GUIDE)
+        for name in new_files:
+            for data in (None, b"", b"\xff"):
+                with self.subTest(path=name, corruption=data):
+                    changed = dict(files)
+                    if data is None:
+                        del changed[name]
+                    else:
+                        changed[name] = data
+                    with self.assertRaises((ValueError, UnicodeDecodeError)):
+                        DISTRIBUTION.validate_payload(changed, files["LICENSE"])
+        # A new file cannot be retrofitted into an already frozen version.
+        accepted.pop(DISTRIBUTION.RECEIPT)
+        accepted.update({name: files[name] for name in new_files})
+        with self.assertRaisesRegex(ValueError, "file set differs"):
+            DISTRIBUTION.validate_payload(accepted, accepted["LICENSE"])
+        # Incorrect SI IDs and boot routes must fail through normal validation.
+        changed = dict(files)
+        changed[DISTRIBUTION.SMALL_IMPROVEMENTS] = files[DISTRIBUTION.SMALL_IMPROVEMENTS].replace(b'SI-001', b'TH-001')
+        with self.assertRaises(ValueError):
+            DISTRIBUTION.validate_payload(changed, files["LICENSE"])
+        changed = dict(files)
+        boot = "vibevm/vibespecs/boot/development-governance.md"
+        changed[boot] = files[boot].replace(b'../protocols/small-improvements.md', b'../protocols/absent.md')
+        with self.assertRaisesRegex(ValueError, "missing local reference"):
+            DISTRIBUTION.validate_payload(changed, files["LICENSE"])
 
     def test_context_loading_requires_new_whole_package_version(self):
         protocol = self.accepted_24_fixture()
@@ -547,9 +610,12 @@ class DistributionTests(unittest.TestCase):
                               if name.startswith(("vibevm/vibespecs/protocols/", "tools/"))})
             self.assertEqual(sum(name.startswith("vibevm/vibespecs/protocols/")
                                  for name in files), 9)
+        expected_guides = {DISTRIBUTION.ONBOARDING, DISTRIBUTION.ONBOARDING_EXAMPLES,
+                           DISTRIBUTION.ENGINEERING_METHODS}
+        if tuple(map(int, receipt["version"].split("."))) >= (5, 2, 0):
+            expected_guides.add(DISTRIBUTION.SMALL_IMPROVEMENTS_GUIDE)
         self.assertEqual({name for name in files if name.startswith("vibevm/vibespecs/guides/")},
-                         {DISTRIBUTION.ONBOARDING, DISTRIBUTION.ONBOARDING_EXAMPLES,
-                          DISTRIBUTION.ENGINEERING_METHODS})
+                         expected_guides)
         destination = self.directory / "engineering-methods-export"
         DISTRIBUTION.prepare(revision, destination)
         self.assertEqual((destination / DISTRIBUTION.ENGINEERING_METHODS).read_bytes(),

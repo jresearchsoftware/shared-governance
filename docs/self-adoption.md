@@ -54,6 +54,24 @@ python3 scripts/prepare-distribution.py --source-ref <full-candidate-sha> --prod
 vibe install --offline --registry vibevm/vibepacks --assume-yes
 ```
 
+The `--registry` shorthand applies to a local-only producer graph. With the
+public Git Relay root also selected, use an isolated staging settings directory
+(`VIBE_SETTINGS`) whose `registry.toml` declares the in-tree registry instead:
+
+```toml
+[[registry]]
+name = "producer-source"
+url = "file:///absolute/staging/path/vibevm/vibepacks"
+```
+
+Then run `vibe install --no-default-registry --no-prefer-local --assume-yes`
+in staging without `--registry`. This preserves manifest Git-source resolution;
+the CLI shorthand otherwise resolves Relay through the local-only registry and
+cannot find it. Cold public Git acquisition requires network access; offline
+reading of committed files does not. Preserve the original lock before fresh
+resolution and retain historical slots pruned by the tool when transferring
+selected outputs back. Do not edit generated source identities or global settings.
+
 Use the pinned executable, set the root's exact requirement to the authored
 version, and review/commit generated files in this same PR. Generation preserves
 text outside root agent blocks. Member AGENTS/CLAUDE/GEMINI and index are producer

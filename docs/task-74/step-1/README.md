@@ -11,7 +11,7 @@ This is the owner's prospective change to accepted 5.0.0 TH-029, not a defect cl
 against Task 62 or its earlier explicitly scoped application policy. Canonical
 TH-029 owns the portable rule; the common base/operator guide/status explains its
 client effects; the producer manual binds the rule to this project's completion.
-RA-006 is unchanged: the new mandatory work has explicit Task 74 owner authority.
+RA-006 is unchanged relative to reconciled main: the new mandatory work has explicit Task 74 owner authority.
 
 The old path allowed a changed-text task to finish without live reconciliation
 when its charter omitted application. The new path generates/validates the full
@@ -35,7 +35,10 @@ Package bump: major
 
 6.0.0 adds mandatory operator work/removes the explicit-application exemption, so
 PATCH/MINOR would misrepresent compatibility. Current main was 5.2.0 at preparation;
-execution authority remains the frozen admitted source. Parallel candidate versions
+execution authority remains the frozen admitted source. Accepted main
+`1121fc8966a2c7142cc0d6067eff0cf1d15e9cd9` is merged into the candidate to preserve
+5.1.0 closure guidance, 5.2.0 opt-in Small Improvements and their frozen history.
+This ordinary source reconciliation does not repin execution guidance. Parallel candidate versions
 are not reservations: reconcile against then-current main before integration and
 repeat affected exact-head checks/review if the result changes. Frozen historical
 source/releases are retained. Native source/lock/slot/boot are one proposed producer

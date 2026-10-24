@@ -80,6 +80,14 @@ binding canonical authority until any material discrepancy is resolved through
 existing owner Decision/contract mechanisms; neither silently ignore it nor
 execute another cycle solely to satisfy an unratified suggestion.
 
+Apply the same distinction to Task closure: optional future use or observation
+does not become a completion gate, while a genuine owner-required Apply or
+protected obligation remains binding until satisfied or explicitly revised.
+Use [TH-026](task-handoff.md#TH-026) for condition-based holds and already
+authorized release through the project's existing Task Decision process;
+neither result acceptance nor a reviewer/executor can silently change authority.
+This reference does not adopt Task Handoff in another consumer.
+
 Make consequential proposals and requested dispositions prominent and unambiguous:
 state the exact recommended outcome for each finding, especially scope changes,
 downgrades, waived checks and deferrals. Prefer one clear consolidated decision
