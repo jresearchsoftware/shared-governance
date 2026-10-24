@@ -405,9 +405,10 @@ protected obligations still apply. With no remaining Task work or hold, use the
 existing authorized owner continuation without another discretionary owner
 prompt, closure-specific test or operator ritual.
 
-An explicitly selected `keep-open` is a temporary closure hold: identify the
-concrete remaining condition, evidence sufficient to verify it and the subsequent
-action already authorized by the owner. When those preauthorized conditions are
+A project may express an owner-selected `keep-open` as a temporary condition-based
+closure hold. Its existing Task/Decision can state the concrete remaining
+condition, sufficient evidence and subsequent owner-authorized action, making
+the existing reassessment practical. When those preauthorized conditions are
 verified, the owner-facing assistant may record the existing trusted Task-scoped
 Decision releasing the hold (to effective `close-authorized` where used), then
 perform the ordinary owner-controlled completion/closure sequence. Condition
@@ -418,11 +419,14 @@ bypassing it. No new owner message is needed solely to repeat prior permission.
 
 Missing, invalid or conflicting closure metadata remains safe `keep-open` where
 that is the project's fail-safe binding; never infer closure permission. At the
-first substantive review of a completed/result-producing Task with missing
-closure reasons or conditions, explicitly flag the gap, ask the owner to identify
-what remains or authorize `close-authorized`, and record the resulting authority
-through the existing Task Decision process. Invent neither conditions nor
-retroactive approval; no universal form or checker is introduced.
+project's existing substantive result review, missing closure reasons or
+conditions can be surfaced for owner resolution: identify what remains or obtain
+`close-authorized` authority through the existing Task Decision process where
+needed. Invent neither conditions nor retroactive approval. This is compatible
+guidance for existing reassessment, not a universal authoring field, scheduled
+review duty, form, checker or additional completion gate. Projects retain their
+accepted local timing and mechanisms; an owner may explicitly select this
+first-review workflow for a particular Task or binding.
 
 For example, reviewed and merged code may remain `keep-open` pending an
 owner-run Apply. After the owner runs the normal workflow and shares its result,
