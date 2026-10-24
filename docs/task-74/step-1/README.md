@@ -72,8 +72,10 @@ The normal checks are `git diff --check`, `python scripts/qualify.py --export-re
 `python scripts/test-release.py`, `python scripts/test-self-adoption.py`,
 `python scripts/test-distribution.py` and `python scripts/test-chatgpt-projection.py`.
 Native source generation uses the pinned VibeVM 1.0.7 musl executable, its verified
-SHA-256, an isolated run-specific settings directory, and the retained Relay slot
-with offline install. Source generation is through the existing exact Git exporter.
+SHA-256, an isolated run-specific settings directory and normal mixed-source resolution
+with the unchanged public Relay Git pin. Local-only `--registry` attempts could
+not resolve Relay and changed no lock/slot. The supported settings registry route
+completed; only selected generated outputs were transferred, preserving history. Source generation is through the existing exact Git exporter.
 The projector invocation binds accepted SHA `414077e956aa47b18ddc436f68c3245b508baf46`
 and Task 74's canonical URL; it intentionally reads that accepted native authority
 while evaluating proposed generator/base and local custom/binding inputs.
