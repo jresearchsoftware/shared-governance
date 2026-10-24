@@ -104,8 +104,14 @@ and [ChatGPT content/application design](task-62/step-2/README.md). RA owns the
 common authority principle; TH/IR apply it. [Step 2 corrections](task-60/step-2/README.md)
 remove the unapproved publication checklist and ChatGPT projection receipt;
 content-based generation retains accepted-source/native validation and path safety.
-TH-029 is conditional on Tasks including live application; source generation
-alone adds no settings obligation. Both Tasks retain separate Step chronology.
+Accepted 5.0.0 and 5.2.0 TH-029 were conditional on Tasks including live application.
+The [Task 74 owner correction](https://github.com/jresearchsoftware/shared-governance/issues/74#issuecomment-6386467528)
+restores the originally intended effective-text requirement narrowed during Task
+62/PR 63 translation. The owner selects 5.2.1 PATCH as a single-task exception:
+the published mandatory workflow changes, which ordinarily requires MAJOR under
+PV-002. General PV-002, earlier acceptance and both earlier Tasks' chronology
+remain unchanged; consumers still own intentional updates and adoption. See
+[Step 2 evidence](task-74/step-2/README.md) and the dated [Step 1 coverage](task-74/step-1/README.md).
 
 
 Task 52's [scope-classification coverage and scenarios](task-52/step-1/README.md)

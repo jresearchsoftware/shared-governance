@@ -27,8 +27,15 @@ Exact accepted-source identities belong to invocation evidence, not a circular
 containing-commit pin. There is no ChatGPT projection receipt or ownership gate;
 adopting consumers remove their old receipt in the same reviewed adoption PR.
 Native VibeVM slot receipts remain intact. Status schema 4 distinguishes content
-changes from NO_OP and keeps application conditional on Task scope; generation
-alone requires no live Settings action.
+changes from NO_OP without reading live Settings. This producer adopts TH-029:
+a Task changing its complete effective Instructions text requires live reconciliation
+after acceptance/integration and before completion, even without an application
+clause. Present the entire raw replacement in one markdown fence when different
+or unconfirmed current; the owner applies/reconciles unknown live rules and supplies
+supported readback or attributable confirmation of live content. Keep the Task open
+while that evidence is missing. Unchanged text/cache/SHA-only changes add no manual
+action but preserve earlier unresolved gaps. A generation NO_OP is not live proof.
+See the [manual client binding](manual-task-handoff.md) and package operator guide.
 
 The prior [Step 4](task-32/step-4/README.md) schema-1 prototype and its limitations
 remain historical at its exact result commit. Its old reproduction commands

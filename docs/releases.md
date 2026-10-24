@@ -18,6 +18,17 @@ assessments. Other consumers retain their own adoption and local policy.
 
 ## Contribution and integration
 
+Task 74's [superseding owner Decision](https://github.com/jresearchsoftware/shared-governance/issues/74#issuecomment-6386467528)
+selects one PATCH, 5.2.0 -> 5.2.1, for restoring the originally intended TH-029
+effective-Instructions reconciliation requirement narrowed in Task 62/PR 63.
+Accepted 5.2.0 expressly documented application only when included in Task scope;
+the correction changes that published workflow obligation and would ordinarily
+be MAJOR under PV-002. This is an explicit single-task exception, not unchanged
+consumer-facing behavior or a revision of general PV-002. The unaccepted 6.0.0
+candidate is superseded, not a release. Frozen releases, historical acceptance and
+separate consumer update/adoption authority remain intact. Recompute one PATCH
+against current accepted main before integration; see [Step 2 evidence](task-74/step-2/README.md).
+
 Task 52 proposes 4.0.0 against frozen accepted 3.0.0: explicit per-blocker
 obligation binding and prepublication proposed-requirement classification tighten
 mandatory PC/IR report content. This is a concrete MAJOR contract change, without
