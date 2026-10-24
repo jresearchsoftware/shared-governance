@@ -212,16 +212,33 @@ embedded in approved source text. Producers own public-file approval, self-conta
 links and disclosure review. A private sibling file outside the allowlist is never
 copied implicitly. Producer-specific content checks remain necessary.
 
-Tree-v1 no longer rejects dependency declarations. Before publication it reads
-the **actually exported** native `vibe.lock` (schema 7) and versioned
-`vibevm/vibedeps/<group>.<name>/<version>/` slots, including transitives. Include
-these files explicitly in `files`; ordinary VibeVM resolution/materialization
-produces them before frozen source acceptance. Each included dependency needs a
+Tree-v1 supports thin dependency-bearing packages. Before publication it reads
+the native `vibe.lock` (schema 7) and versioned
+`vibevm/vibedeps/<group>.<name>/<version>/` slots committed **beneath the package
+source root at the exact source SHA**. Ordinary VibeVM resolution/materialization
+produces this source-time qualification evidence before frozen source acceptance.
+It need not appear in `files` or the public payload. Required direct/transitive
+dependencies and any deliberately exported slots are qualified; unrelated source
+slots do not enter the release closure. Each selected dependency needs a
 matching resolved identity/source, frozen manifest, tool-produced content hash and
-native `.vibe-slot.toml` inventory/hashes matching the shipped bytes. Missing
-required direct/transitive slots or unqualified included slots produce
-`DEPENDENCY_CLOSURE_UNQUALIFIED`. No resolver, dependency ledger, live downloads
-or additional materialization during publication is introduced.
+native `.vibe-slot.toml` inventory/hashes matching the qualified bytes. Exact
+requirements and explicit Git source declarations must agree with the lock.
+Missing required direct/transitive evidence or unqualified slots produce
+`DEPENDENCY_CLOSURE_UNQUALIFIED`. Selection/range solving remains VibeVM-owned;
+this check inspects its committed resolution, without a second resolver, dependency
+ledger, live downloads or additional materialization during publication.
+
+Only explicitly approved `files` enter the release and receipt. Deliberate
+vendoring remains supported: each exported slot must have its complete shipped
+inventory; unexported source bytes cannot fill a partial export. A source-only lock
+can qualify these slots too. Existing frozen vendored distributions stay intact.
+A thin release carries its own unchanged manifest requirements; native consumer
+installation resolves them through the consumer's configured registries or explicit
+Git roots and writes the consumer's own lock/slots. A producer lock does not force
+that consumer's dependency selection. Offline acquisition needs retained native
+consumer evidence/cache or an explicitly supported local source; thin publication
+does not promise a self-contained offline bundle. See the bounded
+[Task 67 qualification](task-67/step-1/README.md).
 
 Excluded development/optional declarations are outside the included closure;
 included dependencies are qualified irrespective of their label. An empty closure

@@ -1,0 +1,17 @@
+test_native_thin_release_cold_install_and_update (__main__.NativeTests.test_native_thin_release_cold_install_and_update) ... FAIL
+
+======================================================================
+FAIL: test_native_thin_release_cold_install_and_update (__main__.NativeTests.test_native_thin_release_cold_install_and_update)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/task67-baseline/tooling/vibe-publisher/test_publisher.py", line 1146, in test_native_thin_release_cold_install_and_update
+    self.assertEqual(P.finalize(staged)["status"], "PUBLISHED")
+AssertionError: 'AUTHORIZATION_PENDING' != 'PUBLISHED'
+- AUTHORIZATION_PENDING
++ PUBLISHED
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.128s
+
+FAILED (failures=1)

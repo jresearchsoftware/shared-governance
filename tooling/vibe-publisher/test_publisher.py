@@ -10,6 +10,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import tomllib
 import textwrap
 import unittest
 import urllib.error
@@ -580,6 +581,37 @@ class PlanningTests(Fixture):
         with self.assertRaisesRegex(ValueError, "license"):
             P.binding_at(self.source, policy, "binding.json", allow_local=True)
 
+    def test_thin_dependency_failure_guides_source_evidence_in_operator_outputs(self):
+        manifest = self.source / self.packages[0]["root"] / "vibe.toml"
+        manifest.write_text(manifest.read_text() + '\n[requires.packages]\n"org.fixture/dep" = "=1.0.0"\n')
+        self.revision = self.change()
+        report = self.plan()
+        row = report["packages"][0]
+        self.assertEqual(row["status"], "AUTHORIZATION_PENDING")
+        code, message = P.operator_diagnostic(row)
+        self.assertEqual(code, "DEPENDENCY_CLOSURE_UNQUALIFIED")
+
+        report_path = self.directory / "publication.json"
+        summary_path = self.directory / "summary.md"
+        with patch("builtins.print") as output:
+            P.write_report(report, report_path)
+        log_text = "\n".join(call.args[0] for call in output.call_args_list)
+        P.append_actions_summary(report_path, summary_path, "success", {"plan": "success"})
+        summary = summary_path.read_text(encoding="utf-8")
+        for text in (message, log_text, summary):
+            with self.subTest(output=text):
+                self.assertIn("frozen native closure with pinned VibeVM", text)
+                self.assertIn("vibe.lock", text)
+                self.assertIn("complete materialized dependency slots", text)
+                self.assertIn("selected package source root at the exact source SHA", text)
+                self.assertIn("producer-approved files", text)
+                self.assertIn("Thin packages need not export dependency slots", text)
+                self.assertIn("deliberately vendored slots require complete shipped inventories", text)
+                self.assertNotIn("approve its complete export inventory", text)
+        self.assertIn(code, log_text)
+        self.assertIn(code, summary)
+        self.assertIn("**AUTHORIZATION_PENDING**", summary)
+
     def test_pinned_binding_ignores_worktree_and_rejects_credentials(self):
         for package in self.packages:
             package["destination"] = "https://github.com/fixture/" + package["coordinate"].split("/")[1] + ".git"
@@ -1103,7 +1135,7 @@ class NativeTests(Fixture):
             self.assertEqual(P.git(Path(staged["staging"]), "show", "v1.0.1:" + path), data)
         self.assertEqual(P.remote_refs(self.packages[0]["destination"], "v1.0.1"), [])
 
-    def native_dependencies(self, mutable=False):
+    def native_dependencies(self, mutable=False, vendored=True):
         registry, consumer = self.directory / "registry", self.directory / "consumer"
         consumer.mkdir()
         for name in ("direct", "transitive"):
@@ -1132,11 +1164,110 @@ class NativeTests(Fixture):
             output = target / relative
             output.parent.mkdir(parents=True, exist_ok=True)
             output.write_bytes(path.read_bytes())
-            package["files"].append(relative)
+            if vendored:
+                package["files"].append(relative)
         manifest = target / "vibe.toml"
         manifest.write_text(manifest.read_text() + '\n[requires.packages]\n"org.fixture/direct"="=1.0.0"\n')
         self.save_binding()
         self.revision = self.change()
+
+    def test_native_thin_release_cold_install_and_update(self):
+        self.native_release_consumer(vendored=False)
+
+    def test_native_vendored_release_cold_install_and_update(self):
+        self.native_release_consumer(vendored=True)
+
+    def native_release_consumer(self, vendored):
+        self.native_dependencies(vendored=vendored)
+        staged = self.stage()
+        self.assertEqual(P.finalize(staged)["status"], "PUBLISHED")
+        paths = self.git("ls-tree", "-r", "--name-only", "v1.0.1", cwd=Path(staged["staging"]))
+        if vendored:
+            self.assertIn("vibevm/vibedeps/org.fixture.direct/1.0.0/vibe.toml", paths.splitlines())
+        else:
+            self.assertEqual(set(paths.splitlines()), {"vibe.toml", "README.md", "LICENSE", "DISTRIBUTION.json"})
+        consumer = self.directory / "cold"
+        consumer.mkdir()
+        remotes = self.directory / "dependency-remotes"
+        remotes.mkdir()
+        for name in ("direct", "transitive"):
+            remote = remotes / ("org.fixture." + name + ".git")
+            self.git("init", "-q", "--bare", "--initial-branch=main", str(remote))
+            result = subprocess.run([str(VIBE), "--json", "registry", "publish",
+                str(self.directory / "registry/org.fixture" / name / "v1.0.0"),
+                "--repo-url", remote.as_uri()], env=P.native_environment(self.directory / "deps-publish"),
+                capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        coordinate = self.packages[0]["coordinate"]
+        manifest = consumer / "vibe.toml"
+        manifest.write_text('[project]\nname="cold"\nversion="0.0.0"\nspec_format="mixed"\n'
+            '[requires.packages]\n"' + coordinate + '"={git="' + self.packages[0]["destination"] +
+            '", tag="v1.0.1", version="=1.0.1"}\n'
+            '[[registry]]\nname="fixture"\nurl="' + str(remotes) + '"\n')
+        env = P.native_environment(self.directory / "cold-settings")
+        for operation in ("install", "install", "update"):
+            if operation == "update":
+                self.revision = self.change(version="1.0.2")
+                updated = self.stage(suffix="thin-update")
+                self.assertEqual(P.finalize(updated)["status"], "PUBLISHED")
+                manifest.write_text(manifest.read_text().replace("1.0.1", "1.0.2"))
+            command = [str(VIBE), "--json", operation, "--path", str(consumer)]
+            if operation == "install":
+                command += ["--no-default-registry", "--no-prefer-local", "--assume-yes"]
+            result = subprocess.run(command, cwd=consumer, env=env, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, operation + ": " + result.stdout + result.stderr)
+            lock = tomllib.loads((consumer / "vibe.lock").read_text())
+            self.assertEqual({e["name"] for e in lock["package"]},
+                             {coordinate.split("/")[1], "direct", "transitive"})
+            self.assertEqual(next(e["version"] for e in lock["package"] if e["name"] == coordinate.split("/")[1]),
+                             "1.0.2" if operation == "update" else "1.0.1")
+            evidence = {p.relative_to(consumer).as_posix(): p.read_bytes()
+                        for p in consumer.rglob("*") if p.is_file()}
+            P.included_dependencies({}, tomllib.loads(manifest.read_text()), evidence)
+            for name in ("direct", "transitive"):
+                installed = consumer / "vibevm/vibedeps" / ("org.fixture." + name) / "1.0.0/vibe.toml"
+                self.assertEqual(installed.read_bytes(),
+                    (self.directory / "registry/org.fixture" / name / "v1.0.0/vibe.toml").read_bytes())
+
+    def test_native_thin_missing_or_tampered_source_evidence_rejected(self):
+        self.native_dependencies(vendored=False)
+        root = self.source / self.packages[0]["root"]
+        slot = root / "vibevm/vibedeps/org.fixture.transitive/1.0.0/vibe.toml"
+        original = slot.read_bytes()
+        slot.write_bytes(original + b"\n# drift\n")
+        # Uncommitted worktree drift cannot alter exact-source qualification.
+        self.assertEqual(self.plan()["packages"][0]["status"], "READY")
+        self.revision = self.change(version="1.0.2")
+        self.assertEqual(self.plan()["packages"][0]["reason_code"], "DEPENDENCY_CLOSURE_UNQUALIFIED")
+        slot.unlink()
+        self.revision = self.change(version="1.0.3")
+        self.assertEqual(self.plan()["packages"][0]["reason_code"], "DEPENDENCY_CLOSURE_UNQUALIFIED")
+
+    def test_native_partial_vendoring_cannot_borrow_unexported_slot_bytes(self):
+        self.native_dependencies()
+        self.packages[0]["files"].remove("vibevm/vibedeps/org.fixture.direct/1.0.0/.vibe-slot.toml")
+        self.save_binding()
+        self.revision = self.change(version="1.0.2")
+        self.assertEqual(self.plan()["packages"][0]["reason_code"], "DEPENDENCY_CLOSURE_UNQUALIFIED")
+
+    def test_native_thin_mutable_closure_rejected(self):
+        self.native_dependencies(mutable=True, vendored=False)
+        self.assertEqual(self.plan()["packages"][0]["reason_code"], "DEPENDENCY_CLOSURE_UNQUALIFIED")
+
+    def test_native_unused_source_slots_do_not_enter_thin_closure(self):
+        self.native_dependencies(mutable=True, vendored=False)
+        manifest = self.source / self.packages[0]["root"] / "vibe.toml"
+        manifest.write_text(manifest.read_text().replace("[requires.packages]", "[dev-requires.packages]"))
+        self.revision = self.change(version="1.0.2")
+        self.assertEqual(self.plan()["packages"][0]["status"], "READY")
+
+    def test_native_thin_stale_exact_lock_rejected(self):
+        self.native_dependencies(vendored=False)
+        manifest = self.source / self.packages[0]["root"] / "vibe.toml"
+        manifest.write_text(manifest.read_text().replace('"org.fixture/direct"="=1.0.0"',
+                                                           '"org.fixture/direct"="=2.0.0"'))
+        self.revision = self.change(version="1.0.2")
+        self.assertEqual(self.plan()["packages"][0]["reason_code"], "DEPENDENCY_CLOSURE_UNQUALIFIED")
 
     def test_native_direct_transitive_dependency_release(self):
         self.native_dependencies()
@@ -1154,10 +1285,12 @@ class NativeTests(Fixture):
         self.native_dependencies(mutable=True)
         row = self.plan()["packages"][0]
         self.assertEqual(row["reason_code"], "DEPENDENCY_CLOSURE_UNQUALIFIED")
-        # Missing transitive slot fails even with otherwise valid direct metadata.
+        # Missing source transitive slot fails even with valid direct metadata.
         self.packages[0]["files"] = [f for f in self.packages[0]["files"]
                                      if "org.fixture.transitive/" not in f]
         self.save_binding()
+        (self.source / self.packages[0]["root"] /
+         "vibevm/vibedeps/org.fixture.transitive/1.0.0/vibe.toml").unlink()
         self.revision = self.change(version="1.0.2")
         self.assertEqual(self.plan()["packages"][0]["reason_code"], "DEPENDENCY_CLOSURE_UNQUALIFIED")
 
