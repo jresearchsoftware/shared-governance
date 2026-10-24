@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Offline integrity check for the reviewed Task 57 native consumer graph."""
+"""Offline integrity check for native Relay and producer-authored governance."""
 import hashlib
 import json
 from pathlib import Path
@@ -41,32 +41,48 @@ def check(root, authored, vibe_hash):
     requirements = manifest["requires"]["packages"]
     require(set(requirements) == set(PINS), "unexpected root graph")
     lock = tomllib.loads((root / "vibe.lock").read_text(encoding="utf-8"))
-    require(lock["meta"]["schema_version"] == 7 and
-            lock["meta"]["root_dependencies"] == sorted(PINS), "lock root identity")
+    require(lock["meta"]["schema_version"] == 7, "lock schema")
     entries = lock["package"]
     require(len(entries) == 2, "expected two unique locked packages")
+    authored_version = tomllib.loads(authored["vibe.toml"].decode())["package"]["version"]
+    local_shared = requirements[SHARED] == dict(version="=" + authored_version, link="dynamic")
+    expected_roots = [SHARED + "@=" + authored_version, RELAY] if local_shared else sorted(PINS)
+    require(lock["meta"]["root_dependencies"] == expected_roots, "lock root identity")
+    pins = dict(PINS)
+    if local_shared:
+        pins[SHARED] = (authored_version, None, vibe_hash(authored))
     payloads = {}
-    for coordinate, (version, revision, content_hash) in PINS.items():
+    for coordinate, (version, revision, content_hash) in pins.items():
         group, name = coordinate.removeprefix("flow:").split("/")
         url = "https://github.com/jrs-vibevm/" + group + "." + name + ".git"
-        require(requirements[coordinate] == dict(version="=" + version, link="dynamic",
-                git=url, rev=revision, auth="none"), "immutable source requirement " + name)
         selected = [e for e in entries if e.get("group") == group and e.get("name") == name]
         require(len(selected) == 1, "ambiguous lock " + name)
-        require(all(selected[0].get(k) == v for k, v in dict(kind="flow", version=version,
-                source_kind="git", source_url=url, source_ref=revision,
-                content_hash=content_hash).items()), "locked public source " + name)
+        if coordinate == SHARED and local_shared:
+            require(all(selected[0].get(k) == v for k, v in dict(kind="flow", version=version,
+                    source_kind="registry", content_hash=content_hash).items()), "locked authored source")
+            source_url = selected[0].get("source_url", "")
+            require(source_url.startswith("file://") and source_url.endswith(
+                    "/vibevm/vibepacks/" + group + "/" + name + "/v" + version), "authored registry location")
+        else:
+            require(requirements[coordinate] == dict(version="=" + version, link="dynamic",
+                    git=url, rev=revision, auth="none"), "immutable source requirement " + name)
+            require(all(selected[0].get(k) == v for k, v in dict(kind="flow", version=version,
+                    source_kind="git", source_url=url, source_ref=revision,
+                    content_hash=content_hash).items()), "locked public source " + name)
         directory = root / "vibevm/vibedeps" / (group + "." + name) / version
         files = read_files(directory)
         marker = tomllib.loads(files.pop(".vibe-slot.toml").decode())
         require(vibe_hash(files) == content_hash, "public package bytes " + name)
         require(marker == dict(schema=1, source_hash=content_hash, spec_format="mixed",
                 file=[dict(path=k, sha256=v) for k, v in hashes(files).items()]), "slot receipt " + name)
-        distribution = json.loads(files["DISTRIBUTION.json"])
-        payload = {k: v for k, v in files.items() if k != "DISTRIBUTION.json"}
-        require(distribution["sha256"] == hashes(payload), "distribution inventory " + name)
-        require(distribution["payload_sha256"] == hashlib.sha256(json.dumps(hashes(payload),
-                sort_keys=True, separators=(",", ":")).encode()).hexdigest(), "distribution digest " + name)
+        if coordinate == SHARED and local_shared:
+            payload = files
+        else:
+            distribution = json.loads(files["DISTRIBUTION.json"])
+            payload = {k: v for k, v in files.items() if k != "DISTRIBUTION.json"}
+            require(distribution["sha256"] == hashes(payload), "distribution inventory " + name)
+            require(distribution["payload_sha256"] == hashlib.sha256(json.dumps(hashes(payload),
+                    sort_keys=True, separators=(",", ":")).encode()).hexdigest(), "distribution digest " + name)
         payloads[name] = payload
     shared = payloads["development-governance"]
     require(shared == authored, "public Shared payload differs from authored governance")
@@ -83,4 +99,4 @@ def check(root, authored, vibe_hash):
     require(receipt == dict(schema=1, skill="codex-relay",
             file=[dict(path=k, sha256=v) for k, v in hashes(skill).items()]), "native projection receipt")
     require(not (root / ".codex/skills/codex-relay").exists(), "competing legacy Skill")
-    return {"version": "3.0.0", "shared_version": "5.0.0", "files": len(skill)}
+    return {"version": "3.0.0", "shared_version": authored_version, "files": len(skill)}

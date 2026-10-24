@@ -199,7 +199,9 @@ class ProjectionTests(unittest.TestCase):
         self.assertEqual(self.tree(), before)
         result = self.cli("update")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("Changed local preference", json.loads(result.stdout)["diffs"]["instructions.md"])
+        status = json.loads(result.stdout)
+        self.assertIn("Changed local preference", status["diffs"]["instructions.md"])
+        self.assert_changed_application(status)
         self.assertEqual(self.cli().returncode, 0)
         self.assertEqual((self.config / "custom.md").read_bytes(), before["custom.md"])
 
@@ -212,7 +214,7 @@ class ProjectionTests(unittest.TestCase):
         base.write_text(base.read_text() + "\nChanged client navigation mechanics.\n")
         result = self.cli(tool=tool)
         self.assertEqual(result.returncode, 1)
-        self.assertEqual(json.loads(result.stdout)["instructions"], "CHANGED")
+        self.assert_changed_application(json.loads(result.stdout))
         self.assertEqual(self.cli("update", tool=tool).returncode, 0)
         self.assertEqual(self.cli(tool=tool).returncode, 0)
 
@@ -241,13 +243,33 @@ class ProjectionTests(unittest.TestCase):
 
     def test_relevant_route_and_dependency_changes_are_reported_without_sha_in_settings(self):
         self.maintain(True)
+        before = (self.config / "instructions.md").read_bytes()
         self.slot("beta", "9.7.1", ["renamed", "second", "third"])
         self.lock([("alpha", "1.0.0"), ("beta", "9.7.1")])
         self.write("boot.md", "New accepted relevant materialized routing\n")
         self.commit()
         status, _ = self.maintain()
         self.assertEqual(status["instructions"], "NO_OP")
+        self.assertIn("require no new application", status["application"])
+        self.assertIn("gap remains unresolved", status["application"])
+        self.assertFalse(status["live_settings_verified"])
         self.assertFalse(self.maintain()[1])
+        self.assertEqual((self.config / "instructions.md").read_bytes(), before)
+
+    def test_binding_change_with_identical_effective_text_needs_no_new_application(self):
+        self.maintain(True)
+        before = self.tree()
+        # Cache selection is inactive while cache_enabled is false. A changed
+        # binding alone must not be confused with changed effective Instructions.
+        self.binding["cache_selection"] = ["boot.md"]
+        self.save_binding()
+        status, stale = self.maintain(True)
+        self.assertFalse(stale)
+        self.assertEqual(status["instructions"], "NO_OP")
+        self.assertIn("require no new application", status["application"])
+        self.assertIn("gap remains unresolved", status["application"])
+        self.assertFalse(status["live_settings_verified"])
+        self.assertEqual((self.config / "instructions.md").read_bytes(), before["instructions.md"])
 
     def test_no_governance_injected_into_non_adopting_consumer(self):
         artifacts = self.render()
@@ -345,17 +367,27 @@ class ProjectionTests(unittest.TestCase):
         self.assertEqual(self.cli("update").returncode, 2)
         self.assertEqual(self.tree(), before)
 
-    def test_application_status_is_conditional_for_check_update_noop_and_cache_only(self):
+    def assert_changed_application(self, status):
+        self.assertEqual(status["schema"], 4)
+        self.assertEqual(status["instructions"], "CHANGED")
+        for meaning in ("adopting projects", "changed complete text", "after acceptance/integration",
+                        "before Task closure", "without an explicit application clause",
+                        "supported live evidence", "entire raw Markdown replacement",
+                        "one markdown fence", "different or unconfirmed",
+                        "owner application", "supported confirmation/readback", "unknown live rules"):
+            self.assertIn(meaning, status["application"])
+        self.assertFalse(status["live_settings_verified"])
+        self.assertNotIn("maintenance_evidence", status)
+
+    def test_changed_instructions_report_completion_obligation_without_live_proof(self):
+        # No Task application flag or live-settings access is supplied. Changed
+        # desired content reports the adopting workflow's obligation, not proof.
         for action in ("check", "update"):
             result = self.cli(action)
             status = json.loads(result.stdout)
-            self.assertEqual(status["schema"], 4)
-            self.assertEqual(status["instructions"], "CHANGED")
-            self.assertIn("generation alone creates no settings-application duty", status["application"])
-            self.assertIn("only a Task including", status["application"])
-            self.assertIn("supported confirmation/readback", status["application"])
-            self.assertFalse(status["live_settings_verified"])
-            self.assertNotIn("maintenance_evidence", status)
+            self.assert_changed_application(status)
+        # After update the source is consistent. That local NO_OP cannot
+        # discharge the earlier change's outstanding live reconciliation.
         for action in ("check", "update"):
             status = json.loads(self.cli(action).stdout)
             self.assertIn("unchanged Instructions require no new application", status["application"])
@@ -367,13 +399,18 @@ class ProjectionTests(unittest.TestCase):
         self.assertEqual(status["instructions"], "NO_OP")
         self.assertEqual(status["sources"], "CHANGED")
         self.assertIn("require no new application", status["application"])
+        self.assertIn("gap remains unresolved", status["application"])
+        self.assertFalse(status["live_settings_verified"])
 
     def test_live_export_exact_diff_and_noop_with_unknown_rules(self):
         self.maintain(True)
         generated = self.config / "instructions.md"
         exported = self.root / "live.md"
         exported.write_bytes(generated.read_bytes())
-        self.assertEqual(projection.compare_live(generated, exported, "raw")["comparison"], "NO_OP")
+        result = projection.compare_live(generated, exported, "raw")
+        self.assertEqual(result["comparison"], "NO_OP")
+        self.assertFalse(result["live_settings_verified"])
+        self.assertIn("owner-supplied export; UI unverified", result["baseline_provenance"])
         exported.write_bytes(generated.read_bytes() + b"Unknown live rule\n")
         before = exported.read_bytes()
         result = projection.compare_live(generated, exported, "raw")
@@ -381,7 +418,18 @@ class ProjectionTests(unittest.TestCase):
         self.assertFalse(result["live_settings_verified"])
         self.assertEqual(exported.read_bytes(), before)
         exported.write_bytes(b"```markdown\n" + generated.read_bytes() + b"```\n")
-        self.assertEqual(projection.compare_live(generated, exported, "fenced")["comparison"], "NO_OP")
+        result = projection.compare_live(generated, exported, "fenced")
+        self.assertEqual(result["comparison"], "NO_OP")
+        self.assertFalse(result["live_settings_verified"])
+        self.assertIn("UI unverified", result["baseline_provenance"])
+        exported.write_bytes(b"```markdown\n" + generated.read_bytes() + b"Unknown live rule\n```\n")
+        before = exported.read_bytes()
+        result = projection.compare_live(generated, exported, "fenced")
+        self.assertEqual(result["comparison"], "CHANGED")
+        self.assertIn("-Unknown live rule", result["diff"])
+        self.assertFalse(result["live_settings_verified"])
+        self.assertEqual(exported.read_bytes(), before)
+        self.assertEqual(generated.read_bytes(), self.render()["instructions.md"])
 
     def test_missing_sources_unsupported_formats_and_unknown_conditions(self):
         for path, text, error in ((projection.INDEX, "schema = 99\n", "INDEX schema"),

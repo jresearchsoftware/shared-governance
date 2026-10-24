@@ -43,8 +43,8 @@ class NativeAdoptionTests(unittest.TestCase):
         import tomllib
         manifest = tomllib.loads((self.work / EXPORTER.PACKAGE / "vibe.toml").read_text())
         self.assertEqual(self.receipt["version"], manifest["package"]["version"])
-        native_relay = "flow:org.jresearch.ai/codex-relay" in tomllib.loads((self.work / "vibe.toml").read_text())["requires"]["packages"]
-        self.assertEqual(native_relay, (self.slot / EXPORTER.RECEIPT).exists())
+        shared_requirement = tomllib.loads((self.work / "vibe.toml").read_text())["requires"]["packages"]["flow:org.jresearch.ai/development-governance"]
+        self.assertEqual("git" in shared_requirement, (self.slot / EXPORTER.RECEIPT).exists())
         self.assertFalse((self.source / EXPORTER.RECEIPT).exists())
         self.assertEqual((self.slot / EXPORTER.CHANGELOG).read_bytes(),
                          (self.work / EXPORTER.PACKAGE / EXPORTER.CHANGELOG).read_bytes())
@@ -111,6 +111,24 @@ class NativeAdoptionTests(unittest.TestCase):
         text = re.sub(r'generated_at = ".*?"', 'generated_at = "2000-01-01T00:00:00Z"', text)
         path.write_text(text)
         EXPORTER.verify_producer(self.revision, self.work)
+
+    def test_local_shared_registry_source_and_receipt_are_bound(self):
+        import tomllib
+        path = self.work / "vibe.lock"
+        original = path.read_text()
+        shared = next(entry for entry in tomllib.loads(original)["package"]
+                      if entry["name"] == "development-governance")
+        if shared["source_kind"] != "registry":
+            self.skipTest("historical public Shared source uses immutable Git checks")
+        for before, after in [(shared["source_url"], "file:///unrelated/source"),
+                              ('source_kind = "registry"', 'source_kind = "git"')]:
+            with self.subTest(before=before):
+                path.write_text(original.replace(before, after))
+                self.reject()
+        path.write_text(original)
+        # A release receipt cannot be injected into receipt-free producer state.
+        (self.slot / EXPORTER.RECEIPT).write_text('{}\n')
+        self.reject()
 
     def test_missing_or_wrong_index_rejected(self):
         path = self.work / EXPORTER.BOOT_INDEX

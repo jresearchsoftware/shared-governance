@@ -88,8 +88,9 @@ and [ChatGPT content/application design](task-62/step-2/README.md). RA owns the
 common authority principle; TH/IR apply it. [Step 2 corrections](task-60/step-2/README.md)
 remove the unapproved publication checklist and ChatGPT projection receipt;
 content-based generation retains accepted-source/native validation and path safety.
-TH-029 is conditional on Tasks including live application; source generation
-alone adds no settings obligation. Both Tasks retain separate Step chronology.
+The accepted 5.0.0 TH-029 was conditional on Tasks including live application;
+Task 74 prospectively changes that policy in 6.0.0, without rewriting the earlier
+Tasks or their separate Step chronology. See [Task 74 coverage](task-74/step-1/README.md).
 
 
 Task 52's [scope-classification coverage and scenarios](task-52/step-1/README.md)

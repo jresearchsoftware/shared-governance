@@ -1,5 +1,20 @@
 # Development Governance changelog
 
+## 6.0.0
+
+MAJOR: TH-029 replaces the explicit-application-scope exemption for adopting
+projects intentionally using generated ChatGPT Project Instructions. A task changing
+its complete effective desired text must reconcile live Settings after source
+acceptance/integration and before completion, even without an application clause.
+Present the full raw replacement in one markdown fence when different or unconfirmed;
+the owner applies/reconciles unknown live rules and supplies supported readback or
+attributable confirmation of live content. Keep unresolved verification visible.
+Unchanged text, cache-only and SHA-only changes create no new application duty;
+earlier mismatches/gaps remain. The projector reports this boundary without reading
+live Settings or judging completion. This is a prospective owner-selected change,
+not retroactive invalidation of 5.0.0. RA-006 and separate consumer adoption remain.
+No automatic Settings writes, recurring verification service or new approval loop.
+
 ## 5.0.0
 
 MAJOR: RA-006 prevents agent-authored obligation expansion across Task authoring,
