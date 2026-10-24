@@ -508,10 +508,13 @@ class DistributionTests(unittest.TestCase):
     def test_small_improvement_addition_preserves_existing_protocols_and_requires_complete_export(self):
         files = self.current_export()
         accepted, _ = DISTRIBUTION.snapshot("2361868c41a916871d687aa8eea8f14573e2c82e")
+        historical, _ = DISTRIBUTION.snapshot("1121fc8966a2c7142cc0d6067eff0cf1d15e9cd9")
+        # Preserve the accepted SI addition's unchanged earlier rules. Current
+        # TH-029 is deliberately revised by Task 74 and qualified separately.
         for name, content in accepted.items():
             if name.startswith("vibevm/vibespecs/protocols/"):
                 with self.subTest(preserved=name):
-                    self.assertEqual(files[name], content)
+                    self.assertEqual(historical[name], content)
         new_files = (DISTRIBUTION.SMALL_IMPROVEMENTS, DISTRIBUTION.SMALL_IMPROVEMENTS_GUIDE)
         for name in new_files:
             for data in (None, b"", b"\xff"):
