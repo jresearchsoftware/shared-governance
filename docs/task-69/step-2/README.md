@@ -94,6 +94,40 @@ them into frozen 5.0.0, and detect installed drift. Existing nine-protocol byte
 comparison protects semantic ownership; it does not prove prose/model compliance.
 The Outcome reports actual checks, native warnings and limitations for its head.
 
+Implementation qualification before handoff:
+
+- Windows and Linux `qualify.py --export-ref HEAD`: PASS; 1,010 tracked files,
+  1,970 local links, bounded credential-marker scan, native parity and exact export.
+- Distribution: 50 tests PASS; self-adoption: 16 PASS; release with pinned native
+  binary: 17 PASS; ChatGPT projection: 28 PASS. Publication: 11 PASS and one
+  optional native-publisher test skipped (12 total); no production publication.
+- Native materialization: pinned musl VibeVM 1.0.7, digest
+  `20d111df02eb28040ef4cb766bfcb0bde8ff4427b031f88f33eacb3711c3e240`.
+  Fresh isolated settings/registry resolution generated Shared 5.1.0 and retained
+  public Relay 3.0.0. Selected outputs transferred without generated-identity
+  edits; historical slots retained. The local-only `--registry` shortcut failed
+  to resolve the public Relay root; the mixed-source procedure is now documented.
+- `qualify-distribution.py` against source
+  `29cbfcca5b700b17803c86b4f4571bb2c3dc7f8d`: PASS, 21 native commands,
+  independent cold consumer, complete slot/route integrity, local publish/repeat,
+  synthetic update and Git rollback. Payload digest
+  `f9afbefd18f76d310d7926ab81d111763a70c920d47af9c7ac1190f667525048`.
+  Native transport limitations remain: a tag-drift lock/slot split is detected
+  by the canonical verifier; cache-only offline recovery fails; retained-slot
+  offline operation works. No remote release or model compliance is claimed.
+- `qualify-vibevm.py --materialize`: FAIL before its install stage because that
+  old helper rejects all findings. Reproduced at accepted baseline: five retained
+  historical orphan-slot warnings, zero errors. Candidate has those five plus
+  retained now-inactive 5.0.0, zero errors. No warnings were suppressed or frozen
+  history deleted. The focused distribution integration above supplies the new
+  payload/consumer proof; this helper's baseline limitation is disclosed, not
+  reported as a passing test or a new protocol regression.
+
+Evidence logs are isolated under `/tmp/task69-run40098460142/`; the canonical
+Outcome binds final-head checks and any CI observations. These are implementer
+checks, not independent acceptance. Later edits confined to producer evidence
+do not change the package digest; the exact-head export check still runs.
+
 Independent exact-result assessment and owner follow-up disposition remain.
 Keep #69 open. No merge, release, deployment, cross-project PR, live consumer
 adoption or Task closure is authorized in this Step. Interested consumer owners
