@@ -41,3 +41,10 @@ candidate bytes; exact final command results and head belong in the canonical
 Writer Outcome and native PR checks. Scenario walks are source-guidance evidence,
 not fresh model compliance or live Relay/DocReview behavior. Independent
 acceptance, integration and public package publication remain separate.
+
+The first candidate CI exposed the old Tasks 60/62 preservation test comparing
+current TH against pre-5.0.0 wording. That historical transition is now pinned
+to accepted 5.0.0; its assertions are retained. A new regression compares all
+nine protocols with this effort's accepted baseline, requiring every rule except
+TH-026 and RA-006 to retain exact bytes. Both focused cases passed. The original
+failed CI is retained as history; final exact-head CI must qualify the correction.
