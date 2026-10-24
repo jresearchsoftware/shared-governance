@@ -87,7 +87,8 @@ Task 75 prepares 5.2.1 after accepted 5.2.0: [negative-constraint coverage and s
 clarify RA-006's existing provenance rule for prohibitions, preserving ordinary
 authorized means and actual protected boundaries. PATCH classification adds no
 operator work or authority mechanism; publication and consumer adoption retain
-their existing owners.
+their existing owners. [Step 2 reconciliation](task-75/step-2/README.md) records
+the 5.2.0 baseline, preserved SI contract and current generation/checks.
 
 Task 69 adds 5.2.0 after accepted 5.1.0: a separately adopted
 [small-improvement topic](../packages/development-governance/vibevm/vibespecs/protocols/small-improvements.md)
