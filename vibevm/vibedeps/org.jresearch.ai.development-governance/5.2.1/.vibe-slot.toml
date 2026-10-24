@@ -1,10 +1,10 @@
 schema = 1
-source_hash = "sha256:4701649b7c12acff727b305bbd154e9f93fa96a5ef743efcd67c48e3c5c02edc"
+source_hash = "sha256:8a9759c7084943aacf08186cade66ca2d8482f1da2c6e3c76ce718e492aa6d79"
 spec_format = "mixed"
 
 [[file]]
 path = "CHANGELOG.md"
-sha256 = "bdf810a79ee767534dc43b6e1573a6f6d833c5a9e9424b8acb1fc11fb20f2f66"
+sha256 = "519e55526881696a803a0956bbad5e68ceb426f81d894f2991263f6493f1a92d"
 
 [[file]]
 path = "LICENSE"
@@ -28,7 +28,7 @@ sha256 = "e5cf6978ddbb8c63f713afccc62cd6c993e76f70074b57cd35bbf062c9f46668"
 
 [[file]]
 path = "vibe.toml"
-sha256 = "9da2be9ed56f98bb5eb154af5459959c3e1270ba1d0cc8e8b7f8a27ef9b95006"
+sha256 = "7c6b988a56e4795977e04802b6df6599f9341f3ec8e66b2010a0eed85bfaa3ae"
 
 [[file]]
 path = "vibevm/vibespecs/boot/development-governance.md"
