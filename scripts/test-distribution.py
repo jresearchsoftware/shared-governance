@@ -124,7 +124,8 @@ class DistributionTests(unittest.TestCase):
         DISTRIBUTION.validate_payload(files, files["LICENSE"])
 
     def test_joint_authority_settings_change_preserves_unaffected_contracts(self):
-        # Historical Task 60/62 transition; later additive topics do not redefine it.
+        # Historical Tasks 60/62 transition; later authorized TH-026 edits do not
+        # redefine the accepted 5.0.0 contract this regression protects.
         DISTRIBUTION.ROOT = REPOSITORY
         files, _ = DISTRIBUTION.snapshot("414077e956aa47b18ddc436f68c3245b508baf46")
         accepted, _ = DISTRIBUTION.snapshot("61aa3444365b02a27c392d48aa9ea33e85c5d5d4")
@@ -154,6 +155,31 @@ class DistributionTests(unittest.TestCase):
             b'decisions and recommendations, preserving initiative and explicit per-finding\n'
             b'owner dispositions without turning proposals into obligations.\n\n', b'')
         self.assertEqual(ir, accepted[DISTRIBUTION.INDEPENDENT_REVIEW])
+
+    def test_closure_change_preserves_all_other_accepted_rules(self):
+        files = self.current_export()
+        accepted, _ = DISTRIBUTION.snapshot("414077e956aa47b18ddc436f68c3245b508baf46")
+        changed_rules = {DISTRIBUTION.HANDOFF: b"TH-026", DISTRIBUTION.AUTHORITY: b"RA-006"}
+        for name, before in accepted.items():
+            if not name.startswith("vibevm/vibespecs/protocols/"):
+                continue
+            with self.subTest(protocol=name):
+                if name not in changed_rules:
+                    self.assertEqual(files[name], before)
+                    continue
+                # Stable rule addresses bind the scope, independent of paragraph
+                # wording. No other accepted rule may be silently rewritten.
+                rule = changed_rules[name]
+                def parts(value):
+                    pieces = re.split(rb'(<a id="[A-Z]+-[0-9]{3}"></a>)', value)
+                    return dict(zip(pieces[1::2], pieces[2::2]))
+                old, new = parts(before), parts(files[name])
+                self.assertEqual(set(old), set(new))
+                for anchor in old:
+                    if anchor == b'<a id="' + rule + b'"></a>':
+                        self.assertNotEqual(old[anchor], new[anchor])
+                    else:
+                        self.assertEqual(old[anchor], new[anchor])
 
     def test_rule_links_survive_paragraph_and_section_insertion(self):
         files = self.current_export()
@@ -449,7 +475,7 @@ class DistributionTests(unittest.TestCase):
                                        "vibe.toml").read_text())["package"]["version"]
         self.assertEqual(receipt["version"], source_version)
         self.assertGreaterEqual(tuple(map(int, source_version.split("."))), (2, 5, 0))
-        expected = 10 if tuple(map(int, source_version.split("."))) >= (5, 1, 0) else 9
+        expected = 10 if tuple(map(int, source_version.split("."))) >= (5, 2, 0) else 9
         self.assertEqual(sum(name.startswith("vibevm/vibespecs/protocols/") for name in files), expected)
         self.assertEqual(files[DISTRIBUTION.CONTEXT_LOADING],
                          (REPOSITORY / DISTRIBUTION.PACKAGE / DISTRIBUTION.CONTEXT_LOADING).read_bytes())
@@ -460,7 +486,7 @@ class DistributionTests(unittest.TestCase):
 
     def test_small_improvement_addition_preserves_existing_protocols_and_requires_complete_export(self):
         files = self.current_export()
-        accepted, _ = DISTRIBUTION.snapshot("414077e956aa47b18ddc436f68c3245b508baf46")
+        accepted, _ = DISTRIBUTION.snapshot("2361868c41a916871d687aa8eea8f14573e2c82e")
         for name, content in accepted.items():
             if name.startswith("vibevm/vibespecs/protocols/"):
                 with self.subTest(preserved=name):
@@ -585,7 +611,7 @@ class DistributionTests(unittest.TestCase):
                                  for name in files), 9)
         expected_guides = {DISTRIBUTION.ONBOARDING, DISTRIBUTION.ONBOARDING_EXAMPLES,
                            DISTRIBUTION.ENGINEERING_METHODS}
-        if tuple(map(int, receipt["version"].split("."))) >= (5, 1, 0):
+        if tuple(map(int, receipt["version"].split("."))) >= (5, 2, 0):
             expected_guides.add(DISTRIBUTION.SMALL_IMPROVEMENTS_GUIDE)
         self.assertEqual({name for name in files if name.startswith("vibevm/vibespecs/guides/")},
                          expected_guides)

@@ -43,8 +43,8 @@ class NativeAdoptionTests(unittest.TestCase):
         import tomllib
         manifest = tomllib.loads((self.work / EXPORTER.PACKAGE / "vibe.toml").read_text())
         self.assertEqual(self.receipt["version"], manifest["package"]["version"])
-        shared = tomllib.loads((self.work / "vibe.toml").read_text())["requires"]["packages"]["flow:" + EXPORTER.COORDINATE]
-        self.assertEqual("git" in shared, (self.slot / EXPORTER.RECEIPT).exists())
+        requirement = tomllib.loads((self.work / "vibe.toml").read_text())["requires"]["packages"]["flow:" + EXPORTER.COORDINATE]
+        self.assertEqual("git" in requirement, (self.slot / EXPORTER.RECEIPT).exists())
         self.assertFalse((self.source / EXPORTER.RECEIPT).exists())
         self.assertEqual((self.slot / EXPORTER.CHANGELOG).read_bytes(),
                          (self.work / EXPORTER.PACKAGE / EXPORTER.CHANGELOG).read_bytes())
@@ -117,11 +117,34 @@ class NativeAdoptionTests(unittest.TestCase):
         path = self.work / "vibe.lock"
         text = path.read_text()
         import re
-        if 'source_kind = "git"' not in text:
-            text = re.sub(r'source_url = ".*?"', 'source_url = "file:///unreachable/windows/vibevm/vibepacks/' + EXPORTER.COORDINATE + '/v' + self.receipt["version"] + '"', text)
+        import tomllib
+        shared = next(entry for entry in tomllib.loads(text)["package"]
+                      if entry["name"] == "development-governance")
+        if shared["source_kind"] == "registry":
+            text = text.replace(shared["source_url"], "file:///unreachable/windows/vibevm/vibepacks/" +
+                                EXPORTER.COORDINATE + "/v" + self.receipt["version"])
         text = re.sub(r'generated_at = ".*?"', 'generated_at = "2000-01-01T00:00:00Z"', text)
         path.write_text(text)
         EXPORTER.verify_producer(self.revision, self.work)
+
+    def test_local_shared_source_identity_and_duplicate_lock_rejected(self):
+        import tomllib
+        path = self.work / "vibe.lock"
+        original = path.read_text()
+        shared = next(entry for entry in tomllib.loads(original)["package"]
+                      if entry["name"] == "development-governance")
+        if shared["source_kind"] != "registry":
+            self.skipTest("historical producer uses public Shared source")
+        for changed in [
+                original.replace(shared["source_url"], "https://example.invalid/shared.git"),
+                original.replace('source_kind = "registry"',
+                                 'source_kind = "registry"\nsource_ref = "' + "0" * 40 + '"'),
+                original + '\n[[package]]\nkind = "flow"\ngroup = "org.jresearch.ai"\n'
+                           'name = "development-governance"\nversion = "0.0.0"\n']:
+            with self.subTest(changed=changed[-100:]):
+                path.write_text(changed)
+                self.reject()
+        path.write_text(original)
 
     def test_missing_or_wrong_index_rejected(self):
         path = self.work / EXPORTER.BOOT_INDEX

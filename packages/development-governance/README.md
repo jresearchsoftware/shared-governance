@@ -12,6 +12,14 @@ the package payload. This README is the current overview; actual acceptance and
 publication evidence remains in source Issues/PRs, workflows and distribution
 tags. Frozen historical versions retain their original bytes.
 
+Version 5.1.0 extends [TH-026](vibevm/vibespecs/protocols/task-handoff.md#TH-026)
+with compatible guidance for owner-selected temporary closure holds, verified
+preauthorized release via existing trusted Task Decisions, and missing-condition
+resolution during existing result review. It preserves 5.0.0 completion,
+reassessment and authority duties, local timing and mechanisms; it adds no
+universal authoring field, review duty or completion gate. Close-authorized still
+waits for actual completion and protected obligations, without repeated permission.
+
 Version 4.0.0 adds [PC-013](vibevm/vibespecs/protocols/proportional-controls.md#PC-013)
 and tightens [IR-012–IR-015](vibevm/vibespecs/protocols/independent-review.md#IR-012):
 bind each blocker to an existing obligation and separate proposed requirements
@@ -42,7 +50,7 @@ Task Handoff requires independent assessment under project rules; consumers
 select Independent Review separately for its shared methodology. That method
 adds no universal owner-wait or publication permission rule.
 
-Version 5.1.0 adds the separately opt-in SI topic and its
+Version 5.2.0 adds the separately opt-in SI topic and its
 [usage/migration guide](vibevm/vibespecs/guides/small-improvements.md).
 Adopters use the exact `small-improvement` label, notify the owner with candidate
 IDs while preparing suitable source-changing work, and obtain receiving scope

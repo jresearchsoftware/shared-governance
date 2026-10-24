@@ -181,7 +181,7 @@ def validate_payload(files, license_bytes, historical=False):
         allowed.add(ENGINEERING_METHODS)
     if tuple(map(int, version.split("."))) >= (3, 0, 0):
         allowed.add(CHANGELOG)
-    if tuple(map(int, version.split("."))) >= (5, 1, 0):
+    if tuple(map(int, version.split("."))) >= (5, 2, 0):
         allowed.update({SMALL_IMPROVEMENTS, SMALL_IMPROVEMENTS_GUIDE})
     if set(files) != allowed:
         raise ValueError("source package file set differs from declared passive payload")
