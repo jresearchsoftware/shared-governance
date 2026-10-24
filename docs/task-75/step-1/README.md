@@ -57,3 +57,28 @@ events or whole-Task completion. Consumers own later deliberate adoption; no
 consumer migration, monitoring or unrelated active-work mutation is included.
 Root/sudo-only installed-runtime proof belongs to native Exact-head CI after
 Writer publication and is not attempted or claimed here.
+
+## Local validation
+
+- `git diff --check`: passed.
+- `TMPDIR=/tmp python3 scripts/qualify.py --export-ref HEAD`: passed, including
+  exact authored export, registry/slot/lock/routes and unchanged Relay Skill.
+- `python3 scripts/test-release.py`: passed 11 tests; six optional one-time
+  native publisher/resolver integration tests skipped. No publisher was invoked.
+- `TMPDIR=/tmp python3 scripts/test-distribution.py`: all 50 tests passed.
+- Existing release `transition` check with category `patch`: passed 5.1.0 to
+  5.1.1 against the frozen accepted SHA. No remote tag availability claim is made.
+- Pinned VibeVM 1.0.7 musl binary matched the toolchain SHA-256. Native mixed
+  install in disposable staging selected 5.1.1 and retained Relay 3.0.0; only
+  selected generated outputs were transferred, preserving historical slots.
+- All eight other complete authored protocol files match the accepted baseline
+  byte for byte. The scenario walks above assess the negative-constraint rule.
+- `test-self-adoption.py` could not run its 16 test bodies: fixture setup's local
+  clone exits 128 because Git detects dubious ownership of the shared checkout's
+  `.git`. Repeating with `/tmp` confirmed the clone limitation. No Git configuration,
+  ownership or permission repair was attempted. Direct exact-commit native
+  qualification passed; the clone-based suite remains unavailable in this worker.
+
+The default worker temporary directory is inside the checkout, so export tests
+initially rejected their destination as designed; selecting external `/tmp`
+resolved that issue. This environmental correction changes no source or policy.
