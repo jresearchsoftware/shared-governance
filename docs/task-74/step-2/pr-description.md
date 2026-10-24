@@ -23,8 +23,11 @@ Source, changelog, local bindings/operator guidance and native registry/slot/loc
 are aligned to 5.2.1. Relay 3.0.0 and frozen historical packages are preserved.
 Recompute one PATCH against current accepted main if it advances before integration.
 
-See [Step 2 qualification](https://github.com/jresearchsoftware/shared-governance/blob/codex/task-74/docs/task-74/step-2/README.md)
-for local checks and evidence limits. Native exact-head CI and fresh independent
+Local checks passed: exact source/export/native parity, 52 distribution, 18 release,
+17 self-adoption and 29 ChatGPT tests; producer publication fixtures passed 11 with
+one optional native fixture skipped. Native ChatGPT install/update and the PATCH
+transition/tag-availability check passed. See [Step 2 qualification](https://github.com/jresearchsoftware/shared-governance/blob/codex/task-74/docs/task-74/step-2/README.md)
+for source identity, isolated-fixture recovery and evidence limits. Native exact-head CI and fresh independent
 review remain required. Task 74 changes this producer's desired Instructions;
 post-integration owner application/readback remains an unresolved completion hold.
 No downstream consumer migration is required for this producer Task's completion.
