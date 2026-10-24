@@ -43,8 +43,8 @@ class NativeAdoptionTests(unittest.TestCase):
         import tomllib
         manifest = tomllib.loads((self.work / EXPORTER.PACKAGE / "vibe.toml").read_text())
         self.assertEqual(self.receipt["version"], manifest["package"]["version"])
-        native_relay = "flow:org.jresearch.ai/codex-relay" in tomllib.loads((self.work / "vibe.toml").read_text())["requires"]["packages"]
-        self.assertEqual(native_relay, (self.slot / EXPORTER.RECEIPT).exists())
+        shared = tomllib.loads((self.work / "vibe.toml").read_text())["requires"]["packages"]["flow:" + EXPORTER.COORDINATE]
+        self.assertEqual("git" in shared, (self.slot / EXPORTER.RECEIPT).exists())
         self.assertFalse((self.source / EXPORTER.RECEIPT).exists())
         self.assertEqual((self.slot / EXPORTER.CHANGELOG).read_bytes(),
                          (self.work / EXPORTER.PACKAGE / EXPORTER.CHANGELOG).read_bytes())
@@ -59,6 +59,17 @@ class NativeAdoptionTests(unittest.TestCase):
         target.write_bytes(original)
         target.unlink()
         self.reject()
+
+    def test_small_improvement_protocol_and_guide_survive_native_route_and_detect_drift(self):
+        for name in (EXPORTER.SMALL_IMPROVEMENTS, EXPORTER.SMALL_IMPROVEMENTS_GUIDE):
+            with self.subTest(path=name):
+                target = self.slot / name
+                original = target.read_bytes()
+                self.assertEqual(original, (self.work / EXPORTER.PACKAGE / name).read_bytes())
+                target.write_bytes(original + b"\nUnreviewed drift\n")
+                self.reject()
+                target.write_bytes(original)
+        EXPORTER.verify_producer(self.revision, self.work)
 
     def test_manual_readiness_rule_is_accessible_through_native_and_local_routes(self):
         authored = self.work / EXPORTER.PACKAGE / EXPORTER.HANDOFF

@@ -7,26 +7,32 @@ stays Draft and unchanged; its later disposition is owner-controlled.
 
 ## Identity and routing
 
-The root manifest pins public immutable Git roots for Relay 3.0.0 at
-`325c96371783e2d628bfa9903b3244468c688fe6` and Development Governance 5.0.0 at
-`30a23f467c30c41fec918204cbbf2ecfffd7bef5`. Relay's annotated v3.0.0 tag is
+The root manifest pins the public immutable Git root for Relay 3.0.0 at
+`325c96371783e2d628bfa9903b3244468c688fe6` and the producer's authored
+Development Governance 5.1.0 through its generated in-tree registry.
+Relay's annotated v3.0.0 tag is
 `edd206aef4318a5f35b2353b221b2682e74bedb7`. Its public distribution receipt binds
 accepted Relay source `ba99807bfc7e7d199ce9bf0e02be8e31416ddc95` and payload digest
 `4322086611ebec9cc34bffe8fa650cf9c572a3c455da6484f68d1bba86c472ee`.
-The Shared public payload is identical to this producer's authored 5.0.0 package;
-its distribution receipt is the only added payload file versus producer staging.
-The in-tree producer registry and historical slots remain intact.
+The earlier public Shared 5.0.0 root at
+`30a23f467c30c41fec918204cbbf2ecfffd7bef5` remains historical evidence. Native
+producer authoring uses exact exported candidate bytes without a public
+distribution receipt or a publication dependency. The integrity check verifies
+the local Shared source/slot/lock against the exact authored export and retains
+Relay's public-root, closure and native Skill receipt checks.
 
-The generated root INDEX reads the authoring overlay, Shared 5.0.0 compact boot,
+The generated root INDEX reads the authoring overlay, Shared 5.1.0 compact boot,
 then Relay's conditional boot. Relevant Relay work reads its complete Skill and
 triggered references. The [project Skill](../.agents/skills/codex-relay/SKILL.md)
 is an exact native projection with its native receipt; ordinary use needs no
 installation or network. Its `references/shared-protocols.md` selects the unique
 Shared package from the consumer root lock and verifies that slot's identity.
-All nine triggered Relay protocol references resolve inside the same 5.0.0 slot.
+All nine triggered Relay protocol references resolve inside the same 5.1.0 slot.
 The producer's five project-wide topic adoptions and conditional self-adoption
 remain unchanged. Relay's additional topics apply only to relevant Relay product
 work. Manual Codex retains the [local Task binding](manual-task-handoff.md).
+The new SI topic is available but not adopted by the producer or Relay Skill;
+this graph update does not activate its backlog scan.
 
 Relay's nested frozen 4.0.0 lock/slot is inert publisher closure evidence. It is
 neither an active root boot route nor a fallback protocol source. Historical
