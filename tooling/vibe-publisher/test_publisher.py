@@ -581,6 +581,37 @@ class PlanningTests(Fixture):
         with self.assertRaisesRegex(ValueError, "license"):
             P.binding_at(self.source, policy, "binding.json", allow_local=True)
 
+    def test_thin_dependency_failure_guides_source_evidence_in_operator_outputs(self):
+        manifest = self.source / self.packages[0]["root"] / "vibe.toml"
+        manifest.write_text(manifest.read_text() + '\n[requires.packages]\n"org.fixture/dep" = "=1.0.0"\n')
+        self.revision = self.change()
+        report = self.plan()
+        row = report["packages"][0]
+        self.assertEqual(row["status"], "AUTHORIZATION_PENDING")
+        code, message = P.operator_diagnostic(row)
+        self.assertEqual(code, "DEPENDENCY_CLOSURE_UNQUALIFIED")
+
+        report_path = self.directory / "publication.json"
+        summary_path = self.directory / "summary.md"
+        with patch("builtins.print") as output:
+            P.write_report(report, report_path)
+        log_text = "\n".join(call.args[0] for call in output.call_args_list)
+        P.append_actions_summary(report_path, summary_path, "success", {"plan": "success"})
+        summary = summary_path.read_text(encoding="utf-8")
+        for text in (message, log_text, summary):
+            with self.subTest(output=text):
+                self.assertIn("frozen native closure with pinned VibeVM", text)
+                self.assertIn("vibe.lock", text)
+                self.assertIn("complete materialized dependency slots", text)
+                self.assertIn("selected package source root at the exact source SHA", text)
+                self.assertIn("producer-approved files", text)
+                self.assertIn("Thin packages need not export dependency slots", text)
+                self.assertIn("deliberately vendored slots require complete shipped inventories", text)
+                self.assertNotIn("approve its complete export inventory", text)
+        self.assertIn(code, log_text)
+        self.assertIn(code, summary)
+        self.assertIn("**AUTHORIZATION_PENDING**", summary)
+
     def test_pinned_binding_ignores_worktree_and_rejects_credentials(self):
         for package in self.packages:
             package["destination"] = "https://github.com/fixture/" + package["coordinate"].split("/")[1] + ".git"

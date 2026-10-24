@@ -35,7 +35,7 @@ AUTHORIZATION_MESSAGES = {
     'ACCEPTANCE_EVIDENCE_UNAVAILABLE': 'Required GitHub acceptance or CI evidence could not be read; restore read access and verify the exact source before retrying.',
     'PRODUCER_BINDING_UNSUPPORTED': "The accepted producer binding uses an unsupported schema or acceptance rule; resolve it in the producer's authority.",
     'PACKAGE_IDENTITY_MISMATCH': "The package identity or frozen version does not match its accepted binding; correct the package under its owner's release policy.",
-    'DEPENDENCY_CLOSURE_UNQUALIFIED': 'An included dependency is unresolved, mutable or lacks matching native lock/slot hashes. Materialize the frozen closure with pinned VibeVM and approve its complete export inventory.',
+    'DEPENDENCY_CLOSURE_UNQUALIFIED': 'A required or shipped dependency is unresolved, mutable or lacks matching native lock/slot hashes. Materialize the frozen native closure with pinned VibeVM; commit vibe.lock and complete materialized dependency slots under the selected package source root at the exact source SHA. Public export includes only producer-approved files. Thin packages need not export dependency slots; deliberately vendored slots require complete shipped inventories.',
 }
 
 AUTHORIZATION_FALLBACK = (
