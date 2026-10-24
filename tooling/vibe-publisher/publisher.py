@@ -396,31 +396,67 @@ def eligible(api, binding, revision, parents):
             "ci_workflow": binding["ci_workflow"], "ci_workflow_id": runs[0]["workflow_id"]}
 
 
-def included_dependencies(blobs, manifest):
-    """Qualify native lock/installed slots actually shipped by the allowlist.
+def included_dependencies(blobs, manifest, evidence=None):
+    """Qualify required closure from source evidence and any explicitly shipped slots.
 
     Resolution and hashes belong to VibeVM. This reads its committed evidence;
     it neither resolves ranges nor downloads/materializes additional content.
     """
     prefix = "vibevm/vibedeps/"
-    slots = {}
-    for name in blobs:
+    evidence = blobs if evidence is None else evidence
+    available = {}
+    for name in evidence:
         if name.startswith(prefix):
             parts = name[len(prefix):].split("/")
             if len(parts) < 3:
                 raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "included dependency has no native versioned slot")
-            slots.setdefault((parts[0], parts[1]), {})["/".join(parts[2:])] = blobs[name]
+            available.setdefault((parts[0], parts[1]), {})["/".join(parts[2:])] = evidence[name]
+    # Explicitly vendored slots are checked against the shipped bytes, including
+    # incomplete inventories. Source evidence must never fill a partial export.
+    slots = {}
+    for name, data in blobs.items():
+        if name.startswith(prefix):
+            parts = name[len(prefix):].split("/")
+            slots.setdefault((parts[0], parts[1]), {})["/".join(parts[2:])] = data
+    lock = tomllib.loads(evidence.get("vibe.lock", b"").decode())
+    entries = lock.get("package", [])
+    manifests = [manifest] + [tomllib.loads(files["vibe.toml"].decode())
+                              for files in slots.values() if "vibe.toml" in files]
+    seen = set()
+    while manifests:
+        resolved = manifests.pop()
+        for coordinate, requirement in resolved.get("requires", {}).get("packages", {}).items():
+            if isinstance(requirement, dict) and requirement.get("optional") is True:
+                continue
+            coordinate = coordinate.split(":", 1)[-1]
+            matches = [e for e in entries if e.get("group", "") + "/" + e.get("name", "") == coordinate]
+            if len(matches) != 1:
+                raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "commit native lock and dependency slot evidence for: " + coordinate)
+            entry = matches[0]
+            constraint = requirement.get("version", "") if isinstance(requirement, dict) else requirement
+            if isinstance(constraint, str) and constraint.startswith("=") and constraint[1:] != entry.get("version"):
+                raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "native lock differs from exact dependency requirement: " + coordinate)
+            if isinstance(requirement, dict) and "git" in requirement:
+                ref = next((requirement[key] for key in ("rev", "tag", "branch") if key in requirement), None)
+                if entry.get("source_url") != requirement["git"] or (ref is not None and entry.get("source_ref") != ref):
+                    raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "native lock differs from declared Git source: " + coordinate)
+            if coordinate in seen:
+                continue
+            seen.add(coordinate)
+            key = (entry["group"] + "." + entry["name"], entry["version"])
+            if key not in slots:
+                slots[key] = available.get(key, {})
+            if "vibe.toml" not in slots[key]:
+                raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "commit native required dependency slot: " + coordinate)
+            manifests.append(tomllib.loads(slots[key]["vibe.toml"].decode()))
     if slots:
-        if "vibe.lock" not in blobs:
-            raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "include the native vibe.lock for the exported dependency slots")
-        lock = tomllib.loads(blobs["vibe.lock"].decode())
+        if "vibe.lock" not in evidence:
+            raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "commit the native vibe.lock for dependency qualification")
         if lock.get("meta", {}).get("schema_version") != 7:
             raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "materialize dependencies with pinned VibeVM schema-7 lock metadata")
-        entries = lock.get("package", [])
     else:
         entries = []
     included = set()
-    manifests = [manifest]
     for (identity, version), files in slots.items():
         if "vibe.toml" not in files:
             raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "included dependency slot is missing its native manifest")
@@ -442,17 +478,6 @@ def included_dependencies(blobs, manifest):
                 or {f["path"]: f["sha256"] for f in recorded} != hashes):
             raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "included slot differs from native materialization hashes/inventory: " + identity)
         included.add(group + "/" + name)
-        manifests.append(resolved)
-    # Check required edges for unresolved/excluded runtime members, including
-    # transitives. Optional and dev declarations outside the shipped slots are
-    # not the release closure. Included dev/optional slots were checked above.
-    for resolved in manifests:
-        for coordinate, requirement in resolved.get("requires", {}).get("packages", {}).items():
-            if isinstance(requirement, dict) and requirement.get("optional") is True:
-                continue
-            coordinate = coordinate.split(":", 1)[-1]
-            if coordinate not in included:
-                raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "materialize and approve the required dependency slot: " + coordinate)
     return sorted(included)
 
 
@@ -488,7 +513,16 @@ def snapshot(root, revision, package, require_ready=True):
             or not VERSION.fullmatch(metadata["version"]) or metadata.get("frozen") is not True):
         raise AuthorizationError("PACKAGE_IDENTITY_MISMATCH", "canonical frozen package identity differs")
     if require_ready:
-        included_dependencies(blobs, manifest)
+        evidence = dict(blobs)
+        for entry in filter(None, entries):
+            metadata_line, path = entry.split(b"\t", 1)
+            mode, kind, oid = metadata_line.decode().split()
+            relative = str(PurePosixPath(path.decode()).relative_to(package["root"]))
+            if relative == "vibe.lock" or relative.startswith("vibevm/vibedeps/"):
+                if mode != "100644" or kind != "blob":
+                    raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "native dependency evidence requires ordinary committed blobs")
+                evidence[relative] = git(root, "cat-file", "blob", oid)
+        included_dependencies(blobs, manifest, evidence)
     if require_ready and not blobs["LICENSE"].strip():
         raise AuthorizationError("PUBLIC_EXPORT_INCOMPLETE", "public package license is empty")
     rights = package.get("redistribution", {})
