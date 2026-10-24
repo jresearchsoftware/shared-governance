@@ -211,12 +211,22 @@ split results and same-Outcome recovery; earlier walks retain historical meaning
 Source-controlled
 [ChatGPT Instructions](../chatgpt/instructions.md) are desired state; the owner
 manually applies and verifies live settings under the existing client procedure.
-For Tasks explicitly including application, compare accepted desired complete text
-with supported live evidence; if different, present the whole replacement for
-owner application and obtain supported confirmation/readback before closure.
-Disclose inaccessible live settings as a gap. Unchanged effective text with no
-known application gap needs no manual action; generation-only Tasks add none.
-Receipt/source SHA changes alone never require re-pasting settings.
+This producer intentionally uses generated Project Instructions and adopts TH-029.
+When a Task changes its complete effective Instructions text through base, custom,
+binding, accepted dependencies or other generation inputs, its completion includes
+live reconciliation even without an explicit application clause. Generate/validate
+the reviewable desired text first. After acceptance/integration, compare the accepted
+complete text with supported live evidence. If different or not confirmed current,
+present the entire raw Markdown replacement in one complete copyable `markdown`
+fence for owner review/manual application, preserving/reconciling unknown live rules.
+Obtain supported readback or sufficiently attributable owner-confirmed live content
+before claiming a match or closing. Inaccessible settings remain a concrete evidence
+gap and completion hold, including after merge; Codex does not write live Settings.
+Unchanged effective text, cache-only or receipt/source SHA changes need no new manual
+action, but retain any earlier unresolved mismatch/verification gap. A projector
+NO_OP after generation is not live verification. Once reconciliation and all other
+real obligations are verified, already-authorized closure needs no further
+discretionary owner prompt. Other consumer projects adopt changes separately.
 
 [Task 14 Step 2](task-14/step-2/README.md) is historical evidence of a new admitted
 Step correcting the same PR. [Task 26 Step 1 walks](task-26/step-1/scenarios.md)

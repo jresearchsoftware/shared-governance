@@ -121,6 +121,33 @@ class ReleaseTests(ReleaseFixture):
         with self.assertRaisesRegex(ValueError, "recompute"):
             RELEASE.transition(self.base, self.revision, "patch")
 
+    def test_unaccepted_candidate_reclassification_keeps_transition_checks(self):
+        # Category authority belongs to the owner/reviewer, not this arithmetic
+        # check. Reclassifying an unaccepted candidate must still select exactly
+        # one bump from accepted source and cannot reuse its frozen identity.
+        with patch.object(RELEASE.PREPARATION, "ROOT", ROOT):
+            files, _ = RELEASE.PREPARATION.snapshot("1121fc8966a2c7142cc0d6067eff0cf1d15e9cd9")
+        for name, data in files.items():
+            if name == RELEASE.PREPARATION.RECEIPT:
+                continue
+            target = self.source / RELEASE.PREPARATION.PACKAGE / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data)
+        baseline = self.commit()
+        manifest = self.source / RELEASE.PREPARATION.PACKAGE / "vibe.toml"
+        accepted = manifest.read_text()
+        manifest.write_text(accepted.replace('version = "5.2.0"', 'version = "6.0.0"'))
+        candidate = self.commit()
+        self.assertEqual(RELEASE.transition(baseline, candidate, "major")["version"], "6.0.0")
+        manifest.write_text(accepted.replace('version = "5.2.0"', 'version = "5.2.1"'))
+        corrected = self.commit()
+        result = RELEASE.transition(baseline, corrected, "patch")
+        self.assertEqual((result["before"], result["version"]), ("5.2.0", "5.2.1"))
+        with self.assertRaisesRegex(ValueError, "recompute"):
+            RELEASE.transition(baseline, corrected, "major")
+        with self.assertRaisesRegex(ValueError, "recompute"):
+            RELEASE.transition(candidate, corrected, "patch")
+
     def test_unaccepted_and_side_branch_heads_are_rejected(self):
         self.git("switch", "-qc", "side")
         (self.source / "side.md").write_text("Side branch.\n")

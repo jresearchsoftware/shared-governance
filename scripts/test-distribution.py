@@ -157,7 +157,10 @@ class DistributionTests(unittest.TestCase):
         self.assertEqual(ir, accepted[DISTRIBUTION.INDEPENDENT_REVIEW])
 
     def test_closure_change_preserves_all_other_accepted_rules(self):
-        files = self.current_export()
+        # Preserve the accepted 5.1.0 transition; Task 74 deliberately changes
+        # TH-029 later, without retroactively changing this earlier contract.
+        DISTRIBUTION.ROOT = REPOSITORY
+        files, _ = DISTRIBUTION.snapshot("2361868c41a916871d687aa8eea8f14573e2c82e")
         accepted, _ = DISTRIBUTION.snapshot("414077e956aa47b18ddc436f68c3245b508baf46")
         changed_rules = {DISTRIBUTION.HANDOFF: b"TH-026", DISTRIBUTION.AUTHORITY: b"RA-006"}
         for name, before in accepted.items():
@@ -180,6 +183,24 @@ class DistributionTests(unittest.TestCase):
                         self.assertNotEqual(old[anchor], new[anchor])
                     else:
                         self.assertEqual(old[anchor], new[anchor])
+
+    def test_effective_instructions_change_preserves_other_accepted_protocol_rules(self):
+        files = self.current_export()
+        accepted, _ = DISTRIBUTION.snapshot("1121fc8966a2c7142cc0d6067eff0cf1d15e9cd9")
+        for name, before in accepted.items():
+            if not name.startswith("vibevm/vibespecs/protocols/"):
+                continue
+            with self.subTest(protocol=name):
+                if name != DISTRIBUTION.HANDOFF:
+                    self.assertEqual(files[name], before)
+                else:
+                    # Only TH-029 changes; retain TH-026 closure guidance and
+                    # all existing rule addresses/paragraphs before this rule.
+                    anchor = b'<a id="TH-029"></a>'
+                    self.assertEqual(files[name].split(anchor)[0], before.split(anchor)[0])
+                    self.assertNotEqual(files[name].split(anchor)[1], before.split(anchor)[1])
+        self.assertEqual(set(name for name in files if name.startswith("vibevm/vibespecs/protocols/")),
+                         set(name for name in accepted if name.startswith("vibevm/vibespecs/protocols/")))
 
     def test_rule_links_survive_paragraph_and_section_insertion(self):
         files = self.current_export()
@@ -487,13 +508,13 @@ class DistributionTests(unittest.TestCase):
     def test_small_improvement_addition_preserves_existing_protocols_and_requires_complete_export(self):
         files = self.current_export()
         accepted, _ = DISTRIBUTION.snapshot("2361868c41a916871d687aa8eea8f14573e2c82e")
-        # Bind SI's preservation claim to its accepted release, not future
-        # authorized protocol corrections such as Task 75's RA-006 clarification.
-        si_release, _ = DISTRIBUTION.snapshot("1121fc8966a2c7142cc0d6067eff0cf1d15e9cd9")
+        historical, _ = DISTRIBUTION.snapshot("1121fc8966a2c7142cc0d6067eff0cf1d15e9cd9")
+        # Preserve the accepted SI addition's unchanged earlier rules. Current
+        # TH-029 is deliberately revised by Task 74 and qualified separately.
         for name, content in accepted.items():
             if name.startswith("vibevm/vibespecs/protocols/"):
                 with self.subTest(preserved=name):
-                    self.assertEqual(si_release[name], content)
+                    self.assertEqual(historical[name], content)
         new_files = (DISTRIBUTION.SMALL_IMPROVEMENTS, DISTRIBUTION.SMALL_IMPROVEMENTS_GUIDE)
         for name in new_files:
             for data in (None, b"", b"\xff"):

@@ -1,0 +1,9 @@
+{
+  "qualification": "PASS",
+  "reviewed_functional_package": "unchanged; only manifest and changelog differ",
+  "historical_source_slots_and_relay": "unchanged",
+  "general_PV_and_RA": "unchanged",
+  "superseded_candidate_outputs": "absent",
+  "effective_instructions_vs_step1": "unchanged",
+  "effective_instructions_vs_accepted_5.2.0": "changed; live gap remains"
+}
