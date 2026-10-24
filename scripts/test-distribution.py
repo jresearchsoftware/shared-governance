@@ -487,10 +487,13 @@ class DistributionTests(unittest.TestCase):
     def test_small_improvement_addition_preserves_existing_protocols_and_requires_complete_export(self):
         files = self.current_export()
         accepted, _ = DISTRIBUTION.snapshot("2361868c41a916871d687aa8eea8f14573e2c82e")
+        # Bind SI's preservation claim to its accepted release, not future
+        # authorized protocol corrections such as Task 75's RA-006 clarification.
+        si_release, _ = DISTRIBUTION.snapshot("1121fc8966a2c7142cc0d6067eff0cf1d15e9cd9")
         for name, content in accepted.items():
             if name.startswith("vibevm/vibespecs/protocols/"):
                 with self.subTest(preserved=name):
-                    self.assertEqual(files[name], content)
+                    self.assertEqual(si_release[name], content)
         new_files = (DISTRIBUTION.SMALL_IMPROVEMENTS, DISTRIBUTION.SMALL_IMPROVEMENTS_GUIDE)
         for name in new_files:
             for data in (None, b"", b"\xff"):
