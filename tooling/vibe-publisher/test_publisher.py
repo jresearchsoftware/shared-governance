@@ -1141,11 +1141,20 @@ class NativeTests(Fixture):
         self.revision = self.change()
 
     def test_native_thin_release_cold_install_and_update(self):
-        self.native_dependencies(vendored=False)
+        self.native_release_consumer(vendored=False)
+
+    def test_native_vendored_release_cold_install_and_update(self):
+        self.native_release_consumer(vendored=True)
+
+    def native_release_consumer(self, vendored):
+        self.native_dependencies(vendored=vendored)
         staged = self.stage()
         self.assertEqual(P.finalize(staged)["status"], "PUBLISHED")
         paths = self.git("ls-tree", "-r", "--name-only", "v1.0.1", cwd=Path(staged["staging"]))
-        self.assertEqual(set(paths.splitlines()), {"vibe.toml", "README.md", "LICENSE", "DISTRIBUTION.json"})
+        if vendored:
+            self.assertIn("vibevm/vibedeps/org.fixture.direct/1.0.0/vibe.toml", paths.splitlines())
+        else:
+            self.assertEqual(set(paths.splitlines()), {"vibe.toml", "README.md", "LICENSE", "DISTRIBUTION.json"})
         consumer = self.directory / "cold"
         consumer.mkdir()
         remotes = self.directory / "dependency-remotes"
