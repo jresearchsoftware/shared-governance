@@ -13,8 +13,8 @@ existing gates. Source Issues stay open until accepted integration, with explici
 deferral, cancellation, partial-work and supersession dispositions.
 
 Availability does not activate SI, including for existing TH/CD/RA adopters.
-The nine earlier protocols keep their accepted 5.1.0 bytes and applicability. The compact boot
-adds only a conditional SI route. No label creation, consumer migration, bot,
+The nine earlier protocols keep their accepted 5.1.0 bytes and applicability.
+The compact boot adds only a conditional SI route. No label creation, consumer migration, bot,
 controller, automatic injection, new per-item execution cycle or review stage
 follows from an update. Separately authorized consumer adoption reconciles proven
 duplicates while retaining broader local planning rules and native authority.

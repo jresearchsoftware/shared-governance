@@ -32,6 +32,8 @@ All nine triggered Relay protocol references resolve inside the same 5.2.0 slot.
 The producer's five project-wide topic adoptions and conditional self-adoption
 remain unchanged. Relay's additional topics apply only to relevant Relay product
 work. Manual Codex retains the [local Task binding](manual-task-handoff.md).
+The new SI topic remains available but unadopted by the producer and Relay Skill;
+this graph update does not activate its backlog scan.
 
 Relay's nested frozen 4.0.0 lock/slot is inert publisher closure evidence. It is
 neither an active root boot route nor a fallback protocol source. Historical

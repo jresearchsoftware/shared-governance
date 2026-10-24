@@ -427,7 +427,6 @@ class DistributionTests(unittest.TestCase):
         metadata = tomllib.loads(files["vibe.toml"].decode())
         self.assertIs(metadata["package"]["frozen"], True)
         self.assertEqual(set(metadata), {"package", "boot_snippet"})
-        self.assertEqual(set(metadata), {"package", "boot_snippet"})
 
     def test_contract_maintenance_missing_empty_or_escaping_payload_is_rejected(self):
         protocol = self.accepted_23_fixture()
@@ -483,6 +482,7 @@ class DistributionTests(unittest.TestCase):
                          {"tools/chatgpt/project.py", "tools/chatgpt/base.md", "tools/chatgpt/README.md"})
         metadata = tomllib.loads(files["vibe.toml"].decode())
         self.assertIs(metadata["package"]["frozen"], True)
+        self.assertEqual(set(metadata), {"package", "boot_snippet"})
 
     def test_small_improvement_addition_preserves_existing_protocols_and_requires_complete_export(self):
         files = self.current_export()
@@ -517,6 +517,7 @@ class DistributionTests(unittest.TestCase):
         changed[boot] = files[boot].replace(b'../protocols/small-improvements.md', b'../protocols/absent.md')
         with self.assertRaisesRegex(ValueError, "missing local reference"):
             DISTRIBUTION.validate_payload(changed, files["LICENSE"])
+
     def test_context_loading_requires_new_whole_package_version(self):
         protocol = self.accepted_24_fixture()
         shutil.copyfile(REPOSITORY / DISTRIBUTION.PACKAGE / DISTRIBUTION.CONTEXT_LOADING,
