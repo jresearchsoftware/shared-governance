@@ -403,6 +403,10 @@ def included_dependencies(blobs, manifest, evidence=None):
     it neither resolves ranges nor downloads/materializes additional content.
     """
     prefix = "vibevm/vibedeps/"
+    required = manifest.get("requires", {}).get("packages", {})
+    if (not any(not (isinstance(value, dict) and value.get("optional") is True)
+                for value in required.values()) and not any(name.startswith(prefix) for name in blobs)):
+        return []
     evidence = blobs if evidence is None else evidence
     available = {}
     for name in evidence:
@@ -434,7 +438,8 @@ def included_dependencies(blobs, manifest, evidence=None):
                 raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "commit native lock and dependency slot evidence for: " + coordinate)
             entry = matches[0]
             constraint = requirement.get("version", "") if isinstance(requirement, dict) else requirement
-            if isinstance(constraint, str) and constraint.startswith("=") and constraint[1:] != entry.get("version"):
+            exact_version = constraint[1:].strip() if isinstance(constraint, str) and constraint.startswith("=") else ""
+            if VERSION.fullmatch(exact_version) and exact_version != entry.get("version"):
                 raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "native lock differs from exact dependency requirement: " + coordinate)
             if isinstance(requirement, dict) and "git" in requirement:
                 ref = next((requirement[key] for key in ("rev", "tag", "branch") if key in requirement), None)
@@ -519,9 +524,8 @@ def snapshot(root, revision, package, require_ready=True):
             mode, kind, oid = metadata_line.decode().split()
             relative = str(PurePosixPath(path.decode()).relative_to(package["root"]))
             if relative == "vibe.lock" or relative.startswith("vibevm/vibedeps/"):
-                if mode != "100644" or kind != "blob":
-                    raise AuthorizationError("DEPENDENCY_CLOSURE_UNQUALIFIED", "native dependency evidence requires ordinary committed blobs")
-                evidence[relative] = git(root, "cat-file", "blob", oid)
+                if mode == "100644" and kind == "blob":
+                    evidence[relative] = git(root, "cat-file", "blob", oid)
         included_dependencies(blobs, manifest, evidence)
     if require_ready and not blobs["LICENSE"].strip():
         raise AuthorizationError("PUBLIC_EXPORT_INCOMPLETE", "public package license is empty")

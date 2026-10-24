@@ -1195,6 +1195,8 @@ class NativeTests(Fixture):
         slot = root / "vibevm/vibedeps/org.fixture.transitive/1.0.0/vibe.toml"
         original = slot.read_bytes()
         slot.write_bytes(original + b"\n# drift\n")
+        # Uncommitted worktree drift cannot alter exact-source qualification.
+        self.assertEqual(self.plan()["packages"][0]["status"], "READY")
         self.revision = self.change(version="1.0.2")
         self.assertEqual(self.plan()["packages"][0]["reason_code"], "DEPENDENCY_CLOSURE_UNQUALIFIED")
         slot.unlink()
