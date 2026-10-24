@@ -8,9 +8,9 @@ stays Draft and unchanged; its later disposition is owner-controlled.
 ## Identity and routing
 
 The root manifest retains the public immutable Git root for Relay 3.0.0 at
-`325c96371783e2d628bfa9903b3244468c688fe6`. Development Governance 6.0.0 is
+`325c96371783e2d628bfa9903b3244468c688fe6`. Development Governance 5.1.0 is
 selected from this producer's exact authored in-tree registry through its normal
-[self-adoption](self-adoption.md) procedure; it is not a claim that 6.0.0 has
+[self-adoption](self-adoption.md) procedure; it is not a claim that 5.1.0 has
 been publicly published. Task 57's accepted public 5.0.0 pin remains historical
 at `30a23f467c30c41fec918204cbbf2ecfffd7bef5`. Relay's annotated v3.0.0 tag is
 `edd206aef4318a5f35b2353b221b2682e74bedb7`. Its public distribution receipt binds
@@ -22,13 +22,13 @@ content. The immutable Relay payload, public distribution receipt, native Skill
 projection and inert dependency closure retain their accepted identity.
 The in-tree producer registry and historical slots remain intact.
 
-The generated root INDEX reads the authoring overlay, Shared 6.0.0 compact boot,
+The generated root INDEX reads the authoring overlay, Shared 5.1.0 compact boot,
 then Relay's conditional boot. Relevant Relay work reads its complete Skill and
 triggered references. The [project Skill](../.agents/skills/codex-relay/SKILL.md)
 is an exact native projection with its native receipt; ordinary use needs no
 installation or network. Its `references/shared-protocols.md` selects the unique
 Shared package from the consumer root lock and verifies that slot's identity.
-All nine triggered Relay protocol references resolve inside the same 6.0.0 slot.
+All nine triggered Relay protocol references resolve inside the same 5.1.0 slot.
 The producer's five project-wide topic adoptions and conditional self-adoption
 remain unchanged. Relay's additional topics apply only to relevant Relay product
 work. Manual Codex retains the [local Task binding](manual-task-handoff.md).
@@ -86,7 +86,7 @@ immutable revision, content hash and distribution receipt; producer Shared
 uses the authored version/content, local registry URL and native slot receipt.
 No fabricated distribution revision or release receipt is needed for a candidate.
 A changed package needs its own version and matching materialization, not reuse
-of frozen public bytes. Shared 6.0.0 narrows no Relay native trust boundary; the
+of frozen public bytes. Shared 5.1.0 narrows no Relay native trust boundary; the
 Skill's actual lower-bound requirement permits this producer selection. This
 does not adopt the change in Relay's own repository or any other consumer.
 

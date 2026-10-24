@@ -174,7 +174,8 @@ further execution and closure remain distinct.
 
 ### Completion and closure disposition
 
-Use accepted TH-026/RA-006 for closure meaning. Here `close-authorized` permits
+Use accepted TH-026/RA-006 for closure meaning. For this producer's
+owner-selected closure binding, `close-authorized` permits
 ordinary owner-controlled closure after actual Task completion, required
 independent acceptance/integration and no remaining Task work or protected hold.
 It adds no closure-specific test or repeated owner prompt. Manual executors do
@@ -195,7 +196,7 @@ conditions, flag that gap and ask the owner what remains or whether to authorize
 An owner-run Apply hold requires the actual run, intended revision/target and
 material warning disposition; a failed/unknown run does not satisfy it. Other
 unrelated repository PRs do not block this Task. Optional later usage needs no
-synthetic exercise to close. See [Task 68 scenarios](task-68/step-2/scenarios.md).
+synthetic exercise to close. See [Task 68 compatible scenarios](task-68/step-3/compatibility.md).
 
 For relevant independent review, root AGENTS explicitly adopts the full accepted
 materialized Independent Review protocol. It owns affected-behavior completeness,
