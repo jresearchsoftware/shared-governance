@@ -71,6 +71,16 @@ public root available through its existing native cache or normal authorized
 public acquisition; do not rewrite its payload or nested closure. Transfer only
 the selected generated outputs and preserve historical slots.
 
+For this mixed graph, VibeVM 1.0.7's `--registry` flag selects a local-only
+resolver that omits manifest Git sources. Instead set `VIBE_SETTINGS` to an
+isolated authoring directory with a `registry.toml` containing one `[[registry]]`
+whose `name` is a local alias, `url` is `file:///absolute/staging/source/vibevm/vibepacks`
+and `auth` is `none`. Run the install command above without `--registry` and
+without `--offline` for public Git acquisition. This uses the native mixed
+resolver without changing user registry configuration. The original lock may
+be retained when intentionally changing Shared's exact version; preserve
+historical slots pruned in disposable staging when transferring selected output.
+
 The offline qualifier checks both source forms: public packages retain their
 immutable revision, content hash and distribution receipt; producer Shared
 uses the authored version/content, local registry URL and native slot receipt.

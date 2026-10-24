@@ -45,7 +45,7 @@ def check(root, authored, vibe_hash):
     root_dependencies = sorted([RELAY, SHARED + "@=" + shared_version] if local_shared else PINS)
     lock = tomllib.loads((root / "vibe.lock").read_text(encoding="utf-8"))
     require(lock["meta"]["schema_version"] == 7 and
-            lock["meta"]["root_dependencies"] == root_dependencies, "lock root identity")
+            sorted(lock["meta"]["root_dependencies"]) == root_dependencies, "lock root identity")
     entries = lock["package"]
     require(len(entries) == 2, "expected two unique locked packages")
     payloads = {}
