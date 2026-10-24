@@ -1,5 +1,31 @@
 # Development Governance changelog
 
+## 5.2.1
+
+PATCH by an explicit single-task owner exception to [PV-002](vibevm/vibespecs/protocols/package-versioning.md#PV-002).
+The [Task 74 owner Decision](https://github.com/jresearchsoftware/shared-governance/issues/74#issuecomment-6386467528)
+identifies this as repair of the originally intended requirement, narrowed during
+translation into Task 62/PR 63. Accepted 5.2.0 visibly documented the narrower
+explicit-application condition; this release changes the published workflow
+obligation and would ordinarily require MAJOR under PV-002. The owner selects
+5.2.0 -> 5.2.1 for this correction only. PV-002 remains the general rule; the PATCH
+label does not claim unchanged consumer-facing behavior. Historical 5.0.0/5.2.0
+acceptance, releases and Task records retain their meaning.
+
+TH-029 replaces the explicit-application-scope exemption for adopting
+projects intentionally using generated ChatGPT Project Instructions. A task changing
+its complete effective desired text must reconcile live Settings after source
+acceptance/integration and before completion, even without an application clause.
+Present the full raw replacement in one markdown fence when different or unconfirmed;
+the owner applies/reconciles unknown live rules and supplies supported readback or
+attributable confirmation of live content. Keep unresolved verification visible.
+Unchanged text, cache-only and SHA-only changes create no new application duty;
+earlier mismatches/gaps remain. The projector reports this boundary without reading
+live Settings or judging completion. RA-006 remains unchanged. Consumers must
+intentionally update under their own authority and assess this changed obligation;
+producer publication neither migrates them nor activates their live Settings.
+No automatic Settings writes, recurring verification service or new approval loop.
+
 ## 5.2.0
 
 MINOR: adds separately adopted [Small Improvements — SI-001–SI-008](vibevm/vibespecs/protocols/small-improvements.md)

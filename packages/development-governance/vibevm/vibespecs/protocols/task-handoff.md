@@ -450,17 +450,37 @@ Shared-protocol adoption, a product upgrade and client-adapter compatibility are
 separate project-owned decisions; none implies the others.
 
 <a id="TH-029"></a>
-**TH-029 — Conditional generated client settings reconciliation.**
+**TH-029 — Effective Project Instructions change and live reconciliation.**
 
-When a Task includes applying changed generated client instructions, integration
-of desired-state files alone does not complete that obligation. For ChatGPT
-Project Instructions, compare the accepted desired complete text with live project
-settings through supported evidence. If different, surface the complete updated
-text for owner manual application, preserving/reconciling unknown live rules,
-and obtain supported confirmation/readback before claiming application or closing
-the Task. Disclose unavailable live reads or uncertain confirmation as an evidence
-gap; source files, receipt metadata and merge never prove settings synchronization.
-When effective text is unchanged and no application gap remains, no manual settings
-action is needed. Tasks that do not include application acquire no such obligation.
-Use the existing client binding and Task records; no automatic settings access,
-new approval loop or recurring hash-only update is required.
+For projects intentionally using generated ChatGPT Project Instructions and
+adopting this rule, a Task that changes its project's complete effective desired
+Instructions text includes live settings reconciliation in its completion path.
+This applies to changes through shared/base, project/custom, local binding,
+accepted dependencies or any other effective generation input. Omitting an
+explicit application clause does not waive the obligation.
+
+Generate and validate the complete desired text in the ordinary reviewable source
+change. After proper acceptance/integration, compare the accepted complete text
+with supported evidence of the live Project Settings. If different or not confirmed
+current, present the entire raw Markdown replacement as one complete copyable
+`markdown` fenced block, without clipping, a patch or a partial replacement. The
+owner reviews and manually applies it, preserving/reconciling unknown live rules.
+Obtain supported readback or sufficiently attributable owner-confirmed live content
+before claiming that settings match or closing the Task. Unavailable live access
+or uncertain confirmation remains a disclosed evidence gap; source files, receipt
+metadata, generation and merge never prove settings synchronization.
+
+If the complete effective Instructions text is unchanged, no new manual settings
+application or hash/receipt-only update is required. This includes no-op,
+Sources-cache-only and dependency/binding changes with identical resulting text.
+An earlier unresolved live-settings mismatch or verification gap remains for
+disposition; a later generation NO_OP does not discharge it.
+
+Keep an applicable Task open while required application/verification is outstanding,
+including after PR approval and merge. Once accepted source integration, effective
+live-text reconciliation and other real obligations are verified, ordinary
+already-authorized closure needs no additional discretionary owner prompt.
+Use the existing client binding and Task records, without automatic settings
+writes, a daemon, external verification service, new approval loop or generator-only
+closure gate. A producer release or another project's change neither updates nor
+activates a consumer's Settings; separate consumer adoption authority remains intact.
