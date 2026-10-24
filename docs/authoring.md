@@ -83,6 +83,14 @@ assessments; other consumers own their separate topic choices and migration.
 
 ## Semantic completeness
 
+Task 68 proposes 6.0.0: [closure coverage and scenarios](task-68/step-2/scenarios.md)
+extend TH-026 and apply RA-006 to concrete temporary holds, preauthorized trusted
+release and visible resolution of missing closure conditions. The new mandatory
+authoring/review duties require MAJOR classification against accepted 5.0.0;
+no extra closure test or repeated permission ritual is introduced. Producer
+self-adoption uses the in-tree authored source with the unchanged public Relay
+3.0.0 Skill; downstream consumer adoption remains separate.
+
 Tasks 60/62 jointly propose 5.0.0: [authority coverage/scenarios](task-60/step-1/README.md)
 and [ChatGPT content/application design](task-62/step-2/README.md). RA owns the
 common authority principle; TH/IR apply it. [Step 2 corrections](task-60/step-2/README.md)
