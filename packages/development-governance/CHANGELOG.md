@@ -1,6 +1,6 @@
 # Development Governance changelog
 
-## 5.1.1
+## 5.2.1
 
 PATCH: RA-006 clarifies that its existing requirement-provenance rule covers
 negative constraints in Tasks, Change Requests, Decisions and execution prompts.
@@ -11,6 +11,28 @@ retain their existing Decision, review and exact-head requirements. This repairs
 the interpretation of RA-002/005/006 and PC-004/013 without adding mandatory
 operator work, a new permission ritual, reviewer gate or state machine. Other
 protocols, applicability, publication and deliberate consumer adoption are unchanged.
+
+## 5.2.0
+
+MINOR: adds separately adopted [Small Improvements — SI-001–SI-008](vibevm/vibespecs/protocols/small-improvements.md)
+and a [usage and consumer-migration guide](vibevm/vibespecs/guides/small-improvements.md).
+The exact `small-improvement` Issue label is the discovery key; the title prefix
+is optional. Adopters inspect open labeled Issues when preparing suitable
+source-changing Tasks, first source-changing Steps or relevant CRs, notify the
+owner with IDs/proposed inclusion, and implement only accepted receiving scope.
+Combined implementation, normal tests and one independent PR review preserve
+existing gates. Source Issues stay open until accepted integration, with explicit
+deferral, cancellation, partial-work and supersession dispositions.
+
+Availability does not activate SI, including for existing TH/CD/RA adopters.
+The nine earlier protocols keep their accepted 5.1.0 bytes and applicability.
+The compact boot adds only a conditional SI route. No label creation, consumer migration, bot,
+controller, automatic injection, new per-item execution cycle or review stage
+follows from an update. Separately authorized consumer adoption reconciles proven
+duplicates while retaining broader local planning rules and native authority.
+The existing onboarding guide's 2.6.0 catalog remains a dated nine-topic inventory;
+its instruction to inventory later topics includes SI in this version.
+All existing rule IDs remain; SI IDs are new and supersede none.
 
 ## 5.1.0
 

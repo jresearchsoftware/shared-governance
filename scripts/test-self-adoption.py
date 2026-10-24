@@ -60,6 +60,17 @@ class NativeAdoptionTests(unittest.TestCase):
         target.unlink()
         self.reject()
 
+    def test_small_improvement_protocol_and_guide_survive_native_route_and_detect_drift(self):
+        for name in (EXPORTER.SMALL_IMPROVEMENTS, EXPORTER.SMALL_IMPROVEMENTS_GUIDE):
+            with self.subTest(path=name):
+                target = self.slot / name
+                original = target.read_bytes()
+                self.assertEqual(original, (self.work / EXPORTER.PACKAGE / name).read_bytes())
+                target.write_bytes(original + b"\nUnreviewed drift\n")
+                self.reject()
+                target.write_bytes(original)
+        EXPORTER.verify_producer(self.revision, self.work)
+
     def test_manual_readiness_rule_is_accessible_through_native_and_local_routes(self):
         authored = self.work / EXPORTER.PACKAGE / EXPORTER.HANDOFF
         installed = (self.slot / EXPORTER.HANDOFF).read_bytes()

@@ -5,7 +5,7 @@ The root virtual workspace has one stable member,
 a routine bump changes that value without moving the authoring tree. Frozen
 `0.1.0` remains at its historical path as retained source, outside membership.
 Historical exports discover the path from the selected commit's workspace.
-The current flow contains nine conditional protocols and optional manually invoked
+The current flow contains ten conditional protocols and optional manually invoked
 ChatGPT maintenance files, with no boot hooks, native Skills, capability declarations
 or dependencies. Proportional-controls preserves its accepted
 baseline and adds the scoped Task 19 existing-proof and friction corrections;
@@ -48,7 +48,7 @@ committed alongside authoring; candidate instructions remain proposal data.
 
 The package also carries an operator procedure and examples under
 `vibevm/vibespecs/guides/`. The compact boot links to onboarding only for an
-explicit human request. Guides connect the nine canonical topics without adding
+explicit human request. Guides connect the canonical topics without adding
 a normative topic or changing adoption. Relative links stay inside the exported
 payload; producer-only entry pages link to that single copy. See
 [Task 30 Step 2](task-30/step-2/README.md) for delivery and qualification.
@@ -83,11 +83,18 @@ assessments; other consumers own their separate topic choices and migration.
 
 ## Semantic completeness
 
-Task 75 prepares 5.1.1: [negative-constraint coverage and scenarios](task-75/step-1/README.md)
+Task 75 prepares 5.2.1 after accepted 5.2.0: [negative-constraint coverage and scenarios](task-75/step-1/README.md)
 clarify RA-006's existing provenance rule for prohibitions, preserving ordinary
 authorized means and actual protected boundaries. PATCH classification adds no
 operator work or authority mechanism; publication and consumer adoption retain
 their existing owners.
+
+Task 69 adds 5.2.0 after accepted 5.1.0: a separately adopted
+[small-improvement topic](../packages/development-governance/vibevm/vibespecs/protocols/small-improvements.md)
+and usage guide. Existing nine protocols, including Task 68 closure guidance,
+retain exact accepted bytes. The producer and Relay Skill do not adopt SI.
+[Step 3 reconciliation](task-69/step-3/README.md) records the bounded merge,
+version transition and native qualification; Step 2 evidence remains historical.
 
 Task 68 proposes 5.1.0: [compatible closure coverage](task-68/step-3/compatibility.md)
 extends TH-026 and applies RA-006 to owner-selected temporary holds,
