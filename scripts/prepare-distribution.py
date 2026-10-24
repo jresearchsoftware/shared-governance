@@ -26,6 +26,8 @@ REPOSITORY_GOVERNANCE = "vibevm/vibespecs/protocols/github-repository-governance
 INDEPENDENT_REVIEW = "vibevm/vibespecs/protocols/independent-review.md"
 CONTRACT_MAINTENANCE = "vibevm/vibespecs/protocols/contract-and-decision-maintenance.md"
 CONTEXT_LOADING = "vibevm/vibespecs/protocols/context-loading.md"
+SMALL_IMPROVEMENTS = "vibevm/vibespecs/protocols/small-improvements.md"
+SMALL_IMPROVEMENTS_GUIDE = "vibevm/vibespecs/guides/small-improvements.md"
 ONBOARDING = "vibevm/vibespecs/guides/onboarding.md"
 ONBOARDING_EXAMPLES = "vibevm/vibespecs/guides/onboarding-examples.md"
 ENGINEERING_METHODS = "vibevm/vibespecs/guides/engineering-methods.md"
@@ -92,7 +94,7 @@ def validate_rule_addresses(files):
     """Bounded Markdown checks, not a rule registry or semantic attestation."""
     prefixes = {PROTOCOL: "PC", AUTHORITY: "RA", VERSIONING: "PV", HANDOFF: "TH",
                 SELF_ADOPTION: "SA", REPOSITORY_GOVERNANCE: "GH", INDEPENDENT_REVIEW: "IR",
-                CONTRACT_MAINTENANCE: "CD", CONTEXT_LOADING: "CL"}
+                CONTRACT_MAINTENANCE: "CD", CONTEXT_LOADING: "CL", SMALL_IMPROVEMENTS: "SI"}
     addresses, documents = {}, {}
     for name, data in files.items():
         if not name.endswith(".md"):
@@ -179,6 +181,8 @@ def validate_payload(files, license_bytes, historical=False):
         allowed.add(ENGINEERING_METHODS)
     if tuple(map(int, version.split("."))) >= (3, 0, 0):
         allowed.add(CHANGELOG)
+    if tuple(map(int, version.split("."))) >= (5, 2, 0):
+        allowed.update({SMALL_IMPROVEMENTS, SMALL_IMPROVEMENTS_GUIDE})
     if set(files) != allowed:
         raise ValueError("source package file set differs from declared passive payload")
     if files["LICENSE"] != license_bytes:
@@ -186,11 +190,11 @@ def validate_payload(files, license_bytes, historical=False):
     validate_skill_links(files, "vibevm/vibespecs")
     protocols = allowed & {PROTOCOL, VERSIONING, AUTHORITY, HANDOFF, SELF_ADOPTION,
                            REPOSITORY_GOVERNANCE, INDEPENDENT_REVIEW, CONTRACT_MAINTENANCE,
-                           CONTEXT_LOADING}
+                           CONTEXT_LOADING, SMALL_IMPROVEMENTS}
     if any(not files[name].strip() for name in protocols):
         raise ValueError("canonical protocol is empty")
     if any(not files[name].strip() for name in allowed & {ONBOARDING, ONBOARDING_EXAMPLES,
-                                                       ENGINEERING_METHODS}):
+                                                       ENGINEERING_METHODS, SMALL_IMPROVEMENTS_GUIDE}):
         raise ValueError("operator guide is empty")
     if CHANGELOG in allowed:
         if not files[CHANGELOG].strip():

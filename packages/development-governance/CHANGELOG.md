@@ -1,5 +1,27 @@
 # Development Governance changelog
 
+## 5.2.0
+
+MINOR: adds separately adopted [Small Improvements — SI-001–SI-008](vibevm/vibespecs/protocols/small-improvements.md)
+and a [usage and consumer-migration guide](vibevm/vibespecs/guides/small-improvements.md).
+The exact `small-improvement` Issue label is the discovery key; the title prefix
+is optional. Adopters inspect open labeled Issues when preparing suitable
+source-changing Tasks, first source-changing Steps or relevant CRs, notify the
+owner with IDs/proposed inclusion, and implement only accepted receiving scope.
+Combined implementation, normal tests and one independent PR review preserve
+existing gates. Source Issues stay open until accepted integration, with explicit
+deferral, cancellation, partial-work and supersession dispositions.
+
+Availability does not activate SI, including for existing TH/CD/RA adopters.
+The nine earlier protocols keep their accepted 5.1.0 bytes and applicability.
+The compact boot adds only a conditional SI route. No label creation, consumer migration, bot,
+controller, automatic injection, new per-item execution cycle or review stage
+follows from an update. Separately authorized consumer adoption reconciles proven
+duplicates while retaining broader local planning rules and native authority.
+The existing onboarding guide's 2.6.0 catalog remains a dated nine-topic inventory;
+its instruction to inventory later topics includes SI in this version.
+All existing rule IDs remain; SI IDs are new and supersede none.
+
 ## 5.1.0
 
 MINOR: TH-026 adds compatible guidance and examples for owner-selected temporary

@@ -21,6 +21,12 @@ Independent Review protocol. Other consumers still select that topic separately.
 The installed [package changelog](packages/development-governance/CHANGELOG.md)
 records version contracts, stable rule addresses and adoption implications.
 
+The separately opt-in [small-improvement topic](packages/development-governance/vibevm/vibespecs/protocols/small-improvements.md)
+and [usage guide](packages/development-governance/vibevm/vibespecs/guides/small-improvements.md)
+describe labeled Issue capture and authorized inclusion in future suitable
+source changes. Package updates do not activate this workflow; consumers own
+their separate adoption and deduplication.
+
 [Version tags](https://github.com/jrs-vibevm/org.jresearch.ai.development-governance/tags)
 and [publication runs](https://github.com/jresearchsoftware/shared-governance/actions/workflows/publish.yml)
 are the authoritative publication surfaces. The [release policy](docs/releases.md)
