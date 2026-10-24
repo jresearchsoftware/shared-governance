@@ -83,6 +83,12 @@ assessments; other consumers own their separate topic choices and migration.
 
 ## Semantic completeness
 
+Task 75 prepares 5.1.1: [negative-constraint coverage and scenarios](task-75/step-1/README.md)
+clarify RA-006's existing provenance rule for prohibitions, preserving ordinary
+authorized means and actual protected boundaries. PATCH classification adds no
+operator work or authority mechanism; publication and consumer adoption retain
+their existing owners.
+
 Task 68 proposes 5.1.0: [compatible closure coverage](task-68/step-3/compatibility.md)
 extends TH-026 and applies RA-006 to owner-selected temporary holds,
 preauthorized trusted release and missing-condition resolution in existing review.

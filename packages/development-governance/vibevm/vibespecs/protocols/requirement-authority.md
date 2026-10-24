@@ -66,6 +66,25 @@ in-contract defects/protected obligations, discretionary scope proposals and
 routine implementation/testing choices within delegated scope. The last category
 needs no separate permission; proposals remain optional until accepted.
 
+Apply the same provenance rule to negative constraints in Tasks, Change Requests,
+Decisions and execution prompts. No-release, no-publication, no-host-inspection,
+diagnosis-only, no-recovery, no-in-scope-fixes, prohibited tools and extra holds
+need explicit owner direction, accepted contracts or actual protected boundaries;
+an assistant's defensive preference or implementation plan supplies none.
+Ordinary operations necessary for the owner-selected outcome, including accepted
+package versioning/publication and effective in-scope diagnostics, must not be
+excluded merely to keep work nominally small or documentation-only. Choosing safe
+implementation means within delegated scope is an engineering decision.
+
+Before publishing a proposed new restriction as authority, discuss its rationale
+and consequences with the owner if it materially narrows the requested result or
+available means. This does not require renewed approval for ordinary operations
+already covered by the goal and accepted governance. Preserve real safety,
+credential, production, cross-repository, immutable-history, independent-review
+and exact-head boundaries. Do not unilaterally erase an existing accepted
+restriction: reconcile conflicting historical authority through the project's
+existing trusted Decision mechanism under RA-005.
+
 Bound required proof to the deliverable and accountable component.
 An unrelated tool's cold installation, downstream
 application or consumer configuration is mandatory only within accepted scope or

@@ -7,7 +7,7 @@ version = "0.0.0"
 spec_format = "mixed"
 
 [requires.packages."flow:org.jresearch.ai/development-governance"]
-version = "=5.1.0"
+version = "=5.1.1"
 link = "dynamic"
 
 [requires.packages."flow:org.jresearch.ai/codex-relay"]
