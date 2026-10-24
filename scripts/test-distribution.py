@@ -125,6 +125,7 @@ class DistributionTests(unittest.TestCase):
 
     def test_joint_authority_settings_change_preserves_unaffected_contracts(self):
         # Historical Task 60/62 transition; later additive topics do not redefine it.
+        DISTRIBUTION.ROOT = REPOSITORY
         files, _ = DISTRIBUTION.snapshot("414077e956aa47b18ddc436f68c3245b508baf46")
         accepted, _ = DISTRIBUTION.snapshot("61aa3444365b02a27c392d48aa9ea33e85c5d5d4")
         guide = files[DISTRIBUTION.ONBOARDING].replace(b'its content check/diff', b'its check/diff/receipt')
@@ -582,9 +583,12 @@ class DistributionTests(unittest.TestCase):
                               if name.startswith(("vibevm/vibespecs/protocols/", "tools/"))})
             self.assertEqual(sum(name.startswith("vibevm/vibespecs/protocols/")
                                  for name in files), 9)
+        expected_guides = {DISTRIBUTION.ONBOARDING, DISTRIBUTION.ONBOARDING_EXAMPLES,
+                           DISTRIBUTION.ENGINEERING_METHODS}
+        if tuple(map(int, receipt["version"].split("."))) >= (5, 1, 0):
+            expected_guides.add(DISTRIBUTION.SMALL_IMPROVEMENTS_GUIDE)
         self.assertEqual({name for name in files if name.startswith("vibevm/vibespecs/guides/")},
-                         {DISTRIBUTION.ONBOARDING, DISTRIBUTION.ONBOARDING_EXAMPLES,
-                          DISTRIBUTION.ENGINEERING_METHODS})
+                         expected_guides)
         destination = self.directory / "engineering-methods-export"
         DISTRIBUTION.prepare(revision, destination)
         self.assertEqual((destination / DISTRIBUTION.ENGINEERING_METHODS).read_bytes(),
