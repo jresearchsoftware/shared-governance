@@ -1,5 +1,26 @@
 # Development Governance changelog
 
+## 5.2.3
+
+PATCH: TH-001–007/010 clarify ordinary Task dispatch without a redundant admission
+Decision. An agreed, actionable open Task can wait and then start through a
+deliberate owner handoff within current permissions. Readiness is not execution;
+Issue openness alone dispatches nothing. This repairs the interpretation of the
+existing routine-action exception in TH-005, adopted applicability in TH-001 and
+execution-cycle meaning in TH-006, consistent with PC-010 and RA-006. It adds no
+mandatory operator work, state, record, label or approval stage. Substantive
+scope, policy, permission and material post-result choices still require their
+applicable Decisions; existing explicit holds are not retrospectively waived.
+
+Standalone work outside an adopted governed workflow needs no synthetic Step or
+Outcome. Adopted Steps, terminal results, same-result recovery, independent review
+and protected effects retain their meaning. Product-owned authenticated start,
+Step/profile snapshots, Writer/Reviewer separation and anti-duplicate trust
+controls remain intact. No existing Task is automatically started or accepted,
+and no other consumer is migrated. Rule IDs, all other protocols, conditional
+topic routing, PR Draft/Ready and effective-Instructions reconciliation remain
+unchanged. Frozen versions retain their bytes and chronology.
+
 ## 5.2.2
 
 PATCH: RA-006 clarifies that its existing requirement-provenance rule covers

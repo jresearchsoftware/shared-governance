@@ -12,6 +12,9 @@ and protected actions. Those mechanisms implement the shared Step semantics
 below; they do not silently redefine them.
 This protocol works manually; it grants no execution, review, merge, release,
 installation, consumer-adoption or closure permission.
+An Issue alone does not adopt this workflow. Standalone/manual work outside an
+adopted Task Handoff binding needs no synthetic Step numbering or Outcome protocol;
+use its actual project authority, result evidence and review requirements.
 
 ## Stable charter and chronological authority
 
@@ -32,28 +35,49 @@ public discussion, contribution attribution or decision provenance. Preserve
 or link meaningful earlier discussion as appropriate. Preliminary thoughts and
 editorial refinements do not each need a formal Decision.
 
+An ordinary, sufficiently specified open Task whose work is agreed may wait in
+a queue and then be deliberately handed to an executor under [TH-006](#TH-006).
+Ready is not running; running is not a separate approval gate. Absence of a Step
+or execution evidence does not by itself prohibit starting the Task or make it
+"NOT ADMITTED". A real manual assignment, authorized launch event, active Step
+where used, or verifiable execution artifacts can establish that work started.
+Creating or opening an Issue alone neither dispatches work nor authorizes an
+agent to start autonomously.
+
+Reserve an explicit Draft / On Hold / needs owner decision distinction for
+unagreed ideas, incomplete requirements, unresolved material choices, genuinely
+blocked dependencies or expressly restricted actions. Preserve those holds;
+reconcile existing explicit restrictions under current canonical owner authority
+before affected work. This guidance is no retrospective waiver. These Task
+distinctions are separate from the result PR Draft/Ready lifecycle in
+[TH-028](#TH-028); no new state machine, label scheme or admission record is required.
+
 <a id="TH-003"></a>
 **TH-003 — Historical charter and authorized amendments.**
 
 From first authorized execution onward, keep the body as the stable historical
-charter. Append substantive changes to scope, requirements, permissions,
-completion/closure conditions or newly admitted work as explicit owner-authorized
-Task Decision comments in chronological order. Another tracker needs equivalently
-durable, clearly linked decision records. Do not prepend later directions or
+charter. Append substantive changes to scope, requirements, permissions, policy,
+protected boundaries, completion/closure conditions or materially new work as
+explicit owner-authorized Task Decision comments in chronological order. Another
+tracker needs equivalently durable, clearly linked decision records. Do not prepend later directions or
 rewrite the charter after Outcomes. Only narrowly non-semantic editorial body
 corrections are permitted; they must not obscure changed authority.
+Routine dispatch within existing authority follows [TH-006](#TH-006); it does
+not need a second Decision merely to certify the start.
 
 <a id="TH-004"></a>
 **TH-004 — Effective chronological authority.**
 
 Completion or reopening preserves the original charter and historical execution
-and acceptance. Append reasons, changes and new admissions as subsequent
-Decisions; reopening resets neither Step numbering nor accepted history.
+and acceptance. Append substantive reasons, authority changes and materially new
+work as subsequent Decisions; reopening resets neither Step numbering nor
+accepted history and does not itself dispatch execution.
 Resolve effective current authority from the original charter plus applicable
 authorized Decisions, including explicit supersession or revocation. Neither
 the latest body alone nor every conversational comment defines that authority.
 Outcomes and reviews are evidence and assessment, not automatic scope permission;
-historical discussion, prompt snapshots and upstream analysis supply none.
+historical discussion, copied prompt snapshots and upstream analysis do not
+themselves authorize a fresh execution.
 
 <a id="TH-005"></a>
 **TH-005 — Readable owner Decisions.**
@@ -71,10 +95,27 @@ already-authorized actions.
 **TH-006 — Authorized execution cycle.**
 
 Identify the Task, current work unit/Step and meaningful purpose explicitly.
-A Step is one separately authorized architect/owner-to-executor work iteration:
+A Step is one authorized architect/owner-to-executor work iteration:
 hand off a bounded Task objective, investigate/implement, test and correct as
 needed, then return a terminal execution result for assessment (an Outcome,
 BLOCKED or another explicitly recognized terminal handoff).
+
+For ordinary agreed work, an owner instruction such as "start Task N" or an
+intentional handoff of its actionable Issue to a manual executor is sufficient
+launch authorization within current project permissions and protected boundaries.
+Do not require that dispatch plus a separate admission transition, Owner Decision
+comment, typed record or operator action merely to certify the same start.
+An adopted Step convention may assign its identity as part of dispatch; it need
+not be allocated in advance. Apply [PC-010](proportional-controls.md#PC-010) and
+[RA-006](requirement-authority.md#RA-006) to redundant start requirements.
+
+Keep substantive Decisions under [TH-003](#TH-003) and the project's actual
+authorization mechanism. Authenticated admission/start events, protected Step
+and profile snapshots, Writer/Reviewer separation, anti-duplicate execution and
+native trust boundaries remain product-owned. A manual assignment cannot bypass
+them for a product-bound attempt. Neither Issue openness nor routine dispatch
+grants deployment, credentials, production, release, approval, merge, publication
+or other protected effects beyond existing authority.
 
 <a id="TH-007"></a>
 **TH-007 — Next Step after terminal result.**
@@ -84,6 +125,9 @@ the next Step, even for the same goal, findings, branch or PR. Internal
 implementation/testing/corrections and ordinary clarifications during the active
 execution retain its Step. Carry an admitted develop/test/fix cycle to a useful
 result; do not invent separate coding, testing or research Steps as ceremony.
+A new post-result handoff within existing authority needs no redundant admission
+Decision. Materially new scope, permissions, policy or unresolved owner choices
+still need the applicable substantive Decision before affected execution.
 
 <a id="TH-008"></a>
 **TH-008 — Recovery identity and Step boundaries.**
@@ -122,8 +166,10 @@ execute the admitted Step and publish its result for independent assessment.
 Do not restate accessible goals, requirements, investigation steps, test matrices,
 boundaries or publication contracts, even when duplication seems helpful.
 Read the complete relevant discussion, Decisions, Outcomes/reviews and linked
-records, not just the body. After an Outcome use a new small handoff and the
-corresponding admission, not a rewritten charter.
+records, not just the body. After an Outcome use a new small authorized handoff
+for the next Step under [TH-006](#TH-006)–[TH-008](#TH-008), retaining the charter.
+Add a Decision only for substantive changes that require one under current
+authority, not merely to repeat an explicit routine start instruction.
 
 <a id="TH-011"></a>
 **TH-011 — Routing facts and delegation boundary.**

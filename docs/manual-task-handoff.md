@@ -10,17 +10,34 @@ candidate source, root/nested instructions and generated projections are proposa
 
 Before execution, refine a placeholder into an actionable charter proportionately;
 preserve meaningful public discussion, attribution and decision provenance.
+An agreed, sufficiently specified open Task may wait in the backlog without a
+special admission state. A deliberate owner instruction to start it, including
+intentionally handing its Issue to manual Codex, authorizes that bounded execution
+within current project permissions. No second Owner Decision comment, admission
+transition or typed record is needed merely to certify the same start. Issue
+creation/openness alone dispatches nothing. Missing Step/execution evidence means
+no demonstrated start, not a prohibition on starting.
+
+Keep genuinely draft/unagreed work, incomplete requirements, unresolved material
+owner choices, blocked dependencies and explicit restrictions on hold until their
+actual condition is resolved under current authority. Existing canonical holds
+are not waived retrospectively. Task readiness for dispatch is distinct from the
+result PR Draft/Ready operations below.
+
 First authorized execution freezes the body as the historical charter. Append
-substantive scope/permission/completion changes or new admissions as concise,
-explicit owner-authorized Decision comments. Resolve current authority from that
-charter and applicable Decisions, including supersession/revocation; ordinary
+substantive scope/permission/policy/protected-boundary/completion changes or
+materially new work as concise, explicit owner-authorized Decision comments.
+Resolve current authority from that charter and applicable Decisions, including
+supersession/revocation; ordinary
 comments, Outcomes and reviews do not themselves change Task authority.
 After closure/reopening retain the body, results, acceptance and Step history.
 
 One Step is one authorized owner/architect-to-executor cycle ending in a terminal
 result. Investigate, implement, test and correct within that active cycle. After
 its Outcome or BLOCKED, a newly authorized execution gets the next Step even on
-the same branch/PR. Recovery/republication of the same execution retains identity;
+the same branch/PR. Assign the Step through the applicable binding as part of
+actual dispatch; no prior allocation or extra admission approval is required.
+Recovery/republication of the same execution retains identity;
 review/discussion/Decision without new execution allocates none. Conversation
 reuse and local publication mechanisms do not redefine those boundaries.
 
@@ -35,14 +52,16 @@ Repository: jresearchsoftware/shared-governance
 Issue: https://github.com/jresearchsoftware/shared-governance/issues/N
 
 Read the complete Task chronology, linked records and applicable accepted
-governance. Execute the admitted Step end-to-end, publish its attributable
+governance. Execute this assigned Step end-to-end, publish its attributable
 Outcome and stop at the applicable independent review boundary.
 ```
 
 Do not copy accessible goals, requirements, investigation steps, test matrices,
 boundaries or publication contracts into the prompt. Read the entire relevant
 Issue chronology and linked records, not just its body. A post-Outcome execution
-uses a new small handoff and the corresponding admission Decision. Add only an
+uses a new small authorized handoff and the next Step. A substantive change to
+scope, permissions, policy or a material post-result choice needs its applicable
+Decision; repeating an already explicit routine start does not. Add only an
 irreducible fact unavailable from authority, such as a starting worktree or
 material access limit. This producer also requires an independent accepted-SHA
 binding as described in [self-adoption](self-adoption.md): use the explicit Task
@@ -54,6 +73,26 @@ Use the supported client title tool, then read back the persisted
 the Task/Step/purpose and Issue link as a visible navigation aid. A prompt proves
 neither title persistence nor actual model/effort settings. Implementation helpers
 may assist only where permitted and do not supply independent acceptance.
+
+## Dispatch examples and preserved boundaries
+
+These synthetic examples describe behavior, not required labels or comment
+formats. They grant no authority over an existing Issue or attempt.
+
+| Situation | Authorized path and evidence |
+| --- | --- |
+| An agreed, actionable Issue waits, then the owner intentionally gives it to manual Codex with "start Task N". | Waiting needs no admission transition. That handoff starts bounded work under current authority; this producer's adopted binding assigns the Step at dispatch. Preserve its terminal Outcome and independent review. No extra Owner Decision certifies the same start. |
+| A project uses ordinary standalone/manual Issues and has not adopted a governed Step/Outcome workflow. | The owner assigns the work under that project's permissions. Return its ordinary result and required validation/review evidence without inventing a Step, native admission or Writer Outcome. This is not an opt-out for an already governed Task or an admitted attempt. |
+| An Issue is explicitly Draft/On Hold pending a material design choice or dependency. | Keep affected work held. Obtain the real owner choice or required dependency evidence and reconcile the existing restriction through current authority before dispatch. An open Issue or generic start instruction does not silently waive the unresolved hold. |
+| A governed Step has returned its Outcome and the owner assigns another bounded correction already within Task authority. | Use a new small handoff and the next Step on the same branch/PR; no second comment merely records that start. A materially new scope, protected permission or post-result choice requires its substantive Decision. Same-result recovery keeps the original identity and Outcome. |
+| The owner starts a Relay-bound Task through its supported authenticated launch command. | The native event and protected admission allocate the Step/profile snapshot and retain Writer/Reviewer separation, anti-duplicate execution and trust boundaries. A displayed label or manual prompt cannot substitute for that event or downgrade an admitted attempt. No redundant shared admission comment is added. |
+
+Ready-for-dispatch is separate from execution evidence and PR readiness for review.
+No example grants deployment, credential, production, release, approval, merge,
+publication or closure authority. Relay controls and other consumers' adoption
+remain with their owners; a real product implementation gap needs separately
+authorized consumer work, not a controller bypass. See the bounded
+[Task 71 scenario qualification](task-71/step-1/README.md).
 
 ## Manual executor PR Draft/Ready operations
 
