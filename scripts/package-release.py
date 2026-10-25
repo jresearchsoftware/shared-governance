@@ -31,23 +31,27 @@ def bump(version, category):
         return f"{major}.{minor + 1}.0"
     if category == "patch":
         return f"{major}.{minor}.{patch + 1}"
-    raise ValueError("package change requires Package bump: major, minor or patch in the PR")
+    raise ValueError("unknown numeric version step: " + category)
 
 
-def transition(base, revision, category=None):
+def transition(base, revision):
     """Compare package payloads independently of the historical source directory move."""
     before, old = PREPARATION.snapshot(base)
     after, new = PREPARATION.snapshot(revision)
     before.pop(PREPARATION.RECEIPT)
     after.pop(PREPARATION.RECEIPT)
     changed = before != after
+    category = None
     if changed:
         if old["version"] == new["version"]:
             raise ValueError("package content changed without a new whole-package version")
-        if category and bump(old["version"], category) != new["version"]:
-            raise ValueError("recompute the intended bump against current accepted main: " + old["version"])
-        if not category and tuple(map(int, new["version"].split("."))) <= tuple(map(int, old["version"].split("."))):
-            raise ValueError("this source main release line must advance its authored version")
+        # This derives arithmetic only; review owns compatibility classification
+        # and mandatory operator-work impact under the shared versioning policy.
+        category = next((step for step in ("major", "minor", "patch")
+                         if bump(old["version"], step) == new["version"]), None)
+        if category is None:
+            raise ValueError("recompute one major, minor or patch step against current accepted main: "
+                             + old["version"])
     return {"changed": changed, "before": old["version"], "version": new["version"],
             "source_revision": revision, "bump": category}
 
@@ -122,8 +126,11 @@ def main():
     action.add_argument("--inspect-accepted", action="store_true", help="inspect a main commit without publication")
     parser.add_argument("--accepted-main", default="origin/main")
     parser.add_argument("--vibe", type=Path)
-    parser.add_argument("--pr-body-file", type=Path)
+    parser.add_argument("--check-remote-tag", action="store_true",
+                        help="reject an already published candidate version (with --base)")
     args = parser.parse_args()
+    if args.check_remote_tag and args.base is None:
+        parser.error("--check-remote-tag requires --base")
     try:
         revision = git("rev-parse", "--verify", args.source_ref + "^{commit}")
         if args.inspect_accepted:
@@ -140,17 +147,10 @@ def main():
             report(publish(revision, args.vibe, accepted_main=args.accepted_main))
         else:
             base = git("rev-parse", "--verify", args.base + "^{commit}")
-            category = None
-            if args.pr_body_file:
-                categories = re.findall(r"(?im)^Package bump:\s*(major|minor|patch)\s*$",
-                                        args.pr_body_file.read_text(encoding="utf-8"))
-                if len(categories) != 1:
-                    if transition(base, revision)["changed"]:
-                        raise ValueError("package PR requires one Package bump: major, minor or patch line")
-                else:
-                    category = categories[0].lower()
-            result = transition(base, revision, category)
-            if args.pr_body_file and result["changed"] and tag_exists(DESTINATION, "v" + result["version"]):
+            result = transition(base, revision)
+            # PRs must not reuse published identities. Accepted-main push checks
+            # omit this probe so a CI rerun after publication remains valid.
+            if args.check_remote_tag and result["changed"] and tag_exists(DESTINATION, "v" + result["version"]):
                 raise ValueError("candidate reuses an already published frozen tag; choose a new version")
             report(result)
     except (ValueError, KeyError, OSError, subprocess.SubprocessError) as error:

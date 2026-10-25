@@ -41,6 +41,9 @@ principles from product mechanisms, and state material behavior changes. Compare
 new findings with the starting state before calling them regressions. Use a
 focused behavioral check when it adds evidence, rather than tests that repeat
 wording. Package-changing PRs follow [release policy](docs/releases.md): justify
-one `Package bump: major|minor|patch` category and recompute against current main.
+the intended compatibility category and mandatory operator-work impact in the
+existing review/release decision, and recompute the manifest version against
+current accepted main. CI derives the numeric step from versioned source; no
+literal PR-description marker is required.
 The reviewed owner merge admits automatic publication; consumer adoption remains
 separately owned.
