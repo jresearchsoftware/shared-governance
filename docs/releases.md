@@ -38,15 +38,25 @@ unaccepted 3.0.0 candidate retain Task 45's historical context; 3.0.0 is now the
 accepted baseline and cannot be refined in place.
 
 Each independently accepted package-changing PR increments the whole-package
-version once against current accepted `main`. Its English description contains
-one `Package bump: major`, `Package bump: minor` or `Package bump: patch` line
-and explains consumer-contract and operator-work impact. A PR with several edits
-uses at least the highest-impact category. CI checks the numeric transition and
-rejects a proposed version whose distribution tag already exists;
-independent review checks whether the category is truthful. Tooling, research
-and documentation outside the package do not bump or publish a package.
+version once against current accepted `main`. CI compares the actual package
+payload and canonical `[package].version` at those exact source commits. A changed
+payload must advance by exactly one numeric major, minor or patch step with the
+required resets; unchanged packages need no bump. Candidate CI also rejects a
+proposed version whose distribution tag already exists. PR descriptions are not
+release-check input: absent, duplicate or contradictory `Package bump` lines
+neither fail the check nor override versioned source. Automatic Relay Writer
+descriptions require no producer-specific field or metadata update.
 
-Task 9 declares stable `1.0.0` from experimental `0.1.0` with `Package bump: major`.
+Under accepted shared PV-002–004, explain the intended compatibility category and
+mandatory operator-work impact in the existing PR review or release decision,
+supported where useful by the versioned changelog. Independent review assesses
+that rationale against the actual consumer-contract changes; numeric arithmetic
+alone does not establish semantic compatibility. A PR with several edits uses at
+least the highest-impact category. This requires no additional PR field, form or
+release ritual. Tooling, research and documentation outside the package do not
+bump or publish a package.
+
+Task 9 declares stable `1.0.0` from experimental `0.1.0` as a MAJOR transition.
 It adds an explicitly adopted protocol and this repository's automatic release
 workflow; it preserves proportional-controls bytes and existing consumer authority.
 After this stable declaration, major/minor/patch follows the shared contract.
@@ -73,7 +83,7 @@ verifies prepared source; it must not silently add missing files after merge.
 The first independently accepted main integration freezes this identity and its
 payload, even if there is no distribution tag, credential or publication service.
 A later license, inventory, metadata or content correction needs a new version.
-Candidate 3.0.0 adds these mandatory obligations under `Package bump: major`,
+Candidate 3.0.0 adds these mandatory obligations as a MAJOR change,
 compared with accepted 2.7.0; its source and native projection are proposals until
 independently accepted. Historical accepted source, receipts and tags stay intact.
 

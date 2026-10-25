@@ -6,6 +6,7 @@ import importlib.util
 import io
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -67,6 +68,35 @@ class ReleaseFixture(unittest.TestCase):
         return subprocess.check_output(["git", *args], cwd=cwd or self.source,
                                        env=self.env, stderr=subprocess.PIPE).decode().strip()
 
+    def current_baseline(self):
+        # Use a complete real 5.2.2 payload so later numeric versions retain the
+        # exporter's current file inventory and source-readiness requirements.
+        with patch.object(RELEASE.PREPARATION, "ROOT", ROOT):
+            files, _ = RELEASE.PREPARATION.snapshot("025cfe71e8e45d9df37a63dd284acacd0fee35c5")
+        package = self.source / RELEASE.PREPARATION.PACKAGE
+        shutil.rmtree(package)
+        for name, data in files.items():
+            if name == RELEASE.PREPARATION.RECEIPT:
+                continue
+            target = package / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data)
+        return self.commit()
+
+    def version(self, version):
+        manifest = self.source / RELEASE.PREPARATION.PACKAGE / "vibe.toml"
+        manifest.write_text(re.sub(r'^version = ".*"$', 'version = "' + version + '"',
+                                   manifest.read_text(), flags=re.MULTILINE))
+        return self.commit()
+
+    def cli(self, revision, base, check_remote=False):
+        args = ["release", "--source-ref", revision, "--base", base]
+        if check_remote:
+            args.append("--check-remote-tag")
+        with patch.object(sys, "argv", args), contextlib.redirect_stdout(io.StringIO()) as output:
+            RELEASE.main()
+        return json.loads(output.getvalue())
+
     def commit(self):
         self.git("add", ".")
         self.git("commit", "-qm", "Disposable source")
@@ -75,9 +105,10 @@ class ReleaseFixture(unittest.TestCase):
 
 class ReleaseTests(ReleaseFixture):
     def test_stable_path_and_major_transition_from_frozen_history(self):
-        result = RELEASE.transition(self.base, self.revision, "major")
+        result = RELEASE.transition(self.base, self.revision)
         self.assertTrue(result["changed"])
-        self.assertEqual((result["before"], result["version"]), ("0.1.0", "1.0.0"))
+        self.assertEqual((result["before"], result["version"], result["bump"]),
+                         ("0.1.0", "1.0.0", "major"))
         for revision, source_path in ((self.base, RELEASE.PREPARATION.HISTORICAL_PACKAGE),
                                       (self.revision, RELEASE.PREPARATION.PACKAGE)):
             self.assertEqual(RELEASE.PREPARATION.snapshot(revision)[1]["source_path"], source_path)
@@ -85,8 +116,11 @@ class ReleaseTests(ReleaseFixture):
     def test_source_only_change_skips_release(self):
         (self.source / "notes.md").write_text("Research outside the package.\n")
         revision = self.commit()
-        self.assertFalse(RELEASE.transition(self.revision, revision)["changed"])
+        result = RELEASE.transition(self.revision, revision)
+        self.assertFalse(result["changed"])
+        self.assertIsNone(result["bump"])
         with patch.object(RELEASE, "tag_exists", side_effect=AssertionError("no remote probe")):
+            self.assertFalse(self.cli(revision, self.revision, check_remote=True)["changed"])
             self.assertEqual(RELEASE.publish(revision, Path("absent"), accepted_main="main")["publication"],
                              "NO_PACKAGE_CHANGE")
 
@@ -96,7 +130,7 @@ class ReleaseTests(ReleaseFixture):
         readme = self.source / RELEASE.PREPARATION.PACKAGE / "README.md"
         readme.write_text(readme.read_text() + "\nChanged contract.\n")
         with self.assertRaisesRegex(ValueError, "without a new"):
-            RELEASE.transition(self.revision, self.commit(), "patch")
+            RELEASE.transition(self.revision, self.commit())
 
     def test_source_time_license_readiness_precedes_publication(self):
         root = self.source / RELEASE.PREPARATION.PACKAGE
@@ -111,42 +145,66 @@ class ReleaseTests(ReleaseFixture):
                     manifest = root / "vibe.toml"
                     manifest.write_text(manifest.read_text().replace('license = "MIT"', 'license = "UNRESOLVED"'))
                 with self.assertRaises(ValueError):
-                    RELEASE.transition(self.revision, self.commit(), "patch")
+                    RELEASE.transition(self.revision, self.commit())
                 self.assertEqual(self.git("tag"), "")
 
-    def test_stale_parallel_bump_is_recomputed(self):
-        self.assertEqual(RELEASE.bump("1.95.0", "major"), "2.0.0")
-        self.assertEqual(RELEASE.bump("2.0.0", "minor"), "2.1.0")
-        self.assertEqual(RELEASE.bump("2.0.0", "patch"), "2.0.1")
+    def test_numeric_transition_derives_each_category_and_resets_lower_components(self):
+        baseline = self.current_baseline()
+        for version, category in (("5.2.3", "patch"), ("5.3.0", "minor"), ("6.0.0", "major")):
+            with self.subTest(version=version):
+                self.git("reset", "--hard", baseline)
+                result = RELEASE.transition(baseline, self.version(version))
+                self.assertEqual((result["before"], result["version"], result["bump"]),
+                                 ("5.2.2", version, category))
+                self.assertTrue(result["changed"])
+        self.assertEqual(RELEASE.bump("1.95.7", "major"), "2.0.0")
+        self.assertEqual(RELEASE.bump("1.95.7", "minor"), "1.96.0")
+        self.assertEqual(RELEASE.bump("1.95.7", "patch"), "1.95.8")
+        with self.assertRaises(ValueError) as error:
+            RELEASE.bump("5.2.2", "unknown")
+        self.assertNotIn("PR", str(error.exception))
+        self.assertNotIn("Package bump:", str(error.exception))
+
+    def test_nonsequential_jumps_and_downgrades_require_recomputation(self):
+        baseline = self.current_baseline()
+        for version in ("5.2.4", "5.4.0", "6.1.0", "6.0.1", "7.0.0", "5.2.1"):
+            with self.subTest(version=version):
+                self.git("reset", "--hard", baseline)
+                revision = self.version(version)
+                with self.assertRaisesRegex(ValueError, "recompute"):
+                    RELEASE.transition(baseline, revision)
+                with self.assertRaisesRegex(ValueError, "recompute"):
+                    RELEASE.accepted_transition(revision, "main")
+
+    def test_invalid_manifest_versions_are_rejected(self):
+        baseline = self.current_baseline()
+        for version in ("5.2", "05.2.3", "5.2.3-rc.1"):
+            with self.subTest(version=version):
+                self.git("reset", "--hard", baseline)
+                with self.assertRaisesRegex(ValueError, "release SemVer"):
+                    RELEASE.transition(baseline, self.version(version))
+
+    def test_stale_parallel_bump_is_recomputed_against_current_baseline(self):
+        baseline = self.current_baseline()
+        candidate = self.version("5.2.3")
+        self.assertEqual(RELEASE.transition(baseline, candidate)["bump"], "patch")
+        self.git("reset", "--hard", baseline)
+        current = self.version("5.3.0")
         with self.assertRaisesRegex(ValueError, "recompute"):
-            RELEASE.transition(self.base, self.revision, "patch")
+            RELEASE.transition(current, candidate)
 
     def test_unaccepted_candidate_reclassification_keeps_transition_checks(self):
-        # Category authority belongs to the owner/reviewer, not this arithmetic
-        # check. Reclassifying an unaccepted candidate must still select exactly
-        # one bump from accepted source and cannot reuse its frozen identity.
-        with patch.object(RELEASE.PREPARATION, "ROOT", ROOT):
-            files, _ = RELEASE.PREPARATION.snapshot("1121fc8966a2c7142cc0d6067eff0cf1d15e9cd9")
-        for name, data in files.items():
-            if name == RELEASE.PREPARATION.RECEIPT:
-                continue
-            target = self.source / RELEASE.PREPARATION.PACKAGE / name
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(data)
-        baseline = self.commit()
-        manifest = self.source / RELEASE.PREPARATION.PACKAGE / "vibe.toml"
-        accepted = manifest.read_text()
-        manifest.write_text(accepted.replace('version = "5.2.0"', 'version = "6.0.0"'))
-        candidate = self.commit()
-        self.assertEqual(RELEASE.transition(baseline, candidate, "major")["version"], "6.0.0")
-        manifest.write_text(accepted.replace('version = "5.2.0"', 'version = "5.2.1"'))
-        corrected = self.commit()
-        result = RELEASE.transition(baseline, corrected, "patch")
-        self.assertEqual((result["before"], result["version"]), ("5.2.0", "5.2.1"))
+        # Category authority belongs to the owner/reviewer; numeric CI checks
+        # the actual final manifest, including corrections before acceptance.
+        baseline = self.current_baseline()
+        candidate = self.version("6.0.0")
+        self.assertEqual(RELEASE.transition(baseline, candidate)["bump"], "major")
+        corrected = self.version("5.2.3")
+        result = RELEASE.transition(baseline, corrected)
+        self.assertEqual((result["before"], result["version"], result["bump"]),
+                         ("5.2.2", "5.2.3", "patch"))
         with self.assertRaisesRegex(ValueError, "recompute"):
-            RELEASE.transition(baseline, corrected, "major")
-        with self.assertRaisesRegex(ValueError, "recompute"):
-            RELEASE.transition(candidate, corrected, "patch")
+            RELEASE.transition(candidate, corrected)
 
     def test_unaccepted_and_side_branch_heads_are_rejected(self):
         self.git("switch", "-qc", "side")
@@ -177,26 +235,105 @@ class ReleaseTests(ReleaseFixture):
             with self.assertRaisesRegex(ValueError, "pinned"):
                 RELEASE.publish(self.revision, binary, "file:///fixture", "main")
 
-    def test_candidate_cli_rejects_existing_publication_before_merge(self):
-        body = self.directory / "pr-body"
-        body.write_text("Package bump: major\nStable contract declaration.\n")
+    def test_candidate_cli_rejects_existing_publication_without_pr_body(self):
         with patch.object(sys, "argv", ["release", "--source-ref", self.revision,
-                                       "--base", self.base, "--pr-body-file", str(body)]), \
-                patch.object(RELEASE, "tag_exists", return_value=True), \
+                                       "--base", self.base, "--check-remote-tag"]), \
+                patch.object(RELEASE, "tag_exists", return_value=True) as probe, \
                 contextlib.redirect_stdout(io.StringIO()) as output:
-            with self.assertRaises(SystemExit):
+            with self.assertRaises(SystemExit) as error:
                 RELEASE.main()
+        self.assertEqual(error.exception.code, 1)
+        probe.assert_called_once_with(RELEASE.DESTINATION, "v1.0.0")
         self.assertIn("already published", output.getvalue())
 
-    def test_candidate_cli_requires_one_category_for_package_changes(self):
-        body = self.directory / "pr-body"
-        body.write_text("No classified bump.\n")
-        with patch.object(sys, "argv", ["release", "--source-ref", self.revision,
-                                       "--base", self.base, "--pr-body-file", str(body)]), \
-                contextlib.redirect_stdout(io.StringIO()) as output:
-            with self.assertRaises(SystemExit):
-                RELEASE.main()
-        self.assertIn("requires one", output.getvalue())
+    def test_candidate_cli_derives_category_without_pr_body(self):
+        with patch.object(RELEASE, "tag_exists", return_value=False) as probe:
+            result = self.cli(self.revision, self.base, check_remote=True)
+        self.assertEqual(result["bump"], "major")
+        probe.assert_called_once_with(RELEASE.DESTINATION, "v1.0.0")
+
+    def test_main_push_cli_succeeds_after_tag_publication(self):
+        with patch.object(RELEASE, "tag_exists", side_effect=AssertionError("main CI must not probe")):
+            result = self.cli(self.revision, self.base)
+        self.assertEqual((result["changed"], result["bump"]), (True, "major"))
+
+
+class CandidateWorkflowTests(ReleaseFixture):
+    def setUp(self):
+        super().setUp()
+        self.baseline = self.current_baseline()
+        self.git("update-ref", "refs/remotes/origin/main", self.baseline)
+        self.remote = self.directory / "distribution.git"
+        self.git("init", "--bare", "-b", "main", str(self.remote))
+        scripts = self.source / "scripts"
+        # Test drivers stay outside fixture source history across hard resets.
+        (self.source / ".git/info/exclude").write_text("/scripts/\n")
+        scripts.mkdir()
+        for name in ("package-release.py", "prepare-distribution.py"):
+            shutil.copyfile(ROOT / "scripts" / name, scripts / name)
+        release = scripts / "package-release.py"
+        release.write_text(release.read_text().replace(RELEASE.DESTINATION, self.remote.as_uri()))
+        workflow = (ROOT / ".github/workflows/candidate.yml").read_text()
+        step = workflow.split("      - name: Check whole-package bump against current accepted main\n", 1)[1]
+        block = step.split("        run: |\n", 1)[1].split("      - name:", 1)[0]
+        self.shell = "\n".join(line[10:] for line in block.splitlines())
+        self.candidate = self.version("5.2.3")
+
+    def run_release_step(self, body="", before="", pr_base=None):
+        env = {**self.env, "PR_BODY": body, "PR_BASE": self.baseline if pr_base is None else pr_base,
+               "PUSH_BEFORE": before, "RUNNER_TEMP": str(self.directory)}
+        return subprocess.run(["bash", "-e", "-c", self.shell], cwd=self.source,
+                              env=env, capture_output=True, text=True)
+
+    def published_tag(self):
+        self.git("push", "-q", str(self.remote), self.candidate + ":refs/tags/v5.2.3")
+        return self.git("for-each-ref", cwd=self.remote)
+
+    def test_pr_body_metadata_does_not_control_numeric_transition(self):
+        # A synthetic Relay Writer-style body carries Task/attempt correlation
+        # only. It needs no producer metadata for any supported numeric step.
+        writer_body = "Related to #123\n\nTask #123 · Step 1\nAttempt: fixture-1\n"
+        bodies = ("", writer_body, "Package bump: major\n",
+                  "Package bump: patch\nPackage bump: patch\n",
+                  "Package bump: major\nPackage bump: minor\nPackage bump: patch\n")
+        for version, category in (("5.2.3", "patch"), ("5.3.0", "minor"), ("6.0.0", "major")):
+            self.git("reset", "--hard", self.baseline)
+            self.version(version)
+            for body in bodies:
+                with self.subTest(version=version, body=body):
+                    result = self.run_release_step(body)
+                    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                    self.assertEqual(json.loads(result.stdout)["bump"], category)
+        self.assertFalse((self.directory / "pr-body").exists())
+
+    def test_candidate_checks_tag_without_body_and_main_retry_preserves_it(self):
+        refs = self.published_tag()
+        candidate = self.run_release_step()
+        self.assertNotEqual(candidate.returncode, 0)
+        self.assertIn("already published", candidate.stdout)
+        main = self.run_release_step(pr_base="", before=self.baseline)
+        self.assertEqual(main.returncode, 0, main.stdout + main.stderr)
+        self.assertEqual(json.loads(main.stdout)["bump"], "patch")
+        self.assertEqual(self.git("for-each-ref", cwd=self.remote), refs)
+
+    def test_candidate_uses_current_main_instead_of_stale_event_base(self):
+        self.git("reset", "--hard", self.baseline)
+        current = self.version("5.3.0")
+        self.git("update-ref", "refs/remotes/origin/main", current)
+        self.git("reset", "--hard", self.candidate)
+        result = self.run_release_step("Package bump: patch\n")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("recompute", result.stdout)
+
+    def test_source_only_pr_skips_unavailable_remote(self):
+        self.git("reset", "--hard", self.baseline)
+        (self.source / "notes.md").write_text("Outside package.\n")
+        self.commit()
+        shutil.rmtree(self.remote)
+        result = self.run_release_step("Package bump: major\nPackage bump: patch\n")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual((json.loads(result.stdout)["changed"], json.loads(result.stdout)["bump"]),
+                         (False, None))
 
 
 @unittest.skipUnless(VIBE, "pass --vibe for one-time native publisher integration")
