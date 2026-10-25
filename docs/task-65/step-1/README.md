@@ -123,9 +123,56 @@ package/projection. No universal new test gate is introduced.
 
 ## Local qualification and handoff
 
-Local validation and material limitations are recorded below after running the
-existing checks. Native root/sudo-only installed-runtime proof belongs to exact-head
-CI after Writer publication; no escalation or installed-runtime proof is claimed.
+The exact exporter staged the authored package from
+`12e6041b4c09d410b011e5493e591f6cce612ff7`;
+the authoritative source used for all suite results below is
+`e60ebd2edc935a38d8685aa0f3a47fc98121b5f2`. The hash-checked Linux musl VibeVM
+1.0.7 matched the existing toolchain pin
+`20d111df02eb28040ef4cb766bfcb0bde8ff4427b031f88f33eacb3711c3e240`.
+Its [native install](logs/native-install.log) selected Shared 6.0.0 alongside
+unchanged Relay 3.0.0 in an isolated in-checkout fixture and settings directory.
+The normal verifier compared source, selected slot, lock, boot and Skill before
+and after transfer. Only the new registry/slot, root lock and root index needed
+generated changes; historical slots pruned in staging were retained here.
+
+The source checkout has shared ownership. A copy helper initially wrote the lock
+but could not preserve its timestamp on a pre-existing owner-owned file. The
+bounded correction atomically replaced only known generated outputs with the
+native source bytes/modes, then verified the complete result. No permission repair,
+access widening for private content, host change or altered Git settings was used.
+The native index and new slot receipt retain the tool's private `0600` mode.
+
+| Existing check | Result and evidence |
+| --- | --- |
+| Source, local links, passive export, bounded credential-marker scan and native integrity | [PASS](logs/qualification.log), using the exact committed candidate in a worker-owned Git bundle fixture. Temporary exports stayed outside that fixture and inside the execution checkout. |
+| Distribution/provenance regression suite | [52 tests passed](logs/distribution.log). |
+| Release regression suite | [20 passed; six optional native integration tests skipped](logs/release.log). |
+| Self-adoption/recovery suite | [17 tests passed](logs/self-adoption.log). |
+| ChatGPT projection suite | [29 tests passed](logs/chatgpt.log). |
+| Publisher boundary suite | [11 passed; one optional native integration test skipped](logs/publication.log). |
+| Release transition from frozen accepted main | [PASS: exactly one MAJOR, 5.2.3 -> 6.0.0](logs/release-transition.log). Public unauthenticated [tag readback](logs/tag-readback.json) found no v6.0.0 at validation time; native CI must recheck before integration. |
+| Bounded preservation comparison | [PASS](logs/preservation.json): only five of 22 public files change (PV, examples, README, changelog, manifest). The other nine protocols, prior PV addresses, historical native content, Relay Skill/projection/closure, ChatGPT inputs, workflows, scripts and license are preserved. |
+| Unprivileged pinned native check on the actual checkout | [Zero errors, 12 warnings](logs/native-check.log) for retained unselected historical slots 2.5.0 through 5.2.3, including the old 5.1.1 proposal. The active lock and route select 6.0.0; the existing integrity verifier confirms that selection. |
+| Desired ChatGPT content using the accepted tool against an isolated candidate | [NO_OP](logs/chatgpt-content.json): effective text/instructions unchanged, sources disabled, live settings unverified. The candidate SHA is a test input, not an acceptance claim. |
+| Whitespace | `git diff --check` against the frozen baseline passed. |
+
+Totals: **129 passing tests and seven optional integration skips**. No new test
+framework or prose-mirroring assertion was added. The native warning source is
+the tool's orphan-slot diagnostic; those frozen historical files are intentionally
+preserved under the accepted producer policy and are not active authority. No
+cleanup, fallback, suppression or consumer upgrade is needed. Independent review
+must retain this warning disposition and confirm the final source/projection.
+The original Relay lower-bound fixtures were not rerun; the historical reports,
+bounded authored scenarios and this actual 5.2.3 -> 6.0.0 native graph update
+support their distinct stated claims. No live model or client compliance is proved.
+
+All suites above ran at the same package/projection head. Later changes record
+only this qualification evidence and logs; the terminal result reports final
+exact-commit export/link/integrity and whitespace verification. Unchanged effective
+Instructions require no new settings application under preserved TH-029. Earlier
+unresolved live-settings gaps remain; NO_OP proves no live synchronization.
+Native root/sudo-only installed-runtime proof belongs to exact-head CI after
+Writer publication; no escalation or installed-runtime proof is claimed.
 The final structured result hands ordinary commits and validation claims to trusted
 Writer. It does not itself publish an Outcome, invoke Reviewer, accept source,
 merge, externally release, migrate a consumer or close the Task. Independent
