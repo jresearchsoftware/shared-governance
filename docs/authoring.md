@@ -83,6 +83,15 @@ assessments; other consumers own their separate topic choices and migration.
 
 ## Semantic completeness
 
+Task 75 prepares 5.2.2 after accepted 5.2.1: [negative-constraint coverage and scenarios](task-75/step-1/README.md)
+clarify RA-006's existing provenance rule for prohibitions, preserving ordinary
+authorized means and actual protected boundaries. PATCH classification adds no
+operator work or authority mechanism; publication and consumer adoption retain
+their existing owners. [Step 2 reconciliation](task-75/step-2/README.md) records
+the historical 5.2.0 baseline and preserved SI contract.
+[Step 3 reconciliation](task-75/step-3/README.md) preserves accepted 5.2.1
+TH-029/client behavior and records the current generation/checks.
+
 Task 69 adds 5.2.0 after accepted 5.1.0: a separately adopted
 [small-improvement topic](../packages/development-governance/vibevm/vibespecs/protocols/small-improvements.md)
 and usage guide. Existing nine protocols, including Task 68 closure guidance,

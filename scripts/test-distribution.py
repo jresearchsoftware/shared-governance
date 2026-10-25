@@ -185,7 +185,11 @@ class DistributionTests(unittest.TestCase):
                         self.assertEqual(old[anchor], new[anchor])
 
     def test_effective_instructions_change_preserves_other_accepted_protocol_rules(self):
-        files = self.current_export()
+        current = self.current_export()
+        # Bind Task 74's preservation claim to its accepted release; later
+        # authorized RA-006 corrections do not rewrite that historical claim.
+        files, _ = DISTRIBUTION.snapshot("80a088500d3944ad9b2391a56b16b949507a0070")
+        self.assertEqual(current[DISTRIBUTION.HANDOFF], files[DISTRIBUTION.HANDOFF])
         accepted, _ = DISTRIBUTION.snapshot("1121fc8966a2c7142cc0d6067eff0cf1d15e9cd9")
         for name, before in accepted.items():
             if not name.startswith("vibevm/vibespecs/protocols/"):

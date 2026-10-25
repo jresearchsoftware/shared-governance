@@ -1,5 +1,17 @@
 # Development Governance changelog
 
+## 5.2.2
+
+PATCH: RA-006 clarifies that its existing requirement-provenance rule covers
+negative constraints in Tasks, Change Requests, Decisions and execution prompts.
+Agent preferences cannot prohibit ordinary operations covered by the selected
+outcome and accepted governance. Material new restrictions need owner discussion
+before publication as authority; accepted restrictions and protected boundaries
+retain their existing Decision, review and exact-head requirements. This repairs
+the interpretation of RA-002/005/006 and PC-004/013 without adding mandatory
+operator work, a new permission ritual, reviewer gate or state machine. Other
+protocols, applicability, publication and deliberate consumer adoption are unchanged.
+
 ## 5.2.1
 
 PATCH by an explicit single-task owner exception to [PV-002](vibevm/vibespecs/protocols/package-versioning.md#PV-002).
