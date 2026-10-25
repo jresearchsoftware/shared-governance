@@ -58,11 +58,25 @@ Consumers choose constraints and intentionally update their own lock. For exampl
 "org.jresearch.ai/development-governance" = { version = "=1.0.0", git = "https://github.com/jrs-vibevm/org.jresearch.ai.development-governance.git", tag = "v1.0.0" }
 ```
 
-The example identifies a version, not current publication status. Exact pins,
-patch-only ranges and caret compatibility windows are explained in the protocol.
+The example deliberately pins reviewed reproducible content; it identifies a
+version, not current publication status or a universal minimum. The
+[Package Versioning protocol](../packages/development-governance/vibevm/vibespecs/protocols/package-versioning.md#PV-014)
+grounds a minimum in the dependent component's actually used contract and explains
+justified exact pins, patch-only/caret windows and uncapped lower bounds. A range
+refusal alone does not prove that an older dependency lacks a required interface.
 Installation or update does not adopt newly available normative topics; an
 existing local versioning policy remains authoritative. Consumer migrations
 require their own accepted changes, including reconciliation of duplicates.
+
+For resolved delivery, the consumer's exact reviewed lock and matching slot are
+the active dependency source; a fixed bundled snapshot cannot silently override
+them. A self-contained delivery can instead declare an attributed immutable
+bundle. Any included closure still receives its normal frozen-content and rights
+checks, even if it is inert release evidence. Compatible dependency updates can
+leave an unchanged dependent product at its existing version; changing that
+product's shipped guidance, manifest, lock or bundle requires its own classified
+release. Assess the used semantics and bindings before updating, including across
+major versions. See the [bounded examples](../packages/development-governance/vibevm/vibespecs/guides/onboarding-examples.md#8-package-consumer-compatibility-and-delivery-choices).
 
 ## Qualification scope
 

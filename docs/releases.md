@@ -18,6 +18,24 @@ assessments. Other consumers retain their own adoption and local policy.
 
 ## Contribution and integration
 
+Task 65 prepares **6.0.0 MAJOR** against accepted 5.2.3. Package Versioning's
+existing cadence/actual-compatibility rules now require explicit floor and
+constraint justification and distinguish the authority used by resolved and
+bundled delivery. This tightens adopters' lifecycle assessment; it adds no new
+topic, approval stage or universal compatibility matrix. The installed changelog
+states the consumer/operator impact, and [Step 1 coverage](task-65/step-1/README.md)
+traces the change and bounded scenarios. The Task 74 PATCH exception below does
+not apply. Independent acceptance and then-current-main reconciliation remain
+required; no source acceptance, external release or consumer adoption is claimed.
+
+An upstream dependency release alone does not require a dependent release here
+or in another producer. The dependent product's actual contract and shipped
+immutable bytes determine its change and classification, while existing rights,
+manifest, included-closure and publication obligations remain binding. This
+producer's reusable flow still has an empty dependency closure; its authoring
+workspace's unchanged Relay Skill is a separate dependency consumer, not a new
+dependency of the public governance package.
+
 Task 74's [superseding owner Decision](https://github.com/jresearchsoftware/shared-governance/issues/74#issuecomment-6386467528)
 selects one PATCH, 5.2.0 -> 5.2.1, for restoring the originally intended TH-029
 effective-Instructions reconciliation requirement narrowed in Task 62/PR 63.

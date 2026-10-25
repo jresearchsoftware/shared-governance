@@ -12,6 +12,16 @@ the package payload. This README is the current overview; actual acceptance and
 publication evidence remains in source Issues/PRs, workflows and distribution
 tags. Frozen historical versions retain their original bytes.
 
+Version 6.0.0 extends [Package Versioning](vibevm/vibespecs/protocols/package-versioning.md#PV-014)
+with evidence-based dependency floors, justified constraints, explicit resolved
+versus bundled authority and deliberate update/release decisions. A compatible
+upstream major can leave a dependent product unchanged; changes to that product's
+own contract or shipped bytes still require its classified release. The added
+mandatory rationale and delivery-source assessment make this MAJOR against 5.2.3.
+Existing lifecycle review carries the work, without another approval stage or
+universal test matrix. See the installed changelog and
+[bounded dependency examples](vibevm/vibespecs/guides/onboarding-examples.md#8-package-consumer-compatibility-and-delivery-choices).
+
 Version 5.1.0 extends [TH-026](vibevm/vibespecs/protocols/task-handoff.md#TH-026)
 with compatible guidance for owner-selected temporary closure holds, verified
 preauthorized release via existing trusted Task Decisions, and missing-condition
@@ -32,7 +42,7 @@ approval/wait stage or topic adoption; see the 3.0.0 → 4.0.0 changelog entry.
 | --- | --- |
 | [Proportional controls — PC](vibevm/vibespecs/protocols/proportional-controls.md) | Proposed security, validation or operator controls, including behaviorally free hardening. |
 | [Requirement authority — RA](vibevm/vibespecs/protocols/requirement-authority.md) | Binding requirements versus revisable engineering choices. |
-| [Package versioning — PV](vibevm/vibespecs/protocols/package-versioning.md) | Explicitly adopted package lifecycle, preparation, versions and consumer updates. |
+| [Package versioning — PV](vibevm/vibespecs/protocols/package-versioning.md) | Explicitly adopted package lifecycle, preparation, versions, dependency compatibility and consumer updates. |
 | [Task handoff — TH](vibevm/vibespecs/protocols/task-handoff.md) | Explicitly adopted Task/Step authority, Outcome, independent-review handoff, acceptance and continuation. |
 | [Producer self-adoption — SA](vibevm/vibespecs/protocols/self-adoption.md) | Explicitly adopted use of guidance a producer authors, with accepted-source/candidate separation. |
 | [GitHub repository governance — GH](vibevm/vibespecs/protocols/github-repository-governance.md) | Explicitly adopted workflow/protection decisions preserving PR, direct-main, distribution and mixed paths. |
