@@ -89,6 +89,67 @@ patch from `1.95.0` yields `2.0.0` then `2.0.1`; two majors yield `2.0.0` then
 CI is evidence; the owner's independently reviewed merge is the publication
 authorization for the version-bearing PR, never self-approval or consumer adoption.
 
+## Codex Relay compatibility transition
+
+When a Shared Governance behavior change needs a corresponding incompatible
+Codex Relay implementation, this producer may publish the agreed Shared contract
+before that Relay release through an explicit owner-selected transition. This
+producer-local exception applies only to Codex Relay integration; other Shared
+rule changes and other projects have no mandatory grace period. Preserve Relay's
+existing [installed and retained-attempt compatibility contract](../.agents/skills/codex-relay/references/compatibility.md).
+
+Use the behavior-change Task and existing release/review rationale to define
+the transition, without a registry, feature switch or additional approval ritual:
+
+1. Identify the affected rule and the **first Shared Governance package version
+   containing it**. Describe the new behavior, the old Relay behavior and the
+   narrow temporary fallback explicitly permitted by the accepted change. Name
+   the older Relay versions, selected Shared versions, affected workflows and
+   limits actually qualified together, with supporting compatibility evidence.
+   This lets a consumer deliberately update Shared while retaining that Relay's
+   old behavior for the identified rule during the supported window. Neither a
+   successful install nor an open-ended constraint proves this compatibility;
+   unqualified combinations and unknown future versions gain no support claim.
+2. Require a linked implementation Issue in
+   [jresearchsoftware/codex-relay](https://github.com/jresearchsoftware/codex-relay/issues)
+   as part of that Shared behavior-change Task's completion/continuation. Record
+   the introducing Shared version, desired Relay behavior, superseded old
+   behavior, compatibility checks and how Relay's release will update its
+   declared floor; link back to the Shared Task. For the imminent Task Closure
+   change, create this Issue **after that Shared change is independently accepted,
+   merged and published**. Creating it belongs to that behavior-change Task's
+   continuation, not this instruction-only Task.
+3. Until Relay implements the linked Issue, retain the older version's declared
+   compatibility floor (currently `>=2.5.0` for Relay Skill 3.0.0), with transition
+   support limited to versions and behaviors actually qualified under the
+   fallback. Relay owns its implementation and release: once accepted and
+   released, the new Relay version must declare compatibility starting at the
+   first Shared version supplying the behavior it now requires, supported by
+   the linked Issue's checks. Previously published Relay artifacts and their
+   pins remain immutable. An unchanged lower bound is never a promise that all
+   later Shared versions work.
+4. Explicitly deprecate the legacy behavior. Before relying on the fallback,
+   record the owner's bounded transition window and its reference event,
+   preferably verified publication of the compatible Relay release, with a
+   finite duration or deadline. Plan removal separately in a future Shared
+   release, subject to independent acceptance and no earlier than the agreed
+   window's end. There is no universal duration, automatic deletion or silent
+   early withdrawal; released artifacts retain their historical content.
+
+Keep source acceptance, immutable package publication, the consumer's deliberate
+lock update and policy adoption, and qualification of its installed Relay
+distinct. The fallback permits only the stated old behavior; it does not load an
+old Shared snapshot in place of the selected package or waive native Relay trust
+boundaries. Publishing this local instruction changes no active Relay behavior,
+consumer dependency, closure policy or installed setting. Documentation outside
+the exported package needs no package release.
+
+Classify each actual Shared behavior change and later fallback removal under
+PV-002/004 for the whole package, preserving the highest-impact category and
+mandatory operator-work disclosure. A narrow Relay fallback cannot disguise an
+otherwise breaking contract as PATCH or MINOR or extend Task 74's separate
+single-task exception.
+
 ## Frozen-package preparation
 
 Before accepting a frozen package-source PR into main, prepare its actual public
