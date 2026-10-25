@@ -83,6 +83,13 @@ assessments; other consumers own their separate topic choices and migration.
 
 ## Semantic completeness
 
+Task 71 prepares 5.2.3 after accepted 5.2.2: [dispatch coverage and scenarios](task-71/step-1/README.md)
+clarify that deliberate owner handoff starts ordinary agreed work without a second
+admission Decision. PATCH repairs the routine-action interpretation; actual holds,
+substantive Decisions, adopted Steps/results and product-owned trust boundaries
+remain. The manual binding and its five dispatch examples follow the same rule.
+Other protocols and consumer adoption retain their existing owners.
+
 Task 75 prepares 5.2.2 after accepted 5.2.1: [negative-constraint coverage and scenarios](task-75/step-1/README.md)
 clarify RA-006's existing provenance rule for prohibitions, preserving ordinary
 authorized means and actual protected boundaries. PATCH classification adds no

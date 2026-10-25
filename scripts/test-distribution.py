@@ -187,9 +187,13 @@ class DistributionTests(unittest.TestCase):
     def test_effective_instructions_change_preserves_other_accepted_protocol_rules(self):
         current = self.current_export()
         # Bind Task 74's preservation claim to its accepted release; later
-        # authorized RA-006 corrections do not rewrite that historical claim.
+        # authorized changes elsewhere do not rewrite that historical claim.
         files, _ = DISTRIBUTION.snapshot("80a088500d3944ad9b2391a56b16b949507a0070")
-        self.assertEqual(current[DISTRIBUTION.HANDOFF], files[DISTRIBUTION.HANDOFF])
+        # Keep the complete current TH-029 contract without freezing unrelated
+        # Task Handoff rules that later Tasks may deliberately correct.
+        anchor = b'<a id="TH-029"></a>'
+        self.assertEqual(current[DISTRIBUTION.HANDOFF].split(anchor)[1],
+                         files[DISTRIBUTION.HANDOFF].split(anchor)[1])
         accepted, _ = DISTRIBUTION.snapshot("1121fc8966a2c7142cc0d6067eff0cf1d15e9cd9")
         for name, before in accepted.items():
             if not name.startswith("vibevm/vibespecs/protocols/"):
