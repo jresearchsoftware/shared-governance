@@ -8,7 +8,7 @@ test inputs. `VERIFIED` means supported by the stated hypothetical observation;
 it never describes an inspection of a real external project by these examples.
 `READY` is a verdict for the explicitly chosen scope, not a sixth evidence state.
 
-Each walk starts with the same ordinary request: **“Onboard this project to
+Each onboarding walk starts with the same ordinary request: **“Onboard this project to
 Shared Governance.”** The operator reads the project's accepted authority,
 discovers the relevant paths, recommends choices, gets owner disposition and
 separates authorized file work from protected setup. A plan can be complete while
@@ -251,3 +251,32 @@ their accepted routes; newly available topics remain passive. Any ordinary updat
 checks follow Grove's existing update contract. “All files installed” establishes
 neither adoption nor readiness. Onboarding is NOT APPLICABLE to this event, and a
 future explicit request starts with current authority and decision-relevant facts.
+
+## 8. Package consumer compatibility and delivery choices
+
+**Discover and choose.** Hazel already adopts Package Versioning and its local
+independent review/release rules. Its adapter consumes a fictional guidance
+package, MapFlow. The owner authorizes a dependency compatibility correction;
+this is not a request to adopt more topics or change repository settings. These
+bounded source/behavior walks apply [PV-014](../protocols/package-versioning.md#PV-014)
+through [PV-018](../protocols/package-versioning.md#PV-018), with invented versions
+and observations rather than a universal compatibility matrix.
+
+| Observed contract and evidence | Deliberate action and release consequence |
+| --- | --- |
+| The adapter reads `protocols/context.md` and its documented section identifier. Accepted MapFlow history first provides both, with the needed behavior, in 1.4.0. Direct inspection of 1.3.0 shows the file absent. | Set the functional floor from 1.4.0 and explain this evidence in the existing change. A later prose edit or stricter unrelated policy does not move that floor. If newer identifiers are merely an avoidable implementation choice, assess supported older references before claiming a higher minimum. |
+| Hazel's manifest says `>=2.0.0`; a resolver rejects 1.4.0. Inspection and a focused walk establish that 1.4.0 supplies every interface and behavior actually needed. No separate accepted policy excludes it. | The resolver proves only the authored exclusion. Correct the needless constraint under Hazel's authority, with its compatibility rationale. A shipped adapter manifest change requires the adapter's normal classified release; no frozen version is rewritten. Retain a stricter constraint if an actual security or policy obligation justifies it. |
+| MapFlow 2.0.0 breaks an unused generator but preserves the adapter's paths, identifiers and used semantics. Relevant applicability, exceptions and Hazel's local binding remain compatible. The root consumer lock and slot sit outside the adapter artifact. | Review the consumer's selected dependency/lock/materialized-state update. Keep the adapter's unchanged version and shipped bytes. No adapter release or gate in MapFlow's producer is needed solely because a new major exists. No new topic is adopted, and the result says nothing about unknown MapFlow 3.0.0. |
+| MapFlow 2.1.0 actually removes the adapter's required path or changes a used return value's meaning. | Diagnose the real interface/behavior incompatibility, preserve the last supported selected state, and reconcile the requirement or adapter through the existing authorized change. Corrected adapter behavior, guidance or packaging needs its own appropriately classified release and independent assessment. A wider range or passing install cannot supply the missing contract. |
+| The native adapter consumes the root's resolved MapFlow 2.0.0. Its release also carries a nested frozen 1.4.0 snapshot solely as publisher closure evidence. | The root lock and matching selected slot govern native reads. The nested snapshot stays inert but still receives included-closure and redistribution checks. A missing selected slot requires supported restoration, never a silent fallback to 1.4.0 or a second boot route. |
+| A separate self-contained adapter artifact deliberately bundles and attributes MapFlow 1.4.0 for offline use. | Its documented bundled snapshot is the source for that form. A consumer's unrelated root lock does not silently replace it. Updating that bundle to compatible 2.0.0 changes shipped immutable bytes and requires a new classified adapter release; retaining the bundle does not require a release just because 2.0.0 is available. |
+| An accepted security boundary excludes a functional old dependency, or an exact pin preserves an approved reproducible artifact. | Preserve and explain that constraint. Compatibility does not waive security, license/redistribution, manifest validity, included frozen closure, first-source freeze or authorized publication requirements. Use existing evidence and review; add no cold installation ritual or per-dependency attestation. |
+
+**Handoff.** The range records permitted selections; the consumer lock records
+the exact resolution; explicit adoption records applicable policy and bindings;
+the delivery contract identifies any bundled source. Actual source/behavior
+evidence supports the chosen floor and assessed update. Native and self-contained
+forms may serve the same supported workflow with different inventories and
+provenance. Report changed consumer contract and operator work in Hazel's existing
+review, preserving stronger local authority. These examples establish no live
+consumer migration, release, native test result or independent acceptance.

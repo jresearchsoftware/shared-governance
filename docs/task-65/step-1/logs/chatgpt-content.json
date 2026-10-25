@@ -1,0 +1,9 @@
+{
+  "schema": 4,
+  "effective_content": "NO_OP",
+  "instructions": "NO_OP",
+  "sources": "DISABLED",
+  "diffs": {},
+  "live_settings_verified": false,
+  "application": "unchanged Instructions require no new application; any prior live-settings verification gap remains unresolved; generation NO_OP does not discharge an earlier changed-text reconciliation obligation"
+}

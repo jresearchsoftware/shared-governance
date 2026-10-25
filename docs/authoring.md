@@ -83,6 +83,17 @@ assessments; other consumers own their separate topic choices and migration.
 
 ## Semantic completeness
 
+Task 65 prepares 6.0.0 after accepted 5.2.3: [compatibility coverage and scenarios](task-65/step-1/README.md)
+extend existing PV-005/013–017 and add PV-018 within Package Versioning. Required
+floor/constraint rationale and delivery-source assessment tighten the adopter
+contract, so the whole-package change is MAJOR. Actual used interfaces and
+semantics determine compatibility; a package major or authored resolver refusal
+alone does not. Consumer lock updates, topic adoption, bundled immutable bytes
+and dependent-product releases remain distinct. Existing examples and human
+guidance carry the new paths; all nine other protocols, licenses, client tools,
+topic routing and public inventory are preserved. Relay Task 174/PR 175 supplies
+bounded historical evidence, not new consumer authority or a retroactive finding.
+
 Task 71 prepares 5.2.3 after accepted 5.2.2: [dispatch coverage and scenarios](task-71/step-1/README.md)
 clarify that deliberate owner handoff starts ordinary agreed work without a second
 admission Decision. PATCH repairs the routine-action interpretation; actual holds,

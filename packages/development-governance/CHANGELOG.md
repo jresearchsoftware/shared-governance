@@ -1,5 +1,46 @@
 # Development Governance changelog
 
+## 6.0.0
+
+MAJOR: extends existing Package Versioning with explicit compatibility-evidence
+and delivery-authority obligations for its adopters. [PV-014](vibevm/vibespecs/protocols/package-versioning.md#PV-014)
+requires a floor grounded in the actually used interfaces, layout, paths,
+identifiers, semantics and behavior, relevant accepted history and proportionate
+evidence. Constraint rationale distinguishes real incompatibility from an
+authored resolver exclusion and preserves justified security, contract and
+reproducibility pins/bounds. Neither open-ended ranges nor next-major caps are
+universal; unknown future releases are not promised compatible.
+
+[PV-015](vibevm/vibespecs/protocols/package-versioning.md#PV-015) distinguishes
+range, consumer lock, explicit adoption and bundled snapshot. Resolved delivery
+uses the selected consumer identity without a competing fixed-policy fallback;
+self-contained delivery may use its deliberate attributed immutable snapshot.
+PV-013 retains checks for every actually included dependency, even an inert
+release-evidence snapshot. New [PV-018](vibevm/vibespecs/protocols/package-versioning.md#PV-018)
+assesses deliberate updates against the used contract and local bindings.
+PV-005 retains producer cadence: compatible or irrelevant upstream changes can
+need only a reviewed consumer update; actual dependent-product behavior,
+interfaces, guidance, packaging or shipped-byte changes need its own correction
+and classified release. PV-017 connects the native lock/slot route to these rules.
+
+Compared with 5.2.3's general actual-compatibility and lock/adoption guidance,
+adopters must now supply the explicit floor/constraint rationale and check which
+dependency source each delivery form uses. This tightens mandatory lifecycle
+assessment and supported routing, so it is not classified as an editorial fix or
+merely an optional addition. Use existing change/release review and focused
+evidence; there is no new operator command, recurring compatibility matrix, cold
+installation gate, attestation, registry or approval service. Consumers reconcile
+these duties and their existing local bindings in their own reviewed update.
+The [worked examples](vibevm/vibespecs/guides/onboarding-examples.md#8-package-consumer-compatibility-and-delivery-choices)
+cover both failure kinds, compatible majors, real incompatibility and both
+delivery forms without an additional normative topic.
+
+All previous rule IDs remain resolvable; PV-018 is new and supersedes none.
+The other nine protocols, topic adoption, source/publication authority, independent
+review, security, license/redistribution, manifest and frozen-closure obligations
+remain intact. No consumer is automatically migrated and no historical work is
+retroactively judged under this extension. Frozen versions retain their bytes.
+
 ## 5.2.3
 
 PATCH: TH-001–007/010 clarify ordinary Task dispatch without a redundant admission

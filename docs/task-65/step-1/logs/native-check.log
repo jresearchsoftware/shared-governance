@@ -1,0 +1,84 @@
+{
+  "ok": true,
+  "command": "check",
+  "project": "/var/lib/codex-relay/slots/pool-3/work/repositories/jresearchsoftware/shared-governance/run-40198500615",
+  "summary": {
+    "error": 0,
+    "warning": 12,
+    "info": 0
+  },
+  "findings": [
+    {
+      "check": "lockfile_files",
+      "severity": "warning",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0",
+      "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0` is a vibedeps/ slot no lockfile entry claims (orphan) — `vibe install` prunes these"
+    },
+    {
+      "check": "lockfile_files",
+      "severity": "warning",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0",
+      "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0` is a vibedeps/ slot no lockfile entry claims (orphan) — `vibe install` prunes these"
+    },
+    {
+      "check": "lockfile_files",
+      "severity": "warning",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.7.0",
+      "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/2.7.0` is a vibedeps/ slot no lockfile entry claims (orphan) — `vibe install` prunes these"
+    },
+    {
+      "check": "lockfile_files",
+      "severity": "warning",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/3.0.0",
+      "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/3.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) — `vibe install` prunes these"
+    },
+    {
+      "check": "lockfile_files",
+      "severity": "warning",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/4.0.0",
+      "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/4.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) — `vibe install` prunes these"
+    },
+    {
+      "check": "lockfile_files",
+      "severity": "warning",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/5.0.0",
+      "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/5.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) — `vibe install` prunes these"
+    },
+    {
+      "check": "lockfile_files",
+      "severity": "warning",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.0",
+      "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.0` is a vibedeps/ slot no lockfile entry claims (orphan) — `vibe install` prunes these"
+    },
+    {
+      "check": "lockfile_files",
+      "severity": "warning",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.1",
+      "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.1` is a vibedeps/ slot no lockfile entry claims (orphan) — `vibe install` prunes these"
+    },
+    {
+      "check": "lockfile_files",
+      "severity": "warning",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.0",
+      "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.0` is a vibedeps/ slot no lockfile entry claims (orphan) — `vibe install` prunes these"
+    },
+    {
+      "check": "lockfile_files",
+      "severity": "warning",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.1",
+      "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.1` is a vibedeps/ slot no lockfile entry claims (orphan) — `vibe install` prunes these"
+    },
+    {
+      "check": "lockfile_files",
+      "severity": "warning",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.2",
+      "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.2` is a vibedeps/ slot no lockfile entry claims (orphan) — `vibe install` prunes these"
+    },
+    {
+      "check": "lockfile_files",
+      "severity": "warning",
+      "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.3",
+      "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.3` is a vibedeps/ slot no lockfile entry claims (orphan) — `vibe install` prunes these"
+    }
+  ]
+}

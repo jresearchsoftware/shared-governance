@@ -1,0 +1,22 @@
+{
+  "source": "e60ebd2edc935a38d8685aa0f3a47fc98121b5f2",
+  "baseline": "6d64ea8fc75839b6beed23be3798c863265c0683",
+  "package_file_count": 22,
+  "changed_package_files": [
+    "CHANGELOG.md",
+    "README.md",
+    "vibe.toml",
+    "vibevm/vibespecs/guides/onboarding-examples.md",
+    "vibevm/vibespecs/protocols/package-versioning.md"
+  ],
+  "other_protocols_byte_identical": 9,
+  "previous_pv_ids_retained": 17,
+  "new_pv_ids": [
+    "PV-018"
+  ],
+  "historical_native_content": "unchanged",
+  "relay_skill_projection_closure": "unchanged",
+  "chatgpt_effective_inputs": "unchanged",
+  "workflows_scripts_license": "unchanged",
+  "preservation": "PASS"
+}
