@@ -78,14 +78,71 @@ and byte integrity. No synthetic Task is dispatched or mutated by these walks.
 
 ## Local qualification and handoff limits
 
-Generation and local check results will be recorded after the candidate is
-committed and materialized. Independent review of the final exact head remains
-pending through the authorized owner/Writer path. Passing local checks does not
-accept the candidate or authorize publication, merge, release or Issue closure.
-Native root/sudo-only installed-runtime proof belongs to exact-head CI after
-Writer publication and is not attempted here.
+The exact-Git exporter staged source from
+`f08f7b678a42bec0abd77909604c906967179de6`. The pinned Linux musl VibeVM 1.0.7
+matched SHA-256 `20d111df02eb28040ef4cb766bfcb0bde8ff4427b031f88f33eacb3711c3e240`.
+Native install used the isolated registry/settings in `.vibe/task71/workspace`
+alongside the unchanged immutable public Relay root. The normal producer verifier
+confirmed source/slot/lock/routes before and after transferring only the new 5.2.3
+slot, root lock and root index. Historical slots pruned in staging were retained
+in the actual checkout. No generated identity was hand-edited; native file modes,
+including the private slot receipt, were preserved without permission repair.
 
-The initial untracked `.codex-sandbox/` is runtime state owned by `nobody` and the
-existing work group, not Task source; it is left untouched. Final reconciliation
-will preserve task work in ordinary commits and report any remaining residue.
+| Check | Result and evidence |
+| --- | --- |
+| `qualify.py --export-ref HEAD` in the exact-commit fixture | PASS at `80a10e1e772d36767a87d8bfe6c13d4a8c5ca4e7`: source, local links, passive export, registry/slot/lock/boot, Relay Skill and bounded credential-marker scan. |
+| `test-distribution.py` | [52 pass](logs/distribution.log). |
+| `test-self-adoption.py` | [17 pass](logs/self-adoption.log) in the exact-commit bundle fixture. |
+| `test-chatgpt-projection.py` | [29 pass](logs/chatgpt.log). |
+| `test-release.py` | [20 pass, 6 optional native integration cases skipped](logs/release.log). |
+| `test-publication.py` | [11 pass, 1 optional native integration case skipped](logs/publication.log). |
+| `package-release.py --source-ref HEAD --base 0c98da7d34c2440ab6910a02feba720385d8b7b8` | PASS: exactly one PATCH, 5.2.2 → 5.2.3. A separate unauthenticated public tag lookup found no `v5.2.3` at validation time; native CI must recheck before integration. |
+| Preservation comparison | Only Task Handoff, manifest and changelog differ in the 22-file authored export. TH-001/002/003/004/006/007/010 change; all other TH rules and protocols are byte-identical. Public inventory, historical registry/slots, Relay Skill/closure, workflows and ChatGPT text are unchanged. |
+| Unprivileged pinned `vibe --offline --json check` on the actual checkout | Zero errors, eleven warnings for deliberately retained unselected historical slots (2.5.0 through 5.2.2, including the old 5.1.1 proposal). The selected route is 5.2.3. Preserve history; no warning suppression or runtime-proof claim. |
 
+The release/publication suites ran at `65dfc2d` before the test-only correction;
+the remaining suites ran at `80a10e1`. Their package/tool inputs are identical.
+Final changes after those runs contain only this qualification evidence and logs;
+the final exact commit receives export/link/integrity and whitespace checks.
+The implementation helper supplied version-classification advice only, not an
+independent assessment or approval.
+
+The initial distribution run exposed a historical Task 74 assertion freezing the
+entire current Task Handoff protocol. The bounded correction retains Task 74's
+historical comparison and the complete current TH-029 bytes while allowing this
+authorized correction elsewhere. It does not weaken export integrity or excuse
+an effective-Instructions regression.
+
+Initial direct export checks rejected temporary output inside their authoring
+checkout. Direct self-adoption clones also failed with Git's explicit dubious
+ownership diagnosis for the shared `.git`. A normal Git bundle of the exact
+candidate was cloned into a worker-owned disposable fixture, with temporary
+exports outside that fixture but still inside this execution's checkout. The
+unchanged validators then passed. No safe-directory setting, hooks, remotes or
+host permissions were changed. This qualifies the exact source and native
+projection; it does not claim direct shared-checkout cloning works or prove a
+privileged installed runtime.
+
+The accepted 5.2.2 ChatGPT projector, used against the isolated candidate for
+qualification, reports `effective_content=NO_OP`, `instructions=NO_OP`,
+`sources=DISABLED` and `live_settings_verified=false`. Its candidate SHA input
+does not claim source acceptance. Complete desired Instructions remain identical,
+so this Task adds no new settings-application duty under preserved TH-029. Earlier
+unresolved live-settings gaps retain their existing disposition; this result
+does not verify live Settings or release any earlier hold.
+
+Independent review of the final exact head remains pending through the authorized
+owner/Writer path. Passing local checks does not accept the candidate or authorize
+publication, merge, release or Issue closure. Native root/sudo-only installed-runtime
+proof belongs to exact-head CI after Writer publication and was not attempted.
+Whole-Task completion still needs the authorized acceptance/integration and
+accepted-source publication verification. Task 71's explicit `keep-open` remains;
+an authorized owner Decision must change that disposition after verified completion.
+Other consumers own their adoption; no Relay implementation defect is established
+by these source-only walks, and no consumer code/settings were modified.
+
+Task-owned source, projections and qualification evidence are preserved in ordinary
+commits. The sole non-ignored untracked path is the pre-existing `.codex-sandbox/`,
+runtime state owned by `nobody` and the existing work group. It is left untouched:
+it is outside this Task's source/cleanup ownership. Disposable fixture/tool files
+remain under the existing `.vibe/` ignore; no new ignore hides useful source.
