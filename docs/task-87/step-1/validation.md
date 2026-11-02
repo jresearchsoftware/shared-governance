@@ -14,8 +14,15 @@ The verified musl VibeVM SHA-256 is recorded in the pin and native report.
 | Distribution regression suite | 52 tests passed | `1bce78b5dea24388687e21671221a5dcf8a6a99b` |
 | Self-adoption regression suite | 17 tests passed | same implementation revision |
 | ChatGPT projection regression suite | 29 tests passed | same implementation revision |
+| Required source/export qualification and bounded secret-marker scan | PASS on Windows Python 3.12 and native Linux Python 3.11 | `235ab0f8539f0ee2cd5b53010168ac37362d93f7` |
+| Ordinary candidate suites: distribution/release/self-adoption/ChatGPT/publication | 136 tests run, 7 optional integration skips, no failures | `235ab0f8539f0ee2cd5b53010168ac37362d93f7` |
+| Producer publication suite with `--vibe` | 12 tests passed, no skips | same evidence-complete revision |
+| Whitespace and package transition against accepted main | PASS; package unchanged at 7.0.0, no bump | same evidence-complete revision |
+| Authoring after synthetic-lock fixture correction | Registry installation PASS; path-source reproduces expected `empty world` / `ORDER-LAW` refusal | final PR implementation |
 
-The later qualification-report commits change evidence only. Public candidate
+The final fixture correction removes the copied mixed lock before deliberately
+resolving the synthetic one-package authoring graph; both variants were rechecked.
+The other later changes record evidence only. Public candidate
 checks and the single terminal executor Outcome bind the final published head.
 No native integration used a real distribution destination or publication token.
 The raw mixed-graph report records native stdout/stderr and expected failure codes;

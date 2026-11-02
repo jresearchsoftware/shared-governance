@@ -114,6 +114,8 @@ def main():
                 '[project]\nname="authoring-fixture"\nversion="0.0.0"\nspec_format="mixed"\n'
                 '[requires.packages]\n"flow:org.jresearch.ai/development-governance" = '
                 + requirement + '\n', encoding="utf-8")
+            # This synthetic single-package graph is independent of the copied mixed lock.
+            (workspace / "vibe.lock").unlink()
             run("--offline", "--json", "install", "--path", str(workspace), "--registry",
                 str(registry), "--no-default-registry", "--assume-yes")
             installed = workspace / ("vibevm/vibedeps/org.jresearch.ai.development-governance/" + version)
