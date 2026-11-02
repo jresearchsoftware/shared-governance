@@ -136,6 +136,48 @@ missing capability stops the affected operation rather than permitting a bypass.
 V4 Writer provenance, exact-result independent acceptance, trust/identity,
 reservations/readback and historical-attempt boundaries remain binding.
 
+## Local validation and preserved warnings
+
+The repository suites ran on `4f383403e633dffd5e0d36e0e2e70bcace2ad99a` in a
+disposable Git-bundle fixture. Temporary exports stayed outside that fixture and
+inside the governed checkout, retaining the exporter's isolation rule. The
+[command/result record](logs/checks.json) binds every run. Later changes add only
+evidence and documentation links; source/export/integrity and whitespace checks
+cover the final handoff. Unchanged package, scripts and native artifacts justify
+reuse of the full-suite results rather than another identical test cycle.
+
+| Check | Result and primary evidence |
+| --- | --- |
+| Source, local links, passive exact-commit export, bounded credential markers and native integrity | [PASS](logs/qualification.log). The credential scan is bounded, not proof of absence of every secret. |
+| Distribution/provenance regressions | [52 passed](logs/distribution.log). |
+| Release regressions | [20 passed; six optional native integrations skipped](logs/release.log). |
+| Self-adoption/recovery | [17 passed](logs/self-adoption.log). |
+| ChatGPT projection regressions | [29 passed](logs/chatgpt.log). |
+| Publisher boundary regressions | [11 passed; one optional native integration skipped](logs/publication.log). |
+| Whole-package transition | [PASS: one MAJOR, 6.0.0 -> 7.0.0](logs/release-transition.log). |
+| Exact selected native combinations and preservation | [PASS](logs/native-and-preservation.json) for accepted Shared 6.0.0 and candidate 7.0.0 with Relay 3.0.0. Step 2 leaves authored packages, source/slots/lock/boot, Relay projection, scripts, workflows, client inputs and license unchanged. |
+| Candidate tag availability | [Public readback](logs/tag-readback.json) found v6.0.0 and no v7.0.0; native CI must refresh before integration. This is no publication claim. |
+| Pinned legacy Relay source behavior | [34 passed](logs/relay-source-and-run.json), no skips; the two focused tests and their limits are described above. |
+
+Totals are **163 passing tests and seven optional integration skips**. These
+optional publisher/resolver integrations are unchanged one-time proof, not failed
+checks or installed-runtime qualification. No new test framework was introduced.
+The aggregate package still changes only six of 22 exported files relative to
+accepted 6.0.0; the other 16, all rule addresses, eight unaffected protocols and
+historical immutable packages retain their bytes.
+
+Step 1's [native check](../step-1/logs/native-check.log) reported zero errors and
+13 warnings for deliberately retained, unselected historical slots. That known
+warning remains part of this handoff: unchanged artifacts and fresh exact native
+integrity show the selected 7.0.0/Relay 3.0.0 graph, not a reason to delete history
+or load an old policy fallback. No fresh native materializer/runtime check is
+claimed. Review should retain that bounded warning disposition.
+
+The package's client tools and all ChatGPT inputs remain unchanged from the
+starting candidate, so Step 1's [effective-content NO_OP evidence](../step-1/logs/chatgpt-content.json)
+continues to apply. Sources are disabled. This adds no new manual application,
+but proves no live settings match and discharges no earlier reconciliation gap.
+
 ## Completion boundary
 
 Independent exact-head assessment, required native CI, Writer publication and

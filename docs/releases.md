@@ -25,7 +25,8 @@ verification of the stated preauthorized condition. RA-006 and the producer's
 manual binding follow that meaning. These are incompatible supported-workflow
 changes under PV-002–004, even though the one-field design removes repeated
 permission friction. Neither Task 74's PATCH exception nor the Relay-only
-transition below changes that classification. See [Task 84 coverage](task-84/step-1/README.md).
+transition below changes that classification. See [Task 84 coverage](task-84/step-1/README.md)
+and the [Step 2 window reconciliation](task-84/step-2/README.md).
 
 For a producer Task whose deliverable includes publication, select `keep-open`
 and describe successful publication of the exact accepted version/revision next
