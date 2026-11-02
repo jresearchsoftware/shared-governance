@@ -43,11 +43,21 @@ or operational target is supplied by this brief.
   nonmerge, multiple PRs, no-PR results, delayed publication, unmet/wrong-target
   conditions, historical work and uncertain mutation/recovery. Distinguish source
   tests from installed-runtime proof and retain the owner-selected bounded window.
+- Apply the [Task 84 window Decision](https://github.com/jresearchsoftware/shared-governance/issues/84#issuecomment-6576169608):
+  the deprecated Relay-only fallback remains permitted pending the compatible
+  release and for 60 calendar days starting from verified publication of the
+  first Codex Relay release implementing and qualifying the new closure semantics.
+  Shared Governance publication does not start the clock. Once that Relay
+  publication is verified, record its exact release/source identity, publication
+  event and derived deadline in the existing Relay Issue/release chronology;
+  invent no date in advance. Qualify only actual legacy combinations, with no
+  universal grace period or promise about unknown Shared versions.
 - Update compatibility evidence and the **new released Skill's dependency floor**
   to the first published Shared version that supplies the behavior. Earlier Relay
   releases, floors, pins and bytes retain their immutable identity and explicitly
-  supported legacy behavior. Plan fallback removal separately after the agreed
-  window under normal independent review and whole-package SemVer.
+  supported legacy behavior. Removal requires a separately accepted future Shared
+  release no earlier than the end of the selected window, under normal independent
+  review and whole-package SemVer; it is not automatic deletion on expiry.
 
 After creating the real Issue, read back its URL, backlink, introducing version
 and complete scope. Record that URL/readback with the Shared publication evidence

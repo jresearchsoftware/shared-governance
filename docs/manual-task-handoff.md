@@ -252,9 +252,13 @@ and effective `close-authorized`; this source change does not implement the new
 runtime behavior. Use only the explicitly qualified, owner-bounded
 [Relay transition](releases.md#task-84-closure-transition) when relying on that
 legacy mechanism with the new Shared contract. Its technical trusted Decision
-path must not become a new discretionary permission prompt. Missing capability
-or an unestablished transition window is a reported gap, never permission for a
-manual bypass or a claim that the new runtime is qualified.
+path must not become a new discretionary permission prompt. Task 84's owner
+selected 60 calendar days from verified publication of the first Relay release
+implementing and qualifying the new semantics; Shared publication does not start
+the clock. Record the exact event and derived deadline only after verification.
+The window rule needs no further owner choice. Missing capability, unqualified
+combinations or an unverified claimed trigger remain reported gaps, never
+permission for a manual bypass or a claim that the new runtime is qualified.
 See the [new closure walks](../packages/development-governance/vibevm/vibespecs/guides/onboarding-examples.md#9-single-field-task-closure);
 [Task 68 scenarios](task-68/step-3/compatibility.md) retain their historical meaning.
 

@@ -166,3 +166,14 @@ The initial untracked `.codex-sandbox/` is pre-existing execution state owned by
 ownership and is preserved. Task-created fixtures use the existing `.vibe/`
 ignore; useful source/evidence is committed. No hooks, Git config, remotes or
 source permissions are changed to bypass access boundaries.
+
+## Subsequent Step 2 reconciliation
+
+The [owner Decision](https://github.com/jresearchsoftware/shared-governance/issues/84#issuecomment-6576169608)
+supplies the previously missing window: 60 calendar days from verified publication
+of the first Relay release implementing and qualifying the new closure semantics,
+not from Shared Governance publication. [Step 2 evidence](../step-2/README.md)
+records the correction and fresh qualification. The earlier missing-window claims
+above describe Step 1's then-unresolved authority; they are superseded for current
+continuation, not erased from its history. The prepared Relay1 brief has been
+updated for future use and remains unsubmitted.

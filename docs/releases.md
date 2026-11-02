@@ -189,20 +189,31 @@ exact-head acceptance, warning disposition, operation reservations and readback
 remain required. Do not bypass a rejection, fabricate provenance or rewrite
 immutable Skill bytes to make old code appear to support the target semantics.
 
-The [source comparison and limits](task-84/step-1/README.md#relay-compatibility-and-window)
-identify the pinned implementation and tests. They establish old source behavior,
+The [bounded compatibility evidence](task-84/step-2/README.md#relay-compatibility-and-limits)
+identifies the pinned implementation, tested combinations and legacy paths.
+These checks establish source behavior and selected guidance integrity,
 not deployed-runtime qualification or support for all Shared versions allowed by
 `>=2.5.0`. Native graph generation establishes selection/integrity only. Preserve
 already-admitted historical work under its original qualified contract.
 
-**Window unresolved:** Task 84's supplied authority names no finite duration or
-deadline for the new-contract/old-Relay fallback. Before relying on that fallback,
-record the owner's reference event and bounded window under the procedure above;
-do not infer one from an open-ended dependency range or invent a deadline. This
-candidate therefore claims no activated 7.0.0/old-runtime compatibility window.
-Plan legacy-path removal in a later independently accepted Shared release, with
-its own whole-package SemVer assessment, no earlier than the agreed window's end.
-Existing immutable releases retain their historical content and supported scope.
+**Owner-selected window:** the [Task 84 Decision](https://github.com/jresearchsoftware/shared-governance/issues/84#issuecomment-6576169608)
+permits this deprecated Relay-only fallback while the compatible Relay release
+is pending and for **60 calendar days starting from verified publication of the
+first Codex Relay release that implements and qualifies the new Task-closure
+semantics**. Shared Governance 7.0.0 publication does **not** start this clock.
+Once that Relay publication is verified, record its exact release/source identity,
+publication event and the derived 60-calendar-day deadline in the linked Relay
+Issue/release chronology. No event date or deadline is assigned in this candidate;
+the duration and trigger are decided, not awaiting another owner choice.
+
+The window grants no support for unqualified combinations or unknown Shared
+versions. Removal requires a separately accepted future Shared release, with its
+own whole-package SemVer assessment, **no earlier than the end of this window**.
+Expiry does not automatically delete behavior or rewrite immutable releases;
+do not silently withdraw support early or promise an extension beyond the
+selected window. Existing historical/admitted authority and release identities
+remain intact. This local exception neither changes other projects/rules nor
+qualifies an installed Relay service.
 
 Keep Task 84 open after source merge until the accepted introducing version is
 successfully published from the verified accepted revision **and** a new linked

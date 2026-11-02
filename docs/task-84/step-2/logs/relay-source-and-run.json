@@ -1,0 +1,98 @@
+{
+  "source_repository": "jresearchsoftware/codex-relay",
+  "source_commit": "ba99807bfc7e7d199ce9bf0e02be8e31416ddc95",
+  "retrieval": "Public unauthenticated raw.githubusercontent.com HTTPS URLs containing the full commit SHA; no Git checkout or npm installation.",
+  "node_version": "v22.23.3",
+  "uid": 983,
+  "command": "node --test --test-reporter=tap contracts/test/post-review-continuation-v4.test.mjs",
+  "working_directory": "/var/lib/codex-relay/slots/pool-4/work/repositories/jresearchsoftware/shared-governance/run-41438331697/.vibe/task84-step2-relay",
+  "exit_code": 0,
+  "tests": 13,
+  "pass": 13,
+  "fail": 0,
+  "skipped": 0,
+  "cancelled": 0,
+  "log": "legacy-v4-tests.tap",
+  "evidence_level": "Focused unprivileged source tests using mocked in-memory ports. Not installed-runtime proof, independent assessment, or compatibility qualification of an actual Shared 7.0.0 deployment.",
+  "downloads": [
+    {
+      "path": "contracts/src/execution-defaults.mjs",
+      "url": "https://raw.githubusercontent.com/jresearchsoftware/codex-relay/ba99807bfc7e7d199ce9bf0e02be8e31416ddc95/contracts/src/execution-defaults.mjs",
+      "sha256": "0c43d78fcfd2345295c46d6b658af03112ab6bfa348353bd6f8d8be7c484cf3c"
+    },
+    {
+      "path": "contracts/src/github-authority-v1.json",
+      "url": "https://raw.githubusercontent.com/jresearchsoftware/codex-relay/ba99807bfc7e7d199ce9bf0e02be8e31416ddc95/contracts/src/github-authority-v1.json",
+      "sha256": "b4a7c7561ca8697e3b00df21c8c624d59d6cb5f3f2f56bde35d7ed6bdd161874"
+    },
+    {
+      "path": "contracts/src/github-authority-v4.json",
+      "url": "https://raw.githubusercontent.com/jresearchsoftware/codex-relay/ba99807bfc7e7d199ce9bf0e02be8e31416ddc95/contracts/src/github-authority-v4.json",
+      "sha256": "90ba19712e64138c605c9efee74d9dd8d60779bb6741bfbb3149424a585037a5"
+    },
+    {
+      "path": "contracts/src/github-authority.mjs",
+      "url": "https://raw.githubusercontent.com/jresearchsoftware/codex-relay/ba99807bfc7e7d199ce9bf0e02be8e31416ddc95/contracts/src/github-authority.mjs",
+      "sha256": "8f71d5a78fa63a3e3bd1e6ecca07e05e12bc343b5e24b1fbac97f945ddd57125"
+    },
+    {
+      "path": "contracts/src/post-review-continuation.mjs",
+      "url": "https://raw.githubusercontent.com/jresearchsoftware/codex-relay/ba99807bfc7e7d199ce9bf0e02be8e31416ddc95/contracts/src/post-review-continuation.mjs",
+      "sha256": "bed2da00f8865188a32f046b928535352c794eac99bebdc194effea689dcb294"
+    },
+    {
+      "path": "contracts/src/publication-rendering.mjs",
+      "url": "https://raw.githubusercontent.com/jresearchsoftware/codex-relay/ba99807bfc7e7d199ce9bf0e02be8e31416ddc95/contracts/src/publication-rendering.mjs",
+      "sha256": "a9d3fc9ad76b241825a74a7bd5b1b962f80875cb11ccef33f71884cc6e56f873"
+    },
+    {
+      "path": "contracts/test/post-review-continuation-v4.test.mjs",
+      "url": "https://raw.githubusercontent.com/jresearchsoftware/codex-relay/ba99807bfc7e7d199ce9bf0e02be8e31416ddc95/contracts/test/post-review-continuation-v4.test.mjs",
+      "sha256": "e283f9229f178f296bee1e020e4ade6bfd434abf84e5e60a77ce73402bd5f5ef"
+    },
+    {
+      "path": "reviewer/src/executable-cr-v2.json",
+      "url": "https://raw.githubusercontent.com/jresearchsoftware/codex-relay/ba99807bfc7e7d199ce9bf0e02be8e31416ddc95/reviewer/src/executable-cr-v2.json",
+      "sha256": "441516610339ce2fb6da86680bb6a14655c6cbe813c95104b5744e2060e5d4ee"
+    },
+    {
+      "path": "contracts/test/post-review-continuation.test.mjs",
+      "url": "https://raw.githubusercontent.com/jresearchsoftware/codex-relay/ba99807bfc7e7d199ce9bf0e02be8e31416ddc95/contracts/test/post-review-continuation.test.mjs",
+      "sha256": "25a97efc7f272a56475012acebfe44c34f2d245495c16f372592db9419257fea"
+    }
+  ],
+  "additional_runs": [
+    {
+      "node_version": "v22.23.3",
+      "uid": 983,
+      "command": "node --test --test-reporter=tap contracts/test/post-review-continuation.test.mjs",
+      "working_directory": "/var/lib/codex-relay/slots/pool-4/work/repositories/jresearchsoftware/shared-governance/run-41438331697/.vibe/task84-step2-relay",
+      "exit_code": 0,
+      "tests": 21,
+      "pass": 21,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "log": "legacy-retained-tests.tap",
+      "evidence_level": "Focused unprivileged retained native/v3/legacy source tests using mocked in-memory ports. No additional imported sources were needed."
+    }
+  ],
+  "aggregate": {
+    "tests": 34,
+    "pass": 34,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "scope": "Two distinct existing test files, executed once each. Source-test behavior only; not installed Shared 7.0.0/Relay qualification."
+  },
+  "evidence_logs": [
+    {
+      "path": "legacy-v4-tests.tap",
+      "sha256": "338069955b6fea017ded98c17130226eec7e4c499b944bba6359468853240d6b"
+    },
+    {
+      "path": "legacy-retained-tests.tap",
+      "sha256": "d25cba3a085ccda722e178f7acec5f469c0724d7b7f9a7971fe4295f052b5db1"
+    }
+  ]
+}

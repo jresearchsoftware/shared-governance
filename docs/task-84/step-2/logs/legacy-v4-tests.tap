@@ -1,0 +1,88 @@
+TAP version 13
+# Subtest: trusted Decision closure uses verified complete Task state, without a public task_complete flag
+ok 1 - trusted Decision closure uses verified complete Task state, without a public task_complete flag
+  ---
+  duration_ms: 40.677623
+  type: 'test'
+  ...
+# Subtest: completed keep-open Task with no actual remaining work surfaces owner disposition
+ok 2 - completed keep-open Task with no actual remaining work surfaces owner disposition
+  ---
+  duration_ms: 7.201902
+  type: 'test'
+  ...
+# Subtest: native exact-head APPROVE preserves originating CR provenance and uses squash-only owner continuation
+ok 3 - native exact-head APPROVE preserves originating CR provenance and uses squash-only owner continuation
+  ---
+  duration_ms: 14.304416
+  type: 'test'
+  ...
+# Subtest: migrated older Task no-PR acceptance continues without rebinding retained v3 history
+ok 4 - migrated older Task no-PR acceptance continues without rebinding retained v3 history
+  ---
+  duration_ms: 27.669012
+  type: 'test'
+  ...
+# Subtest: migrated older Task exact-head PR acceptance continues without rebinding retained v3 history
+ok 5 - migrated older Task exact-head PR acceptance continues without rebinding retained v3 history
+  ---
+  duration_ms: 24.29085
+  type: 'test'
+  ...
+# Subtest: v4 authorized continuation launches native authority without preparing a Request or Step
+ok 6 - v4 authorized continuation launches native authority without preparing a Request or Step
+  ---
+  duration_ms: 22.410657
+  type: 'test'
+  ...
+# Subtest: current v4 continuation selects fresh native direction without inheriting an older v3 Request
+ok 7 - current v4 continuation selects fresh native direction without inheriting an older v3 Request
+  ---
+  duration_ms: 18.283722
+  type: 'test'
+  ...
+# Subtest: changed trusted Decision, unknown completion, protected hold and delayed mutation remain bounded
+ok 8 - changed trusted Decision, unknown completion, protected hold and delayed mutation remain bounded
+  ---
+  duration_ms: 8.763764
+  type: 'test'
+  ...
+# Subtest: no-PR Task acceptance binds current amended Task while preserving the original Outcome admission
+ok 9 - no-PR Task acceptance binds current amended Task while preserving the original Outcome admission
+  ---
+  duration_ms: 15.054878
+  type: 'test'
+  ...
+# Subtest: Task material Decision drift after approval requires fresh independent acceptance before any effect
+ok 10 - Task material Decision drift after approval requires fresh independent acceptance before any effect
+  ---
+  duration_ms: 3.947302
+  type: 'test'
+  ...
+# Subtest: native exact-head PR acceptance binds current amended Task while preserving the original Outcome admission
+ok 11 - native exact-head PR acceptance binds current amended Task while preserving the original Outcome admission
+  ---
+  duration_ms: 14.415863
+  type: 'test'
+  ...
+# Subtest: PR material Decision drift after approval requires fresh independent acceptance before any effect
+ok 12 - PR material Decision drift after approval requires fresh independent acceptance before any effect
+  ---
+  duration_ms: 3.629813
+  type: 'test'
+  ...
+# Subtest: a native PR authority marker binds exact current sources and rejects copied or duplicated acceptance bindings
+ok 13 - a native PR authority marker binds exact current sources and rejects copied or duplicated acceptance bindings
+  ---
+  duration_ms: 3.475278
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 269.091433

@@ -1,0 +1,136 @@
+TAP version 13
+# Subtest: verified independent native approval immediately executes squash, authorized closure and exact next automatic Request
+ok 1 - verified independent native approval immediately executes squash, authorized closure and exact next automatic Request
+  ---
+  duration_ms: 15.727009
+  type: 'test'
+  ...
+# Subtest: manual next Request creates the bounded handoff through the owner adapter
+ok 2 - manual next Request creates the bounded handoff through the owner adapter
+  ---
+  duration_ms: 6.438993
+  type: 'test'
+  ...
+# Subtest: keep-open preserves the Issue while accepting and continuing already authorized work
+ok 3 - keep-open preserves the Issue while accepting and continuing already authorized work
+  ---
+  duration_ms: 4.097892
+  type: 'test'
+  ...
+# Subtest: close-authorized does not close an incomplete Task or one with remaining work
+ok 4 - close-authorized does not close an incomplete Task or one with remaining work
+  ---
+  duration_ms: 4.898234
+  type: 'test'
+  ...
+# Subtest: changed head, native actor, charter or current Request stops before mutation
+ok 5 - changed head, native actor, charter or current Request stops before mutation
+  ---
+  duration_ms: 4.710356
+  type: 'test'
+  ...
+# Subtest: unresolved, stale, missing or failed required checks and unknown base readiness stop
+ok 6 - unresolved, stale, missing or failed required checks and unknown base readiness stop
+  ---
+  duration_ms: 4.163141
+  type: 'test'
+  ...
+# Subtest: checks are re-read after reservation before any merge is sent
+ok 7 - checks are re-read after reservation before any merge is sent
+  ---
+  duration_ms: 1.363144
+  type: 'test'
+  ...
+# Subtest: ordinary moving base is allowed with fresh exact-head checks; an explicit exact-base boundary remains enforced
+ok 8 - ordinary moving base is allowed with fresh exact-head checks; an explicit exact-base boundary remains enforced
+  ---
+  duration_ms: 3.41906
+  type: 'test'
+  ...
+# Subtest: explicit hold and a protected boundary prevent every continuation action
+ok 9 - explicit hold and a protected boundary prevent every continuation action
+  ---
+  duration_ms: 1.559603
+  type: 'test'
+  ...
+# Subtest: migrated PR implicit Task closure is blocked and squash messages do not inherit closing keywords
+ok 10 - migrated PR implicit Task closure is blocked and squash messages do not inherit closing keywords
+  ---
+  duration_ms: 4.289448
+  type: 'test'
+  ...
+# Subtest: failed or uncertain native publication never falls back to manual approval or mutation
+ok 11 - failed or uncertain native publication never falls back to manual approval or mutation
+  ---
+  duration_ms: 0.411554
+  type: 'test'
+  ...
+# Subtest: uncertain merge or existing mutation intent stops without closure, relaunch or blind retry
+ok 12 - uncertain merge or existing mutation intent stops without closure, relaunch or blind retry
+  ---
+  duration_ms: 2.259114
+  type: 'test'
+  ...
+# Subtest: a successful merge response requires native readback before closure
+ok 13 - a successful merge response requires native readback before closure
+  ---
+  duration_ms: 1.561498
+  type: 'test'
+  ...
+# Subtest: next Request is revalidated after reservation and superseded next authority is never launched
+ok 14 - next Request is revalidated after reservation and superseded next authority is never launched
+  ---
+  duration_ms: 4.521853
+  type: 'test'
+  ...
+# Subtest: Task Approval accepts no-PR immutable qualification result and can close only under charter authority
+ok 15 - Task Approval accepts no-PR immutable qualification result and can close only under charter authority
+  ---
+  duration_ms: 6.62715
+  type: 'test'
+  ...
+# Subtest: legacy native PR acceptance retains its canonical authority digest and no implicit typed migration
+ok 16 - legacy native PR acceptance retains its canonical authority digest and no implicit typed migration
+  ---
+  duration_ms: 0.750047
+  type: 'test'
+  ...
+# Subtest: same-Task phase preparation follows native acceptance and verified merge while old authority stays current until preparation
+ok 17 - same-Task phase preparation follows native acceptance and verified merge while old authority stays current until preparation
+  ---
+  duration_ms: 11.63645
+  type: 'test'
+  ...
+# Subtest: a prepared same-Task Request cannot invent a different execution profile
+ok 18 - a prepared same-Task Request cannot invent a different execution profile
+  ---
+  duration_ms: 5.850938
+  type: 'test'
+  ...
+# Subtest: a superseding same-Task Request published before merge invalidates the accepted source and prevents every action
+ok 19 - a superseding same-Task Request published before merge invalidates the accepted source and prevents every action
+  ---
+  duration_ms: 1.592454
+  type: 'test'
+  ...
+# Subtest: same-Task preparation after no-PR Task Approval preserves the immutable accepted Outcome
+ok 20 - same-Task preparation after no-PR Task Approval preserves the immutable accepted Outcome
+  ---
+  duration_ms: 13.351444
+  type: 'test'
+  ...
+# Subtest: same-Task preparation stops before publication when a selected Decision still owns conflicting continuation
+ok 21 - same-Task preparation stops before publication when a selected Decision still owns conflicting continuation
+  ---
+  duration_ms: 4.7125
+  type: 'test'
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 184.870259

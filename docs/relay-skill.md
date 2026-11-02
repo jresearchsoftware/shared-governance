@@ -113,8 +113,12 @@ trusted closure requiring effective `close-authorized`. Keep those immutable
 bytes and supported historical/admitted authority intact; do not claim the new
 behavior from installing the Shared slot. The producer-local
 [Task 84 transition](releases.md#task-84-closure-transition) records the exact
-fallback scope, deprecation, missing owner window, qualification limits and
-post-publication Relay1 deliverable. Source/native graph validation is separate
+fallback scope, deprecation, owner-selected 60-calendar-day window from verified
+publication of the first compatible Relay release, qualification limits and
+post-publication Relay1 deliverable. Shared publication does not start the clock;
+the exact event and derived deadline are recorded only once that Relay publication
+is verified. Removal needs a separately accepted future Shared release no earlier
+than window end. Source/native graph validation is separate
 from qualification of that combination or deployment of a compatible Relay.
 A new Relay release must implement/qualify its own adoption and raise its Skill
 floor to the first published Shared version containing the new behavior.
