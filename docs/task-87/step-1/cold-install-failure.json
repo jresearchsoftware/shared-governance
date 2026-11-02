@@ -1,0 +1,19 @@
+{
+  "source_revision": "1abc63fc3ce3e2e54cbec626177301b2918df6ea",
+  "tool_version": "1.0.10",
+  "binary_sha256": "5c6703e2ccc7a4e5cf3b3999b62a3452a803d75f73623ef1e8024524d6e39814",
+  "cases": [
+    {
+      "label": "mixed cold resolution",
+      "arguments": [
+        "install",
+        "--no-default-registry",
+        "--no-prefer-local",
+        "--assume-yes"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "{\"ok\":false,\"error\":\"git operation failed (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#backend-trait; fix: act on the wrapped git error): git `git clone --progress --recurse-submodules --no-checkout --no-tags -- https://raw.githubusercontent.com/jrs-vibevm/org.jresearch.ai.codex-relay.git /tmp/toolchain-qualification-gj4r0tmy/settings/registries/8470bd566559b4f6/packages/org.jresearch.ai.codex-relay/clone` exited with status 128 (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-001#windows-ux; fix: re-run the command by hand and read the stderr below):\\nCloning into '/tmp/toolchain-qualification-gj4r0tmy/settings/registries/8470bd566559b4f6/packages/org.jresearch.ai.codex-relay/clone'...\\nremote: 404: Not Found\\nfatal: repository 'https://raw.githubusercontent.com/jrs-vibevm/org.jresearch.ai.codex-relay.git/' not found (violates spec://org.vibevm.core/vibevm/modules/vibe-registry/PROP-002#failure-discriminator; fix: act on the underlying provider failure named in the message)\"}\n"
+    }
+  ]
+}
