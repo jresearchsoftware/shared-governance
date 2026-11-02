@@ -1,0 +1,15 @@
+{
+  "v6.0.0": {
+    "status": 200,
+    "ref": "refs/tags/v6.0.0",
+    "object": {
+      "sha": "0bdfe55e36683e69cd2f8219b11b3e9fe14b069c",
+      "type": "tag",
+      "url": "https://api.github.com/repos/jrs-vibevm/org.jresearch.ai.development-governance/git/tags/0bdfe55e36683e69cd2f8219b11b3e9fe14b069c"
+    }
+  },
+  "v7.0.0": {
+    "status": 404,
+    "observation": "not found at unauthenticated public readback"
+  }
+}

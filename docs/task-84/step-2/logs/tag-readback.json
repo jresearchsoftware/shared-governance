@@ -1,0 +1,22 @@
+{
+  "observed_at": "2026-11-02T11:51:29.533245+00:00",
+  "repository": "jrs-vibevm/org.jresearch.ai.development-governance",
+  "reads": [
+    {
+      "tag": "v6.0.0",
+      "http_status": 200,
+      "ref": "refs/tags/v6.0.0",
+      "object": {
+        "sha": "0bdfe55e36683e69cd2f8219b11b3e9fe14b069c",
+        "type": "tag",
+        "url": "https://api.github.com/repos/jrs-vibevm/org.jresearch.ai.development-governance/git/tags/0bdfe55e36683e69cd2f8219b11b3e9fe14b069c"
+      }
+    },
+    {
+      "tag": "v7.0.0",
+      "http_status": 404,
+      "observation": "Not found by unauthenticated public ref read"
+    }
+  ],
+  "limit": "No publication or source acceptance claim; native CI must recheck version/tag before integration."
+}

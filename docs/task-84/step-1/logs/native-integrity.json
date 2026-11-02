@@ -1,0 +1,11 @@
+{
+  "source_revision": "966cbe5aaad6f4a33546266e9ea6646b1ddd5a62",
+  "staging_and_actual_integrity": "PASS",
+  "new_slot": "vibevm/vibedeps/org.jresearch.ai.development-governance/7.0.0",
+  "changed_routes": [
+    "vibe.lock",
+    "vibevm/vibespecs/boot/INDEX.md"
+  ],
+  "historical_slots": "preserved",
+  "relay_skill_and_receipt": "unchanged and verified"
+}

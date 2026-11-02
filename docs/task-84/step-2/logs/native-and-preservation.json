@@ -1,0 +1,83 @@
+{
+  "accepted": {
+    "source_revision": "b451bfdba89f6f9658805c66cd71a5ffd75b0f6a",
+    "version": "6.0.0",
+    "payload_sha256": "5fb053e46110f2ddd9fde4053e8c511f3d3dba8eadd73788a5dbd348e59ab028",
+    "native_integrity": "PASS",
+    "selected_packages": [
+      {
+        "group": "org.jresearch.ai",
+        "name": "development-governance",
+        "version": "6.0.0",
+        "content_hash": "sha256:e26c7bc346bca66c4a1dfe5d9a1f2f19c8b68d1a8bb604f56a60a5496f7d0130",
+        "source_kind": "registry"
+      },
+      {
+        "group": "org.jresearch.ai",
+        "name": "codex-relay",
+        "version": "3.0.0",
+        "content_hash": "sha256:451ee21dbfd63abd7918f0aee979220fb57cb8a8dffde20009a25f11bf9071e7",
+        "source_kind": "git"
+      }
+    ]
+  },
+  "candidate": {
+    "source_revision": "4f383403e633dffd5e0d36e0e2e70bcace2ad99a",
+    "version": "7.0.0",
+    "payload_sha256": "3eff2ae300602e812b99539b18fe3d8232c92191ec1e5515c156a6754be51257",
+    "native_integrity": "PASS",
+    "selected_packages": [
+      {
+        "group": "org.jresearch.ai",
+        "name": "development-governance",
+        "version": "7.0.0",
+        "content_hash": "sha256:5ce5f41aa48aa0604fc5f04e76e5b29cc5134d51b848b4be327ee7e621cd0b22",
+        "source_kind": "registry"
+      },
+      {
+        "group": "org.jresearch.ai",
+        "name": "codex-relay",
+        "version": "3.0.0",
+        "content_hash": "sha256:451ee21dbfd63abd7918f0aee979220fb57cb8a8dffde20009a25f11bf9071e7",
+        "source_kind": "git"
+      }
+    ]
+  },
+  "aggregate_change": {
+    "whole_package_transition": {
+      "changed": true,
+      "before": "6.0.0",
+      "version": "7.0.0",
+      "source_revision": "4f383403e633dffd5e0d36e0e2e70bcace2ad99a",
+      "bump": "major"
+    },
+    "changed_export_files": [
+      "CHANGELOG.md",
+      "README.md",
+      "vibe.toml",
+      "vibevm/vibespecs/guides/onboarding-examples.md",
+      "vibevm/vibespecs/protocols/requirement-authority.md",
+      "vibevm/vibespecs/protocols/task-handoff.md"
+    ],
+    "unchanged_export_files": 16,
+    "export_file_count": 22
+  },
+  "step_2_preservation": {
+    "comparison": "334086b47070258b322e4e0966a96f458ac6430f",
+    "status": "PASS",
+    "unchanged_paths": [
+      "packages/",
+      "vibevm/",
+      "vibe.toml",
+      "vibe.lock",
+      "AGENTS.md",
+      ".agents/",
+      "CLAUDE.md",
+      "GEMINI.md",
+      "scripts/",
+      ".github/",
+      "chatgpt/",
+      "LICENSE"
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "source_revision": "fba8c5056e9556021083368c9fc289144d6992a0",
+  "results": {
+    "qualification": {
+      "exit_code": 0,
+      "command": [
+        "python3",
+        "scripts/qualify.py",
+        "--export-ref",
+        "fba8c5056e9556021083368c9fc289144d6992a0"
+      ]
+    },
+    "chatgpt": {
+      "exit_code": 0,
+      "command": [
+        "python3",
+        "scripts/test-chatgpt-projection.py"
+      ]
+    },
+    "release": {
+      "exit_code": 0,
+      "command": [
+        "python3",
+        "scripts/test-release.py"
+      ]
+    },
+    "release-transition": {
+      "exit_code": 0,
+      "command": [
+        "python3",
+        "scripts/package-release.py",
+        "--source-ref",
+        "fba8c5056e9556021083368c9fc289144d6992a0",
+        "--base",
+        "b451bfdba89f6f9658805c66cd71a5ffd75b0f6a"
+      ]
+    },
+    "self-adoption": {
+      "exit_code": 0,
+      "command": [
+        "python3",
+        "scripts/test-self-adoption.py"
+      ]
+    },
+    "publication": {
+      "exit_code": 0,
+      "command": [
+        "python3",
+        "scripts/test-publication.py"
+      ]
+    },
+    "distribution": {
+      "exit_code": 0,
+      "command": [
+        "python3",
+        "scripts/test-distribution.py"
+      ]
+    }
+  }
+}

@@ -215,6 +215,14 @@ does not accept or repair semantic migration gaps.
 
 ## Source and pinned-tool checks
 
+Task 84's [closure coverage and bounded walks](task-84/step-1/README.md) compare
+the complete accepted TH-026/RA-006 behavior with the single-field timing change.
+The whole-package 6.0.0 -> 7.0.0 MAJOR preserves historical authority, all other
+protocols and public inventory. The [producer-local Relay transition](releases.md#task-84-closure-transition)
+uses the owner-selected window reconciled in [Step 2](task-84/step-2/README.md):
+60 calendar days from verified publication of the first implementing and qualified
+Relay release, not from Shared publication. It does not qualify a changed runtime.
+
 Python 3.11+ and Git suffice for ordinary source/export checks:
 
 ```sh

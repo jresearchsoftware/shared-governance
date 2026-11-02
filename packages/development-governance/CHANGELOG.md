@@ -1,5 +1,44 @@
 # Development Governance changelog
 
+## 7.0.0
+
+MAJOR: replaces the timing and hold-release meaning within existing
+[TH-026](vibevm/vibespecs/protocols/task-handoff.md#TH-026). The single existing
+`Issue closure policy` attribute has two values: `close-authorized` closes on
+successful default-branch merge of the designated completing PR via `Closes #N`
+or its supported native closing link; `keep-open` uses a non-closing reference
+and closes after its adjacent human-readable condition is verified. Neither
+value requires another discretionary owner confirmation. Condition satisfaction
+uses the existing trusted closure path without a new policy-change Decision;
+genuine changes in scope, conditions or authority still require one. RA-006's
+closure reference is aligned with that distinction.
+
+Compared with 6.0.0, adopters must reconcile PR closing linkage, final-versus-
+intermediate PR designation and conditional later closure. A producer Task
+including publication selects `keep-open` until verified publication of the
+exact accepted revision/version. The old contract allowed separate closure
+after completion under `close-authorized`, including post-merge obligations,
+and a trusted policy-release Decision for `keep-open`. Replacing those supported
+paths is incompatible even though it removes repeated permission friction.
+This is neither PATCH nor an optional MINOR addition. Existing review/merge and
+completion records carry the evidence; no new field, checker, registry, daemon,
+test framework or approval stage is introduced.
+
+Required exact-head acceptance, protected merge authority, actual completion,
+no-PR results and historical/admitted authority remain intact. Closing an
+unmerged PR does not close its Task; only a genuinely completing PR in a multi-PR
+Task closes it. Missing metadata fails safe without inventing an owner-selected
+hold. Frozen releases and old Issue/Step history are not rewritten or replayed.
+Consumers separately reconcile their bindings and qualify runtime changes;
+publishing this package does not implement them or grant a universal grace period.
+The [bounded examples](vibevm/vibespecs/guides/onboarding-examples.md#9-single-field-task-closure)
+exercise these cases without relying on a producer's product-specific rules.
+
+TH-026 and RA-006 retain their addresses and semantic ownership; TH-026's earlier
+closure timing/release wording is superseded in this version. No rule ID is
+retired or reused. All other protocols, conditional topic routing, public
+inventory, license, client tools and adoption boundaries are preserved.
+
 ## 6.0.0
 
 MAJOR: extends existing Package Versioning with explicit compatibility-evidence

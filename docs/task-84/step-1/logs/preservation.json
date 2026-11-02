@@ -1,0 +1,16 @@
+{
+  "source_revision": "fba8c5056e9556021083368c9fc289144d6992a0",
+  "accepted_baseline": "b451bfdba89f6f9658805c66cd71a5ffd75b0f6a",
+  "public_inventory_files": 22,
+  "changed_public_files": [
+    "CHANGELOG.md",
+    "README.md",
+    "vibe.toml",
+    "vibevm/vibespecs/guides/onboarding-examples.md",
+    "vibevm/vibespecs/protocols/requirement-authority.md",
+    "vibevm/vibespecs/protocols/task-handoff.md"
+  ],
+  "unchanged_public_files": 16,
+  "rule_addresses": "preserved",
+  "historical_sources_slots_relay_skill_workflows_scripts_chatgpt_license": "unchanged"
+}

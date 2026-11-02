@@ -18,6 +18,25 @@ assessments. Other consumers retain their own adoption and local policy.
 
 ## Contribution and integration
 
+Task 84 prepares **7.0.0 MAJOR** against accepted 6.0.0. TH-026 replaces separate
+post-completion `close-authorized` closure with native closure on the designated
+completing PR's merge, and replaces `keep-open` policy-release ceremony with
+verification of the stated preauthorized condition. RA-006 and the producer's
+manual binding follow that meaning. These are incompatible supported-workflow
+changes under PV-002–004, even though the one-field design removes repeated
+permission friction. Neither Task 74's PATCH exception nor the Relay-only
+transition below changes that classification. See [Task 84 coverage](task-84/step-1/README.md)
+and the [Step 2 window reconciliation](task-84/step-2/README.md).
+
+For a producer Task whose deliverable includes publication, select `keep-open`
+and describe successful publication of the exact accepted version/revision next
+to the one closure field. Source acceptance/merge, package publication and later
+consumer adoption are distinct. The source PR uses a non-closing reference.
+After all actual Task conditions are verified, already-authorized trusted closure
+needs no new discretionary owner choice. If final merge itself completes a Task,
+`close-authorized` uses the designated final PR's native closing link. Historical
+Tasks retain their admitted authority and then-supported mechanism.
+
 Task 65 prepares **6.0.0 MAJOR** against accepted 5.2.3. Package Versioning's
 existing cadence/actual-compatibility rules now require explicit floor and
 constraint justification and distinguish the authority used by resolved and
@@ -149,6 +168,67 @@ PV-002/004 for the whole package, preserving the highest-impact category and
 mandatory operator-work disclosure. A narrow Relay fallback cannot disguise an
 otherwise breaking contract as PATCH or MINOR or extend Task 74's separate
 single-task exception.
+
+### Task 84 closure transition
+
+[Task 84](https://github.com/jresearchsoftware/shared-governance/issues/84)
+implements TH-026's new target semantics in candidate **7.0.0**, the introducing
+version if accepted and successfully published without a later version
+reconciliation. Verify the actual first published version before creating the
+Relay follow-up; a candidate version or source merge is not publication evidence.
+This is the concrete application of [Task 83](https://github.com/jresearchsoftware/shared-governance/issues/83),
+not a grace period for other projects or other rules.
+
+The deprecated legacy path is narrowly Relay Skill 3.0.0's schema-v4 source
+contract: migrated PRs use `Related to #N`, native `closesTask=false` and neutral
+squash messages; trusted owner continuation separately closes only with effective
+`close-authorized`, verified completion and no remaining work/hold. Where an
+existing condition and its release are preauthorized, the qualified legacy
+Task-scoped Decision mechanism can reconcile that policy without another owner
+choice. Original admissions, native authority, Writer evidence, independent
+exact-head acceptance, warning disposition, operation reservations and readback
+remain required. Do not bypass a rejection, fabricate provenance or rewrite
+immutable Skill bytes to make old code appear to support the target semantics.
+
+The [bounded compatibility evidence](task-84/step-2/README.md#relay-compatibility-and-limits)
+identifies the pinned implementation, tested combinations and legacy paths.
+These checks establish source behavior and selected guidance integrity,
+not deployed-runtime qualification or support for all Shared versions allowed by
+`>=2.5.0`. Native graph generation establishes selection/integrity only. Preserve
+already-admitted historical work under its original qualified contract.
+
+**Owner-selected window:** the [Task 84 Decision](https://github.com/jresearchsoftware/shared-governance/issues/84#issuecomment-6576169608)
+permits this deprecated Relay-only fallback while the compatible Relay release
+is pending and for **60 calendar days starting from verified publication of the
+first Codex Relay release that implements and qualifies the new Task-closure
+semantics**. Shared Governance 7.0.0 publication does **not** start this clock.
+Once that Relay publication is verified, record its exact release/source identity,
+publication event and the derived 60-calendar-day deadline in the linked Relay
+Issue/release chronology. No event date or deadline is assigned in this candidate;
+the duration and trigger are decided, not awaiting another owner choice.
+
+The window grants no support for unqualified combinations or unknown Shared
+versions. Removal requires a separately accepted future Shared release, with its
+own whole-package SemVer assessment, **no earlier than the end of this window**.
+Expiry does not automatically delete behavior or rewrite immutable releases;
+do not silently withdraw support early or promise an extension beyond the
+selected window. Existing historical/admitted authority and release identities
+remain intact. This local exception neither changes other projects/rules nor
+qualifies an installed Relay service.
+
+Keep Task 84 open after source merge until the accepted introducing version is
+successfully published from the verified accepted revision **and** a new linked
+Relay implementation Issue is created and read back. Only then, with no actual
+Task work remaining, use the then-supported trusted closure mechanism without a
+new discretionary confirmation. [Relay1's prepared brief](task-84/step-1/relay1-follow-up.md)
+is not a created Issue. Its later creation must reference the first published
+Shared version, reconcile `closesTask=false`, implement/qualify both closure
+paths, retain historical/v4 trust boundaries, update compatibility evidence and
+raise the **new released Skill's** floor to that introducing Shared version.
+Record its real URL and readback in Task 84's chronology. Relay1 implementation
+and release belong to Relay's subsequent consumer-owned work; their completion
+is not an additional Task 84 closure condition. No earlier Relay artifact or pin
+is rewritten.
 
 ## Frozen-package preparation
 
