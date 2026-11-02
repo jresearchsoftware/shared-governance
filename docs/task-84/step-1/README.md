@@ -101,10 +101,58 @@ agreed window, with its own SemVer assessment.
 
 ## Completion and validation boundary
 
-Local validation results follow after authored source and native projection are
-committed. Independent exact-head assessment remains pending: this worker cannot
-invoke Reviewer or accept itself. Root/sudo-only installed-runtime proof belongs
-to native exact-head CI after Writer publication; no escalation is authorized.
+The authored export was staged from `966cbe5aaad6f4a33546266e9ea6646b1ddd5a62`.
+The existing pinned Linux musl VibeVM 1.0.7 binary was downloaded without
+credentials and verified against the toolchain SHA-256
+`20d111df02eb28040ef4cb766bfcb0bde8ff4427b031f88f33eacb3711c3e240`.
+[Native install](logs/native-install.log) in an isolated in-checkout fixture and
+settings directory selected Shared 7.0.0 alongside unchanged Relay 3.0.0.
+[Integrity verification](logs/native-integrity.json) passed before and after
+transferring the new slot, lock and root index. Historical slots pruned only in
+staging were preserved in the real checkout. Native private file modes were
+retained; no access widening or host permission repair was used.
+
+All suites below ran against source/projection
+`fba8c5056e9556021083368c9fc289144d6992a0` in a local Git-bundle fixture. Temporary
+exports stayed outside that fixture and inside this execution checkout, meeting
+the exporter's ordinary isolation contract without external writes.
+
+| Existing check | Result and primary evidence |
+| --- | --- |
+| Source, local links, passive exact-commit export, bounded credential markers and native integrity | [PASS](logs/qualification.log). |
+| Distribution/provenance regressions | [52 passed](logs/distribution.log). |
+| Release regressions | [20 passed; six optional native integrations skipped](logs/release.log). |
+| Self-adoption/recovery | [17 passed](logs/self-adoption.log). |
+| ChatGPT projection regressions | [29 passed](logs/chatgpt.log). |
+| Publisher boundary regressions | [11 passed; one optional native integration skipped](logs/publication.log). |
+| Whole-package arithmetic | [PASS: one MAJOR, 6.0.0 -> 7.0.0](logs/release-transition.log). [Public readback](logs/tag-readback.json) found v6.0.0 and no v7.0.0; native CI must recheck before integration. |
+| Bounded preservation | [PASS](logs/preservation.json): six of 22 exported files change; 16 remain identical. Historical sources/slots, Relay Skill/projection/closure, rule addresses, workflows, scripts, client inputs and license are preserved. |
+| Actual-checkout unprivileged native check | [Zero errors; 13 warnings](logs/native-check.log) for retained unselected historical slots 2.5.0 through 6.0.0, including the old 5.1.1 proposal. |
+| Effective ChatGPT content | [NO_OP](logs/chatgpt-content.json) using the frozen accepted tool against the isolated candidate. Sources are disabled; live settings are unverified. |
+| Whitespace against frozen accepted main | `git diff --check` passed. |
+
+Totals are **129 passing tests and seven optional integration skips**. No new
+test framework or prose-mirroring tests were added. The native warnings are the
+tool's orphan-slot diagnostics for deliberately preserved historical files. The
+active lock/route selects 7.0.0, verified against authored bytes; no cleanup,
+fallback, suppression or consumer migration is warranted. Retain this warning
+disposition for independent assessment. Source tests and native graph checks do
+not prove new Relay runtime behavior, live GitHub closure or model compliance.
+
+The first local staging command used `HEAD` where the exporter requires a full
+SHA; it refused before writing. The subsequent fixture copy consequently found
+no new registry source. Resolving the existing full commit and rerunning the
+same bounded export completed staging; no package or validator change was needed.
+This setup correction does not affect the successful source/projection checks.
+
+Later commits record only this qualification evidence; final source/export/link/
+integrity and whitespace verification covers the handed-off head. The projector's
+candidate SHA is a test input, not acceptance. Unchanged effective Instructions
+need no new application under TH-029; any earlier unresolved live-settings gap
+remains, and NO_OP proves no live synchronization.
+Independent exact-head assessment remains pending: this worker cannot invoke
+Reviewer or accept itself. Root/sudo-only installed-runtime proof belongs to
+native exact-head CI after Writer publication; none is attempted or claimed.
 
 Task 84 stays open through verified accepted-source publication and creation/
 readback of [Relay1](relay1-follow-up.md). The brief is not a created Issue. Once
