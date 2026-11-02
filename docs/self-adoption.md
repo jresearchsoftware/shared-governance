@@ -72,6 +72,15 @@ reading of committed files does not. Preserve the original lock before fresh
 resolution and retain historical slots pruned by the tool when transferring
 selected outputs back. Do not edit generated source identities or global settings.
 
+With 1.0.10, set `VIBE_REMAP` to the absolute path of the staging checkout's
+[`toolchain/vibevm-git-compat.toml`](../toolchain/vibevm-git-compat.toml) for native
+commands using the mixed graph. The built-in raw-file rule otherwise rewrites
+Relay's Git clone to `raw.githubusercontent.com`, which returns 404. This
+owner-authorized compatibility row keeps only the existing Relay Git origin
+unchanged, with the same pinned revision and bytes. It installs no remap package
+and changes no global settings. Keep it in the same isolated command environment
+as `VIBE_SETTINGS`; other projects do not acquire this workaround automatically.
+
 Use the pinned executable, set the root's exact requirement to the authored
 version, and review/commit generated files in this same PR. Generation preserves
 text outside root agent blocks. Member AGENTS/CLAUDE/GEMINI and index are producer
@@ -98,7 +107,8 @@ exact-source receipt and unchanged publication contract.
 `python3 scripts/qualify.py --export-ref HEAD` compares the authored export with
 registry/installed file sets and bytes, slot metadata, exact lock version/content
 hash and native index/agent routing. It reuses exporter/Git checks; `vibe check`
-alone misses known missing/corrupt slot and index incidents. Candidate artifacts
+alone still misses corrupt payload/index incidents; 1.0.10 now diagnoses a
+slot-receipt/lock hash split as `lock_slot_hash`. Candidate artifacts
 remain proposed guidance during these checks.
 
 ## Failure and recovery
@@ -123,6 +133,16 @@ canonical comparison. Plain `vibe reinstall` rebuilds boot from retained slots.
 Both paths were tested; reinstall has no `--registry` flag. In-tree local
 resolution needs no global registry configuration change. Do not hand-edit lock
 URLs, bypass integrity or repair host permissions.
+
+On 1.0.10, forced reinstall refuses refetched source bytes that differ from the
+lock with `lock_hash_mismatch`, before copying them into slots. Restore the
+reviewed source/projection with Git and retry; do not use update to bless an
+accidental edit to a frozen version. Native runs may create two ignored
+`.vibe-boot-artifacts.lock` receipts under root/member boot directories; after
+Git restoration, remove only newly generated receipts when a byte-identical
+disposable baseline is needed. Lifecycle journals under `.vibe/` remain diagnostic
+state. The bounded [Task 87 qualification](task-87/step-1/README.md) also exercises
+late failed-install rollback without changing manifest, lock, slots or boot.
 
 If accepted files cannot be read/verified, preserve work and report the concrete
 missing guidance or permission boundary. Ordinary Git restore or an authorized

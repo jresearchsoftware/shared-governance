@@ -23,6 +23,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--vibe", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--git-compat", type=Path, help="explicit compatibility row for the Git acquisition probe")
     args = parser.parse_args()
     vibe = args.vibe.resolve()
     pin = json.loads((ROOT / "toolchain/vibevm.json").read_text())
@@ -45,6 +46,9 @@ def main():
                    GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_NOSYSTEM="1", GIT_TERMINAL_PROMPT="0",
                    GIT_AUTHOR_NAME="Fixture", GIT_AUTHOR_EMAIL="fixture@example.invalid",
                    GIT_COMMITTER_NAME="Fixture", GIT_COMMITTER_EMAIL="fixture@example.invalid")
+        if args.git_compat:
+            env["VIBE_REMAP"] = str(args.git_compat.resolve())
+            report["compatibility_sha256"] = hashlib.sha256(args.git_compat.read_bytes()).hexdigest()
 
         def git(path, *arguments):
             return subprocess.check_output(["git", "-c", "core.autocrlf=false", "-C", str(path),
@@ -78,7 +82,7 @@ def main():
         selected = lambda data: {(p["group"], p["name"]): (p["version"], p["content_hash"])
                                  for p in data["package"]}
         require(selected(lock) == selected(original_lock), "selected package identities changed")
-        require(lock["generated_by"] == "vibe " + pin["version"], "wrong materializer version")
+        require(lock["meta"]["generated_by"] == "vibe " + pin["version"], "wrong materializer version")
         report["selected"] = [dict(group=p["group"], name=p["name"], version=p["version"],
                                    content_hash=p["content_hash"], source_kind=p["source_kind"],
                                    source_ref=p.get("source_ref")) for p in lock["package"]]
@@ -120,7 +124,15 @@ def main():
         require("lock_hash_mismatch" in refused.stdout + refused.stderr, "missing pinned-byte refusal")
         require(tree(work) == before, "refused reinstall changed project")
         git(work, "restore", "--source=" + revision, "--", ".")
-        require(tree(work) == original_tree, "Git restoration did not recover the complete project")
+        # New ignored boot receipts are disposable materializer output, not committed source.
+        for path in ("vibevm/vibespecs/boot/.vibe-boot-artifacts.lock",
+                     "packages/development-governance/vibevm/vibespecs/boot/.vibe-boot-artifacts.lock"):
+            if path not in original_tree:
+                (work / path).unlink(missing_ok=True)
+        restored_tree = tree(work)
+        require(restored_tree == original_tree, "Git restoration did not recover the complete project: "
+                + repr([p for p in restored_tree.keys() | original_tree.keys()
+                        if restored_tree.get(p) != original_tree.get(p)]))
         preparation.verify_producer(revision, work)
         run("retained-slot reinstall", work, "reinstall", "--offline", "--assume-yes", str(work))
         preparation.verify_producer(revision, work)

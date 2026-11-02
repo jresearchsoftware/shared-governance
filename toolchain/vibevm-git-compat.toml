@@ -1,0 +1,6 @@
+# VibeVM 1.0.10's built-in raw-file mapping also rewrites registry clones.
+# Keep only the producer's existing Relay Git origin unchanged. Use through
+# VIBE_REMAP in isolated staging; no remap package or global setting is adopted.
+[[remap]]
+prefix = "https://github.com/jrs-vibevm/org.jresearch.ai.codex-relay.git"
+url = "https://github.com/jrs-vibevm/org.jresearch.ai.codex-relay.git"

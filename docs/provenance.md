@@ -53,13 +53,13 @@ requires independent exact-head acceptance and grants no publication or consumer
 adoption authority. [Self-adoption](self-adoption.md) records accepted-origin
 active guidance separately from candidate authoring.
 
-VibeVM is pinned to `v1.0.7`, source
+The initial experiment pinned VibeVM `v1.0.7`, source
 `b6659978453f50e6d1d4d99626d70b980a2c5847`, and
 [release 403150895](https://github.com/vibevm/vibevm/releases/tag/v1.0.7).
 The release API reports `immutable=false`; hashes in the toolchain pin protect
 this experiment from silently changed download bytes.
 
-Relevant pinned upstream sources:
+Historical 1.0.7 upstream sources:
 
 - [Manifest/workspace schema](https://github.com/vibevm/vibevm/blob/b6659978453f50e6d1d4d99626d70b980a2c5847/crates/vibe-core/src/manifest/document.rs)
   and [package wire schema](https://github.com/vibevm/vibevm/blob/b6659978453f50e6d1d4d99626d70b980a2c5847/crates/vibe-core/src/manifest/package/wire.rs).
@@ -68,6 +68,16 @@ Relevant pinned upstream sources:
 - [Skill byte snapshot](https://github.com/vibevm/vibevm/blob/b6659978453f50e6d1d4d99626d70b980a2c5847/crates/vibe-agent-projection/src/pkgskill/snapshot.rs)
   and [agent scope paths](https://github.com/vibevm/vibevm/blob/b6659978453f50e6d1d4d99626d70b980a2c5847/crates/vibe-agent-projection/src/agents/ambient_paths.rs).
 - [Alpha posture](https://github.com/vibevm/vibevm/blob/b6659978453f50e6d1d4d99626d70b980a2c5847/docs-legacy/ALPHA-NOTES.md).
+
+Task 87 updates the producer toolchain to `v1.0.10`, source
+`49a2d745ec2ad8bb123ba867a53400b0a3ff0c3d`,
+[release 431101942](https://github.com/vibevm/vibevm/releases/tag/v1.0.10).
+Its mutable release assets are independently checked against the distribution
+manifest and API digests; the [pin](../toolchain/vibevm.json) records the manifest
+and supported artifact identities. [Qualification](task-87/step-1/README.md)
+records preserved payload/boot/hash behavior, changed integrity diagnostics and
+the owner-authorized narrow Git-origin compatibility correction. Earlier
+versioned package references and qualification records remain historical facts.
 
 Future publication repositories/tags, consumer adoption, registry credentials,
 private governance and broader extraction require their own later authority.

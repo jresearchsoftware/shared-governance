@@ -49,6 +49,7 @@ and the [published installation contract](../.agents/skills/codex-relay/referenc
 Generate in a disposable native filesystem and review all outputs together:
 
 ```sh
+export VIBE_REMAP="$PWD/toolchain/vibevm-git-compat.toml"
 vibe --json install --no-default-registry --no-prefer-local --assume-yes
 vibe --offline --json skill list
 vibe --offline --json skill install --skill codex-relay --agent codex --scope project --dry-run
@@ -82,6 +83,13 @@ without `--offline` for public Git acquisition. This uses the native mixed
 resolver without changing user registry configuration. The original lock may
 be retained when intentionally changing Shared's exact version; preserve
 historical slots pruned in disposable staging when transferring selected output.
+
+Keep the compatibility variable in that isolated staging environment. VibeVM
+1.0.10 otherwise applies its built-in raw-file mapping to the Relay Git clone,
+causing a 404. The single [compatibility row](../toolchain/vibevm-git-compat.toml)
+retains the existing origin; it adopts no remap package or global configuration.
+See the [owner Decision](https://github.com/jresearchsoftware/shared-governance/issues/87#issuecomment-6577910678)
+and [qualification](task-87/step-1/README.md) before removing it in a later upgrade.
 
 The offline qualifier checks both source forms: public packages retain their
 immutable revision, content hash and distribution receipt; producer Shared

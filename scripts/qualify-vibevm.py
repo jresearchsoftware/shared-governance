@@ -97,8 +97,11 @@ def main():
         run("--json", "check", "--path", str(member))
         agents_before = (workspace / "AGENTS.md").read_bytes()
         listing = json.loads(run("--offline", "--json", "skill", "list", "--path", str(member)))
-        if listing.get("skills"):
-            raise RuntimeError("flow exposes a native Skill")
+        # Member listing sees the enclosing workspace's separately installed Relay Skill.
+        if any(s.get("name") != "codex-relay" or s.get("source") != str(workspace /
+               "vibevm/vibedeps/org.jresearch.ai.codex-relay/3.0.0/skill")
+               for s in listing.get("skills", [])):
+            raise RuntimeError("unexpected Skill outside the enclosing Relay dependency")
         if (workspace / "AGENTS.md").read_bytes() != agents_before:
             raise RuntimeError("member qualification changed root AGENTS.md")
         run("--json", "check", "--path", str(workspace))
@@ -129,7 +132,7 @@ def main():
             if len(blocks) != 1 or outside != before_overlay:
                 raise RuntimeError("dependency install modified human-owned AGENTS.md content")
         print(json.dumps({"vibevm_qualification": "PASS", "version": pin["version"],
-                          "commands": len(commands), "native_skills": "none declared/projected",
+                          "commands": len(commands), "native_skills": "governance declares none; enclosing Relay listing preserved",
                           "dependency_install": "PASS" if args.materialize else "not requested",
                           "fixture": "disposable local paths; no package publication or consumer writes"}))
 

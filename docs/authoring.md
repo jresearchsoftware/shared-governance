@@ -248,6 +248,8 @@ in a disposable native filesystem. Its SHA-256 is recorded in
 python3 scripts/qualify-vibevm.py --vibe /absolute/path/to/vibe --materialize
 python3 scripts/qualify-distribution.py --vibe /absolute/path/to/vibe --source-ref "$(git rev-parse HEAD)"
 python3 scripts/test-release.py --vibe /absolute/path/to/vibe
+python3 scripts/qualify-toolchain.py --vibe /absolute/path/to/vibe \
+  --git-compat toolchain/vibevm-git-compat.toml --output /tmp/toolchain-qualification.json
 ```
 
 The authoring probe checks stable workspace/member loading and isolated registry
@@ -256,6 +258,10 @@ lock/slot/route integrity, a deliberate disposable mutable-tag incident, offline
 retained-slot behavior, synthetic patch update and complete Git rollback.
 Release integration covers the guarded native publisher, competing writers,
 transitive frozen closure, diamond conflict and intentional lock update.
+The toolchain probe covers the real producer mixed graph, immutable historical
+slots, native Relay Skill projection, pinned-byte refusal, late install failure
+and Git restoration. Its explicit compatibility row keeps the existing Relay Git
+origin unchanged in isolated staging; see [Task 87](task-87/step-1/README.md).
 No real consumer is migrated. These are focused integration/incident probes,
 not mandatory per-release requalification of package-manager file transport.
 
