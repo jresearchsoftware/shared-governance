@@ -191,7 +191,12 @@ def main():
             pass
         else:
             raise ValueError("canonical consumer verifier accepted lock/slot split")
-        run(first, "check")  # Check does not detect the demonstrated split.
+        diagnosed = run(first, "check", success=False)
+        # A failed check emits its report followed by a JSON error envelope.
+        findings, _ = json.JSONDecoder().raw_decode(diagnosed.stdout.lstrip())
+        require(any(f["check"] == "lock_slot_hash" and f["severity"] == "error"
+                    and f.get("field") == "package[0].content_hash" for f in findings["findings"]),
+                "native check did not diagnose the lock/slot split")
         drifted = consumer("drifted-consumer")
         run(drifted, "install", "--no-default-registry", "--assume-yes", settings=fixture / "drift-settings")
         try:
@@ -230,7 +235,7 @@ def main():
                           "commands": len(commands), "native_skills": "none declared/projected",
                           "protocol_source": "exact canonical source commit; independent acceptance is separate",
                           "local_publish_and_idempotence": "PASS", "independent_cold_consumer": "PASS",
-                          "tag_drift": "upstream lock/slot split reproduced; canonical verifier rejects",
+                          "tag_drift": "lock/slot split reproduced; native check and canonical verifier reject",
                           "offline": "existing slots and complete Git rollback PASS; cache-only recovery FAIL",
                           "update": "synthetic version-only declaration change PASS",
                           "boot_index": "static package entry despite authored dynamic link",

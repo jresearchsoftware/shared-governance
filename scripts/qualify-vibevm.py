@@ -17,9 +17,9 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--vibe", required=True, type=Path, help="downloaded pinned Linux x86_64 v1.0.7 binary")
+    parser.add_argument("--vibe", required=True, type=Path, help="downloaded pinned Linux x86_64 v1.0.10 binary")
     parser.add_argument("--materialize", action="store_true", help="also probe local dependency installation (alpha behavior)")
-    parser.add_argument("--path-source", action="store_true", help="reproduce the known v1.0.7 path-only dependency limitation")
+    parser.add_argument("--path-source", action="store_true", help="reproduce the known v1.0.10 path-only dependency limitation")
     args = parser.parse_args()
     vibe = args.vibe.resolve()
     pin = json.loads((ROOT / "toolchain/vibevm.json").read_text(encoding="utf-8"))
@@ -46,6 +46,12 @@ def main():
         env["VIBE_SETTINGS"] = str(fixture_root / "settings")
         env["VIBEVM_USER_CONFIG"] = str(fixture_root / "settings/config.toml")
         commands = []
+        selected = {preparation.slot(p["version"]) for p in
+                    tomllib.loads((workspace / "vibe.lock").read_text())["package"]
+                    if p["name"] == "development-governance"}
+        retained = {p.relative_to(workspace).as_posix() for p in
+                    (workspace / "vibevm/vibedeps/org.jresearch.ai.development-governance").iterdir()
+                    if p.is_dir()} - selected
 
         def run(*arguments):
             result = subprocess.run([str(vibe), *arguments], cwd=workspace, env=env,
@@ -60,7 +66,11 @@ def main():
                 print(result.stderr.strip())
             if "check" in arguments:
                 report = json.loads(result.stdout)
-                if report["summary"]["error"] or report["summary"]["warning"] or report["findings"]:
+                unexpected = [f for f in report["findings"] if not (
+                    arguments[-1] == str(workspace) and f["check"] == "lockfile_files"
+                    and f["severity"] == "warning" and f.get("path") in retained
+                    and "orphan" in f["message"])]
+                if report["summary"]["error"] or unexpected:
                     raise RuntimeError("VibeVM check reported findings")
             return result.stdout
 
@@ -87,8 +97,11 @@ def main():
         run("--json", "check", "--path", str(member))
         agents_before = (workspace / "AGENTS.md").read_bytes()
         listing = json.loads(run("--offline", "--json", "skill", "list", "--path", str(member)))
-        if listing.get("skills"):
-            raise RuntimeError("flow exposes a native Skill")
+        # Member listing sees the enclosing workspace's separately installed Relay Skill.
+        if any(s.get("name") != "codex-relay" or s.get("source") != str(workspace /
+               "vibevm/vibedeps/org.jresearch.ai.codex-relay/3.0.0/skill")
+               for s in listing.get("skills", [])):
+            raise RuntimeError("unexpected Skill outside the enclosing Relay dependency")
         if (workspace / "AGENTS.md").read_bytes() != agents_before:
             raise RuntimeError("member qualification changed root AGENTS.md")
         run("--json", "check", "--path", str(workspace))
@@ -101,6 +114,8 @@ def main():
                 '[project]\nname="authoring-fixture"\nversion="0.0.0"\nspec_format="mixed"\n'
                 '[requires.packages]\n"flow:org.jresearch.ai/development-governance" = '
                 + requirement + '\n', encoding="utf-8")
+            # This synthetic single-package graph is independent of the copied mixed lock.
+            (workspace / "vibe.lock").unlink()
             run("--offline", "--json", "install", "--path", str(workspace), "--registry",
                 str(registry), "--no-default-registry", "--assume-yes")
             installed = workspace / ("vibevm/vibedeps/org.jresearch.ai.development-governance/" + version)
@@ -119,7 +134,7 @@ def main():
             if len(blocks) != 1 or outside != before_overlay:
                 raise RuntimeError("dependency install modified human-owned AGENTS.md content")
         print(json.dumps({"vibevm_qualification": "PASS", "version": pin["version"],
-                          "commands": len(commands), "native_skills": "none declared/projected",
+                          "commands": len(commands), "native_skills": "governance declares none; enclosing Relay listing preserved",
                           "dependency_install": "PASS" if args.materialize else "not requested",
                           "fixture": "disposable local paths; no package publication or consumer writes"}))
 

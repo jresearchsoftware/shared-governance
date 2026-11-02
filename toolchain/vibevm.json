@@ -1,21 +1,27 @@
 {
-  "version": "1.0.7",
+  "version": "1.0.10",
   "source_repository": "https://github.com/vibevm/vibevm",
-  "source_revision": "b6659978453f50e6d1d4d99626d70b980a2c5847",
-  "release_id": 403150895,
+  "source_revision": "49a2d745ec2ad8bb123ba867a53400b0a3ff0c3d",
+  "release_id": 431101942,
+  "release_immutable": false,
+  "distribution_manifest": {
+    "asset_id": 700752734,
+    "url": "https://github.com/vibevm/vibevm/releases/download/v1.0.10/DISTRIBUTIONS.json",
+    "sha256": "93ef7515a8b5c4ea2ae1faaa88423c1234daa8766526e31da8a2f651c8c8be90"
+  },
   "linux_x86_64_musl_binary": {
-    "asset_id": 610468051,
-    "url": "https://github.com/vibevm/vibevm/releases/download/v1.0.7/vibe-bootstrap-x86_64-unknown-linux-musl",
-    "sha256": "20d111df02eb28040ef4cb766bfcb0bde8ff4427b031f88f33eacb3711c3e240"
+    "asset_id": 700742512,
+    "url": "https://github.com/vibevm/vibevm/releases/download/v1.0.10/vibe-bootstrap-x86_64-unknown-linux-musl",
+    "sha256": "5c6703e2ccc7a4e5cf3b3999b62a3452a803d75f73623ef1e8024524d6e39814"
   },
   "linux_x86_64_gnu_binary": {
-    "asset_id": 610468551,
-    "url": "https://github.com/vibevm/vibevm/releases/download/v1.0.7/vibe-bootstrap-x86_64-unknown-linux-gnu",
-    "sha256": "21e605787342af41b0ac8a21a708c10d1fa3686b298b31b647e06926766527b4"
+    "asset_id": 700741959,
+    "url": "https://github.com/vibevm/vibevm/releases/download/v1.0.10/vibe-bootstrap-x86_64-unknown-linux-gnu",
+    "sha256": "85345ab6c9f770592d4362e5c4494aa6287060e34de8845dcfe95024e6d1a870"
   },
   "linux_x86_64_gnu": {
-    "asset_id": 610468407,
-    "url": "https://github.com/vibevm/vibevm/releases/download/v1.0.7/vibevm-1.0.7-x86_64-unknown-linux-gnu.zip",
-    "sha256": "ffed6bdec872ce9b3bcde5c5ace519dfb7732d56ede8807f37087d1d36849bd8"
+    "asset_id": 700741696,
+    "url": "https://github.com/vibevm/vibevm/releases/download/v1.0.10/vibevm-1.0.10-x86_64-unknown-linux-gnu.zip",
+    "sha256": "821193f971fdac6cbe9bdd3d5e9b346f9ba425a93dc6f7c9c5c42c94ad8b62b9"
   }
 }

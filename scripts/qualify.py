@@ -65,7 +65,7 @@ def check(export_ref=None):
                 payload[relative] = path.read_bytes()
     preparation.validate_payload(payload, (ROOT / "LICENSE").read_bytes())
     pin = json.loads((ROOT / "toolchain/vibevm.json").read_text(encoding="utf-8"))
-    require(pin["version"] == "1.0.7" and pin["source_revision"] == "b6659978453f50e6d1d4d99626d70b980a2c5847", "qualified VibeVM pin changed")
+    require(pin["version"] == "1.0.10" and pin["source_revision"] == "49a2d745ec2ad8bb123ba867a53400b0a3ff0c3d", "qualified VibeVM pin changed")
     spec = importlib.util.spec_from_file_location("projection", ROOT / "scripts/project-protocol.py")
     projection = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(projection)
