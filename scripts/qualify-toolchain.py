@@ -77,6 +77,10 @@ def main():
                                                + (work / "vibevm/vibepacks").as_uri() + '"\nauth="none"\n')
         # Deliberate fresh resolution, retaining the original lock in the clone's Git.
         (work / "vibe.lock").unlink()
+        for package in original_lock["package"]:
+            installed = work / "vibevm/vibedeps" / (package["group"] + "." + package["name"]) / package["version"]
+            require(installed.resolve().is_relative_to(work.resolve()), "slot escaped disposable clone")
+            shutil.rmtree(installed)
         run("mixed cold resolution", work, "install", "--no-default-registry", "--no-prefer-local", "--assume-yes")
         lock = tomllib.loads((work / "vibe.lock").read_text())
         selected = lambda data: {(p["group"], p["name"]): (p["version"], p["content_hash"])
