@@ -12,6 +12,17 @@ the package payload. This README is the current overview; actual acceptance and
 publication evidence remains in source Issues/PRs, workflows and distribution
 tags. Frozen historical versions retain their original bytes.
 
+Version 7.0.0 changes the existing [TH-026 closure clause](vibevm/vibespecs/protocols/task-handoff.md#TH-026):
+`close-authorized` closes on merge of the designated completing PR; `keep-open`
+uses a non-closing reference and closes after its stated condition is verified.
+The one existing Issue field controls timing, with no repeated permission prompt
+or second field. Publication deliverables use `keep-open` until the exact accepted
+package is published. This is MAJOR against 6.0.0's separate post-completion
+closure and policy-release path. Existing/admitted authority and immutable releases
+retain their meaning; consumer runtime adoption/qualification remains separate.
+See the [closure examples](vibevm/vibespecs/guides/onboarding-examples.md#9-single-field-task-closure)
+and changelog for operator impact and migration.
+
 Version 6.0.0 extends [Package Versioning](vibevm/vibespecs/protocols/package-versioning.md#PV-014)
 with evidence-based dependency floors, justified constraints, explicit resolved
 versus bundled authority and deliberate update/release decisions. A compatible
@@ -21,14 +32,6 @@ mandatory rationale and delivery-source assessment make this MAJOR against 5.2.3
 Existing lifecycle review carries the work, without another approval stage or
 universal test matrix. See the installed changelog and
 [bounded dependency examples](vibevm/vibespecs/guides/onboarding-examples.md#8-package-consumer-compatibility-and-delivery-choices).
-
-Version 5.1.0 extends [TH-026](vibevm/vibespecs/protocols/task-handoff.md#TH-026)
-with compatible guidance for owner-selected temporary closure holds, verified
-preauthorized release via existing trusted Task Decisions, and missing-condition
-resolution during existing result review. It preserves 5.0.0 completion,
-reassessment and authority duties, local timing and mechanisms; it adds no
-universal authoring field, review duty or completion gate. Close-authorized still
-waits for actual completion and protected obligations, without repeated permission.
 
 Version 4.0.0 adds [PC-013](vibevm/vibespecs/protocols/proportional-controls.md#PC-013)
 and tightens [IR-012–IR-015](vibevm/vibespecs/protocols/independent-review.md#IR-012):

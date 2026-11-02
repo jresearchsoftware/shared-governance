@@ -102,8 +102,11 @@ execute another cycle solely to satisfy an unratified suggestion.
 Apply the same distinction to Task closure: optional future use or observation
 does not become a completion gate, while a genuine owner-required Apply or
 protected obligation remains binding until satisfied or explicitly revised.
-Use [TH-026](task-handoff.md#TH-026) for condition-based holds and already
-authorized release through the project's existing Task Decision process;
+Use [TH-026](task-handoff.md#TH-026) for the existing closure field's on-merge
+and condition-verified timing. Verifying an already preauthorized condition
+needs no new owner choice or policy-change Decision; genuinely changed scope,
+conditions or authority still use the existing trusted Task Decision process.
+Missing intent cannot justify unsafe closure or an invented indefinite hold;
 neither result acceptance nor a reviewer/executor can silently change authority.
 This reference does not adopt Task Handoff in another consumer.
 

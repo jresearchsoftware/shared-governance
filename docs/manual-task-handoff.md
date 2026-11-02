@@ -213,29 +213,50 @@ further execution and closure remain distinct.
 
 ### Completion and closure disposition
 
-Use accepted TH-026/RA-006 for closure meaning. For this producer's
-owner-selected closure binding, `close-authorized` permits
-ordinary owner-controlled closure after actual Task completion, required
-independent acceptance/integration and no remaining Task work or protected hold.
-It adds no closure-specific test or repeated owner prompt. Manual executors do
-not gain merge or closure authority from their Outcome.
+Use accepted TH-026/RA-006 and the Task's chronological authority. Keep one
+`Issue closure policy: close-authorized` or `Issue closure policy: keep-open`
+line; describe any condition in ordinary adjacent text. No second field is needed.
+This 7.0.0 binding is proposed until accepted and does not retroactively change
+already-admitted work or earlier explicit holds.
 
-For explicit `keep-open`, record what remains, sufficient evidence and the
-owner-preauthorized next action. Once verified, the owner-facing assistant may
-publish the existing Task-scoped Decision changing effective policy to
-`close-authorized`, then use the existing owner continuation. In Relay-bound
-Tasks this must use the qualified trusted native Decision mechanism and current
-Task identity; unavailable authority/capability is a reported gap. A local note,
-Outcome, CR or review cannot substitute or silently mutate policy.
+For `close-authorized`, only the designated genuinely completing PR uses
+`Closes #N` or GitHub's supported native closing link. Verify that actual Task
+work has reached its accepted completion boundary and that merge will finish it;
+preserve independent exact-head acceptance, required checks and protected merge
+authority. GitHub closes the Issue on that PR's default-branch merge, not when
+an unmerged PR is abandoned/closed. Intermediate PRs use `Related to #N`.
+No-PR results use the existing authorized completion path without a fabricated PR.
 
-Missing/invalid/conflicting metadata safely retains `keep-open`. At the first
-substantive completed/result-producing Task review with absent reasons or
-conditions, flag that gap and ask the owner what remains or whether to authorize
-`close-authorized`; record the answer through the existing Decision mechanism.
-An owner-run Apply hold requires the actual run, intended revision/target and
-material warning disposition; a failed/unknown run does not satisfy it. Other
-unrelated repository PRs do not block this Task. Optional later usage needs no
-synthetic exercise to close. See [Task 68 compatible scenarios](task-68/step-3/compatibility.md).
+For `keep-open`, use `Related to #N` and state the remaining condition and
+sufficient evidence. The owner-facing continuation verifies it and closes through
+the supported trusted mechanism when all Task work/holds are resolved. Record
+the evidence in the chronology; do not require another owner-choice prompt or a
+Decision changing policy merely because the condition was satisfied. A real
+scope/condition/authority change still requires the existing trusted Decision.
+Manual executors gain neither merge nor closure authority from their Outcome.
+
+Producer Tasks that include package publication choose `keep-open` with successful
+publication of the exact accepted revision/version as a condition. Required
+post-merge Apply or effective-Instructions reconciliation likewise belongs in
+the real completion condition. Verify the actual Apply, intended revision/target
+and material warning disposition; failed/unknown runs do not satisfy it. Missing
+or conflicting closure intent prevents automatic closure and needs reconciliation
+through current Task authority. Do not invent an owner-selected hold or obtain a
+second decision where existing permission is clear. Unrelated PRs and optional
+later usage add no completion obligation.
+
+For Relay-bound work, preserve the actual admitted v4 identity, Writer provenance,
+native exact-head review and protected owner continuation. The pinned Relay 3.0.0
+mechanism still requires `closesTask=false`, neutral squash text, separate closure
+and effective `close-authorized`; this source change does not implement the new
+runtime behavior. Use only the explicitly qualified, owner-bounded
+[Relay transition](releases.md#task-84-closure-transition) when relying on that
+legacy mechanism with the new Shared contract. Its technical trusted Decision
+path must not become a new discretionary permission prompt. Missing capability
+or an unestablished transition window is a reported gap, never permission for a
+manual bypass or a claim that the new runtime is qualified.
+See the [new closure walks](../packages/development-governance/vibevm/vibespecs/guides/onboarding-examples.md#9-single-field-task-closure);
+[Task 68 scenarios](task-68/step-3/compatibility.md) retain their historical meaning.
 
 For relevant independent review, root AGENTS explicitly adopts the full accepted
 materialized Independent Review protocol. It owns affected-behavior completeness,

@@ -444,45 +444,62 @@ reconcile apparent self-expansion through existing Decisions. Reassess concrete
 completion conditions, remaining work and holds at meaningful transitions; do
 not close with known remaining work or copy a stale disposition indefinitely.
 
-Where a project uses `close-authorized`, it means unconditional permission to
-close **after actual Task completion**, not permission to close prematurely.
-Required independent acceptance/integration, concrete completion conditions and
-protected obligations still apply. With no remaining Task work or hold, use the
-existing authorized owner continuation without another discretionary owner
-prompt, closure-specific test or operator ritual.
+For a binding using `Issue closure policy`, retain that one existing attribute:
+`Issue closure policy: close-authorized` or `Issue closure policy: keep-open`.
+It selects **when** the Issue closes; neither value asks the owner to authorize
+the same completion again. Add no second machine-readable closure field or
+closure-type system. Non-GitHub/no-PR work uses its supported project binding.
 
-A project may express an owner-selected `keep-open` as a temporary condition-based
-closure hold. Its existing Task/Decision can state the concrete remaining
-condition, sufficient evidence and subsequent owner-authorized action, making
-the existing reassessment practical. When those preauthorized conditions are
-verified, the owner-facing assistant may record the existing trusted Task-scoped
-Decision releasing the hold (to effective `close-authorized` where used), then
-perform the ordinary owner-controlled completion/closure sequence. Condition
-satisfaction does not silently mutate policy. Current canonical authority and
-the project's native Task/Decision identity and publication capability must
-support that transition; report a missing capability or authority instead of
-bypassing it. No new owner message is needed solely to repeat prior permission.
+`close-authorized` means closure on successful merge of the designated completing
+PR. On GitHub, use `Closes #N` or its supported native closing link so GitHub
+closes the Issue when that PR merges to the default branch. Merely closing an
+unmerged or abandoned PR does not close the Task. Designate a closing PR only
+when the actual work has reached the accepted completion boundary and that merge
+will complete the Task. Required independent exact-head acceptance, checks and
+protected merge authority still apply. With multiple PRs, only the PR that
+genuinely completes all Task work may carry the closing link; intermediate PRs
+use non-closing references. Where there is no result PR, use the existing
+owner-authorized completion path without fabricating a PR.
 
-Missing, invalid or conflicting closure metadata remains safe `keep-open` where
-that is the project's fail-safe binding; never infer closure permission. At the
-project's existing substantive result review, missing closure reasons or
-conditions can be surfaced for owner resolution: identify what remains or obtain
-`close-authorized` authority through the existing Task Decision process where
-needed. Invent neither conditions nor retroactive approval. This is compatible
-guidance for existing reassessment, not a universal authoring field, scheduled
-review duty, form, checker or additional completion gate. Projects retain their
-accepted local timing and mechanisms; an owner may explicitly select this
-first-review workflow for a particular Task or binding.
+`keep-open` means no closure on merge, followed by closure when the explicitly
+stated condition is verified. Use `Related to #N` or another non-closing PR
+reference. State the actual remaining obligation and sufficient evidence in
+ordinary human-readable text adjacent to the one closure field, in the charter
+or applicable trusted Decision. Once that preauthorized condition is satisfied,
+required acceptance/integration is complete and no actual Task work or protected
+hold remains, the owner-facing continuation closes the Issue through the
+supported trusted mechanism. Record the verification in the existing Task
+chronology; no new owner-choice prompt, policy-change Decision or conversion to
+`close-authorized` is required merely to carry out that permission. A genuine
+later change to scope, conditions or authority still uses the existing trusted
+owner Decision process. Executors, CRs and reviewers cannot silently waive it.
+Report missing capability or authority without bypassing protected boundaries.
 
-For example, reviewed and merged code may remain `keep-open` pending an
-owner-run Apply. After the owner runs the normal workflow and shares its result,
-check the actual run, intended deployed revision/target and material warnings.
-A failed or unknown Apply does not release the hold. Verified preauthorized
-conditions and no related Task work/PR permit the trusted transition and normal
-owner continuation; unrelated repository PRs are not a blanket closure blocker.
-An owner Decision may revise a genuine condition without claiming omitted work
-occurred. Executors, CRs and reviewers cannot silently waive it. Optional future
-use/observation must not become an indefinite hold without accepted authority.
+Choose `keep-open` with the publication condition for a producer Task whose
+deliverable includes publishing the accepted package. Source acceptance and PR
+merge do not prove successful publication of the exact accepted revision/version;
+failed, delayed or unknown publication leaves that obligation outstanding.
+Likewise, an owner-run Apply condition requires the actual successful run,
+intended revision/target and material warning disposition. A failed or unknown
+Apply does not satisfy it. Later consumer adoption is separate unless actually
+included in the Task. Unrelated repository PRs and optional future usage or
+observation do not invent completion holds.
+
+Missing, invalid or conflicting metadata must fail safe against automatic
+closure. Reconcile genuinely missing intent through existing Task authority at
+the relevant authoring/review/continuation point. A protective refusal to close
+is not evidence that the owner selected `keep-open`, and must not become a
+perpetual procedural hold, invented condition or second approval ritual. Reuse
+clear existing permission; obtain an actual missing owner decision only when
+needed. This adds no scheduled review duty, universal form or checker.
+
+Preserve historical and already-admitted Task authority, explicit earlier holds,
+terminal Step/Outcome identity and immutable releases. Do not rewrite old Issue
+bodies, replay terminal Steps or silently reinterpret their closure terms under
+this change. Reconcile a genuine authority change through the existing trusted
+Decision mechanism. New shared guidance alone neither modifies nor qualifies a
+consumer runtime; consumer adoption and supported version-specific mechanisms
+remain separately owned.
 
 <a id="TH-027"></a>
 **TH-027 — Proportionate local bindings.**
