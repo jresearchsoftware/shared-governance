@@ -1,6 +1,6 @@
 # Native producer self-adoption
 
-This producer consumes its own guidance through ordinary pinned VibeVM 1.0.7
+This producer consumes its own guidance through ordinary pinned VibeVM 1.0.10
 `flow:` resolution, a versioned in-tree registry and dynamic slot routing.
 The stable authoring root remains `packages/development-governance`; generated
 registry source, slots, lock, root/member indexes and agent routes are committed

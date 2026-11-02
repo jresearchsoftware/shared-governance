@@ -240,7 +240,7 @@ path, version and generated payload hashes. These hashes are tool output, not
 a recurring manual reviewer exercise. Historical native-Skill exports remain
 available through `vendor-skill.py`; current flow commits declare none.
 
-For a changed integration, use the pinned Linux x86_64 musl VibeVM 1.0.7 binary
+For a changed integration, use the pinned Linux x86_64 musl VibeVM 1.0.10 binary
 in a disposable native filesystem. Its SHA-256 is recorded in
 [toolchain/vibevm.json](../toolchain/vibevm.json):
 

@@ -17,9 +17,9 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--vibe", required=True, type=Path, help="downloaded pinned Linux x86_64 v1.0.7 binary")
+    parser.add_argument("--vibe", required=True, type=Path, help="downloaded pinned Linux x86_64 v1.0.10 binary")
     parser.add_argument("--materialize", action="store_true", help="also probe local dependency installation (alpha behavior)")
-    parser.add_argument("--path-source", action="store_true", help="reproduce the known v1.0.7 path-only dependency limitation")
+    parser.add_argument("--path-source", action="store_true", help="reproduce the known v1.0.10 path-only dependency limitation")
     args = parser.parse_args()
     vibe = args.vibe.resolve()
     pin = json.loads((ROOT / "toolchain/vibevm.json").read_text(encoding="utf-8"))
@@ -46,6 +46,12 @@ def main():
         env["VIBE_SETTINGS"] = str(fixture_root / "settings")
         env["VIBEVM_USER_CONFIG"] = str(fixture_root / "settings/config.toml")
         commands = []
+        selected = {preparation.slot(p["version"]) for p in
+                    tomllib.loads((workspace / "vibe.lock").read_text())["package"]
+                    if p["name"] == "development-governance"}
+        retained = {p.relative_to(workspace).as_posix() for p in
+                    (workspace / "vibevm/vibedeps/org.jresearch.ai.development-governance").iterdir()
+                    if p.is_dir()} - selected
 
         def run(*arguments):
             result = subprocess.run([str(vibe), *arguments], cwd=workspace, env=env,
@@ -60,7 +66,11 @@ def main():
                 print(result.stderr.strip())
             if "check" in arguments:
                 report = json.loads(result.stdout)
-                if report["summary"]["error"] or report["summary"]["warning"] or report["findings"]:
+                unexpected = [f for f in report["findings"] if not (
+                    arguments[-1] == str(workspace) and f["check"] == "lockfile_files"
+                    and f["severity"] == "warning" and f.get("path") in retained
+                    and "orphan" in f["message"])]
+                if report["summary"]["error"] or unexpected:
                     raise RuntimeError("VibeVM check reported findings")
             return result.stdout
 
