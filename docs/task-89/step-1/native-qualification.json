@@ -1,0 +1,170 @@
+{
+  "source_revision": "521909b5aa84ddbaf404f92f089f0453c58a4aa7",
+  "tool_version": "1.0.11",
+  "binary_sha256": "5fe5b3efeb2eab7c7c49a8dc864864ffacac08a9d7be3dc9df0bc0bb15a8bd58",
+  "cases": [
+    {
+      "label": "mixed cold resolution",
+      "arguments": [
+        "install",
+        "--no-default-registry",
+        "--no-prefer-local",
+        "--assume-yes"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"install:plan\",\n  \"packages\": [\n    {\n      \"package\": \"org.jresearch.ai/development-governance\",\n      \"version\": \"7.0.0\"\n    },\n    {\n      \"package\": \"org.jresearch.ai/codex-relay\",\n      \"version\": \"3.0.0\"\n    }\n  ]\n}\n{\n  \"command\": \"install:closure-diff\",\n  \"added\": [\n    \"org.jresearch.ai/codex-relay@3.0.0 (root-edge)\",\n    \"org.jresearch.ai/development-governance@7.0.0 (root-edge)\"\n  ],\n  \"removed\": [],\n  \"changed\": [],\n  \"lanes\": []\n}\n{\n  \"command\": \"install\",\n  \"complete\": true,\n  \"materialised\": [\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/7.0.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.codex-relay/3.0.0\"\n  ],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"project\": \"/tmp/toolchain-qualification-pydyd3jf/workspace\",\n  \"pruned\": [\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/2.7.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/3.0.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/4.0.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.0.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.1\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.1\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.2\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.3\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/6.0.0\"\n  ],\n  \"skipped\": [],\n  \"unchanged\": false\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "native Skill listing",
+      "arguments": [
+        "skill",
+        "list",
+        "--offline"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"command\": \"skill:list\",\n  \"project\": \"/tmp/toolchain-qualification-pydyd3jf/workspace\",\n  \"count\": 1,\n  \"skills\": [\n    {\n      \"name\": \"codex-relay\",\n      \"origin\": \"flow:codex-relay\",\n      \"source\": \"/tmp/toolchain-qualification-pydyd3jf/workspace/vibevm/vibedeps/org.jresearch.ai.codex-relay/3.0.0/skill\",\n      \"description\": null,\n      \"agents\": [\n        \"codex\"\n      ]\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "Skill projection dry run",
+      "arguments": [
+        "skill",
+        "install",
+        "--offline",
+        "--skill",
+        "codex-relay",
+        "--agent",
+        "codex",
+        "--scope",
+        "project",
+        "--dry-run"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"command\": \"skill:install\",\n  \"project\": \"/tmp/toolchain-qualification-pydyd3jf/workspace\",\n  \"count\": 1,\n  \"results\": [\n    {\n      \"skill\": \"codex-relay\",\n      \"agent\": \"codex\",\n      \"scope\": \"project\",\n      \"path\": \"/tmp/toolchain-qualification-pydyd3jf/workspace/.agents/skills/codex-relay\",\n      \"status\": \"unchanged\",\n      \"note\": null\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "Skill projection",
+      "arguments": [
+        "skill",
+        "install",
+        "--offline",
+        "--skill",
+        "codex-relay",
+        "--agent",
+        "codex",
+        "--scope",
+        "project",
+        "--yes"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"command\": \"skill:install\",\n  \"project\": \"/tmp/toolchain-qualification-pydyd3jf/workspace\",\n  \"count\": 1,\n  \"results\": [\n    {\n      \"skill\": \"codex-relay\",\n      \"agent\": \"codex\",\n      \"scope\": \"project\",\n      \"path\": \"/tmp/toolchain-qualification-pydyd3jf/workspace/.agents/skills/codex-relay\",\n      \"status\": \"unchanged\",\n      \"note\": null\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "mixed graph check",
+      "arguments": [
+        "check"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"command\": \"check\",\n  \"project\": \"/tmp/toolchain-qualification-pydyd3jf/workspace\",\n  \"summary\": {\n    \"error\": 0,\n    \"warning\": 13,\n    \"info\": 0\n  },\n  \"findings\": [\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/2.7.0\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/2.7.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/3.0.0\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/3.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/4.0.0\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/4.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.0.0\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/5.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.0\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.1\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.1` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.0\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.1\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.1` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.2\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.2` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.3\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.3` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/6.0.0\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/6.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "force reinstall source mismatch",
+      "arguments": [
+        "reinstall",
+        "--force",
+        "--offline",
+        "--assume-yes",
+        "/tmp/toolchain-qualification-pydyd3jf/workspace"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "{\"ok\":false,\"error\":\"lock_hash_mismatch: the source of `org.jresearch.ai/development-governance@7.0.0` now hashes to sha256:1eeea90e1f05938b0ad9ff7e70140c730d19713c982eff4f45aa0dbe98c59ada, but vibe.lock pins sha256:5ce5f41aa48aa0604fc5f04e76e5b29cc5134d51b848b4be327ee7e621cd0b22; nothing was copied into vibedeps/ (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#lockfile-schema; fix: `vibe update org.jresearch.ai/development-governance`)\",\"code\":\"lock_hash_mismatch\",\"package\":{\"group\":\"org.jresearch.ai\",\"name\":\"development-governance\"},\"locked_hash\":\"sha256:5ce5f41aa48aa0604fc5f04e76e5b29cc5134d51b848b4be327ee7e621cd0b22\",\"source_hash\":\"sha256:1eeea90e1f05938b0ad9ff7e70140c730d19713c982eff4f45aa0dbe98c59ada\"}\n"
+    },
+    {
+      "label": "retained-slot reinstall",
+      "arguments": [
+        "reinstall",
+        "--offline",
+        "--assume-yes",
+        "/tmp/toolchain-qualification-pydyd3jf/workspace"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"reinstall\",\n  \"complete\": true,\n  \"forced\": false,\n  \"materialised\": [],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"project\": \"/tmp/toolchain-qualification-pydyd3jf/workspace\",\n  \"pruned\": [],\n  \"skipped\": [],\n  \"unchanged\": false,\n  \"hooks\": []\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "rollback baseline",
+      "arguments": [
+        "install",
+        "org.example/kept",
+        "--no-default-registry",
+        "--assume-yes"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"install:plan\",\n  \"packages\": [\n    {\n      \"package\": \"org.example/kept\",\n      \"version\": \"1.0.0\"\n    }\n  ]\n}\n{\n  \"command\": \"install:closure-diff\",\n  \"added\": [\n    \"org.example/kept@1.0.0 (root-edge)\"\n  ],\n  \"removed\": [],\n  \"changed\": [],\n  \"lanes\": [\n    {\n      \"lane\": \"vibevm/vibespecs/boot/INDEX.md\",\n      \"before\": null,\n      \"after\": 705\n    }\n  ]\n}\n{\n  \"command\": \"install\",\n  \"complete\": true,\n  \"materialised\": [\n    \"vibevm/vibedeps/org.example.kept/1.0.0\"\n  ],\n  \"nodes_regenerated\": [\n    \".\"\n  ],\n  \"ok\": true,\n  \"project\": \"/tmp/toolchain-qualification-pydyd3jf/rollback\",\n  \"pruned\": [],\n  \"skipped\": [],\n  \"unchanged\": false\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "late failed install rollback",
+      "arguments": [
+        "install",
+        "org.example/wrapper",
+        "--no-default-registry",
+        "--assume-yes"
+      ],
+      "exit": 1,
+      "stdout": "{\n  \"command\": \"install:plan\",\n  \"packages\": [\n    {\n      \"package\": \"org.example/wrapper\",\n      \"version\": \"1.0.0\"\n    },\n    {\n      \"package\": \"org.example/kept\",\n      \"version\": \"1.0.0\"\n    },\n    {\n      \"package\": \"org.example/broken\",\n      \"version\": \"1.0.0\"\n    }\n  ]\n}\n{\n  \"command\": \"install\",\n  \"complete\": false,\n  \"materialised\": [],\n  \"nodes_regenerated\": [],\n  \"ok\": false,\n  \"project\": \"/tmp/toolchain-qualification-pydyd3jf/rollback\",\n  \"pruned\": [],\n  \"skipped\": [\n    \"vibevm/vibedeps/org.example.kept/1.0.0\"\n  ],\n  \"unchanged\": false\n}\n",
+      "stderr": "{\"ok\":false,\"error\":\"compiling vibevm/vibespecs/boot/STATIC.xml failed: compiling the normal package `org.example/broken` closure (PROP-035 \u00a78): cannot resolve use spec://org.example/ghost/boot/base#root: no installed vibedeps slot for package `ghost` (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#embed)\"}\n"
+    }
+  ],
+  "cold_acquisition": {
+    "isolated_empty_home": true,
+    "compatibility_remap": false,
+    "clone_commands": [
+      [
+        "git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.askPass=",
+        "clone",
+        "--progress",
+        "--recurse-submodules",
+        "--no-checkout",
+        "--no-tags",
+        "--",
+        "https://github.com/jrs-vibevm/org.jresearch.ai.codex-relay.git",
+        "/tmp/toolchain-qualification-pydyd3jf/settings/registries/__git_sources__/org.jresearch.ai.codex-relay/clone"
+      ]
+    ],
+    "actual_origins": [
+      "https://github.com/jrs-vibevm/org.jresearch.ai.codex-relay.git"
+    ]
+  },
+  "selected": [
+    {
+      "group": "org.jresearch.ai",
+      "name": "development-governance",
+      "version": "7.0.0",
+      "content_hash": "sha256:5ce5f41aa48aa0604fc5f04e76e5b29cc5134d51b848b4be327ee7e621cd0b22",
+      "source_kind": "registry",
+      "source_ref": null
+    },
+    {
+      "group": "org.jresearch.ai",
+      "name": "codex-relay",
+      "version": "3.0.0",
+      "content_hash": "sha256:451ee21dbfd63abd7918f0aee979220fb57cb8a8dffde20009a25f11bf9071e7",
+      "source_kind": "git",
+      "source_ref": "325c96371783e2d628bfa9903b3244468c688fe6"
+    }
+  ],
+  "generated_diff": "vibe.lock | 6 +++---\n 1 file changed, 3 insertions(+), 3 deletions(-)",
+  "historical_slots_retained": 13,
+  "historical_warnings": 13,
+  "result": "PASS"
+}

@@ -28,7 +28,7 @@ Upstream 1.0.10's `crates/vibe-registry/src/git_backend/shell/raw_http/hosts.rs`
 defines that default raw-file endpoint. No host credential or access change is
 needed to reproduce the issue.
 
-The owner-approved [identity row](../../../toolchain/vibevm-git-compat.toml) keeps
+The owner-approved [identity row](https://github.com/jresearchsoftware/shared-governance/blob/5011228ec6706c6e0c51c7cbadff699590dc6115/toolchain/vibevm-git-compat.toml) keeps
 only this existing Git origin unchanged through `VIBE_REMAP` in the isolated
 staging environment. It adds one environment variable to mixed-graph native
 maintenance, without changing root requirements, Git source SHA, package bytes,
