@@ -1,0 +1,144 @@
+[
+  {
+    "label": "source-export",
+    "exit": 0,
+    "arguments": [
+      "scripts/qualify.py",
+      "--export-ref",
+      "HEAD"
+    ],
+    "source_revision": "521909b5aa84ddbaf404f92f089f0453c58a4aa7",
+    "expected_exit": 0,
+    "tests": null,
+    "output_tail": "{\"qualification\": \"PASS\", \"tracked_files\": 1396, \"local_links\": 3688, \"secret_scan\": \"bounded markers PASS\", \"active_protocol\": \"PASS\", \"native_projection_source\": \"521909b5aa84ddbaf404f92f089f0453c58a4aa7\", \"native_skill\": \"codex-relay 3.0.0\", \"flow_export\": \"PASS\"}"
+  },
+  {
+    "label": "distribution-tests",
+    "exit": 0,
+    "arguments": [
+      "scripts/test-distribution.py"
+    ],
+    "source_revision": "521909b5aa84ddbaf404f92f089f0453c58a4aa7",
+    "expected_exit": 0,
+    "tests": 52,
+    "output_tail": "test_verification_rejects_corruption_missing_extra_and_symlink_files (__main__.DistributionTests.test_verification_rejects_corruption_missing_extra_and_symlink_files) ... ok\ntest_verification_rejects_symlink_directory (__main__.DistributionTests.test_verification_rejects_symlink_directory) ... ok\n\n----------------------------------------------------------------------\nRan 52 tests in 10.203s\n\nOK"
+  },
+  {
+    "label": "release-native",
+    "exit": 0,
+    "arguments": [
+      "scripts/test-release.py",
+      "--vibe",
+      "/tmp/task-89-tools/vibe-bootstrap-x86_64-unknown-linux-musl"
+    ],
+    "source_revision": "521909b5aa84ddbaf404f92f089f0453c58a4aa7",
+    "expected_exit": 0,
+    "tests": 26,
+    "output_tail": "test_unaccepted_and_side_branch_heads_are_rejected (__main__.ReleaseTests.test_unaccepted_and_side_branch_heads_are_rejected) ... ok\ntest_unaccepted_candidate_reclassification_keeps_transition_checks (__main__.ReleaseTests.test_unaccepted_candidate_reclassification_keeps_transition_checks) ... ok\n\n----------------------------------------------------------------------\nRan 26 tests in 11.374s\n\nOK"
+  },
+  {
+    "label": "self-adoption",
+    "exit": 0,
+    "arguments": [
+      "scripts/test-self-adoption.py"
+    ],
+    "source_revision": "521909b5aa84ddbaf404f92f089f0453c58a4aa7",
+    "expected_exit": 0,
+    "tests": 17,
+    "output_tail": "test_small_improvement_protocol_and_guide_survive_native_route_and_detect_drift (__main__.NativeAdoptionTests.test_small_improvement_protocol_and_guide_survive_native_route_and_detect_drift) ... ok\ntest_uncommitted_and_committed_authored_change_cannot_hide_behind_old_url (__main__.NativeAdoptionTests.test_uncommitted_and_committed_authored_change_cannot_hide_behind_old_url) ... ok\n\n----------------------------------------------------------------------\nRan 17 tests in 9.211s\n\nOK"
+  },
+  {
+    "label": "chatgpt-tests",
+    "exit": 0,
+    "arguments": [
+      "scripts/test-chatgpt-projection.py"
+    ],
+    "source_revision": "521909b5aa84ddbaf404f92f089f0453c58a4aa7",
+    "expected_exit": 0,
+    "tests": 29,
+    "output_tail": ".............................\n----------------------------------------------------------------------\nRan 29 tests in 3.808s\n\nOK"
+  },
+  {
+    "label": "publication-native",
+    "exit": 0,
+    "arguments": [
+      "scripts/test-publication.py",
+      "--vibe",
+      "/tmp/task-89-tools/vibe-bootstrap-x86_64-unknown-linux-musl"
+    ],
+    "source_revision": "521909b5aa84ddbaf404f92f089f0453c58a4aa7",
+    "expected_exit": 0,
+    "tests": 12,
+    "output_tail": "test_same_version_change_and_non_first_parent_source_are_rejected (__main__.ProducerTests.test_same_version_change_and_non_first_parent_source_are_rejected) ... ok\ntest_squash (__main__.ProducerTests.test_squash) ... ok\n\n----------------------------------------------------------------------\nRan 12 tests in 3.370s\n\nOK"
+  },
+  {
+    "label": "publisher-native",
+    "exit": 0,
+    "arguments": [
+      "tooling/vibe-publisher/test_publisher.py",
+      "--vibe",
+      "/tmp/task-89-tools/vibe-bootstrap-x86_64-unknown-linux-musl"
+    ],
+    "source_revision": "521909b5aa84ddbaf404f92f089f0453c58a4aa7",
+    "expected_exit": 0,
+    "tests": 101,
+    "output_tail": ".....................................................................................................\n----------------------------------------------------------------------\nRan 101 tests in 44.213s\n\nOK"
+  },
+  {
+    "label": "distribution",
+    "exit": 0,
+    "arguments": [
+      "scripts/qualify-distribution.py",
+      "--vibe",
+      "/tmp/task-89-tools/vibe-bootstrap-x86_64-unknown-linux-musl",
+      "--source-ref",
+      "521909b5aa84ddbaf404f92f089f0453c58a4aa7"
+    ],
+    "source_revision": "521909b5aa84ddbaf404f92f089f0453c58a4aa7",
+    "expected_exit": 0,
+    "tests": null,
+    "output_tail": "  \"project\": \"/tmp/shared-governance-distribution-4h16nw12/consumer\",\n  \"pruned\": [],\n  \"skipped\": [],\n  \"unchanged\": false,\n  \"hooks\": []\n}\n{\"distribution_qualification\": \"PASS\", \"source_revision\": \"521909b5aa84ddbaf404f92f089f0453c58a4aa7\", \"payload_sha256\": \"3eff2ae300602e812b99539b18fe3d8232c92191ec1e5515c156a6754be51257\", \"distribution_revision\": \"5d424b7dbb7f355acfdda602f9e604fe06ee33cb\", \"vibevm_content_hash\": \"sha256:397ccc0a9c5adfdf73ad4cfd3cc68ab900cdb7fdbd27b57504d7439a8239abd4\", \"commands\": 21, \"native_skills\": \"none declared/projected\", \"protocol_source\": \"exact canonical source commit; independent acceptance is separate\", \"local_publish_and_idempotence\": \"PASS\", \"independent_cold_consumer\": \"PASS\", \"tag_drift\": \"lock/slot split reproduced; native check and canonical verifier reject\", \"offline\": \"existing slots and complete Git rollback PASS; cache-only recovery FAIL\", \"update\": \"synthetic version-only declaration change PASS\", \"boot_index\": \"static package entry despite authored dynamic link\", \"scope\": \"disposable local Git transport; remote publication not qualified\"}"
+  },
+  {
+    "label": "authoring",
+    "exit": 0,
+    "arguments": [
+      "scripts/qualify-vibevm.py",
+      "--vibe",
+      "/tmp/task-89-tools/vibe-bootstrap-x86_64-unknown-linux-musl",
+      "--materialize"
+    ],
+    "source_revision": "521909b5aa84ddbaf404f92f089f0453c58a4aa7",
+    "expected_exit": 0,
+    "tests": null,
+    "output_tail": "  ],\n  \"skipped\": [\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/7.0.0\"\n  ],\n  \"unchanged\": false\n}\n{\"vibevm_qualification\": \"PASS\", \"version\": \"1.0.11\", \"commands\": 7, \"native_skills\": \"governance declares none; enclosing Relay listing preserved\", \"dependency_install\": \"PASS\", \"fixture\": \"disposable local paths; no package publication or consumer writes\"}"
+  },
+  {
+    "label": "authoring-path",
+    "exit": 1,
+    "arguments": [
+      "scripts/qualify-vibevm.py",
+      "--vibe",
+      "/tmp/task-89-tools/vibe-bootstrap-x86_64-unknown-linux-musl",
+      "--materialize",
+      "--path-source"
+    ],
+    "source_revision": "521909b5aa84ddbaf404f92f089f0453c58a4aa7",
+    "expected_exit": 1,
+    "observed": "Expected diagnostic limitation: empty world / ORDER-LAW"
+  },
+  {
+    "label": "chatgpt-native",
+    "exit": 0,
+    "expected_exit": 0,
+    "source_revision": "521909b5aa84ddbaf404f92f089f0453c58a4aa7",
+    "arguments": [
+      "scripts/qualify-chatgpt.py",
+      "--vibe",
+      "/tmp/task-89-tools/vibe-bootstrap-x86_64-unknown-linux-musl",
+      "--source-ref",
+      "521909b5aa84ddbaf404f92f089f0453c58a4aa7"
+    ],
+    "observed": "PASS; native install/update, custom preserved, non-adopting negative and cache export; disposable synthetic consumer only"
+  }
+]

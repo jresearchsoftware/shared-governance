@@ -102,7 +102,7 @@ exact-source receipt and unchanged publication contract.
 `python3 scripts/qualify.py --export-ref HEAD` compares the authored export with
 registry/installed file sets and bytes, slot metadata, exact lock version/content
 hash and native index/agent routing. It reuses exporter/Git checks; `vibe check`
-alone still misses corrupt payload/index incidents; 1.0.11 now diagnoses a
+alone still misses corrupt payload/index incidents; the pinned tool diagnoses a
 slot-receipt/lock hash split as `lock_slot_hash`. Candidate artifacts
 remain proposed guidance during these checks.
 

@@ -1,0 +1,46 @@
+{
+  "date": "2026-11-03",
+  "release_api": "https://api.github.com/repos/vibevm/vibevm/releases/432408525",
+  "release_id": 432408525,
+  "immutable": false,
+  "tag": "v1.0.11",
+  "tag_commit": "5e470926ad0f34d61e37d387ce4b7c153356a804",
+  "manifest_source_commit": "5e470926ad0f34d61e37d387ce4b7c153356a804",
+  "manifest_digests_match": true,
+  "gnu_archive_executable_matches_bootstrap": true,
+  "downloads": [
+    {
+      "key": "distribution_manifest",
+      "asset_id": 704920919,
+      "url": "https://github.com/vibevm/vibevm/releases/download/v1.0.11/DISTRIBUTIONS.json",
+      "api_sha256": "a11b0812d6ee675eeb58166a066500f5c1bf02705608d1de6725e087e9d713e6",
+      "downloaded_sha256": "a11b0812d6ee675eeb58166a066500f5c1bf02705608d1de6725e087e9d713e6"
+    },
+    {
+      "key": "linux_x86_64_musl_binary",
+      "asset_id": 704909893,
+      "url": "https://github.com/vibevm/vibevm/releases/download/v1.0.11/vibe-bootstrap-x86_64-unknown-linux-musl",
+      "api_sha256": "5fe5b3efeb2eab7c7c49a8dc864864ffacac08a9d7be3dc9df0bc0bb15a8bd58",
+      "downloaded_sha256": "5fe5b3efeb2eab7c7c49a8dc864864ffacac08a9d7be3dc9df0bc0bb15a8bd58"
+    },
+    {
+      "key": "linux_x86_64_gnu_binary",
+      "asset_id": 704909981,
+      "url": "https://github.com/vibevm/vibevm/releases/download/v1.0.11/vibe-bootstrap-x86_64-unknown-linux-gnu",
+      "api_sha256": "651734b5030054976718af4a2e1c696df58eab87d2f0b52b21204b6f0c7ebbc8",
+      "downloaded_sha256": "651734b5030054976718af4a2e1c696df58eab87d2f0b52b21204b6f0c7ebbc8"
+    },
+    {
+      "key": "linux_x86_64_gnu",
+      "asset_id": 704909641,
+      "url": "https://github.com/vibevm/vibevm/releases/download/v1.0.11/vibevm-1.0.11-x86_64-unknown-linux-gnu.zip",
+      "api_sha256": "c36364177cf447c0e0b2a28279b6fbf6ee68764d1126897cc47de4e4e12cfe9e",
+      "downloaded_sha256": "c36364177cf447c0e0b2a28279b6fbf6ee68764d1126897cc47de4e4e12cfe9e"
+    }
+  ],
+  "versions": {
+    "musl": "vibe 1.0.11",
+    "gnu": "vibe 1.0.11"
+  },
+  "gnu_warning": "weak version GLIBC_2.39 not found; exit 0; functional probes use musl"
+}
