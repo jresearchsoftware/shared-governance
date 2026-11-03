@@ -17,9 +17,9 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--vibe", required=True, type=Path, help="downloaded pinned Linux x86_64 v1.0.10 binary")
+    parser.add_argument("--vibe", required=True, type=Path, help="downloaded pinned Linux x86_64 v1.0.11 binary")
     parser.add_argument("--materialize", action="store_true", help="also probe local dependency installation (alpha behavior)")
-    parser.add_argument("--path-source", action="store_true", help="reproduce the known v1.0.10 path-only dependency limitation")
+    parser.add_argument("--path-source", action="store_true", help="reproduce the known v1.0.11 path-only dependency limitation")
     args = parser.parse_args()
     vibe = args.vibe.resolve()
     pin = json.loads((ROOT / "toolchain/vibevm.json").read_text(encoding="utf-8"))

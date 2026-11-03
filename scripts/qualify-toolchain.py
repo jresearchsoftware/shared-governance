@@ -23,7 +23,6 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--vibe", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--git-compat", type=Path, help="explicit compatibility row for the Git acquisition probe")
     args = parser.parse_args()
     vibe = args.vibe.resolve()
     pin = json.loads((ROOT / "toolchain/vibevm.json").read_text())
@@ -41,14 +40,16 @@ def main():
         work = base / "workspace"
         settings = base / "settings"
         settings.mkdir()
+        home = base / "home"
+        home.mkdir()
+        trace = base / "git-trace.json"
         env = {k: v for k, v in os.environ.items() if k in {"PATH", "LANG", "LC_ALL", "TMPDIR"}}
         env.update(VIBE_SETTINGS=str(settings), VIBEVM_USER_CONFIG=str(settings / "config.toml"),
+                   HOME=str(home), XDG_CACHE_HOME=str(home / ".cache"),
+                   XDG_CONFIG_HOME=str(home / ".config"), GIT_TRACE2_EVENT=str(trace),
                    GIT_CONFIG_GLOBAL=os.devnull, GIT_CONFIG_NOSYSTEM="1", GIT_TERMINAL_PROMPT="0",
                    GIT_AUTHOR_NAME="Fixture", GIT_AUTHOR_EMAIL="fixture@example.invalid",
                    GIT_COMMITTER_NAME="Fixture", GIT_COMMITTER_EMAIL="fixture@example.invalid")
-        if args.git_compat:
-            env["VIBE_REMAP"] = str(args.git_compat.resolve())
-            report["compatibility_sha256"] = hashlib.sha256(args.git_compat.read_bytes()).hexdigest()
 
         def git(path, *arguments):
             return subprocess.check_output(["git", "-c", "core.autocrlf=false", "-C", str(path),
@@ -81,7 +82,20 @@ def main():
             installed = work / "vibevm/vibedeps" / (package["group"] + "." + package["name"]) / package["version"]
             require(installed.resolve().is_relative_to(work.resolve()), "slot escaped disposable clone")
             shutil.rmtree(installed)
+        require(not any(home.iterdir()) and not (settings / "cache").exists(), "cold cache is not empty")
+        trace.unlink(missing_ok=True)  # Exclude the local fixture clone from acquisition evidence.
         run("mixed cold resolution", work, "install", "--no-default-registry", "--no-prefer-local", "--assume-yes")
+        commands = [event["argv"] for line in trace.read_text().splitlines()
+                    if (event := json.loads(line)).get("event") == "start"]
+        origin = "https://github.com/jrs-vibevm/org.jresearch.ai.codex-relay.git"
+        clones = [argv for argv in commands if "clone" in argv and origin in argv]
+        require(clones, "no cold Relay Git clone observed")
+        require(not any("raw.githubusercontent.com" in arg for argv in commands for arg in argv),
+                "Git acquisition was rewritten to a raw-file host")
+        origins = [git(Path(argv[-1]), "config", "--get", "remote.origin.url") for argv in clones]
+        require(all(url == origin for url in origins), "Relay cache origin changed")
+        report["cold_acquisition"] = dict(isolated_empty_home=True, compatibility_remap=False,
+                                          clone_commands=clones, actual_origins=origins)
         lock = tomllib.loads((work / "vibe.lock").read_text())
         selected = lambda data: {(p["group"], p["name"]): (p["version"], p["content_hash"])
                                  for p in data["package"]}

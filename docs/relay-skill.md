@@ -44,12 +44,11 @@ unchanged. A real separately admitted Task must verify automatic execution.
 
 ## Maintenance and rollback
 
-Use the hash-checked Linux musl VibeVM 1.0.10 in [the toolchain pin](../toolchain/vibevm.json)
+Use the hash-checked Linux musl VibeVM 1.0.11 in [the toolchain pin](../toolchain/vibevm.json)
 and the [published installation contract](../.agents/skills/codex-relay/references/installation.md).
 Generate in a disposable native filesystem and review all outputs together:
 
 ```sh
-export VIBE_REMAP="$PWD/toolchain/vibevm-git-compat.toml"
 vibe --json install --no-default-registry --no-prefer-local --assume-yes
 vibe --offline --json skill list
 vibe --offline --json skill install --skill codex-relay --agent codex --scope project --dry-run
@@ -74,7 +73,7 @@ public root available through its existing native cache or normal authorized
 public acquisition; do not rewrite its payload or nested closure. Transfer only
 the selected generated outputs and preserve historical slots.
 
-For this mixed graph, VibeVM 1.0.10's `--registry` flag selects a local-only
+For this mixed graph, VibeVM 1.0.11's `--registry` flag selects a local-only
 resolver that omits manifest Git sources. Instead set `VIBE_SETTINGS` to an
 isolated authoring directory with a `registry.toml` containing one `[[registry]]`
 whose `name` is a local alias, `url` is `file:///absolute/staging/source/vibevm/vibepacks`
@@ -84,12 +83,9 @@ resolver without changing user registry configuration. The original lock may
 be retained when intentionally changing Shared's exact version; preserve
 historical slots pruned in disposable staging when transferring selected output.
 
-Keep the compatibility variable in that isolated staging environment. VibeVM
-1.0.10 otherwise applies its built-in raw-file mapping to the Relay Git clone,
-causing a 404. The single [compatibility row](../toolchain/vibevm-git-compat.toml)
-retains the existing origin; it adopts no remap package or global configuration.
-See the [owner Decision](https://github.com/jresearchsoftware/shared-governance/issues/87#issuecomment-6577910678)
-and [qualification](task-87/step-1/README.md) before removing it in a later upgrade.
+VibeVM 1.0.11 repairs the Git clone host regression. No staging `VIBE_REMAP`
+is needed; [Task 89 qualification](task-89/step-1/README.md) records an unmodified
+cold clone from the existing GitHub origin with unchanged selected identities.
 
 The offline qualifier checks both source forms: public packages retain their
 immutable revision, content hash and distribution receipt; producer Shared
