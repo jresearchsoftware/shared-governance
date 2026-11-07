@@ -1,27 +1,27 @@
 {
-  "version": "1.0.10",
+  "version": "1.0.11",
   "source_repository": "https://github.com/vibevm/vibevm",
-  "source_revision": "49a2d745ec2ad8bb123ba867a53400b0a3ff0c3d",
-  "release_id": 431101942,
+  "source_revision": "5e470926ad0f34d61e37d387ce4b7c153356a804",
+  "release_id": 432408525,
   "release_immutable": false,
   "distribution_manifest": {
-    "asset_id": 700752734,
-    "url": "https://github.com/vibevm/vibevm/releases/download/v1.0.10/DISTRIBUTIONS.json",
-    "sha256": "93ef7515a8b5c4ea2ae1faaa88423c1234daa8766526e31da8a2f651c8c8be90"
+    "asset_id": 704920919,
+    "url": "https://github.com/vibevm/vibevm/releases/download/v1.0.11/DISTRIBUTIONS.json",
+    "sha256": "a11b0812d6ee675eeb58166a066500f5c1bf02705608d1de6725e087e9d713e6"
   },
   "linux_x86_64_musl_binary": {
-    "asset_id": 700742512,
-    "url": "https://github.com/vibevm/vibevm/releases/download/v1.0.10/vibe-bootstrap-x86_64-unknown-linux-musl",
-    "sha256": "5c6703e2ccc7a4e5cf3b3999b62a3452a803d75f73623ef1e8024524d6e39814"
+    "asset_id": 704909893,
+    "url": "https://github.com/vibevm/vibevm/releases/download/v1.0.11/vibe-bootstrap-x86_64-unknown-linux-musl",
+    "sha256": "5fe5b3efeb2eab7c7c49a8dc864864ffacac08a9d7be3dc9df0bc0bb15a8bd58"
   },
   "linux_x86_64_gnu_binary": {
-    "asset_id": 700741959,
-    "url": "https://github.com/vibevm/vibevm/releases/download/v1.0.10/vibe-bootstrap-x86_64-unknown-linux-gnu",
-    "sha256": "85345ab6c9f770592d4362e5c4494aa6287060e34de8845dcfe95024e6d1a870"
+    "asset_id": 704909981,
+    "url": "https://github.com/vibevm/vibevm/releases/download/v1.0.11/vibe-bootstrap-x86_64-unknown-linux-gnu",
+    "sha256": "651734b5030054976718af4a2e1c696df58eab87d2f0b52b21204b6f0c7ebbc8"
   },
   "linux_x86_64_gnu": {
-    "asset_id": 700741696,
-    "url": "https://github.com/vibevm/vibevm/releases/download/v1.0.10/vibevm-1.0.10-x86_64-unknown-linux-gnu.zip",
-    "sha256": "821193f971fdac6cbe9bdd3d5e9b346f9ba425a93dc6f7c9c5c42c94ad8b62b9"
+    "asset_id": 704909641,
+    "url": "https://github.com/vibevm/vibevm/releases/download/v1.0.11/vibevm-1.0.11-x86_64-unknown-linux-gnu.zip",
+    "sha256": "c36364177cf447c0e0b2a28279b6fbf6ee68764d1126897cc47de4e4e12cfe9e"
   }
 }

@@ -1,6 +1,6 @@
 # Native producer self-adoption
 
-This producer consumes its own guidance through ordinary pinned VibeVM 1.0.10
+This producer consumes its own guidance through ordinary pinned VibeVM 1.0.11
 `flow:` resolution, a versioned in-tree registry and dynamic slot routing.
 The stable authoring root remains `packages/development-governance`; generated
 registry source, slots, lock, root/member indexes and agent routes are committed
@@ -72,14 +72,9 @@ reading of committed files does not. Preserve the original lock before fresh
 resolution and retain historical slots pruned by the tool when transferring
 selected outputs back. Do not edit generated source identities or global settings.
 
-With 1.0.10, set `VIBE_REMAP` to the absolute path of the staging checkout's
-[`toolchain/vibevm-git-compat.toml`](../toolchain/vibevm-git-compat.toml) for native
-commands using the mixed graph. The built-in raw-file rule otherwise rewrites
-Relay's Git clone to `raw.githubusercontent.com`, which returns 404. This
-owner-authorized compatibility row keeps only the existing Relay Git origin
-unchanged, with the same pinned revision and bytes. It installs no remap package
-and changes no global settings. Keep it in the same isolated command environment
-as `VIBE_SETTINGS`; other projects do not acquire this workaround automatically.
+VibeVM 1.0.11 keeps Git clone requests on their original host. No compatibility
+remap is needed; [Task 89](task-89/step-1/README.md) verifies cold acquisition
+without the temporary Task 87 identity row.
 
 Use the pinned executable, set the root's exact requirement to the authored
 version, and review/commit generated files in this same PR. Generation preserves
@@ -107,7 +102,7 @@ exact-source receipt and unchanged publication contract.
 `python3 scripts/qualify.py --export-ref HEAD` compares the authored export with
 registry/installed file sets and bytes, slot metadata, exact lock version/content
 hash and native index/agent routing. It reuses exporter/Git checks; `vibe check`
-alone still misses corrupt payload/index incidents; 1.0.10 now diagnoses a
+alone still misses corrupt payload/index incidents; the pinned tool diagnoses a
 slot-receipt/lock hash split as `lock_slot_hash`. Candidate artifacts
 remain proposed guidance during these checks.
 
@@ -134,7 +129,7 @@ Both paths were tested; reinstall has no `--registry` flag. In-tree local
 resolution needs no global registry configuration change. Do not hand-edit lock
 URLs, bypass integrity or repair host permissions.
 
-On 1.0.10, forced reinstall refuses refetched source bytes that differ from the
+On 1.0.11, forced reinstall refuses refetched source bytes that differ from the
 lock with `lock_hash_mismatch`, before copying them into slots. Restore the
 reviewed source/projection with Git and retry; do not use update to bless an
 accidental edit to a frozen version. Native runs may create two ignored
