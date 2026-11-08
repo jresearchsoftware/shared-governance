@@ -1,5 +1,31 @@
 # Development Governance changelog
 
+## 7.0.1
+
+PATCH: clarifies the existing stable-charter and in-scope persistence meaning at
+[TH-010](vibevm/vibespecs/protocols/task-handoff.md#TH-010),
+[TH-013](vibevm/vibespecs/protocols/task-handoff.md#TH-013) and
+[TH-026](vibevm/vibespecs/protocols/task-handoff.md#TH-026). Preparing and interpreting
+post-result continuation preserves the effective Task objective, completion
+criteria and remaining work from its charter and applicable owner Decisions.
+A blocker, failed check, review finding or partial Outcome guides necessary
+actions without becoming a replacement charter. Removing the obstacle alone
+does not complete the Task; continue authorized remaining work to the agreed
+outcome or applicable review/handoff boundary.
+
+This makes the linkage between TH-002–004, TH-006–010, TH-012–013, TH-026 and
+RA-006 explicit without changing their authority or adding mandatory operator
+work. Owner-justified bounded Steps, accepted process and protected boundaries
+remain valid. New goals, permissions, policy choices and completion changes
+still require their authorized Decisions. Short navigation-first handoffs,
+terminal execution/recovery identities, independent acceptance and separate
+consumer adoption remain intact. No forms, gates, repeated approvals, automatic
+resume or orchestration infrastructure are added. The
+[continuation examples](vibevm/vibespecs/guides/onboarding-examples.md#10-continuation-preserves-the-task-objective)
+illustrate the distinction without depending on a particular client runtime.
+All other protocols, rule addresses, routing, client tools, public inventory
+and license are preserved; frozen prior versions remain unchanged.
+
 ## 7.0.0
 
 MAJOR: replaces the timing and hold-release meaning within existing

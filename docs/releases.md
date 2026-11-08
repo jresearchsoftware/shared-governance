@@ -18,6 +18,16 @@ assessments. Other consumers retain their own adoption and local policy.
 
 ## Contribution and integration
 
+Task 91 prepares **7.0.1 PATCH** against accepted 7.0.0. TH-010/013/026 make
+explicit that post-result handoffs preserve the effective Task objective and
+that clearing an obstacle alone is not completion. This preserves existing
+TH-002–004/006–008/012–013/026 and RA-006 meaning, including justified bounded
+Steps, protected boundaries, short prompts and owner Decisions for changed scope.
+It adds no mandatory operator work, execution mechanism or runtime behavior.
+See [Task 91 coverage and scenarios](task-91/step-1/README.md). Independent
+acceptance, current-main reconciliation, publication verification and genuinely
+applicable TH-029 reconciliation remain required before Task closure.
+
 Task 84 prepares **7.0.0 MAJOR** against accepted 6.0.0. TH-026 replaces separate
 post-completion `close-authorized` closure with native closure on the designated
 completing PR's merge, and replaces `keep-open` policy-release ceremony with
