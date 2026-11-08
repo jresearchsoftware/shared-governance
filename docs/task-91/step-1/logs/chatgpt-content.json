@@ -1,0 +1,12 @@
+{
+  "accepted_baseline": "b18bfd85bd06c74799469a04db07441b10e46a63",
+  "candidate": "f5ddfd536c12628fdd3797c89c68be7953dcce52",
+  "assessment": "candidate generation comparison only; no candidate acceptance or live synchronization claimed",
+  "effective_content": "NO_OP",
+  "instructions": "NO_OP",
+  "sources": "DISABLED",
+  "desired_bytes": 6963,
+  "desired_sha256": "499a9c3116f58e3ec560f4ee2977e33dcaeb90dcc66132811c686e74f7060c0a",
+  "live_settings_verified": false,
+  "application": "No new application required because complete desired text is unchanged. Any earlier unresolved live mismatch or verification gap remains for disposition; NO_OP is not live verification."
+}

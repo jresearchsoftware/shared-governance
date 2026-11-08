@@ -65,3 +65,71 @@ required, trusted Writer publication, protected merge and verified package
 publication remain pending through the authorized continuation. Pending
 root/sudo-only runtime proof is not a local implementation blocker; it is not
 attempted or claimed. A merged PR alone will not satisfy this Task's charter.
+
+
+The full suite ran on committed source/projection
+`f5ddfd536c12628fdd3797c89c68be7953dcce52` in an isolated local Git-bundle
+fixture. Temporary exports remained outside that fixture but inside the
+governed checkout; no credentials or protected runtime were used. Subsequent
+changes add only qualification evidence/documentation. The
+[command/result record](logs/checks.json) binds those runs; unchanged package,
+scripts and generated payload justify reusing the suites after evidence updates.
+
+| Check | Observed result and primary evidence |
+| --- | --- |
+| Source, links, passive exact-commit export, bounded credential markers and native state | [PASS](logs/qualification.log). Bounded marker scanning is not proof of absence of every secret. |
+| Distribution/provenance regressions | [52 passed](logs/distribution.log). |
+| Package-release regressions | [20 passed; six optional native integrations skipped](logs/release.log). |
+| Native self-adoption/recovery | [17 passed](logs/self-adoption.log). |
+| ChatGPT projection regressions | [29 passed](logs/chatgpt.log). |
+| Publication-boundary regressions | [11 passed; one optional integration skipped](logs/publication.log). No public publication executed. |
+| Whole-package transition | [PASS: one PATCH, 7.0.0 -> 7.0.1](logs/release-transition.log). Required CI must refresh then-current-main arithmetic and tag availability before integration. |
+| Native materialization | [PASS](logs/native-install.json): pinned VibeVM 1.0.11 Linux musl digest verified; isolated settings/in-tree registry selected Shared 7.0.1 and unchanged Relay 3.0.0. |
+| Native integrity before/after transfer | [PASS](logs/native-integrity.json). Transfer retains prior historical source/slots and existing private permissions; no actual Skill-directory rewrite was needed. |
+| Actual-checkout offline native check | [PASS: zero errors, 14 warnings](logs/native-check.json), all for deliberately retained unselected historical slots. |
+| Semantic and byte preservation | [PASS](logs/preservation.json): four of 22 public files change; 18 remain identical, including all nine other protocols. All 701 pre-existing registry/slot files, Relay projection, client inputs, scripts, workflows, toolchain and license remain unchanged. |
+| Complete effective ChatGPT desired text | [NO_OP](logs/chatgpt-content.json): accepted tool compares baseline/candidate generation and stored Instructions; Sources disabled. No new manual application. Live settings remain unverified; any earlier mismatch/gap remains for disposition. |
+
+Totals: **129 passing tests and seven optional integration skips**, plus the
+six source-based semantic walks above. No model behavior, native Relay execution,
+independent acceptance or installed-runtime proof is inferred from these checks.
+The native warnings are the accepted retention behavior: 13 historical slots
+already existed at baseline, with 7.0.0 now also historical. The selected lock,
+receipt, payload and routing pass the exact exporter comparison. Do not prune
+frozen history or load it as competing active guidance to silence warnings.
+
+## Execution observations and reconciliation
+
+An initial staging invocation supplied an abbreviated source ref; the exporter
+rejected it before writing. The corrected full exact revision staged normally.
+The public release-download URL returned HTTP 504; the public asset API delivered
+the same pinned binary and its digest passed. No credential fallback was used.
+A direct local fixture clone failed Git's ownership check on the collector-owned
+source metadata. A bundle-based fixture succeeded using ordinary object reads,
+without adding safe-directory exceptions or modifying source hooks/config/remotes.
+
+During native output transfer, `copy2` wrote the task-owned `vibe.lock` bytes but
+could not preserve timestamps on the existing collector-owned file. Inspection
+showed owner `nobody:codex-relay-codex-work`, mode 0660; the native-generated
+source had the same mode. The lock bytes already matched. Remaining existing
+outputs were copied by ordinary content writes retaining their modes; no chmod,
+ownership or host repair was attempted. The new native slot receipt retains
+0600. Full native integrity passed after reconciliation. These recovered local
+limitations are retained as evidence, not hidden or treated as publication proof.
+
+All useful task source, native artifacts and evidence are preserved in ordinary
+local commits. Disposable task fixtures/tool downloads use the repository's
+existing `.vibe/` ignore. The pre-existing untracked `.codex-sandbox/`, owned by
+`nobody:codex-relay-codex-work` with mode 2770, is execution state outside task
+source cleanup and remains untouched. No other task-owned uncommitted work is
+intended at handoff; final status/whitespace/source checks verify reconciliation.
+The supplied Task/Step title is retained in this evidence; no supported client
+rename/readback operation is available, so persisted thread-title change is not
+claimed.
+
+The next authorized path is trusted Writer handoff and independent exact-result
+review, then required CI/integration and publication through the existing producer
+path. Verify publication of the exact accepted revision/version and any genuine
+remaining Instructions reconciliation before closure. This worker's local result
+completes its admitted implementation boundary, not the entire Task. Optional
+consumer adoption, a future Relay release or later use is not a Task 91 gate.
