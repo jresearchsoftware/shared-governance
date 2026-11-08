@@ -313,3 +313,28 @@ Iris's package publication does not adopt the package in another consumer.
 Unrelated PRs and optional future usage are not remaining Task obligations.
 Consumer automation must separately implement and qualify changed timing; these
 walks do not create a compatibility exception for an older runtime.
+
+
+## 10. Continuation preserves the Task objective
+
+Iris has adopted Task Handoff and uses manual execution with independent review.
+These synthetic scenarios apply [TH-010](../protocols/task-handoff.md#TH-010),
+[TH-013](../protocols/task-handoff.md#TH-013) and
+[TH-026](../protocols/task-handoff.md#TH-026). They illustrate existing authority,
+not new dispatch permission, automatic resume or live runtime qualification.
+The next prompt remains a short Task/Step/purpose and canonical link; the
+architect and executor reconstruct current authority from the linked records.
+
+| Canonical authority and latest result | Supported continuation and completion assessment |
+| --- | --- |
+| The Task requires a parser repair, user documentation and qualification. A terminal BLOCKED reports a broken test fixture; the owner authorizes the next Step with purpose "repair the fixture" and no scope amendment. | Preserve the terminal result and allocate the newly authorized Step. Repair the fixture, then finish the parser, documentation and qualification within authority before the independent review handoff. The fixture passing alone does not satisfy the original criteria. No charter copy or second approval for those ordinary corrections is needed. |
+| The Task requires a migration and recovery instructions. Independent review finds a migration bug; the next authorized handoff says "fix the review finding". Recovery instructions and one agreed check remain unfinished. | Fix the finding and complete the remaining instructions/check within admitted scope. Hand off the changed exact result for fresh applicable independent assessment. Neither resolving that finding nor the prior review accepts or completes the broader Task. |
+| The owner explicitly authorizes a diagnostic/research Step to compare two options and return evidence before a policy choice; implementation remains outside that Step. | Complete and hand off that bounded report, preserving implementation as remaining Task work pending the actual owner Decision and next authorized execution. The Task objective does not authorize choosing the policy, implementing it or replaying a terminal Step. This supported boundary is not an agent-invented diagnosis-only restriction. |
+| The Task includes a package release; the executor may repair and qualify source but lacks protected publication authority. The source blocker is cleared. | Complete other permitted source work and hand off its evidence at the review/publication boundary. Report exact-version publication as remaining work, keep the Task open as required, and use the existing authorized continuation. Do not acquire credentials, bypass independent review or claim publication from a passing source check. |
+
+A failed check is evidence for the next necessary correction, not authority to
+remove that check or change completion criteria. An ordinary result or discussion
+also cannot authorize a new feature, protected operation or policy. Such material
+changes use the existing owner Decision mechanism. Conversely, no new Decision
+or repeated approval is needed solely to preserve and execute already-authorized
+remaining work. Optional consumer adoption or later use adds no completion gate.

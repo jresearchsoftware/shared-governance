@@ -167,7 +167,20 @@ Do not restate accessible goals, requirements, investigation steps, test matrice
 boundaries or publication contracts, even when duplication seems helpful.
 Read the complete relevant discussion, Decisions, Outcomes/reviews and linked
 records, not just the body. After an Outcome use a new small authorized handoff
-for the next Step under [TH-006](#TH-006)–[TH-008](#TH-008), retaining the charter.
+for the next Step under [TH-006](#TH-006)–[TH-008](#TH-008).
+
+When preparing or interpreting continuation, reconstruct and preserve the effective
+Task goal, completion criteria and remaining work from the original charter and
+applicable owner Decisions. A blocker, failed check, review finding or partial
+Outcome refines the next necessary actions; it does not itself replace or narrow
+the Task objective. A short purpose naming the latest obstacle is navigation,
+not a replacement charter.
+A deliberately bounded diagnostic, research or repair Step is legitimate when
+justified by current owner scope, accepted process or a genuine execution/authority
+boundary; retaining the Task objective neither overrides that boundary nor
+authorizes replay of a terminal execution. Apply [RA-006](requirement-authority.md#RA-006)
+to unsupported restrictions and [TH-013](#TH-013) to continued execution.
+
 Add a Decision only for substantive changes that require one under current
 authority, not merely to repeat an explicit routine start instruction.
 
@@ -197,7 +210,11 @@ condition, not permission to reset, replace or silently overwrite work.
 **TH-013 — In-scope persistence and stop conditions.**
 
 Continue evidence-backed corrections inside the admitted goal without adding
-approval stages for every local fix. Stop when scope/permission or prior external
+approval stages for every local fix. After removing an obstacle, continue the
+remaining authorized Task work toward the agreed outcome or applicable
+review/handoff boundary, using the effective objective under [TH-010](#TH-010).
+Stopping at the local fix needs support from current owner scope, accepted process
+or a genuine execution/authority boundary. Stop when scope/permission or prior external
 mutation is uncertain, a material policy choice needs its owner, a protected
 boundary is inaccessible, or repetition yields no new evidence. Preserve useful
 results and disclose unreconciled work. A preferred new workflow or material
@@ -438,8 +455,9 @@ Acceptance, integration, publication/installation, further execution and Task
 closure are distinct. Continue only when current authority permits the next
 action and applicable checks, acceptance and protected boundaries are satisfied.
 Already authorized actions need no ceremonial reconfirmation; new scope needs
-its owner. A completed or accepted Step does not prove the whole Task complete,
-and accepted source does not prove deployment or release. Apply [RA-006](requirement-authority.md#RA-006) before admitting continuation;
+its owner. A completed or accepted Step does not prove the whole Task complete;
+a cleared blocker does not establish Task completion, and accepted source does
+not prove deployment or release. Apply [RA-006](requirement-authority.md#RA-006) before admitting continuation;
 reconcile apparent self-expansion through existing Decisions. Reassess concrete
 completion conditions, remaining work and holds at meaningful transitions; do
 not close with known remaining work or copy a stale disposition indefinitely.

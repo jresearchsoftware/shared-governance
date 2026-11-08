@@ -68,6 +68,16 @@ binding as described in [self-adoption](self-adoption.md): use the explicit Task
 binding, or supply the missing SHA as routing information. No universal model,
 effort or duplicate execution specification is required.
 
+For post-result handoffs, apply TH-010/TH-013: reconstruct the effective Task
+objective, completion criteria and remaining work from the charter and Decisions.
+A purpose such as "repair the failed check" identifies the next action without
+making it the whole Task. After repair, carry remaining authorized work to its
+agreed outcome or review/handoff boundary. A bounded diagnostic/research Step
+remains valid when current authority or a real process boundary justifies it;
+new permissions or changed completion criteria still require a substantive
+Decision. Retain terminal identities; this is no automatic resume instruction.
+See the [portable continuation examples](../packages/development-governance/vibevm/vibespecs/guides/onboarding-examples.md#10-continuation-preserves-the-task-objective).
+
 Use the supported client title tool, then read back the persisted
 `Task N — Step S — <purpose>` title. If unavailable, disclose that limit and retain
 the Task/Step/purpose and Issue link as a visible navigation aid. A prompt proves

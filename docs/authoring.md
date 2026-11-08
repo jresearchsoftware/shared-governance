@@ -83,6 +83,13 @@ assessments; other consumers own their separate topic choices and migration.
 
 ## Semantic completeness
 
+Task 91's [continuation coverage and scenarios](task-91/step-1/README.md)
+clarify TH-010/013/026 in 7.0.1 PATCH against accepted 7.0.0. The next obstacle
+refines actions without replacing the effective charter, completion criteria or
+remaining work. Bounded Steps and real process/authority boundaries remain;
+no new operator duty, form or execution mechanism is introduced. Other protocol
+bytes, client tools, topic adoption and frozen versions are preserved.
+
 Task 65 prepares 6.0.0 after accepted 5.2.3: [compatibility coverage and scenarios](task-65/step-1/README.md)
 extend existing PV-005/013–017 and add PV-018 within Package Versioning. Required
 floor/constraint rationale and delivery-source assessment tighten the adopter
