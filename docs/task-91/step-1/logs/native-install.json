@@ -1,0 +1,13 @@
+{
+  "tool": "VibeVM 1.0.11 (pinned digest verified)",
+  "arguments": [
+    "--json",
+    "install",
+    "--no-default-registry",
+    "--no-prefer-local",
+    "--assume-yes"
+  ],
+  "exit": 0,
+  "stdout": "{\n  \"command\": \"install:plan\",\n  \"packages\": [\n    {\n      \"package\": \"org.jresearch.ai/development-governance\",\n      \"version\": \"7.0.1\"\n    },\n    {\n      \"package\": \"org.jresearch.ai/codex-relay\",\n      \"version\": \"3.0.0\"\n    }\n  ]\n}\n{\n  \"command\": \"install:closure-diff\",\n  \"added\": [],\n  \"removed\": [],\n  \"changed\": [\n    \"org.jresearch.ai/development-governance 7.0.0 -> 7.0.1\"\n  ],\n  \"lanes\": []\n}\n{\n  \"command\": \"install\",\n  \"complete\": true,\n  \"materialised\": [\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/7.0.1\"\n  ],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"project\": \"/var/lib/codex-relay/slots/pool-3/work/repositories/jresearchsoftware/shared-governance/run-42469177891/.vibe/task91/native-workspace\",\n  \"pruned\": [\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/2.7.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/3.0.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/4.0.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.0.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.1\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.1\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.2\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.3\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/6.0.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/7.0.0\"\n  ],\n  \"skipped\": [\n    \"vibevm/vibedeps/org.jresearch.ai.codex-relay/3.0.0\"\n  ],\n  \"unchanged\": false\n}\n",
+  "stderr": ""
+}
