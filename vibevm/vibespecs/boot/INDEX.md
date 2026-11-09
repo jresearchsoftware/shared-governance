@@ -22,3 +22,11 @@ kind = "static"
 [[entry]]
 path = "vibevm/vibedeps/org.jresearch.ai.codex-relay/3.0.0/vibevm/vibespecs/boot/codex-relay.md"
 kind = "static"
+
+[[entry]]
+path = "vibevm/vibedeps/org.jresearch.ai.landscape-model-guidance/1.0.3/vibevm/vibespecs/boot/landscape-model-guidance.md"
+kind = "static"
+
+[[entry]]
+path = "vibevm/vibedeps/org.jresearch.ai.landscape-subagents/1.0.2/vibevm/vibespecs/boot/landscape-subagents.md"
+kind = "static"

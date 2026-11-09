@@ -60,6 +60,27 @@ Governance 7.0.1 slot. Preserve the topic applicability above and the
 Skill installation grants no automatic execution or operational authority.
 See [native Relay integration](docs/relay-skill.md) for maintenance and rollback.
 
+This producer workspace uses the root's native Landscape model-guidance 1.0.3
+flow for relevant new general model/effort recommendations. Follow its conditional
+boot to the full selection guidance and dated evidence when needed. Owner
+decisions, project/task allowlists, actual client eligibility and admitted profiles
+take precedence; recommendations neither prove access nor change an admitted
+Codex/Relay model or effort, dynamically route work or configure a client.
+
+This producer explicitly adopts the root's installed Landscape subagents 1.0.2
+flow. Before substantial work, follow its conditional boot and read the full policy
+only when Subagents is On and the task and runtime permit delegation. It requests
+useful proactive delegation at every supported parent effort, with independently
+chosen child model and effort, bounded assignments, parallel work when useful,
+reassessment and integrated verification. There is no helper quota; zero helpers
+remains valid. Preserve Subagents Off, higher-priority restrictions, accepted local
+exceptions, task permissions, explicit child limits and the admitted parent profile.
+Helpers supply implementation evidence, never independent governance acceptance.
+Keep both installed guidance versions stable throughout an admitted task. These
+producer-only dependencies do not enter the public Development Governance package,
+change Relay's execution authority or adopt policy for other consumers. See
+[Landscape integration](docs/landscape-integration.md) for scope and maintenance.
+
 For producer self-adoption work, this producer also explicitly adopts
 `self-adoption.md` from that same accepted flow. Unrelated tasks skip the
 corresponding protocol. This adoption grants no Task,

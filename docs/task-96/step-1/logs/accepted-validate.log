@@ -1,0 +1,25 @@
+{
+  "chain": [
+    "validate"
+  ],
+  "command": "lifecycle:plan",
+  "contributions": [],
+  "notices": [],
+  "requested": "validate"
+}
+{
+  "chain": [
+    "validate"
+  ],
+  "command": "lifecycle",
+  "contributions": [],
+  "notices": [],
+  "ok": true,
+  "requested": "validate",
+  "steps": [
+    {
+      "phase": "validate",
+      "status": "ok"
+    }
+  ]
+}
