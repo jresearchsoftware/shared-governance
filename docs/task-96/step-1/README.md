@@ -73,7 +73,9 @@ Used the pinned Linux x86_64 musl VibeVM 1.0.11 binary; SHA-256 matched
 `5fe5b3efeb2eab7c7c49a8dc864864ffacac08a9d7be3dc9df0bc0bb15a8bd58`.
 Acquisition and materialization used disposable staging inside this execution's
 sandbox, empty HOME, isolated VIBE_SETTINGS and Git credential-free configuration.
-No live user settings, hooks, remotes, permissions or protected Skill files changed.
+No live user settings, hooks, remotes, host permissions or protected Skill files changed.
+The native generator's private INDEX/slot-receipt modes are preserved in delivery;
+the admission-bound collector owns access without widening them.
 
 Preserved the original lock, configured staging's in-tree governance registry in
 isolated `registry.toml`, then ran:
@@ -89,7 +91,7 @@ The first native run selected exactly four packages and generated two new slots,
 the root INDEX and the lock. Existing selected slots were skipped as current.
 Its fourteen historical-slot prunes were confined to staging; delivery retains
 all prior tracked slots. The repeat offline run succeeded and reused all four
-selected slots. Check reported zero findings; validate reported no executable
+selected slots. The pruned staging check reported zero findings; validate reported no executable
 contributions and success. [Logs](logs/install.log) retain the native acquisition
 result; [repeat install](logs/repeat-install.log), [check](logs/check.log) and
 [validate](logs/candidate-validate.log) retain the bounded follow-up evidence.
@@ -146,6 +148,11 @@ replacement is newly required by unchanged text. Live Settings remain unread and
 unverified; earlier unresolved reconciliation gaps are not discharged.
 
 Final local checks and their results are recorded in [validation](validation.md).
+The delivered clean checkout retains fourteen historical slots. Native check warns
+that they are unclaimed by the current lock; accepted-baseline and candidate
+findings are identical (zero errors, fourteen warnings). This is the intentional
+retained-history contract, not a new dependency conflict or reason to delete slots.
+The trusted continuation should retain this disposition during exact-head review.
 The trusted Writer must publish the local result and one attributable Outcome,
 then use its governed Draft/Ready handoff. Independent exact-head acceptance and
 authorized integration remain pending; this worker cannot push, create/merge a PR,
