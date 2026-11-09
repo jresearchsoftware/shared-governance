@@ -11,6 +11,7 @@ import os
 from pathlib import Path, PurePosixPath
 import re
 import subprocess
+import tempfile
 import tomllib
 import urllib.request
 import urllib.error
@@ -44,7 +45,10 @@ AUTHORIZATION_FALLBACK = (
 
 DIAGNOSTIC_MESSAGES = {
     "DESTINATION_PROVISIONING_PENDING": "The bound public destination could not be safely verified or created. Check shared credential access and destination visibility, then retry the same source and workflow pin; no release push was attempted.",
-    "NO_PACKAGE_CHANGE": "No approved package payload changed; no publication was attempted.",
+    "NO_PACKAGE_CHANGE": "No new payload or eligible publisher-bound recovery was selected; no publication was attempted.",
+    "EXISTING_PAYLOAD_CONFIRMED": "The retained remote tag was read back and matches the original frozen export; no write was needed.",
+    "RECOVERY_TAG_MISMATCH": "The retained remote tag differs from the original frozen export. Publication remains blocked; resolve its provenance without moving the tag.",
+    "RECOVERY_READBACK_FAILED": "The remote release state could not be verified. Publication remains pending; retry the same source and publisher pins after restoring read access.",
     "ELIGIBLE_NOT_PUBLISHED": "Eligibility checks passed, but publication has not run.",
     "STAGED_NOT_PUBLISHED": "The native release is staged locally; destination publication is not confirmed.",
     "PUBLISHED_CONFIRMED": "The exact staged tag object was read back from the destination; publication is confirmed.",
@@ -134,6 +138,8 @@ def operator_diagnostic(result, status=None):
     if status == "AUTHORIZATION_PENDING":
         code = result.get("reason_code")
         return (code, AUTHORIZATION_MESSAGES[code]) if code in AUTHORIZATION_MESSAGES else AUTHORIZATION_FALLBACK
+    if status == "ALREADY_PUBLISHED" and result.get("verified_payload") is True:
+        return "EXISTING_PAYLOAD_CONFIRMED", DIAGNOSTIC_MESSAGES["EXISTING_PAYLOAD_CONFIRMED"]
     if status == "ALREADY_PUBLISHED":
         code = WARNING_CODES.get(result.get("warning"), "EXISTING_TAG_UNVERIFIED")
         return code, DIAGNOSTIC_MESSAGES[code]
@@ -188,6 +194,8 @@ def append_actions_summary(report_path, summary_path, job_status, outcomes):
         try:
             report = json.loads(report_path.read_text(encoding="utf-8"))
             packages = report["packages"]
+            if SHA.fullmatch(report.get("source_sha", "")):
+                rows.append(f"Trigger source: `{report['source_sha']}`.")
         except (OSError, ValueError, KeyError, TypeError):
             rows.append("Publisher result unavailable: **FAILED_OR_PENDING** — `PUBLISHER_REPORT_UNREADABLE`: "
                         + DIAGNOSTIC_MESSAGES["PUBLISHER_REPORT_UNREADABLE"])
@@ -206,6 +214,8 @@ def append_actions_summary(report_path, summary_path, job_status, outcomes):
             else:
                 code, message = operator_diagnostic(package)
             rows.append(f"{package.get('package', 'Package')}: **{status}** — `{code}`: {message}")
+            if package.get("operation") == "pending-publication" and SHA.fullmatch(package.get("source_sha", "")):
+                rows.append(f"Frozen package source: `{package['source_sha']}`; its bytes and receipt are retained.")
             pending_authorization |= status == "AUTHORIZATION_PENDING"
             failed |= status == "FAILED_OR_PENDING"
 
@@ -635,8 +645,85 @@ def initial_plan(root, initiation_sha, main, binding, api, binding_path, candida
             "operation": "initial-publication", "packages": results}
 
 
+def pending_source(root, source_sha, package, binding_path):
+    """Bounded source-only recovery, without historical CI or acceptance audits.
+
+    Only the current version is considered. Its first source occurrence must
+    already carry this publisher coordinate; onboarding an older version cannot
+    create eligibility. Export the original receipt as well as original bytes.
+    """
+    current = snapshot(root, source_sha, package, require_ready=False)
+    if current is None:
+        return None
+    version = current[1]["version"]
+    history = git(root, "rev-list", "--first-parent", source_sha, "--",
+                  package["root"], binding_path).decode().splitlines()
+    first = None
+    occurrences = []
+    for revision in reversed(history):
+        if not git(root, "ls-tree", revision, "--", package["root"]):
+            continue
+        if package["adapter"] == "tree-v1":
+            manifest_path = package["root"] + "/vibe.toml"
+            if not git(root, "ls-tree", revision, "--", manifest_path):
+                continue
+            try:
+                metadata = tomllib.loads(git(root, "show", revision + ":" + manifest_path).decode()).get("package", {})
+            except tomllib.TOMLDecodeError:
+                if first is None:
+                    continue
+                raise AuthorizationError("PACKAGE_VERSION_REUSE", "frozen source history contains an invalid manifest") from None
+            same_identity = (metadata.get("group", "") + "/" + metadata.get("name", "") == package["coordinate"]
+                             and metadata.get("version") == version)
+            if first is not None and same_identity and metadata.get("frozen") is not True:
+                raise AuthorizationError("PACKAGE_VERSION_REUSE", "accepted frozen identity was made mutable")
+            if not same_identity or metadata.get("frozen") is not True:
+                continue
+        value = snapshot(root, revision, package, require_ready=False)
+        if value is not None and value[1]["version"] == version:
+            first = first or revision
+            occurrences.append((revision, value))
+    if first is None or not git(root, "ls-tree", first, "--", binding_path):
+        return None
+    original_binding = revision_binding(root, first, binding_path)
+    original = next((p for p in original_binding["packages"]
+                     if p["coordinate"] == package["coordinate"]), None)
+    if original is None:
+        return None
+    # A binding added over preexisting source is onboarding, even if that
+    # commit also changes unrelated files. It cannot authorize an old release.
+    parents = git(root, "show", "-s", "--format=%P", first).decode().split()
+    before = (snapshot(root, parents[0], original, require_ready=False)
+              if parents and git(root, "ls-tree", parents[0], "--", original["root"]) else None)
+    frozen = snapshot(root, first, original, require_ready=False)
+    if before is not None and before[1]["version"] == version:
+        return None
+    if not parents or not git(root, "ls-tree", parents[0], "--", binding_path):
+        return None
+    prior_binding = revision_binding(root, parents[0], binding_path)
+    if not any(p["coordinate"] == package["coordinate"] for p in prior_binding["packages"]):
+        return None
+    for revision, value in occurrences:
+        if payload(value) != payload(frozen):
+            raise AuthorizationError("PACKAGE_VERSION_REUSE", "accepted frozen identity changed before recovery")
+    # Retain the source-time inventory, mapping and disclosure throughout this
+    # version. Current rights and closure cannot repair an unready frozen source.
+    for revision in history[:history.index(first) + 1]:
+        historical = revision_binding(root, revision, binding_path)
+        prior = package_binding(historical, package["coordinate"])
+        if any(historical[k] != original_binding[k]
+               for k in ("repository", "repository_id", "branch")):
+            raise AuthorizationError("HISTORICAL_BINDING_UNRESOLVED", "recovery source identity changed")
+        if any(prior.get(k) != original.get(k) for k in
+               ("root", "adapter", "destination", "disclosure")) or set(prior.get("files", [])) != set(original.get("files", [])):
+            raise AuthorizationError("PACKAGE_MAPPING_CHANGED", "recovery export binding changed")
+    snapshot(root, first, original)
+    snapshot(root, source_sha, package)
+    return first, frozen
+
+
 def plan(root, source_sha, main, binding, api, binding_path, candidate_base=None, selected=None):
-    """Compare one source transition; never reconstruct historical eligibility."""
+    """Compare the transition, recovering only its current publisher-bound version."""
     exact(root, source_sha)
     chain = git(root, "rev-list", "--first-parent", main).decode().splitlines()
     if candidate_base is None and source_sha not in chain:
@@ -675,7 +762,17 @@ def plan(root, source_sha, main, binding, api, binding_path, candidate_base=None
             inventory_changed = (previous_binding is not None and prior_package is not None
                                  and set(prior_package.get("files", [])) != set(package.get("files", [])))
             if payload(current) == payload(previous) and not inventory_changed:
-                result["status"] = "NO_PACKAGE_CHANGE"
+                recovery = (pending_source(root, source_sha, package, binding_path)
+                            if candidate_base is None else None)
+                if recovery is None:
+                    result["status"] = "NO_PACKAGE_CHANGE"
+                else:
+                    frozen_sha, frozen = recovery
+                    result.update(status="READY", source_sha=frozen_sha,
+                                  trigger_sha=source_sha, operation="pending-publication",
+                                  version=frozen[1]["version"],
+                                  payload_sha256=frozen[1]["payload_sha256"],
+                                  acceptance=[eligible(api, binding, source_sha, parents)])
             else:
                 if current is None:
                     raise AuthorizationError("OWNER_DISPOSITION_REQUIRED", "package removal requires owner disposition")
@@ -801,6 +898,63 @@ def native_environment(temporary):
     return env
 
 
+def release_files(repository, revision):
+    files = {}
+    for entry in filter(None, git(repository, "ls-tree", "-rz", revision).split(b"\0")):
+        metadata, path = entry.split(b"\t", 1)
+        mode, kind, oid = metadata.decode().split()
+        if mode != "100644" or kind != "blob":
+            raise ValueError("release contains a nonordinary blob")
+        files[path.decode()] = git(repository, "cat-file", "blob", oid)
+    return files
+
+
+def retained_recovery(result, refs, files):
+    """Read the real immutable tag; existence alone cannot resolve pending recovery."""
+    result = dict(result, remote_refs=refs)
+    observed = tag_oid(refs, result["tag"])
+    with tempfile.TemporaryDirectory(prefix="publisher-readback-") as directory:
+        git(None, "init", "--bare", directory)
+        git(directory, "fetch", "--no-tags", "--", result["destination"],
+            "refs/tags/" + result["tag"] + ":refs/tags/" + result["tag"])
+        actual = git(directory, "rev-parse", "refs/tags/" + result["tag"]).decode().strip()
+        if actual != observed or release_files(directory, "refs/tags/" + result["tag"]) != files:
+            result.update(status="FAILED_OR_PENDING", failure_code="RECOVERY_TAG_MISMATCH")
+        else:
+            result.update(status="ALREADY_PUBLISHED", verified_payload=True)
+    return result
+
+
+def resolve_published_recoveries(root, binding, report):
+    """After exact trigger qualification, resolve recovery no-ops before tool acquisition."""
+    results = []
+    for decision in report["packages"]:
+        result = dict(decision)
+        if decision["status"] == "READY" and decision.get("operation") == "pending-publication":
+            package = package_binding(binding, decision["package"])
+            try:
+                if decision["destination"] != package["destination"]:
+                    raise ValueError("planned destination differs from source binding")
+                tag = "v" + decision["version"]
+                try:
+                    refs = remote_refs(package["destination"], tag)
+                except ValueError:
+                    repository = provisioned_repository(package["destination"])
+                    if not repository or destination_exists(repository, DestinationAPI()):
+                        raise
+                    # Same read-only missing-destination handling as staging.
+                    refs = []
+                if tag_oid(refs, tag):
+                    files, receipt = snapshot(root, decision["source_sha"], package)
+                    if receipt["payload_sha256"] != decision["payload_sha256"]:
+                        raise ValueError("planned and retained payload differ")
+                    result = retained_recovery(dict(result, tag=tag), refs, files)
+            except (ValueError, OSError, subprocess.SubprocessError):
+                result.update(status="FAILED_OR_PENDING", failure_code="RECOVERY_READBACK_FAILED")
+        results.append(result)
+    return {**report, "packages": results}
+
+
 def stage(root, package, decision, vibe, directory):
     """Credential-free preparation. directory is disposable, never a release ledger."""
     if decision["status"] != "READY":
@@ -821,6 +975,8 @@ def stage(root, package, decision, vibe, directory):
         # An unauthenticated 404 only permits local staging, never creation.
         exists, refs = False, []
     if tag_oid(refs, tag):
+        if decision.get("operation") == "pending-publication":
+            return retained_recovery(result, refs, snapshot(root, decision["source_sha"], package)[0])
         result.update(status="ALREADY_PUBLISHED", remote_refs=refs,
                       warning="Existing identity retained; this does not prove this retry source was published.")
         return result
@@ -846,6 +1002,8 @@ def stage(root, package, decision, vibe, directory):
         # commit, metadata mutation or secret is needed before the atomic push.
         git(None, "init", "--bare", "--initial-branch=main", str(staging))
     if tag_oid(remote_refs(staging.as_uri(), tag), tag):
+        if decision.get("operation") == "pending-publication":
+            return retained_recovery(result, remote_refs(package["destination"], tag), files)
         result.update(status="ALREADY_PUBLISHED", remote_refs=remote_refs(package["destination"], tag),
                       warning="Existing identity retained; the retry source has not been proven published.")
         return result
@@ -889,6 +1047,8 @@ def finalize(staged, push=None, destination_api=None):
             return result
     try:
         if tag_oid(refs, tag):
+            if staged.get("operation") == "pending-publication":
+                return retained_recovery(result, refs, release_files(staged["staging"], "refs/tags/" + tag))
             result.update(status="ALREADY_PUBLISHED", remote_refs=refs,
                           warning="Existing identity retained; compare its original provenance if recovery differs.")
             return result
@@ -902,6 +1062,8 @@ def finalize(staged, push=None, destination_api=None):
         observed = tag_oid(refs, tag)
         if observed == staged["expected_tag"]:
             result.update(status="PUBLISHED", remote_refs=refs)
+        elif observed and staged.get("operation") == "pending-publication":
+            return retained_recovery(result, refs, release_files(staged["staging"], "refs/tags/" + tag))
         elif observed:
             result.update(status="ALREADY_PUBLISHED", remote_refs=refs,
                           warning="A competing identity exists and was retained; this source was not published.")
@@ -986,6 +1148,7 @@ def main():
         # No-op onboarding must not query even the triggering CI run.
         if args.operation != "check" and any(p["status"] == "READY" for p in report["packages"]):
             verify_trigger(api, binding, args.source_sha)
+            report = resolve_published_recoveries(args.source, binding, report)
         if args.operation == "stage":
             report = stage_all(args.source, binding, report, args.vibe, args.directory, args.package)
     write_report(report, args.report)
