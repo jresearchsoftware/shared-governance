@@ -32,6 +32,8 @@ jobs:
         run: python3 scripts/test-chatgpt-projection.py
       - name: Check producer migration and accepted publisher parity
         run: python3 scripts/test-publication.py
+      - name: Check exact manual and automatic publication source resolution
+        run: python3 scripts/test-publication-dispatch.py
       - name: Check whole-package bump against current accepted main
         env:
           PR_BASE: ${{ github.event.pull_request.base.sha }}

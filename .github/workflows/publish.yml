@@ -8,38 +8,67 @@ on:
   workflow_dispatch:
     inputs:
       source_sha:
-        description: Full accepted source main SHA to retry (same revision as the failed run)
-        required: true
+        description: Optional full accepted source main SHA; blank uses the selected main revision
+        required: false
         type: string
 
 permissions:
   contents: read
   actions: read
 
-# Each accepted SHA retains its own run; a global concurrency group can discard
-# pending releases. Races at the destination fail atomically and can be retried.
-concurrency:
-  group: package-publication-${{ github.event.workflow_run.head_sha || inputs.source_sha }}
-  cancel-in-progress: false
-
 jobs:
-  readiness:
+  resolve:
     if: >-
       github.repository == 'jresearchsoftware/shared-governance' &&
-      ((github.event_name == 'workflow_run' &&
-        github.event.workflow_run.conclusion == 'success' &&
-        github.event.workflow_run.event == 'push' &&
-        github.event.workflow_run.head_branch == 'main' &&
-        github.event.workflow_run.head_repository.full_name == github.repository) ||
-       (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'))
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      source_sha: ${{ steps.source.outputs.source_sha }}
+    steps:
+      - name: Resolve the exact accepted source revision
+        id: source
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_REF: ${{ github.ref }}
+          DISPATCH_SHA: ${{ github.sha }}
+          INPUT_SOURCE_SHA: ${{ inputs.source_sha }}
+          RUN_SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+          RUN_EVENT: ${{ github.event.workflow_run.event }}
+          RUN_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          RUN_REPOSITORY: ${{ github.event.workflow_run.head_repository.full_name }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          trap 'printf "Source resolution rejected: require selected main, an exact lowercase SHA, and consistent source event identity.\n" >> "$GITHUB_STEP_SUMMARY"' ERR
+          case "$EVENT_NAME" in
+            workflow_dispatch)
+              test "$DISPATCH_REF" = refs/heads/main
+              [[ "$DISPATCH_SHA" =~ ^[0-9a-f]{40}$ ]]
+              SOURCE_SHA="${INPUT_SOURCE_SHA:-$DISPATCH_SHA}"
+              ;;
+            workflow_run)
+              test "$RUN_EVENT" = push
+              test "$RUN_BRANCH" = main
+              test "$RUN_REPOSITORY" = "$REPOSITORY"
+              test -z "$INPUT_SOURCE_SHA"
+              SOURCE_SHA="$RUN_SOURCE_SHA"
+              ;;
+            *) exit 1 ;;
+          esac
+          [[ "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          printf 'source_sha=%s\n' "$SOURCE_SHA" >> "$GITHUB_OUTPUT"
+          printf 'Resolved accepted source `%s` for `%s`. Retry this exact SHA after recovery.\n' "$SOURCE_SHA" "$EVENT_NAME" >> "$GITHUB_STEP_SUMMARY"
+  readiness:
+    needs: resolve
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
-      SOURCE_SHA: ${{ github.event.workflow_run.head_sha || inputs.source_sha }}
+      SOURCE_SHA: ${{ needs.resolve.outputs.source_sha }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event.workflow_run.head_sha || inputs.source_sha }}
+          ref: ${{ needs.resolve.outputs.source_sha }}
           path: producer
           fetch-depth: 0
           persist-credentials: false
@@ -50,6 +79,10 @@ jobs:
           path: publisher
           fetch-depth: 0
           persist-credentials: false
+      - name: Verify the exact source checkout belongs to main
+        run: |
+          test "$(git -C producer rev-parse HEAD)" = "$SOURCE_SHA"
+          git -C producer merge-base --is-ancestor "$SOURCE_SHA" refs/remotes/origin/main
       - name: Verify source-bound producer readiness without distribution credentials
         id: readiness
         env:
@@ -65,11 +98,16 @@ jobs:
         run: |
           printf 'Producer readiness failed or pending for source `%s`. Retry this same SHA using Publish accepted package after recovery.\n' "$SOURCE_SHA" >> "$GITHUB_STEP_SUMMARY"
   publish:
-    needs: readiness
+    needs: [resolve, readiness]
+    # Serialize destination work by the single resolved SHA. Distinct accepted
+    # revisions retain independent runs; destination races fail atomically.
+    concurrency:
+      group: package-publication-${{ needs.resolve.outputs.source_sha }}
+      cancel-in-progress: false
     uses: ./.github/workflows/vibe-publisher.yml
     with:
       mode: publish
-      source_sha: ${{ github.event.workflow_run.head_sha || inputs.source_sha }}
+      source_sha: ${{ needs.resolve.outputs.source_sha }}
       binding: vibe-publisher.json
       package: org.jresearch.ai/development-governance
     secrets:

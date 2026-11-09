@@ -7,6 +7,7 @@ on:
       - vibe-publisher.json
       - scripts/check-publication.py
       - scripts/test-publication.py
+      - scripts/test-publication-dispatch.py
       - scripts/probe-publication.py
       - .github/workflows/publish.yml
       - .github/workflows/producer-publisher-fixture.yml
@@ -45,3 +46,5 @@ jobs:
         run: python3 producer/scripts/probe-publication.py --publisher publisher --candidate "$SOURCE_SHA"
       - name: Executing shared implementation regressions without destination credentials
         run: python3 publisher/tooling/vibe-publisher/test_publisher.py
+      - name: Exact manual and automatic source resolution without credentials
+        run: python3 publisher/scripts/test-publication-dispatch.py
