@@ -5,6 +5,29 @@ selects the native VibeVM path. This change remains proposed until independently
 accepted. The separate [standalone PR 64](https://github.com/jresearchsoftware/shared-governance/pull/64)
 stays Draft and unchanged; its later disposition is owner-controlled.
 
+## Current 5.0.0 integration
+
+[Deployment Task 8](https://github.com/jresearchsoftware/codex-relay-deployment/issues/8)
+authorizes this consumer update in PR 93. The reviewed candidate selects public
+Relay Skill 5.0.0 at immutable distribution commit
+`5fc55231ffc2fee2d7dd4c399e85ef1d3b091bd9` (`v5.0.0`), with package content hash
+`sha256:d78711a85f07e3d09eb95d9660e1c0ca4fc4efc0dece0dadfb4f2265340c0973`.
+The root keeps the exact producer-owned Shared Governance 7.0.1 requirement and
+unchanged authored payload. The public package's nested Shared closure is inert;
+active protocol references use the unique root-selected Shared 7.0.1 slot.
+
+The hash-checked pinned Linux musl VibeVM 1.0.11 resolves the mixed graph in
+disposable staging with isolated registry settings. Its supported native Skill
+install updates the complete Codex projection and receipt. Transfer selected
+outputs together and preserve historical slots pruned only inside staging.
+The generated root INDEX selects Relay 5.0.0; root topic adoption, human overlays,
+Manual Codex and independent acceptance remain unchanged. The integration checker
+pins the new immutable release while continuing to reject payload, receipt,
+root-source and nested-closure drift. The earlier sections below retain the
+historical 3.0.0 integration and Task 84 compatibility evidence; they do not select
+an active root or override this update. Source/Skill integrity checks do not
+qualify an installed runtime or authorize PROD effects.
+
 ## Identity and routing
 
 The root manifest retains the public immutable Git root for Relay 3.0.0 at

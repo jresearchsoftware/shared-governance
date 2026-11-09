@@ -11,8 +11,8 @@ version = "=7.0.1"
 link = "dynamic"
 
 [requires.packages."flow:org.jresearch.ai/codex-relay"]
-version = "=3.0.0"
+version = "=5.0.0"
 link = "dynamic"
 git = "https://github.com/jrs-vibevm/org.jresearch.ai.codex-relay.git"
-rev = "325c96371783e2d628bfa9903b3244468c688fe6"
+rev = "5fc55231ffc2fee2d7dd4c399e85ef1d3b091bd9"
 auth = "none"

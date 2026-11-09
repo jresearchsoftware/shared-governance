@@ -55,7 +55,7 @@ results retain typed Task Approval.
 
 Source acceptance, installation, deployment and release are separate facts and
 permissions. A route choice adds no operational or credential authority, and
-source support does not qualify an installed Reviewer or owner adapter.
+source support does not qualify installed Reviewer or GitHub connector permissions.
 
 ## Authority, actors and capabilities
 
@@ -122,12 +122,16 @@ durably creates the sole immutable admission snapshot, including sources,
 profile, scope, boundaries, validation, exact starting state, route, attempt/run
 and Step. Rejected routing does not allocate Step.
 
-Task Handoff's "Step as an authorized execution cycle" section owns cycle and navigation semantics. Relay's protected
-Writer allocates Step 1 at first admission and the next Step for each genuinely
-new execution, including after BLOCKED. Same-attempt replay/recovery cannot
-launch another worker. Approval, charter/Decision/CR publication and ready-label
-display allocate no Step. Native titles and `step-N` labels project protected
-admission state; never infer identity from the largest historical number.
+At a genuinely new routed admission, Writer reads the canonical Issue's single
+valid `step-N` position under its existing serialization lock and compares it
+with successful durable admissions. The next Step is N+1; without a label it is
+last admitted Step+1, or 1 when neither exists. An owner-maintained position
+above Writer history permits standalone iterations. A position below successful
+history, malformed/conflicting labels, overflow or a concurrent position change
+fails with an actionable diagnostic. Rejected launches allocate no Step;
+same-attempt replay/recovery retains its Step. The label supplies numbering,
+never execution or admission authority. Writer projects the position only after
+durable admission and verifies the native result.
 
 Profile resolution is applicable CR overrides, trusted Decisions, consumer
 defaults, then supported system defaults. Resolve once at admission; no silent
@@ -145,6 +149,30 @@ folded by default, after actual GitHub expand/copy usability is qualified.
 Otherwise leave it open. Actions run names can show bounded Task/PR/route
 information but do not preallocate Step.
 
+### Manual result PR Step labels
+
+An ordinary authorized participant or Codex may create a manual result PR.
+When Writer validates its exact repository, Task, admitted branch/head and base,
+it uses the shared projection path to apply the already-admitted `step-S` label
+and bounded canonical title. This covers admission-bound PRs, delayed result
+association and same-Step repair of a missing projection. It allocates no Step
+and does not restrict PR author identity or require Writer-created manual PRs.
+A conflicting Step or Task title requires reconciliation; it is never silently
+overwritten. Late original results cannot restore an older Step's projections.
+
+This completes the interim manual labeling responsibility from Task #182 and
+Task #177: manual executors supply an accurately bound result; Writer owns the
+verified projection at binding/publication. There is no historical bulk relabel,
+continuous synchronizer or additional owner gate. One canonical Outcome,
+Draft/Ready ownership and independent exact-head acceptance remain unchanged.
+
+This Writer responsibility applies to Relay-admitted results. Explicitly
+authorized standalone/manual work keeps owner-maintained numbering and ordinary
+GitHub metadata permissions, with no fabricated admission or Writer receipt.
+Its Issue position can become the numbering input of a later genuine admission.
+
+### Independent attempts
+
 A fresh native command may admit an independent source/research attempt before
 an older Step has a terminal Outcome. Use an independent checkout and available
 resource; a shared checkout, physical slot or exclusive environment remains
@@ -154,7 +182,23 @@ or implicit cancellation of the older attempt. New attempts have their own
 Steps and may duplicate computation; replay of one attempt never invokes the
 model again.
 
+Routine lifecycle drain and consumer transitions classify current operational
+effects. A clean manual handoff with no matching runner journal or pending
+result/publication effect does not require a historical Outcome, Task closure
+or withdrawal acknowledgement before an unrelated idle upgrade. Historical
+execution remains unknown; no cancellation or completion receipt is invented.
+Active/unknown workers, pending trusted publication/recovery, conflicting
+ownership and the original attempt's replay bindings remain protected.
+
 ## Execute and preserve progress
+
+Normally carry investigation, implementation, technical corrections and tests
+through one substantive execution Step to a complete candidate and Outcome.
+Ordinary test failures, retries and internal phases do not themselves require
+another Step. After resolving a blocker or finding, return to the complete
+effective Task goal and its remaining requirements. Stop at a real evidenced
+capability, authority, policy, trust or safety boundary. A genuinely new
+execution after a terminal result keeps the existing next-Step rule.
 
 Use complete Task Handoff and Context Loading for refresh, JIT completeness, correction and
 stop semantics. Relay's existing-PR starting-head gate inspects its
@@ -177,6 +221,29 @@ without proving newly added requirements were performed or granting a revoked
 operation. Consumer-specific TEST/PROD, deployment, credentials and recovery
 authority must be explicit; the Skill creates none.
 
+## Isolated disposable TEST qualification
+
+The owning project's established authority must identify the concrete disposable
+TEST environment and dedicated TEST repositories. A repository name containing
+`test` alone establishes no boundary; this Skill designates no consumer resource.
+Where that verified authority grants full standing TEST control, it includes
+creation/modification of TEST-only Issues, branches, fixtures and trusted
+Decisions/CRs, native positive and
+negative independent reviews, workflow management/runs and creation, review and
+squash integration of TEST PRs. Do not request a separate confirmation for each
+of those already authorized operations. A preview rule for actual product
+findings does not add a per-review prompt to in-scope TEST fixtures.
+
+Preserve actual actor/tool permissions, Writer/Reviewer independence, genuine
+native admission, exact head/checks, trusted publication, Issue closure policy
+and recovery of the original uncertain operation. Claim shared TEST before use,
+restore/verify usability and release only that execution's claim. This authority
+does not extend to a product PR merge, PROD, external/ordinary consumer repositories outside the designated TEST boundary, or
+App/credential/runner-ACL changes outside independently established authority.
+An unavailable capability is a concrete boundary, not an invented approval stage.
+The source project's [TEST policy](https://github.com/jresearchsoftware/codex-relay/blob/main/docs/execution-policy.md#test-environment-authority)
+owns its concrete standing binding.
+
 ## Change Request and remediation
 
 Apply complete IR methodology to assessment and findings. A v4 native `CHANGES_REQUESTED`
@@ -185,10 +252,26 @@ CR ID and actionable findings with bounded overrides. It has no Step and needs
 no successor public Task Request. Task-level `task-review` findings are evidence
 for future owner direction, not an executable PR CR.
 
-After publication the existing owner channel invokes the bounded Writer
-lifecycle action and verifies Draft for that exact CR/head before remediation.
-An uncertain transition stops continuation. The owner applies the appropriate
-ready command to the existing PR; Writer then admits and projects the new Step.
+For native Relay-admitted automatic remediation, the owner applies
+`codex-ready-auto` to the existing PR. The qualified routing path sends that
+command through Writer, which derives the bounded `begin-remediation` action
+from the verified current native CR, executes it and verifies Draft for the exact
+CR/head before admitting or reserving worker execution. No second manual Draft
+operation or direct Writer bypass is required. Reviewer publication returns
+`structuredContent.pr_lifecycle`; that returned action alone does not prove
+Writer executed it or changed the PR state.
+
+Writer re-reads executable authority and the exact target. Missing lifecycle
+capability, changed authority/head or a failed/uncertain transition stops
+continuation before execution; retain the same CR/head for supported recovery.
+The existing owner orchestration channel may also invoke the returned action
+through Writer and verify its result. Relay-admitted manual routing uses Writer's
+verified transition before publishing its handoff. Genuinely standalone/direct
+manual execution follows its explicitly authorized channel and available native
+PR capabilities; it cannot assume the automatic Writer transition or fabricate
+admission. This clarification adds no standalone routing or qualification.
+
+After successful preparation Writer admits and projects the new Step.
 Preserve the branch/PR and exact starting-head gate. The corrected head needs
 fresh independent review. Draft/Ready denotes execution handoff, not acceptance,
 passing CI or merge permission.
@@ -213,6 +296,18 @@ positive integer Task/run IDs and a complete compatible Outcome claim from the
 admitted handoff/schema. No owner result-copy comment or second approval is
 required merely to transport a new v4 result. It neither imports Git nor
 launches, approves, deploys, merges or closes anything.
+
+For a v4 PR result set `result.parent` to the intended PR and
+`result.result.revision` to its exact published Git head. Keep one ordinary Task
+link in the PR, such as `Related to #N`. Writer checks the admitted repository,
+branch and configured base, and any admitted existing-PR number. No admission
+digest line, PR-author restriction or scan of unrelated same-branch PRs is
+required. Writer publishes one verified Outcome then makes that exact open PR
+Ready for independent review. BLOCKED remains Draft; disposed PRs stay disposed.
+A target input error can be corrected before claim reservation in the same
+attempt. Once reserved, retry the same result for publication recovery; changed
+claims cannot overwrite it. Retained v3 keeps its original request binding.
+
 
 Competing candidates retain the canonical Task branch. The first authorized
 publication may advance its exact predecessor; another candidate stops if that
@@ -247,6 +342,19 @@ Native source tampering, wrong identity, conflicting CR, result/head mismatch
 and duplicate delivery still fail closed.
 
 ## Independent acceptance and authorized continuation
+
+The owner orchestration uses the supported GitHub connector directly for
+already-authorized integration after genuine independent native approval. There
+is no local owner merge command, post-review engine, action journal or background
+service. Reviewer publishes acceptance; the owner channel performs integration;
+protected Writer retains admitted execution and publication recovery.
+
+After `PUBLICATION_UNCERTAIN`, reconcile the original identical Reviewer
+operation through supported replay/readback, preserving its exact intended
+body and operation identity. Do not post another review or treat an uncertain
+response as approval. Reviewer `execution_supported: false` means that the
+Reviewer itself performs no merge; it does not prevent authorized owner use of
+the GitHub connector.
 
 For an implementation PR, independent acceptance uses native exact-head
 `APPROVE`; genuine remediation findings use `REQUEST_CHANGES`. Another Task
@@ -296,64 +404,57 @@ its recommendation or authorize implementation, deployment or release. Owner
 discussion or a Decision alone does not allocate Step. After genuine approval,
 only already-authorized continuation below may proceed.
 
-The owner continuation path re-reads effective authority, exact acceptance/head,
-required checks, readiness, completion, holds and protected boundaries. Only
-already-authorized integration proceeds through that channel; v4 direction has
-`hold` and optional trusted `next`, no competing `task_complete` or future Step.
-Reviewer publishes acceptance and its bounded continuation policy; it performs
-neither merge nor closure. A native `APPROVE` binds one reviewed head and
-permits the separately authorized **squash-only** continuation when required
-native checks are complete and passing, mergeability/readiness are verified,
-and no hold or protected boundary applies. Unresolved checks, unknown readiness
-or a moved candidate stop continuation. Ordinary base movement is allowed
-where current exact-head checks and readiness remain safe; preserve any explicit
-exact-base reconciliation policy.
+### Owner integration through the GitHub connector
 
-Migrated PRs use `Related to #N`; trusted native `closesTask` must be explicitly
-`false` before squash. `true` or unknown blocks the merge. The owner helper uses
-neutral squash title/body rather than inheriting closing keywords. Explicit
-Issue closure stays a separate action. Legacy linkage behavior retains its
-original contract.
+After durable genuine approval, complete the already-authorized owner sequence
+without another ceremonial merge prompt:
 
-For an owner-created standalone source PR, Reviewer verifies the configured
-owner's native User identity, same repository, branch and exact head, and binds
-current canonical authority plus `source_pr` provenance in the native review.
-This replaces only the execution-result binding; it fabricates no admission or
-Writer Outcome. An exact retained manual Request may remain its compatibility
-source. Unrelated historical Requests do not become current authority, and
-fresh v4 work needs no fictitious Step or new v3 Request.
+1. Refresh effective canonical Task/Decision authority, native independent
+   approval and the exact reviewed/current PR head, source provenance, required
+   native checks, Draft/Ready, mergeability, warnings, explicit holds and
+   protected boundaries. Changed authority requiring acceptance or a moved
+   candidate needs fresh applicable review; incomplete/failing required checks,
+   unknown readiness or a hold stop integration. Ordinary base movement is
+   allowed only where current exact-head checks and readiness remain safe.
+   Preserve an explicit exact-base requirement: the connector's atomic head
+   comparison does not supply an atomic base comparison.
+2. Verify closure restrictions. Under the current migrated-Task compatibility
+   binding, use `Related to #N`, establish that the PR does not implicitly close
+   the Task, and supply a neutral squash title/body. Removing the old helper
+   does not implement Task #194 or authorize Issue closure.
+3. Use the connector's `merge_pull_request` with `merge_method: "squash"`, the
+   canonical repository/PR and `expected_head_sha` equal to the full approved
+   SHA. Supply explicit neutral `commit_title`/`commit_message` where required
+   by the closure binding. Do not omit the head guard or replace squash with
+   another merge method or unattended auto-merge.
+4. Read back the same PR and merge commit; verify merged state, approved head,
+   destination and squash SHA before dependent work. A lost or uncertain merge
+   response requires authoritative GitHub reconciliation of that original
+   effect. Never blindly repeat it, switch verdict or launch/close while its
+   effect is unknown. Report a missing permission or readback capability as the
+   exact boundary; do not claim completion from a successful tool call alone.
 
-The existing trusted owner adapter separately verifies explicit standalone
-permission in current canonical authority, no admitted Relay execution for that
-result, and disposition of ordinary owner result warnings plus required native
-evidence. Its internal `standaloneAuthorization` binds the exact
-`authority_sha256`, `pullRequest` and `headSha`, with `authorized: true`,
-`admittedExecution: false` and `warningsDispositioned: true`. Native owner,
-head repository and branch must match the receipt; retained manual Requests
-also bind Task/PR Step. These are adapter facts from existing evidence, not a
-new owner prompt, public comment or registry. Missing, ambiguous or revoked
-facts stop before mutation. An ordinary owner Outcome remains ordinary
-evidence; it cannot become a Writer Outcome or Task Approval.
+The [component contract](https://github.com/jresearchsoftware/codex-relay/blob/main/contracts/README.md#authorized-continuation-after-independent-acceptance)
+provides the connector argument example and detailed evidence boundaries.
+GitHub records are the durable integration evidence; no owner-local merge
+journal or replacement orchestration service is required.
 
-Known same-result Writer evidence or execution markers, including blocked or
-stale results, retain their admitted result/recovery path. A source receipt
-cannot downgrade an admitted result. Current migrated routes keep exact-head
-checks, warning disposition, holds, neutral squash messages and closure boundaries;
-only the explicitly supported standalone source path omits the admission/Writer
-receipt. A retained Request naming only an old Request as its next action may
-complete an authorized squash, then stops follow-up with
-`CONTINUATION_NEXT_AUTHORITY_INVALID` until current v4 direction replaces or
-clears that follow-up. Do not silently discard it or launch a fresh v3 chain.
+For an explicitly permitted owner-created standalone source PR, Reviewer
+verifies native owner, same repository, branch and exact head and binds current
+canonical authority plus `source_pr` provenance. This supplies no admission or
+Writer Outcome. The owner verifies standalone permission, absence of an admitted
+execution for that result, warnings and the same integration gates through
+existing evidence. An exact retained manual Request may remain a historical
+compatibility source; fresh work creates no fictitious Step or v3 Request.
 
-Owner continuation reserves each operation before mutation, re-reads current
-authority/facts after reservation and records/verifies the native result before
-the next action. It reconciles already-completed operations without repeating
-them. Uncertain approval, an ambiguous earlier mutation, missing readback,
-changed authority or an uncertain response stops dependent progress and
-preserves completed actions. Do not blindly retry merge, close or launch, fall
-back to another verdict, or re-execute the accepted current Request as its own
-next action. Already-authorized current v4 next direction can use existing
-owner ports without a new public Request or preallocated Step.
+Known same-result Writer evidence or execution markers retain their admitted
+result and recovery path, including blocked or stale results. An ordinary owner
+comment cannot replace a Writer Outcome or Task Approval. Genuine no-PR results
+keep their native Task Approval path and require no synthetic merge. Further
+execution uses existing current admission authority rather than an old helper's
+launch ports. Review, integration, Issue closure, further admission, release and
+deployment remain distinct permissions. Reassess actual remaining work and
+holds after verified integration under the supported closure contract.
 
 ## Decisions, closure and subsequent work
 
@@ -401,19 +502,49 @@ test commands and optional hooks do not become consumer admission requirements.
 
 ## Prepare a Relay installation
 
-Installation is separately owner-authorized. Use the selected exact accepted
-product revision and validated target configuration through Relay's public
-deployment interface. For every explicitly owner-managed configured repository,
-including inactive targets, authorized orchestration prepares and publishes a
-separate reviewable routing/recovery workflow and manifest PR. A central product
-PR, local projection or read-only proposal does not complete that publication.
-Report missing access and the affected target rather than claiming completion.
+Installation is separately owner-authorized. The ordinary public
+`deploy/relay-deploy.py --phase install` selects fresh install, same-revision
+reconciliation, compatible upgrade or supported protected replacement from
+observed host state. Expert phases remain available. This 4.1.0 guidance
+candidate describes Task #63 source support; installing the Skill alone does
+not install or qualify the compatible product or activate a private PROD route.
+
+For the owner's Git-managed installation, freeze accepted public product and
+private desired-config Git commits together at Apply start. The private
+configuration repository owns the single trusted owner `apply/stop/resume`
+workflow; its `GITHUB_SHA` is the configuration SHA, while product source is
+selected and verified independently. The scoped ephemeral workflow token reaches
+the fixed protected helper through stdin, without private access for candidate
+CI/workers or a new static credential. Merge alone does not deploy.
+
+Git configuration is desired state for code-only, config-only and combined
+changes. Previous installed intent is not an equality gate; snapshots/manifests
+attest installation and recovery rather than select desired values. Actual
+protected identity, schema, credential, runtime and external permissions still
+apply. Other consumers retain their supported owner-file/checkout integrations.
+
+The same operation returns complete repository-relative integration directories
+for consumer routing/recovery and, in Git mode, the separate private lifecycle
+workflow. Publish each directory's contents through its receiving repository's
+normal change process; no fixed workflow count or second installer run is
+required to finish the already-successful host installation. Compatible stale
+workflows can continue; incompatible invocation fails with an actionable
+outdated-integration diagnostic. Actual managed-workflow drift still fails
+integrity validation. Separately authorized target-PR preparation/publication
+remains distinct from installation.
 
 Derive each proposal from that target's actual trusted branch, runner/pool
 identities and installation namespace. Managed-pool projections use
 `relay-workflows-v4`; a SERIAL v3 example does not qualify a managed installation.
 The assembled `product/contract.json` records both supported workflow ABIs.
-The target owner retains acceptance, merge, activation and governance; proposal
-publication does not grant App access, runner ACLs or settings changes. Inactive
-configured targets do not block a safe Apply, while enabling routing/recovery
-requires the accepted configured refs and their separate operational proof.
+The target owner retains acceptance, merge, activation and governance; artifact
+publication grants no App access, runner ACL or settings changes. Report precise
+external prerequisites and retained recovery evidence instead of inventing
+permissions or blind replay. Inactive configured targets do not block a safe
+Apply; enabling routing/recovery requires accepted configured refs and their
+separate operational proof. A private PROD cutover must qualify the replacement
+and its external policy before retiring the working public entrypoint, with no
+dual active privileged dispatcher. Source acceptance and TEST proof authorize no
+live PROD Apply. The source repository's
+[installation contract](https://github.com/jresearchsoftware/codex-relay/blob/main/docs/git-managed-installation.md)
+provides the detailed strategy, readback and cutover procedure.

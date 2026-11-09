@@ -106,7 +106,7 @@ def check(export_ref=None):
     return {"qualification": "PASS", "tracked_files": len(tracked), "local_links": links,
             "secret_scan": "bounded markers PASS", "active_protocol": "PASS",
             "native_projection_source": receipt["source_revision"],
-            "native_skill": "codex-relay 3.0.0" if "flow:org.jresearch.ai/codex-relay" in workspace["requires"]["packages"] else "absent",
+            "native_skill": "codex-relay 5.0.0" if "flow:org.jresearch.ai/codex-relay" in workspace["requires"]["packages"] else "absent",
             "flow_export": "PASS" if export_ref else "not requested"}
 
 
