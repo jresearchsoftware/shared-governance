@@ -113,6 +113,8 @@ def main():
             return original_git(cwd, *mapped)
         # Source/binding stays exact; only Git transport addresses are mapped.
         with patch.object(P, "git", side_effect=local_git):
+            planned = P.resolve_published_recoveries(root, binding, report)
+            assert planned["packages"][0]["status"] == "READY", planned
             staged = P.stage(root, package, decision, args.vibe, temporary / "stage")
             assert staged["status"] == "STAGED", staged
             result = P.finalize(staged)
@@ -123,6 +125,13 @@ def main():
             assert retry["status"] == "ALREADY_PUBLISHED", retry
             assert repeated.get("verified_payload") is True, repeated
             assert retry.get("verified_payload") is True, retry
+            # The package-neutral incident source must now plan a verified no-op
+            # before a reusable workflow can request any native download.
+            with patch("urllib.request.urlretrieve", side_effect=AssertionError("download unavailable")):
+                retained_plan = P.resolve_published_recoveries(root, binding, report)
+            retained = retained_plan["packages"][0]
+            assert retained["status"] == "ALREADY_PUBLISHED", retained
+            assert retained.get("verified_payload") is True, retained
             assert len(writes) == 1
             receipt = json.loads(original_git(local, "show", "v5.0.0:DISTRIBUTION.json"))
             assert receipt["source_revision"] == FROZEN
@@ -149,6 +158,8 @@ def main():
                 "stage": staged["status"], "finalize": result["status"],
                 "repeat_finalize": repeated["status"], "repeat_stage": retry["status"],
                 "repeat_payload_verified": repeated["verified_payload"] and retry["verified_payload"],
+                "repeat_plan": retained["status"],
+                "repeat_plan_payload_verified": retained["verified_payload"],
                 "push_count": len(writes), "receipt": receipt,
             },
             "limits": ["No public destination write or consumer migration occurred.",

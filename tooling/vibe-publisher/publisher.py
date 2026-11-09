@@ -48,6 +48,7 @@ DIAGNOSTIC_MESSAGES = {
     "NO_PACKAGE_CHANGE": "No new payload or eligible publisher-bound recovery was selected; no publication was attempted.",
     "EXISTING_PAYLOAD_CONFIRMED": "The retained remote tag was read back and matches the original frozen export; no write was needed.",
     "RECOVERY_TAG_MISMATCH": "The retained remote tag differs from the original frozen export. Publication remains blocked; resolve its provenance without moving the tag.",
+    "RECOVERY_READBACK_FAILED": "The remote release state could not be verified. Publication remains pending; retry the same source and publisher pins after restoring read access.",
     "ELIGIBLE_NOT_PUBLISHED": "Eligibility checks passed, but publication has not run.",
     "STAGED_NOT_PUBLISHED": "The native release is staged locally; destination publication is not confirmed.",
     "PUBLISHED_CONFIRMED": "The exact staged tag object was read back from the destination; publication is confirmed.",
@@ -924,6 +925,36 @@ def retained_recovery(result, refs, files):
     return result
 
 
+def resolve_published_recoveries(root, binding, report):
+    """After exact trigger qualification, resolve recovery no-ops before tool acquisition."""
+    results = []
+    for decision in report["packages"]:
+        result = dict(decision)
+        if decision["status"] == "READY" and decision.get("operation") == "pending-publication":
+            package = package_binding(binding, decision["package"])
+            try:
+                if decision["destination"] != package["destination"]:
+                    raise ValueError("planned destination differs from source binding")
+                tag = "v" + decision["version"]
+                try:
+                    refs = remote_refs(package["destination"], tag)
+                except ValueError:
+                    repository = provisioned_repository(package["destination"])
+                    if not repository or destination_exists(repository, DestinationAPI()):
+                        raise
+                    # Same read-only missing-destination handling as staging.
+                    refs = []
+                if tag_oid(refs, tag):
+                    files, receipt = snapshot(root, decision["source_sha"], package)
+                    if receipt["payload_sha256"] != decision["payload_sha256"]:
+                        raise ValueError("planned and retained payload differ")
+                    result = retained_recovery(dict(result, tag=tag), refs, files)
+            except (ValueError, OSError, subprocess.SubprocessError):
+                result.update(status="FAILED_OR_PENDING", failure_code="RECOVERY_READBACK_FAILED")
+        results.append(result)
+    return {**report, "packages": results}
+
+
 def stage(root, package, decision, vibe, directory):
     """Credential-free preparation. directory is disposable, never a release ledger."""
     if decision["status"] != "READY":
@@ -1117,6 +1148,7 @@ def main():
         # No-op onboarding must not query even the triggering CI run.
         if args.operation != "check" and any(p["status"] == "READY" for p in report["packages"]):
             verify_trigger(api, binding, args.source_sha)
+            report = resolve_published_recoveries(args.source, binding, report)
         if args.operation == "stage":
             report = stage_all(args.source, binding, report, args.vibe, args.directory, args.package)
     write_report(report, args.report)

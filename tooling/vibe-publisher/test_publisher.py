@@ -332,6 +332,15 @@ class Fixture(unittest.TestCase):
         self.git("init", "-q", "--bare", "--initial-branch=main", str(destination))
         return destination
 
+    def invoke(self, operation, revision, selected, extra=()):
+        report = self.directory / (operation + "-selected.json")
+        command = ["publisher.py", operation, "--source", str(self.source),
+                   "--source-sha", revision, "--main", "main", "--binding", "binding.json",
+                   "--package", selected, "--report", str(report), *extra]
+        with patch.object(sys, "argv", command), patch("sys.stdout", new=io.StringIO()):
+            code = P.main()
+        return code, json.loads(report.read_text())
+
 
 class PackageOnboardingTests(Fixture):
     def bind_only_a(self):
@@ -388,15 +397,6 @@ class PackageOnboardingTests(Fixture):
 
 class PackageSelectionTests(Fixture):
     public_destinations = True
-
-    def invoke(self, operation, revision, selected, extra=()):
-        report = self.directory / (operation + "-selected.json")
-        command = ["publisher.py", operation, "--source", str(self.source),
-                   "--source-sha", revision, "--main", "main", "--binding", "binding.json",
-                   "--package", selected, "--report", str(report), *extra]
-        with patch.object(sys, "argv", command), patch("sys.stdout", new=io.StringIO()):
-            code = P.main()
-        return code, json.loads(report.read_text())
 
     def test_selected_noop_b_skips_changed_a_in_plan_check_and_stage(self):
         self.git("branch", "accepted", self.revision)
@@ -460,6 +460,95 @@ class RecoveryTests(Fixture):
     def factual_commit(self, text="Test-only CI repair"):
         (self.source / "tests-only.txt").write_text(text)
         return self.commit()
+
+    def plan_cli(self, revision, selected=None):
+        binding_at = P.binding_at
+        # These disposable destinations are file:// bare repos. Keep all
+        # committed-source validation; relax only the fixture transport scheme.
+        def local_binding(root, sha, path, allow_local=False):
+            return binding_at(root, sha, path, allow_local=True)
+        with patch.object(P, "GitHub", return_value=self.api), \
+                patch.object(P, "binding_at", side_effect=local_binding):
+            return self.invoke("plan", revision, selected or self.packages[0]["coordinate"])
+
+    def test_planning_recovery_missing_tag_and_failed_readback(self):
+        self.remote(0)
+        self.change()
+        current = self.factual_commit()
+        code, report = self.plan_cli(current)
+        self.assertEqual(code, 0)
+        self.assertEqual(report["packages"][0]["status"], "READY")
+        with patch.object(P, "remote_refs", side_effect=ValueError("unavailable")):
+            code, report = self.plan_cli(current)
+        self.assertEqual(code, 1)
+        self.assertEqual(report["packages"][0]["failure_code"], "RECOVERY_READBACK_FAILED")
+
+    def test_planning_recovery_qualifies_ci_and_trigger_before_remote_access(self):
+        self.change()
+        current = self.factual_commit()
+        with patch.object(P, "remote_refs", side_effect=AssertionError("no unqualified read")):
+            self.api.alter_run = lambda run: dict(run, conclusion="failure")
+            code, report = self.plan_cli(current)
+            self.assertEqual(code, 1)
+            self.assertEqual(report["packages"][0]["reason_code"], "MATCHING_SOURCE_CI_MISSING")
+            self.api.alter_run = lambda run: run
+            with patch.object(P, "verify_trigger", side_effect=P.AuthorizationError("TRIGGER_RUN_MISMATCH", "wrong run")):
+                with self.assertRaises(P.AuthorizationError):
+                    self.plan_cli(current)
+
+    def test_native_published_neutral_commit_plans_verified_noop_without_tool_download(self):
+        if not VIBE:
+            self.skipTest("pass --vibe for pinned Linux native staging")
+        with patch.dict(os.environ, self.env):
+            destination = self.remote(0)
+            frozen = self.change()
+            current = self.factual_commit()
+            row = self.plan(current)["packages"][0]
+            staged = P.stage(self.source, self.packages[0], row, VIBE, self.directory / "first")
+            self.assertEqual(P.finalize(staged)["status"], "PUBLISHED")
+            before = P.remote_refs(destination.as_uri(), "v1.0.1")
+            # Same-source retry and a later unrelated accepted commit both bypass
+            # native acquisition only after exact tag AND frozen receipt readback.
+            later = self.factual_commit("Unrelated later test change")
+            for revision in (current, later):
+                with patch("urllib.request.urlretrieve", side_effect=AssertionError("native download unavailable")):
+                    code, report = self.plan_cli(revision)
+                    self.assertEqual(code, 0)
+                    result = report["packages"][0]
+                    self.assertEqual(result["status"], "ALREADY_PUBLISHED")
+                    self.assertIs(result["verified_payload"], True)
+                    self.assertEqual((result["source_sha"], result["trigger_sha"]), (frozen, revision))
+                    # Execute the reusable workflow's actual readiness-output code.
+                    workflow = (P.ROOT / ".github/workflows/vibe-publisher.yml").read_text()
+                    plan_step = workflow.split("        id: plan\n", 1)[1].split("      - name:", 1)[0]
+                    output_code = textwrap.dedent(plan_step.split("          python3 - <<'PY'\n", 1)[1].split("          PY", 1)[0])
+                    (self.directory / "publication.json").write_text(json.dumps(report))
+                    output = self.directory / "outputs"
+                    output.write_text("")
+                    subprocess.run([sys.executable, "-c", output_code], check=True,
+                                   env=dict(self.env, RUNNER_TEMP=str(self.directory), GITHUB_OUTPUT=str(output)))
+                    self.assertEqual(output.read_text(), "ready=false\n")
+                    self.assertIn("if: inputs.mode == 'publish' && steps.plan.outputs.ready == 'true'", workflow)
+                    self.assertEqual(P.stage(self.source, self.packages[0], result,
+                                             self.directory / "absent-vibe", self.directory / "unused"), result)
+            self.assertEqual(P.remote_refs(destination.as_uri(), "v1.0.1"), before)
+            # A retained tag with a different receipt is a failure before download.
+            files, _ = P.snapshot(self.source, frozen, self.packages[0])
+            with patch.object(P, "release_files", return_value={**files, P.RECEIPT: b"wrong receipt"}):
+                code, report = self.plan_cli(later)
+            self.assertEqual(code, 1)
+            self.assertEqual(report["packages"][0]["failure_code"], "RECOVERY_TAG_MISMATCH")
+            self.assertEqual(P.remote_refs(destination.as_uri(), "v1.0.1"), before)
+            with patch.object(P, "release_files", side_effect=ValueError("readback unavailable")):
+                code, report = self.plan_cli(later)
+            self.assertEqual(code, 1)
+            self.assertEqual(report["packages"][0]["failure_code"], "RECOVERY_READBACK_FAILED")
+            # One published coordinate cannot mask another missing release.
+            self.remote(1)
+            self.change(1)
+            mixed = self.factual_commit("Two package states")
+            report = P.resolve_published_recoveries(self.source, self.binding, self.plan(mixed))
+            self.assertEqual([r["status"] for r in report["packages"]], ["ALREADY_PUBLISHED", "READY"])
 
     def test_prior_bound_first_package_creation_recovers_on_later_green_commit(self):
         initial = self.revision
@@ -651,7 +740,8 @@ class RecoveryTests(Fixture):
             self.git("tag", "v1.0.1", cwd=wrong)
             self.git("push", "--atomic", "origin", "main", "v1.0.1", cwd=wrong)
             before = P.remote_refs(destination.as_uri(), "v1.0.1")
-            for result in (P.stage(self.source, self.packages[0], row, VIBE, self.directory / "mismatch-stage"),
+            for result in (P.resolve_published_recoveries(self.source, self.binding, {"packages": [row]})["packages"][0],
+                           P.stage(self.source, self.packages[0], row, VIBE, self.directory / "mismatch-stage"),
                            P.finalize(staged)):
                 self.assertEqual(result["status"], "FAILED_OR_PENDING")
                 self.assertEqual(result["failure_code"], "RECOVERY_TAG_MISMATCH")

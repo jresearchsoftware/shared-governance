@@ -206,11 +206,14 @@ this does not qualify a direct retry of that old source. The report's top-level
 its original `DISTRIBUTION.json` provenance. No payload edit or version bump is
 needed. `READY` means eligible but still unpublished until staging/finalization.
 
-Read the real remote tag before staging. An existing recovery tag is fetched and
+After exact source/CI and automatic-trigger qualification, planning reads the real
+remote recovery tag **before downloading VibeVM**. An existing recovery tag is fetched and
 compared with the complete frozen export, including its receipt. A matching tag
 returns `ALREADY_PUBLISHED` / `EXISTING_PAYLOAD_CONFIRMED` without native publication
-or any ref write. A mismatch returns `FAILED_OR_PENDING` / `RECOVERY_TAG_MISMATCH`;
-unavailable readback stays pending. Concurrent tags receive the same check.
+or any ref write, even on later package-neutral accepted commits when the native
+download is unavailable. A mismatch returns `FAILED_OR_PENDING` / `RECOVERY_TAG_MISMATCH`;
+unavailable planning readback stays pending as `RECOVERY_READBACK_FAILED`.
+Staging/finalization repeat the check for concurrent tags.
 Absent tags use the existing credential-free native staging and atomic non-force
 publication. `PUBLISHED_CONFIRMED` still requires exact staged-tag readback.
 
