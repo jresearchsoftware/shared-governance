@@ -49,7 +49,24 @@ distribution, release boundary and ChatGPT projection. Direct self-adoption
 fixture cloning encounters the launch checkout's Git dubious-ownership boundary;
 qualification uses an exact committed bundle imported into an owned disposable
 checkout, without changing source ownership, permissions, hooks, config or remotes.
-Exact-commit qualification and final test counts are recorded below after checks.
+The applicable local results are:
+
+| Check | Result |
+| --- | --- |
+| Shared publisher with pinned native tool | 118 tests passed |
+| Focused recovery suite with pinned native tool | 17 tests passed |
+| Actual manual/automatic workflow shell resolution | 7 tests passed |
+| Producer publication parity with native staging | 12 tests passed |
+| Distribution | 52 tests passed |
+| Release boundary with native fixtures | 26 tests passed |
+| Self-adoption from exact committed bundle | 17 tests passed |
+| ChatGPT projection | 29 tests passed |
+| Source, links, bounded credential markers and exact committed export | `qualify.py --export-ref HEAD` passed |
+| Whitespace and exported package scope | Diff checks passed; package bytes unchanged |
+
+`actionlint` is unavailable. Workflow source-resolution scripts and the reusable
+readiness-output script execute locally; this does not claim hosted Actions or
+native installed-runtime proof.
 
 ## Remaining completion boundary
 
