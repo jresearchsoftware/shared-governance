@@ -53,6 +53,13 @@ def main():
     api = PublicEvidence()
     binding = P.binding_at(root, SOURCE, BINDING)
     package = binding["packages"][0]
+    relay_caller = P.git(root, "show", SOURCE + ":.github/workflows/publish-guidance.yml").decode()
+    relay_input = relay_caller.split("      source_sha:\n", 1)[1].split("permissions:", 1)[0]
+    shared_caller = (P.ROOT / ".github/workflows/publish.yml").read_text()
+    shared_input = shared_caller.split("      source_sha:\n", 1)[1].split("permissions:", 1)[0]
+    assert "required: true" in relay_input
+    assert "required: false" in shared_input
+    assert "vibe-publisher.yml@main" in relay_caller
     parent = P.git(root, "rev-parse", SOURCE + "^").decode().strip()
     assert parent == FROZEN
     current_snapshot = P.snapshot(root, SOURCE, package)
@@ -114,6 +121,8 @@ def main():
             assert repeated["status"] == "ALREADY_PUBLISHED", repeated
             retry = P.stage(root, package, decision, args.vibe, temporary / "retry")
             assert retry["status"] == "ALREADY_PUBLISHED", retry
+            assert repeated.get("verified_payload") is True, repeated
+            assert retry.get("verified_payload") is True, retry
             assert len(writes) == 1
             receipt = json.loads(original_git(local, "show", "v5.0.0:DISTRIBUTION.json"))
             assert receipt["source_revision"] == FROZEN
@@ -121,6 +130,12 @@ def main():
         output = {
             "observed_at_utc": datetime.now(timezone.utc).isoformat(),
             "source_repository": binding["repository"], "binding_path": BINDING,
+            "caller_entrypoints": {
+                "relay_source_sha_required_at_inspected_source": True,
+                "relay_shared_workflow_selector_at_inspected_source": "main",
+                "shared_candidate_source_sha_required": False,
+                "relay_ui_fixed": False,
+            },
             "accepted_publisher_sha": ACCEPTED_PUBLISHER,
             "accepted_publisher_plan": baseline_plan,
             "trigger_source_sha": SOURCE, "first_frozen_source_sha": FROZEN,
@@ -133,6 +148,7 @@ def main():
             "local_distribution": {
                 "stage": staged["status"], "finalize": result["status"],
                 "repeat_finalize": repeated["status"], "repeat_stage": retry["status"],
+                "repeat_payload_verified": repeated["verified_payload"] and retry["verified_payload"],
                 "push_count": len(writes), "receipt": receipt,
             },
             "limits": ["No public destination write or consumer migration occurred.",

@@ -12,6 +12,12 @@
   },
   "accepted_publisher_sha": "1110f10b996c2f81fa842e6339ab6d7c13111cd7",
   "binding_path": "vibe-publisher.json",
+  "caller_entrypoints": {
+    "relay_shared_workflow_selector_at_inspected_source": "main",
+    "relay_source_sha_required_at_inspected_source": true,
+    "relay_ui_fixed": false,
+    "shared_candidate_source_sha_required": false
+  },
   "current_source_plan": {
     "packages": [
       {
@@ -111,6 +117,7 @@
       "version": "5.0.0"
     },
     "repeat_finalize": "ALREADY_PUBLISHED",
+    "repeat_payload_verified": true,
     "repeat_stage": "ALREADY_PUBLISHED",
     "stage": "STAGED"
   },
@@ -127,7 +134,7 @@
     ],
     "source_sha": "10d2614372cbf578dfb552d3d62fdb8f640f7501"
   },
-  "observed_at_utc": "2026-11-09T07:52:38.132404+00:00",
+  "observed_at_utc": "2026-11-09T08:01:31.109592+00:00",
   "public_ci_evidence": {
     "actions/runs?head_sha=0aff32a6873262185f60364463f4e97ef330de89&event=push&per_page=100&page=1": [
       {

@@ -1,7 +1,12 @@
 # Task 94 — Step 1 — Current-version publication recovery
 
 This qualification uses independently accepted Shared Governance source
-`1110f10b996c2f81fa842e6339ab6d7c13111cd7` for the authoring baseline. It exercises the shared publisher against
+`1110f10b996c2f81fa842e6339ab6d7c13111cd7` for the authoring baseline.
+Anonymous public GitHub readback confirmed that current main still had that SHA
+and Task #94 was open with no comments when authority was refreshed in this Step.
+The trusted launch limits execution to local source work and commits; it grants
+no external writes, credentials, Reviewer invocation or consumer authority.
+This qualification exercises the shared publisher against
 actual public Codex Relay source and push-CI evidence, with every distribution
 write redirected to disposable local bare Git repositories. It does not change
 Relay, its consumer state, public distribution refs or repository settings.
@@ -77,3 +82,40 @@ exercise reusable-workflow dispatch in GitHub Actions, publication credential
 delivery, destination provisioning or consumer installation/migration. Passing
 local checks supplies implementation evidence; independent exact-head acceptance
 and separately authorized public publication remain distinct.
+
+## Local implementation qualification
+
+All applicable unprivileged checks passed:
+
+| Check | Result |
+| --- | --- |
+| Shared publisher with pinned VibeVM 1.0.11 musl | 115 tests passed, including 14 focused recovery tests |
+| Actual workflow shell source resolution | 7 tests passed: omitted/empty, explicit, automatic, rejection and moving-main cases |
+| Producer publication parity with native staging | 12 tests passed |
+| Distribution | 52 tests passed |
+| Release boundary with native fixtures | 26 tests passed |
+| Self-adoption, exact disposable Git export | 17 tests passed |
+| ChatGPT projection | 29 tests passed |
+| Source, local links, bounded credential markers and exact committed export | `qualify.py --export-ref HEAD` passed |
+| Whitespace and package scope | `git diff --check` passed; no exported Development Governance package bytes changed |
+
+The launcher sets its temporary directory inside the checkout. Initial export
+checks correctly rejected that location; rerunning those checks with `TMPDIR=/tmp`
+passed. Direct self-adoption fixture cloning also hit Git's dubious-ownership
+rejection on the launcher-owned source repository. The same unmodified suite
+passed from an exact `git bundle` export imported into a disposable owned checkout.
+No source ownership, permissions, hooks, configuration or remotes were changed.
+These are fixture-location/ownership limits, not installed-runtime proof.
+
+GitHub Actions dispatch, native exact-head CI and independently accepted integration
+remain unexecuted here; `actionlint` is unavailable. Shell fixtures execute the
+actual workflow scripts locally, and the reusable workflow's native staging,
+atomic push and readback code executes against disposable bare destinations.
+No root/sudo-only validation or native installed-runtime proof is claimed.
+
+The [prepared Relay continuation](relay-continuation.md) tracks the still-required
+producer caller change and real public release readback. No Relay UI change,
+consumer repin, public publication or Task closure occurred. All task-owned source
+and evidence are preserved in ordinary local commits. The pre-existing untracked
+`.codex-sandbox/` launch environment is unrelated runtime state and is left untouched;
+its directories are owned by `nobody:codex-relay-codex-work` with mode `2770`.
