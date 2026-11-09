@@ -16,3 +16,17 @@ link = "dynamic"
 git = "https://github.com/jrs-vibevm/org.jresearch.ai.codex-relay.git"
 rev = "325c96371783e2d628bfa9903b3244468c688fe6"
 auth = "none"
+
+[requires.packages."flow:org.jresearch.ai/landscape-model-guidance"]
+version = "=1.0.3"
+link = "dynamic"
+git = "https://github.com/jrs-vibevm/org.jresearch.ai.landscape-model-guidance.git"
+rev = "48432f00802f5aad106f3e1a9264e17c1edc354c"
+auth = "none"
+
+[requires.packages."flow:org.jresearch.ai/landscape-subagents"]
+version = "=1.0.2"
+link = "dynamic"
+git = "https://github.com/jrs-vibevm/org.jresearch.ai.landscape-subagents.git"
+rev = "042e92884278d748502157945301dbc3f3c8318c"
+auth = "none"
