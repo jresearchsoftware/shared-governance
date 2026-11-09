@@ -8,12 +8,12 @@ import tomllib
 RELAY = "flow:org.jresearch.ai/codex-relay"
 SHARED = "flow:org.jresearch.ai/development-governance"
 PINS = {
-    RELAY: ("3.0.0", "325c96371783e2d628bfa9903b3244468c688fe6",
-            "sha256:451ee21dbfd63abd7918f0aee979220fb57cb8a8dffde20009a25f11bf9071e7"),
+    RELAY: ("5.0.0", "5fc55231ffc2fee2d7dd4c399e85ef1d3b091bd9",
+            "sha256:d78711a85f07e3d09eb95d9660e1c0ca4fc4efc0dece0dadfb4f2265340c0973"),
     SHARED: ("5.0.0", "30a23f467c30c41fec918204cbbf2ecfffd7bef5",
              "sha256:e686314f26c82f32f55958a242481d792e9fcd0d755a6eebf933431f3e0875d9"),
 }
-SLOT = "vibevm/vibedeps/org.jresearch.ai.codex-relay/3.0.0"
+SLOT = "vibevm/vibedeps/org.jresearch.ai.codex-relay/5.0.0"
 
 
 def require(condition, message):
@@ -94,7 +94,7 @@ def check(root, authored, vibe_hash):
     skill = {k.removeprefix("skill/"): v for k, v in relay.items() if k.startswith("skill/")}
     require(read_files(root / ".agents/skills/codex-relay") == skill, "projected Skill bytes")
     provenance = json.loads(skill["PROVENANCE.json"])
-    require(provenance["version"] == "3.0.0" and provenance["protocol_source"] == "consumer-vibe-lock"
+    require(provenance["version"] == "5.0.0" and provenance["protocol_source"] == "consumer-vibe-lock"
             and provenance["delivery_form"] == "vpm" and provenance["shared_requirement"] == ">=2.5.0",
             "native Skill provenance")
     require(provenance["files"] == hashes({k: v for k, v in skill.items() if k != "PROVENANCE.json"}),
@@ -103,4 +103,4 @@ def check(root, authored, vibe_hash):
     require(receipt == dict(schema=1, skill="codex-relay",
             file=[dict(path=k, sha256=v) for k, v in hashes(skill).items()]), "native projection receipt")
     require(not (root / ".codex/skills/codex-relay").exists(), "competing legacy Skill")
-    return {"version": "3.0.0", "shared_version": shared_version, "files": len(skill)}
+    return {"version": "5.0.0", "shared_version": shared_version, "files": len(skill)}
