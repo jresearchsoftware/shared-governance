@@ -101,7 +101,7 @@ jobs:
         env:
           PUBLISH_TOKEN: ${{ secrets.DEVELOPMENT_GOVERNANCE_PUBLISH_TOKEN || secrets.publish_token }}
         run: test "$PUBLISH_TOKEN" = 'task45-fixture-sentinel'
-      - name: Plan the exact source transition and push CI
+      - name: Plan the exact source and any pending frozen publication
         id: plan
         if: inputs.mode != 'fixture'
         env:

@@ -20,14 +20,16 @@ jobs:
     uses: jresearchsoftware/shared-governance/.github/workflows/vibe-publisher.yml@main
     with:
       mode: publish
-      source_sha: ${{ github.event.workflow_run.head_sha || inputs.source_sha }}
+      source_sha: ${{ needs.resolve.outputs.source_sha }}
       binding: vibe-publisher.json
       package: org.example/package
     secrets:
       DEVELOPMENT_GOVERNANCE_PUBLISH_TOKEN: ${{ secrets.DEVELOPMENT_GOVERNANCE_PUBLISH_TOKEN }}
 ```
 
-The caller still owns its event filtering and source/readiness checks. The secret
+Here `resolve` is the caller-owned exact-event SHA resolution job, as in
+[this producer's caller](../.github/workflows/publish.yml). The caller still owns
+its event filtering and source/readiness checks. The secret
 must be visible **in that caller repository** through the existing organization
 Actions secret's repository-access policy (or the existing repository arrangement).
 A secret stored only in Shared Governance is not available to another producer,
@@ -133,7 +135,7 @@ package coordinates, stable roots, export adapters and one destination per
 coordinate. Ordinary bindings need no `acceptance`, `authorized_integrators`,
 `baseline`, `baseline_disposition` or historical inventory attestations.
 
-Ordinary planning checks first-parent source-main membership and compares only
+Ordinary planning checks first-parent source-main membership and first compares
 that commit with its immediate first parent. Candidate `check` instead compares
 against the exact current accepted main supplied as `--base`. If the immediate
 prior commit has a binding, its own package inventory selects its export; a new
@@ -142,15 +144,17 @@ prior binding **or an absent coordinate in an existing binding** is normal:
 compare the preexisting package source under the new inventory. Adding a binding
 entry alone cannot release unchanged old source; a genuinely new package or
 changed new version still follows ordinary qualification.
-Identical exported payloads return `NO_PACKAGE_CHANGE` before readiness,
-CI/trigger queries, destination access, credentials, tool preparation or staging.
-This includes unchanged historically incomplete licenses or unresolved rights.
-A non-package commit never opportunistically releases an earlier version.
+Identical exported payloads then check for the bounded current-version recovery
+below. Without an eligible recovery they return `NO_PACKAGE_CHANGE` before
+readiness, CI/trigger queries, destination access, credentials, tool preparation
+or staging. This preserves late-onboarding no-ops, including unchanged historically
+incomplete licenses or unresolved rights. A non-package commit does not create a
+new version or select an arbitrary older release.
 
 `--package` selects the coordinate before export/readiness and CI/trigger work,
 in both ordinary and explicit initial-publication planning. A selected unchanged
-B returns its own no-op even if sibling A changed, without A's API/CI, trigger,
-destination or staging work. Calls without a package selection still assess each
+B without an eligible recovery returns its own no-op even if sibling A changed,
+without A's API/CI, trigger, destination or staging work. Calls without a package selection still assess each
 coordinate. Staging associates decisions with bindings by coordinate, preserving
 the selected payload/destination even when it is not the first binding entry.
 
@@ -165,14 +169,67 @@ performs no PR association, owner/integrator/reviewer lookup or merge-method aud
 Producer-specific review, integration, bump-category and arithmetic controls stay
 with producer CI/policy. No `Package bump:` annotation is required by this tool.
 
-There is deliberately no reconstruction of earlier binding/CI/owner decisions,
-first-accepted unpublished version inventories or historical baselines. The owner
-accepted this reduced historical assurance in Task 51. Source/review/versioning
-policy still applies at its own boundaries; existing public tags stay immutable.
-A new correctly versioned release can qualify without old publisher records.
+Changed-version planning retains Task 51's ordinary transition qualification:
+there is no reconstruction of historical CI, PR acceptance or owner decisions,
+and a new correctly versioned release can qualify without old publisher records.
 The immediate transition still detects package removal and changes to an existing
 root/adapter/destination mapping; these need producer-owned migration disposition.
-No history scan or adoption ledger substitutes for the removed audit.
+Source/review/versioning policy still applies at its own boundaries.
+
+### Recovery after a package-neutral CI repair
+
+A successful current-source CI can recover the **current** version when the coordinate was already publisher-bound
+before that version was introduced. Source Git history supplies focused evidence of that boundary;
+it does not infer a release request from an old package discovered at onboarding.
+Initial publisher onboarding, an unbound old package and an unchanged
+onboarding entry retain the existing no-op path. A genuinely new package created
+after its coordinate was bound can recover its first version too. Explicit historical initial
+publication remains the separately authorized operation below.
+
+For a package-neutral trigger, inspect only history affecting the current package
+root or its binding to identify the first accepted frozen occurrence of the current
+coordinate/version. Earlier unrelated versions do not acquire new readiness duties.
+The version must retain its original approved inventory, disclosure, root, adapter,
+destination and payload, including intervening same-version edits later reverted.
+The original frozen source and current source must both satisfy license/rights and
+included dependency-closure readiness; later source cannot complete an unready
+frozen release in place. Repository identity remains bound throughout recovery.
+Missing or incompatible evidence is `AUTHORIZATION_PENDING`, never a silent skip.
+This is a source-only check for one current version, without a ledger, historical
+CI/PR fabrication, removed owner audits or a general publication bypass.
+
+Qualify successful **push** CI for the exact current trigger SHA, and verify the
+actual triggering run for `workflow_run`. The original failed CI remains failed;
+this does not qualify a direct retry of that old source. The report's top-level
+`source_sha` and per-package `trigger_sha` identify current CI, while per-package
+`source_sha` identifies the first frozen source exported for staging, including
+its original `DISTRIBUTION.json` provenance. No payload edit or version bump is
+needed. `READY` means eligible but still unpublished until staging/finalization.
+
+Read the real remote tag before staging. An existing recovery tag is fetched and
+compared with the complete frozen export, including its receipt. A matching tag
+returns `ALREADY_PUBLISHED` / `EXISTING_PAYLOAD_CONFIRMED` without native publication
+or any ref write. A mismatch returns `FAILED_OR_PENDING` / `RECOVERY_TAG_MISMATCH`;
+unavailable readback stays pending. Concurrent tags receive the same check.
+Absent tags use the existing credential-free native staging and atomic non-force
+publication. `PUBLISHED_CONFIRMED` still requires exact staged-tag readback.
+
+Shared Governance's manual **Publish accepted package** form accepts an optional
+`source_sha`. Omitted or empty means the exact dispatch-event `github.sha` of the
+selected `main`, captured once before checkout; it never rereads moving main to
+select a source. An explicit full lowercase SHA retries that accepted source.
+The single resolved SHA drives checkout, readiness/CI, publication concurrency,
+the reusable invocation and reporting. Automatic publication retains the exact
+successful `workflow_run.head_sha`. Non-main dispatches, malformed or inconsistent
+event inputs, sources outside first-parent main and unqualified exact push CI
+cannot reach a distribution write. A later movement of main cannot replace the
+captured dispatch source.
+
+Each producer owns its form. This shared implementation cannot make Codex Relay's
+currently required caller input optional. The [tracked producer continuation](task-94/step-1/relay-continuation.md)
+requires its own authorized change and independent review before claiming that UI
+is fixed. The [actual Relay replay](task-94/step-1/README.md) qualifies source/CI and
+local native publication, without granting public publication permission.
 
 ## Export and readiness
 
@@ -270,7 +327,7 @@ or publication authority. `GH_TOKEN` is for read-only source CI, never distribut
 
 `stage` repeats the source plan and uses `--vibe /path/to/pinned/vibe` plus
 `--directory /tmp/disposable-stage`. An existing `vVERSION` tag skips before native
-invocation. Otherwise clone the distribution into disposable bare staging, recheck
+invocation; pending recovery additionally verifies its exact frozen export. Otherwise clone the distribution into disposable bare staging, recheck
 the tag, and publish exact exported bytes there using the pinned VibeVM 1.0.11 musl
 binary. Native subprocesses receive isolated settings and no API/publication token,
 askpass or global Git credentials. `finalize --report ...` alone receives the shared
@@ -337,6 +394,7 @@ Later ordinary versions use the immediate-transition path above, not this audit.
 
 ```sh
 python3 tooling/vibe-publisher/test_publisher.py
+python3 scripts/test-publication-dispatch.py
 python3 tooling/vibe-publisher/test_publisher.py --vibe /absolute/pinned/vibe
 python3 scripts/test-release.py --vibe /absolute/pinned/vibe
 ```

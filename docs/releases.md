@@ -275,7 +275,9 @@ Frozen 2.7.0 and the existing post-accepted-merge publisher remain unchanged.
 Public candidate checks for a push to source main. It binds the accepted merge
 or squash SHA (ordinary merge, rebase and eligible direct-main also work), checks
 first-parent source-main membership and the version/payload transition, and
-qualifies that exact accepted source. Unchanged packages skip. The candidate
+qualifies that exact accepted source. Unchanged packages skip unless the
+[current-version recovery](shared-publisher.md#recovery-after-a-package-neutral-ci-repair)
+identifies an already publisher-bound frozen version still needing publication. The candidate
 caller delegates staging and publication to `./.github/workflows/vibe-publisher.yml`
 from its own executing workflow revision, passing only the exact triggering
 `source_sha` and its committed [producer binding](../vibe-publisher.json).
@@ -290,7 +292,9 @@ closes that integration gap without copying the publisher. Its reference is
 the owner's original [public MIT bootstrap request](https://github.com/jresearchsoftware/codex-relay/issues/83#issuecomment-6037643777),
 implemented by the accepted root/package LICENSE grant. It acknowledges existing
 rights while applicable, creates no new rights and adds no per-release approval.
-Unchanged packages skip before rights/CI/destination/native-tool work.
+Unchanged packages without an eligible recovery skip before
+rights/CI/destination/native-tool work. Eligible recoveries qualify both original
+frozen source and current readiness, and use exact current-source push CI.
 The explicit direct-Git destination is
 [jrs-vibevm/org.jresearch.ai.development-governance](https://github.com/jrs-vibevm/org.jresearch.ai.development-governance).
 There is no registry service. Source `publish=false` excludes workspace batch
@@ -311,10 +315,16 @@ The Actions result and step summary show published, already-published, skipped
 or failed/pending state and exact source SHA. A failure does not undo source
 acceptance or imply publication. Recover the credential/network/concurrency
 failure, then rerun the failed workflow or manually dispatch **Publish accepted
-package** from main with that same full `source_sha`. Dispatch requires successful
-push CI at that SHA and accepted first-parent membership; candidate side-branch
+package** from main with that same full `source_sha`. The SHA is optional:
+omitted/empty captures the exact selected main dispatch-event `github.sha`, never
+a later reread of main. Explicit full-SHA retries remain supported. The resolved
+SHA is used throughout checkout, readiness, CI, concurrency, reusable invocation
+and reporting. Dispatch requires successful push CI at that SHA and accepted
+first-parent membership; candidate side-branch
 heads and unaccepted commits are rejected. Retry does not bump, overwrite or
-silently publish current HEAD. Existing tags remain untouched after an ambiguous
+silently select a moving HEAD. A package-neutral green CI repair can recover an
+eligible existing frozen version using its original bytes and receipt, without a
+version bump; failed original CI is not rewritten. Existing tags remain untouched after an ambiguous
 transport result. A release defect is repaired in a new reviewed version.
 
 Use the established `DEVELOPMENT_GOVERNANCE_PUBLISH_TOKEN` Actions secret through
