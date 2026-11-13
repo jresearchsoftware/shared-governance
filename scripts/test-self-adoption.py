@@ -197,7 +197,7 @@ class NativeAdoptionTests(unittest.TestCase):
         skill.write_bytes(original + b"\nDrift\n")
         self.reject()
         skill.write_bytes(original)
-        closure = self.work / "vibevm/vibedeps/org.jresearch.ai.codex-relay/3.0.0/vibe.lock"
+        closure = self.work / "vibevm/vibedeps/org.jresearch.ai.codex-relay/5.0.0/vibe.lock"
         closure.write_bytes(closure.read_bytes() + b"\n# changed evidence\n")
         self.reject()
 
@@ -207,7 +207,7 @@ class NativeAdoptionTests(unittest.TestCase):
             self.skipTest("historical producer has no native Relay integration")
         lock = self.work / "vibe.lock"
         original = lock.read_text()
-        lock.write_text(original.replace("325c96371783e2d628bfa9903b3244468c688fe6", "0" * 40))
+        lock.write_text(original.replace("5fc55231ffc2fee2d7dd4c399e85ef1d3b091bd9", "0" * 40))
         self.reject()
         lock.write_text(original)
         path.write_text(path.read_text().replace('skill = "codex-relay"', 'skill = "other"'))

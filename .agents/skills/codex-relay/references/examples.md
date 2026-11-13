@@ -52,10 +52,16 @@ completed-record marker. Record the candidate and comparison SHAs, triggering
 case, impact, evidence, provenance, bounded correction and acceptance evidence.
 Publish a native v4 `REQUEST_CHANGES`/`change-request` bound to that PR/head.
 
-The CR carries no future Step and creates no replacement Task Request. Owner
-orchestration verifies Writer's exact CR/head Draft transition, then applies the
-matching ready command to PR #43. Writer admits the next execution and supplies
-its Step. Keep the branch, PR and starting-head binding. Inner corrections and
+The CR carries no future Step and creates no replacement Task Request. For native
+automatic remediation, the owner applies `codex-ready-auto` to PR #43. Qualified
+routing sends it through Writer, which derives and executes `begin-remediation`
+from the current native CR and verifies the exact CR/head is Draft before
+admission or worker reservation. The Reviewer response alone is not proof of
+that transition; a failed or uncertain transition stops execution. No second
+manual Draft action is required. Writer admits the next execution and supplies
+its Step. Standalone/direct manual work follows its separately authorized
+channel, without assuming this automatic Writer preparation. Keep the branch,
+PR and starting-head binding. Inner corrections and
 tests stay in that execution. A new candidate requires fresh exact-head review.
 
 If the suggested correction instead changes the authorized export workflow,
@@ -150,3 +156,17 @@ An already-admitted v3 attempt is different: use its exact original complete
 Request, references, Step, result transport and recovery contract. Leave those
 historical bytes intact. Neither that retained path nor installing this Skill
 authorizes a fresh old-style execution on a qualified v4 installation.
+
+## Dedicated TEST review and integration
+
+An owner explicitly designates `example-org/relay-testbed` and its isolated
+sandbox for qualification. Within that established standing authority, the
+executor may create a fixture Issue/Decision, launch it through genuine native
+admission, obtain independent TEST REQUEST_CHANGES, preserve a truthful blocked
+result, complete a later admitted correction, obtain exact-head TEST APPROVE
+and perform the already authorized expected-head squash/readback. No additional
+per-action owner prompt is needed for these TEST-only operations. Keep the
+Issue open when its closure policy says `keep-open`, preserve original native
+records and reconcile uncertain publication before dependent action. A separately
+required preview for negative findings on the actual product PR still applies
+to that product assessment; it does not govern this dedicated TEST fixture.

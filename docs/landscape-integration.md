@@ -28,7 +28,7 @@ orchestration/review role does not gain executor permissions from either flow.
 
 These dependencies belong to the **producer root**. The public Development
 Governance authoring member, export inventory, version 7.0.1 and empty dependency
-closure are unchanged. Relay 3.0.0 and its single consumer-selected Shared
+closure are unchanged. Relay 5.0.0 and its single consumer-selected Shared
 Governance slot remain unchanged. No other consumer adopts these flows here.
 
 ## Deliberate maintenance and recovery
