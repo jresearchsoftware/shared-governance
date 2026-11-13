@@ -129,12 +129,17 @@ def main():
                 require(generated_tree.get(path) == digest, "immutable or effective content changed: " + path)
         check = json.loads(run("mixed graph check", work, "check").stdout)
         require(check["summary"]["error"] == 0 and all(f["check"] == "lockfile_files"
-                and f["severity"] == "warning" and f["path"] in historical for f in check["findings"]),
+                and f["severity"] == "warning" and f["path"] in historical
+                and "orphan" in f["message"] for f in check["findings"]),
                 "unexpected native check findings")
         report["historical_slots_retained"] = len(historical)
         report["historical_warnings"] = check["summary"]["warning"]
         # Change source bytes only in this disposable registry. Forced reinstall must refuse them.
-        source = work / "vibevm/vibepacks/org.jresearch.ai/development-governance/v7.0.0/README.md"
+        shared = [p for p in lock["package"]
+                  if (p["group"], p["name"]) == ("org.jresearch.ai", "development-governance")]
+        require(len(shared) == 1, "expected one selected governance source for the mismatch probe")
+        source = (work / "vibevm/vibepacks" / shared[0]["group"] / shared[0]["name"]
+                  / ("v" + shared[0]["version"]) / "README.md")
         source.write_bytes(source.read_bytes() + b"\nDisposable mismatch probe.\n")
         before = tree(work)
         refused = run("force reinstall source mismatch", work, "reinstall", "--force", "--offline",
