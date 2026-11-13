@@ -1,0 +1,13 @@
+test_all_consumers_use_resolved_output (__main__.Dispatch.test_all_consumers_use_resolved_output) ... ok
+test_blank_dispatch_freezes_event_sha (__main__.Dispatch.test_blank_dispatch_freezes_event_sha) ... ok
+test_explicit_dispatch_keeps_old_exact_sha (__main__.Dispatch.test_explicit_dispatch_keeps_old_exact_sha) ... ok
+test_omitted_dispatch_input_freezes_event_sha (__main__.Dispatch.test_omitted_dispatch_input_freezes_event_sha) ... ok
+test_rejects_malformed_non_main_and_inconsistent_inputs (__main__.Dispatch.test_rejects_malformed_non_main_and_inconsistent_inputs) ... ok
+test_source_checkout_mismatch_and_non_main_commit_fail (__main__.Dispatch.test_source_checkout_mismatch_and_non_main_commit_fail) ... HEAD is now at ddfca1d main
+ok
+test_workflow_run_uses_its_head_not_current_main (__main__.Dispatch.test_workflow_run_uses_its_head_not_current_main) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.157s
+
+OK

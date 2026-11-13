@@ -1,0 +1,10 @@
+mixed cold resolution: exit 0
+native Skill listing: exit 0
+Skill projection dry run: exit 0
+Skill projection: exit 0
+mixed graph check: exit 0
+force reinstall source mismatch: exit 1
+retained-slot reinstall: exit 0
+rollback baseline: exit 0
+late failed install rollback: exit 1
+Mixed graph, frozen payload, native projection, refusal, rollback and Git recovery: PASS
