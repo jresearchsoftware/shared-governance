@@ -1,0 +1,186 @@
+{
+  "source_revision": "2fc054749c7e244e7caf621202e4263a42558c84",
+  "tool_version": "1.0.11",
+  "binary_sha256": "5fe5b3efeb2eab7c7c49a8dc864864ffacac08a9d7be3dc9df0bc0bb15a8bd58",
+  "cases": [
+    {
+      "label": "mixed cold resolution",
+      "arguments": [
+        "install",
+        "--no-default-registry",
+        "--no-prefer-local",
+        "--assume-yes"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"install:plan\",\n  \"packages\": [\n    {\n      \"package\": \"org.jresearch.ai/development-governance\",\n      \"version\": \"7.0.1\"\n    },\n    {\n      \"package\": \"org.jresearch.ai/codex-relay\",\n      \"version\": \"5.0.0\"\n    },\n    {\n      \"package\": \"org.jresearch.ai/landscape-model-guidance\",\n      \"version\": \"1.0.3\"\n    },\n    {\n      \"package\": \"org.jresearch.ai/landscape-subagents\",\n      \"version\": \"1.0.2\"\n    }\n  ]\n}\n{\n  \"command\": \"install:closure-diff\",\n  \"added\": [\n    \"org.jresearch.ai/codex-relay@5.0.0 (root-edge)\",\n    \"org.jresearch.ai/development-governance@7.0.1 (root-edge)\",\n    \"org.jresearch.ai/landscape-model-guidance@1.0.3 (root-edge)\",\n    \"org.jresearch.ai/landscape-subagents@1.0.2 (root-edge)\"\n  ],\n  \"removed\": [],\n  \"changed\": [],\n  \"lanes\": []\n}\n{\n  \"command\": \"install\",\n  \"complete\": true,\n  \"materialised\": [\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/7.0.1\",\n    \"vibevm/vibedeps/org.jresearch.ai.codex-relay/5.0.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.landscape-model-guidance/1.0.3\",\n    \"vibevm/vibedeps/org.jresearch.ai.landscape-subagents/1.0.2\"\n  ],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"project\": \"/home/hortonolite/task96-run-43521778128/tmp/toolchain-qualification-ejtyyf2s/workspace\",\n  \"pruned\": [\n    \"vibevm/vibedeps/org.jresearch.ai.codex-relay/3.0.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/2.7.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/3.0.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/4.0.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.0.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.1\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.1\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.2\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.3\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/6.0.0\",\n    \"vibevm/vibedeps/org.jresearch.ai.development-governance/7.0.0\"\n  ],\n  \"skipped\": [],\n  \"unchanged\": false\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "native Skill listing",
+      "arguments": [
+        "skill",
+        "list",
+        "--offline"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"command\": \"skill:list\",\n  \"project\": \"/home/hortonolite/task96-run-43521778128/tmp/toolchain-qualification-ejtyyf2s/workspace\",\n  \"count\": 1,\n  \"skills\": [\n    {\n      \"name\": \"codex-relay\",\n      \"origin\": \"flow:codex-relay\",\n      \"source\": \"/home/hortonolite/task96-run-43521778128/tmp/toolchain-qualification-ejtyyf2s/workspace/vibevm/vibedeps/org.jresearch.ai.codex-relay/5.0.0/skill\",\n      \"description\": null,\n      \"agents\": [\n        \"codex\"\n      ]\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "Skill projection dry run",
+      "arguments": [
+        "skill",
+        "install",
+        "--offline",
+        "--skill",
+        "codex-relay",
+        "--agent",
+        "codex",
+        "--scope",
+        "project",
+        "--dry-run"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"command\": \"skill:install\",\n  \"project\": \"/home/hortonolite/task96-run-43521778128/tmp/toolchain-qualification-ejtyyf2s/workspace\",\n  \"count\": 1,\n  \"results\": [\n    {\n      \"skill\": \"codex-relay\",\n      \"agent\": \"codex\",\n      \"scope\": \"project\",\n      \"path\": \"/home/hortonolite/task96-run-43521778128/tmp/toolchain-qualification-ejtyyf2s/workspace/.agents/skills/codex-relay\",\n      \"status\": \"unchanged\",\n      \"note\": null\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "Skill projection",
+      "arguments": [
+        "skill",
+        "install",
+        "--offline",
+        "--skill",
+        "codex-relay",
+        "--agent",
+        "codex",
+        "--scope",
+        "project",
+        "--yes"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"command\": \"skill:install\",\n  \"project\": \"/home/hortonolite/task96-run-43521778128/tmp/toolchain-qualification-ejtyyf2s/workspace\",\n  \"count\": 1,\n  \"results\": [\n    {\n      \"skill\": \"codex-relay\",\n      \"agent\": \"codex\",\n      \"scope\": \"project\",\n      \"path\": \"/home/hortonolite/task96-run-43521778128/tmp/toolchain-qualification-ejtyyf2s/workspace/.agents/skills/codex-relay\",\n      \"status\": \"unchanged\",\n      \"note\": null\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "mixed graph check",
+      "arguments": [
+        "check"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"ok\": true,\n  \"command\": \"check\",\n  \"project\": \"/home/hortonolite/task96-run-43521778128/tmp/toolchain-qualification-ejtyyf2s/workspace\",\n  \"summary\": {\n    \"error\": 0,\n    \"warning\": 15,\n    \"info\": 0\n  },\n  \"findings\": [\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.codex-relay/3.0.0\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.codex-relay/3.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/2.7.0\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/2.7.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/3.0.0\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/3.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/4.0.0\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/4.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.0.0\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/5.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.0\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.1\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.1` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.0\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.1\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.1` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.2\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.2` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.3\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.3` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/6.0.0\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/6.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    },\n    {\n      \"check\": \"lockfile_files\",\n      \"severity\": \"warning\",\n      \"path\": \"vibevm/vibedeps/org.jresearch.ai.development-governance/7.0.0\",\n      \"message\": \"`vibevm/vibedeps/org.jresearch.ai.development-governance/7.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these\"\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "force reinstall source mismatch",
+      "arguments": [
+        "reinstall",
+        "--force",
+        "--offline",
+        "--assume-yes",
+        "/home/hortonolite/task96-run-43521778128/tmp/toolchain-qualification-ejtyyf2s/workspace"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "{\"ok\":false,\"error\":\"lock_hash_mismatch: the source of `org.jresearch.ai/development-governance@7.0.1` now hashes to sha256:6f5ca89d79f75e490cf0515c588cb713d19f8a8226f0cbd8e491a8d763482616, but vibe.lock pins sha256:ae2eae444d76688dbc57a1fa13ac26d406c621c630de3753a659e96fb523ac2f; nothing was copied into vibedeps/ (violates spec://org.vibevm.core/vibevm/VIBEVM-SPEC#lockfile-schema; fix: `vibe update org.jresearch.ai/development-governance`)\",\"code\":\"lock_hash_mismatch\",\"package\":{\"group\":\"org.jresearch.ai\",\"name\":\"development-governance\"},\"locked_hash\":\"sha256:ae2eae444d76688dbc57a1fa13ac26d406c621c630de3753a659e96fb523ac2f\",\"source_hash\":\"sha256:6f5ca89d79f75e490cf0515c588cb713d19f8a8226f0cbd8e491a8d763482616\"}\n"
+    },
+    {
+      "label": "retained-slot reinstall",
+      "arguments": [
+        "reinstall",
+        "--offline",
+        "--assume-yes",
+        "/home/hortonolite/task96-run-43521778128/tmp/toolchain-qualification-ejtyyf2s/workspace"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"reinstall\",\n  \"complete\": true,\n  \"forced\": false,\n  \"materialised\": [],\n  \"nodes_regenerated\": [\n    \".\",\n    \"packages/development-governance\"\n  ],\n  \"ok\": true,\n  \"project\": \"/home/hortonolite/task96-run-43521778128/tmp/toolchain-qualification-ejtyyf2s/workspace\",\n  \"pruned\": [],\n  \"skipped\": [],\n  \"unchanged\": false,\n  \"hooks\": []\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "rollback baseline",
+      "arguments": [
+        "install",
+        "org.example/kept",
+        "--no-default-registry",
+        "--assume-yes"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"command\": \"install:plan\",\n  \"packages\": [\n    {\n      \"package\": \"org.example/kept\",\n      \"version\": \"1.0.0\"\n    }\n  ]\n}\n{\n  \"command\": \"install:closure-diff\",\n  \"added\": [\n    \"org.example/kept@1.0.0 (root-edge)\"\n  ],\n  \"removed\": [],\n  \"changed\": [],\n  \"lanes\": [\n    {\n      \"lane\": \"vibevm/vibespecs/boot/INDEX.md\",\n      \"before\": null,\n      \"after\": 705\n    }\n  ]\n}\n{\n  \"command\": \"install\",\n  \"complete\": true,\n  \"materialised\": [\n    \"vibevm/vibedeps/org.example.kept/1.0.0\"\n  ],\n  \"nodes_regenerated\": [\n    \".\"\n  ],\n  \"ok\": true,\n  \"project\": \"/home/hortonolite/task96-run-43521778128/tmp/toolchain-qualification-ejtyyf2s/rollback\",\n  \"pruned\": [],\n  \"skipped\": [],\n  \"unchanged\": false\n}\n",
+      "stderr": ""
+    },
+    {
+      "label": "late failed install rollback",
+      "arguments": [
+        "install",
+        "org.example/wrapper",
+        "--no-default-registry",
+        "--assume-yes"
+      ],
+      "exit": 1,
+      "stdout": "{\n  \"command\": \"install:plan\",\n  \"packages\": [\n    {\n      \"package\": \"org.example/wrapper\",\n      \"version\": \"1.0.0\"\n    },\n    {\n      \"package\": \"org.example/kept\",\n      \"version\": \"1.0.0\"\n    },\n    {\n      \"package\": \"org.example/broken\",\n      \"version\": \"1.0.0\"\n    }\n  ]\n}\n{\n  \"command\": \"install\",\n  \"complete\": false,\n  \"materialised\": [],\n  \"nodes_regenerated\": [],\n  \"ok\": false,\n  \"project\": \"/home/hortonolite/task96-run-43521778128/tmp/toolchain-qualification-ejtyyf2s/rollback\",\n  \"pruned\": [],\n  \"skipped\": [\n    \"vibevm/vibedeps/org.example.kept/1.0.0\"\n  ],\n  \"unchanged\": false\n}\n",
+      "stderr": "{\"ok\":false,\"error\":\"compiling vibevm/vibespecs/boot/STATIC.xml failed: compiling the normal package `org.example/broken` closure (PROP-035 \u00a78): cannot resolve use spec://org.example/ghost/boot/base#root: no installed vibedeps slot for package `ghost` (violates spec://org.vibevm.core/vibevm/modules/vibe-workspace/PROP-035#embed)\"}\n"
+    }
+  ],
+  "cold_acquisition": {
+    "isolated_empty_home": true,
+    "compatibility_remap": false,
+    "clone_commands": [
+      [
+        "git",
+        "-c",
+        "credential.helper=",
+        "-c",
+        "core.askPass=",
+        "clone",
+        "--progress",
+        "--recurse-submodules",
+        "--no-checkout",
+        "--no-tags",
+        "--",
+        "https://github.com/jrs-vibevm/org.jresearch.ai.codex-relay.git",
+        "/home/hortonolite/task96-run-43521778128/tmp/toolchain-qualification-ejtyyf2s/settings/registries/__git_sources__/org.jresearch.ai.codex-relay/clone"
+      ]
+    ],
+    "actual_origins": [
+      "https://github.com/jrs-vibevm/org.jresearch.ai.codex-relay.git"
+    ]
+  },
+  "selected": [
+    {
+      "group": "org.jresearch.ai",
+      "name": "development-governance",
+      "version": "7.0.1",
+      "content_hash": "sha256:ae2eae444d76688dbc57a1fa13ac26d406c621c630de3753a659e96fb523ac2f",
+      "source_kind": "registry",
+      "source_ref": null
+    },
+    {
+      "group": "org.jresearch.ai",
+      "name": "codex-relay",
+      "version": "5.0.0",
+      "content_hash": "sha256:d78711a85f07e3d09eb95d9660e1c0ca4fc4efc0dece0dadfb4f2265340c0973",
+      "source_kind": "git",
+      "source_ref": "5fc55231ffc2fee2d7dd4c399e85ef1d3b091bd9"
+    },
+    {
+      "group": "org.jresearch.ai",
+      "name": "landscape-model-guidance",
+      "version": "1.0.3",
+      "content_hash": "sha256:a64d829c0e50ac228d9bc39608db7e081e87c13d69e9cfeafc46720ec022f7f6",
+      "source_kind": "git",
+      "source_ref": "48432f00802f5aad106f3e1a9264e17c1edc354c"
+    },
+    {
+      "group": "org.jresearch.ai",
+      "name": "landscape-subagents",
+      "version": "1.0.2",
+      "content_hash": "sha256:58a76e39b4861f8205726930d89d4f16c320704cb21b146ce4c47c3d2b959e56",
+      "source_kind": "git",
+      "source_ref": "042e92884278d748502157945301dbc3f3c8318c"
+    }
+  ],
+  "generated_diff": "vibe.lock | 4 ++--\n 1 file changed, 2 insertions(+), 2 deletions(-)",
+  "historical_slots_retained": 15,
+  "historical_warnings": 15,
+  "result": "PASS"
+}
