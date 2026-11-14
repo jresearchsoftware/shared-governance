@@ -1,0 +1,3 @@
+COMMAND: python3 scripts/qualify.py --export-ref HEAD
+EXIT: 0
+{"qualification": "PASS", "tracked_files": 1568, "local_links": 4162, "secret_scan": "bounded markers PASS", "active_protocol": "PASS", "native_projection_source": "b455af2f0d223246828e83a7a389f9c82d301f03", "native_skill": "codex-relay 5.0.0", "flow_export": "PASS"}
