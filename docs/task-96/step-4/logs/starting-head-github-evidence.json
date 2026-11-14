@@ -1,0 +1,225 @@
+{
+  "expected_head_sha": "b455af2f0d223246828e83a7a389f9c82d301f03",
+  "limits": {
+    "annotations_total": 250,
+    "items_per_surface": 75,
+    "pages_per_surface": 3,
+    "requests": 40,
+    "response_bytes": 262144,
+    "timeout_seconds": 30,
+    "total_bytes": 2097152
+  },
+  "observed_check_annotation_warnings": 0,
+  "pr_number": 97,
+  "repository": "jresearchsoftware/shared-governance",
+  "requests_observed": 12,
+  "required_surfaces_complete": true,
+  "response_byte_budget_used": 216062,
+  "surfaces": [
+    {
+      "api_path": "/repos/jresearchsoftware/shared-governance/commits/b455af2f0d223246828e83a7a389f9c82d301f03/check-suites",
+      "availability": "available",
+      "items": [
+        {
+          "app_id": 12526,
+          "check_suite_id": 117853252039,
+          "conclusion": null,
+          "head_sha": "b455af2f0d223246828e83a7a389f9c82d301f03",
+          "status": "queued"
+        },
+        {
+          "app_id": 4340311,
+          "check_suite_id": 117853252574,
+          "conclusion": null,
+          "head_sha": "b455af2f0d223246828e83a7a389f9c82d301f03",
+          "status": "queued"
+        },
+        {
+          "app_id": 1236702,
+          "check_suite_id": 117853253062,
+          "conclusion": null,
+          "head_sha": "b455af2f0d223246828e83a7a389f9c82d301f03",
+          "status": "queued"
+        },
+        {
+          "app_id": 15368,
+          "check_suite_id": 117986871216,
+          "conclusion": "skipped",
+          "head_sha": "b455af2f0d223246828e83a7a389f9c82d301f03",
+          "status": "completed"
+        }
+      ],
+      "pages_observed": 1,
+      "reason": null,
+      "source": "github_check_suites"
+    },
+    {
+      "api_path": "/repos/jresearchsoftware/shared-governance/actions/runs?head_sha=b455af2f0d223246828e83a7a389f9c82d301f03",
+      "availability": "available",
+      "items": [
+        {
+          "api_path": "/repos/jresearchsoftware/shared-governance/actions/runs/43574569393",
+          "association": "exact_head",
+          "check_suite_id": 117986871216,
+          "conclusion": "skipped",
+          "event": "pull_request_target",
+          "head_sha": "b455af2f0d223246828e83a7a389f9c82d301f03",
+          "issue_number": null,
+          "name": "Auto remediation · PR #97 · Task 96 · Step 3 · Adopt published Landscape model-guid…",
+          "native_url": "https://github.com/jresearchsoftware/shared-governance/actions/runs/43574569393",
+          "outcome_comment_id": null,
+          "reviewed_head_sha": "b455af2f0d223246828e83a7a389f9c82d301f03",
+          "run_attempt": 1,
+          "run_id": 43574569393,
+          "status": "completed",
+          "text_redacted_or_truncated": false,
+          "workflow_id": 393738906
+        }
+      ],
+      "pages_observed": 1,
+      "reason": null,
+      "source": "github_actions_workflow_runs"
+    },
+    {
+      "additional_api_paths": [
+        "/repos/jresearchsoftware/shared-governance/check-suites/117849281246/check-runs?filter=all"
+      ],
+      "api_path": "/repos/jresearchsoftware/shared-governance/commits/b455af2f0d223246828e83a7a389f9c82d301f03/check-runs?filter=all",
+      "availability": "available",
+      "items": [
+        {
+          "annotations": {
+            "api_path": "/repos/jresearchsoftware/shared-governance/check-runs/132385899163/annotations",
+            "availability": "absent",
+            "items": [],
+            "pages_observed": 1,
+            "reason": null,
+            "source": "github_check_run_annotations"
+          },
+          "app_id": 15368,
+          "app_slug": "github-actions",
+          "association": "exact_head",
+          "check_run_id": 132385899163,
+          "check_suite_id": 117986871216,
+          "conclusion": "skipped",
+          "head_sha": "b455af2f0d223246828e83a7a389f9c82d301f03",
+          "name": "route",
+          "native_url": "https://github.com/jresearchsoftware/shared-governance/runs/132385899163",
+          "outcome_comment_id": null,
+          "reviewed_head_sha": "b455af2f0d223246828e83a7a389f9c82d301f03",
+          "status": "completed",
+          "text_redacted_or_truncated": false,
+          "workflow_run_ids": [
+            43574569393
+          ]
+        },
+        {
+          "annotations": {
+            "api_path": "/repos/jresearchsoftware/shared-governance/check-runs/132217574896/annotations",
+            "availability": "absent",
+            "items": [],
+            "pages_observed": 1,
+            "reason": null,
+            "source": "github_check_run_annotations"
+          },
+          "app_id": 15368,
+          "app_slug": "github-actions",
+          "association": "writer_exact_head_outcome",
+          "check_run_id": 132217574896,
+          "check_suite_id": 117849281246,
+          "conclusion": "success",
+          "head_sha": "0b72349f3ab0b2d88e836a6ba3d4fc675a87f75a",
+          "name": "route",
+          "native_url": "https://github.com/jresearchsoftware/shared-governance/runs/132217574896",
+          "outcome_comment_id": 6867034773,
+          "reviewed_head_sha": "b455af2f0d223246828e83a7a389f9c82d301f03",
+          "status": "completed",
+          "text_redacted_or_truncated": false,
+          "workflow_run_ids": [
+            43521778128
+          ]
+        }
+      ],
+      "pages_observed": 1,
+      "reason": null,
+      "source": "github_check_runs"
+    },
+    {
+      "availability": "unavailable",
+      "explanation": "UI-only GitHub service-level/pre-execution annotations are outside mandatory automated evidence acquisition. No HTML or browser-session fallback is used. Complete in-scope API evidence does not prove absence of GitHub UI warnings.",
+      "items": [],
+      "native_urls": [
+        "https://github.com/jresearchsoftware/shared-governance/actions/runs/43574569393",
+        "https://github.com/jresearchsoftware/shared-governance/actions/runs/43521778128"
+      ],
+      "reason": "GITHUB_UI_ONLY_SERVICE_ANNOTATIONS_OUT_OF_SCOPE",
+      "required_for_completeness": false,
+      "source": "github_workflow_run_platform_annotations"
+    },
+    {
+      "additional_api_paths": [
+        "/repos/jresearchsoftware/shared-governance/issues/96/comments"
+      ],
+      "api_path": "/repos/jresearchsoftware/shared-governance/issues/97/comments",
+      "availability": "available",
+      "items": [
+        {
+          "actor": "jresearchsoftware-codex-writer[bot]",
+          "comment_id": 6867034773,
+          "head_sha": "b455af2f0d223246828e83a7a389f9c82d301f03",
+          "issue_number": 97,
+          "native_url": "https://github.com/jresearchsoftware/shared-governance/issues/97#issuecomment-6867034773",
+          "text_redacted_or_truncated": false,
+          "warning_summaries": [
+            "Original Step 1 Outcome 6737903647 and Step 2 Outcome 6862278423; accepted Task 247 incident report.: Original attempts remain terminal BLOCKED; Step 2 publication was rejected for prohibited local merge topology.; disposition: Fresh Step 3 owner-authorized source recovery verified original bytes and tree, then used ordinary single-parent commits. Original objects, protected state and Outcomes were untouched.; next action: Independent reviewer assesses this new source result and current evidence; never replay or relabel the original operations.; evidence gaps: ",
+            "Current GitHub PR 97 metadata and final-head supported evidence reader.: mergeable_state=dirty; no Actions workflow runs or check runs are present for b455af2f0d223246828e83a7a389f9c82d301f03. Remote CI and integration readiness are unproved.; disposition: All required candidate commands and expanded native qualification passed locally. The complete result is source-reviewable, but local tests do not establish native CI. No prohibited local merge/rebase/reset or protected workaround performed.; next action: Independent exact-head source assessment and owner-authorized reconciliation of the conflicting PR/native CI before integration.; evidence gaps: No final-head native Actions/check run results.; UI-only service/pre-execution annotations are outside supported automated acquisition.",
+            "Fresh clean accepted/candidate native checks and Step 2 GNU GLIBC warning.: 15 historical-slot orphan warnings in both checkouts; previous GNU binary emitted weak GLIBC_2.39 warning.; disposition: Kept required historical slots and verified identical findings with zero errors. Used exact accepted musl binary SHA256 5fe5b3efeb2eab7c7c49a8dc864864ffacac08a9d7be3dc9df0bc0bb15a8bd58; all current native operations passed without GLIBC warning.; next action: Retain historical slots and this warning disposition during review.; evidence gaps: ",
+            "Complete Project Instructions projector at final published candidate.: NO_OP does not verify existing live Settings or discharge prior completion gaps.; disposition: Generated text is byte-identical, so this integration creates no new full-replacement/manual-application requirement; no live Settings were written.; next action: Owner-facing completion must reconcile any earlier live Instructions gap after independent acceptance/integration; keep Task 96 open.; evidence gaps: No supported live Settings readback or attributable owner confirmation in this execution."
+          ],
+          "workflow_run_id": 43521778128
+        }
+      ],
+      "pages_observed": 2,
+      "reason": null,
+      "source": "github_relay_execution_outcomes"
+    },
+    {
+      "api_path": "/repos/jresearchsoftware/shared-governance/actions/runs",
+      "availability": "available",
+      "items": [
+        {
+          "api_path": "/repos/jresearchsoftware/shared-governance/actions/runs/43521778128",
+          "association": "writer_exact_head_outcome",
+          "check_suite_id": 117849281246,
+          "conclusion": "success",
+          "event": "issues",
+          "head_sha": "0b72349f3ab0b2d88e836a6ba3d4fc675a87f75a",
+          "issue_number": 97,
+          "name": "Manual handoff · Task 96 · codex-ready-manual",
+          "native_url": "https://github.com/jresearchsoftware/shared-governance/actions/runs/43521778128",
+          "outcome_comment_id": 6867034773,
+          "reviewed_head_sha": "b455af2f0d223246828e83a7a389f9c82d301f03",
+          "run_attempt": 1,
+          "run_id": 43521778128,
+          "status": "completed",
+          "text_redacted_or_truncated": false,
+          "workflow_id": 393738906
+        }
+      ],
+      "pages_observed": 0,
+      "reason": null,
+      "source": "github_relay_execution_workflow_runs"
+    }
+  ],
+  "target": {
+    "api_path": "/repos/jresearchsoftware/shared-governance/pulls/97",
+    "final_binding": {
+      "availability": "available",
+      "binding_verified": true
+    },
+    "head_sha": "b455af2f0d223246828e83a7a389f9c82d301f03",
+    "initial_binding_verified": true,
+    "source": "github_pull_request"
+  },
+  "warning_observation": "observed"
+}
