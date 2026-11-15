@@ -12,9 +12,9 @@ authorizes this consumer update in PR 93. The reviewed candidate selects public
 Relay Skill 5.0.0 at immutable distribution commit
 `5fc55231ffc2fee2d7dd4c399e85ef1d3b091bd9` (`v5.0.0`), with package content hash
 `sha256:d78711a85f07e3d09eb95d9660e1c0ca4fc4efc0dece0dadfb4f2265340c0973`.
-The root keeps the exact producer-owned Shared Governance 7.0.1 requirement and
-unchanged authored payload. The public package's nested Shared closure is inert;
-active protocol references use the unique root-selected Shared 7.0.1 slot.
+After later accepted package updates, the current root selects the exact
+producer-owned Shared Governance 10.0.0 requirement and its authored payload. The public package's nested Shared closure is inert;
+active protocol references use the unique root-selected Shared 10.0.0 slot.
 
 The hash-checked pinned Linux musl VibeVM 1.0.11 resolves the mixed graph in
 disposable staging with isolated registry settings. Its supported native Skill
@@ -52,11 +52,12 @@ is an exact native projection with its native receipt; ordinary use needs no
 installation or network. Its `references/shared-protocols.md` selects the unique
 Shared package from the consumer root lock and verifies that slot's identity.
 All nine triggered Relay protocol references resolve inside the same 7.0.0 slot.
-The producer's five project-wide topic adoptions and conditional self-adoption
-remain unchanged. Relay's additional topics apply only to relevant Relay product
-work. Manual Codex retains the [local Task binding](manual-task-handoff.md).
-The new SI topic remains available but unadopted by the producer and Relay Skill;
-this graph update does not activate its backlog scan.
+The producer's current six project-wide topic adoptions and separate conditional
+self-adoption are owned by root AGENTS. Relay's additional topics apply only to
+relevant Relay product work. Manual Codex retains the [local Task binding](manual-task-handoff.md).
+Task 107 explicitly adopts SI for this producer through root AGENTS. The Relay
+Skill does not adopt SI; producer adoption does not activate it for Relay product
+guidance or other consumers. The earlier graph update itself adopted no topic.
 
 Relay's nested frozen 4.0.0 lock/slot is inert publisher closure evidence. It is
 neither an active root boot route nor a fallback protocol source. Historical

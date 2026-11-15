@@ -41,7 +41,7 @@ preserved eight earlier protocols, client tools and topic adoptions. See the bou
 policy and documents automatic publication, exact-source retry and credentials.
 [Distribution](distribution.md) describes the generated source receipt and
 one-time integration tests. The authoring boot is outside the exported package.
-The five explicitly adopted topics and producer self-adoption are read
+The six explicitly adopted topics and producer self-adoption are read
 from a frozen independently accepted source-main commit as described in
 [self-adoption](self-adoption.md). Native generated source/slot/boot files are
 committed alongside authoring; candidate instructions remain proposal data.
@@ -147,7 +147,18 @@ TH-029/client behavior and records the current generation/checks.
 Task 69 adds 5.2.0 after accepted 5.1.0: a separately adopted
 [small-improvement topic](../packages/development-governance/vibevm/vibespecs/protocols/small-improvements.md)
 and usage guide. Existing nine protocols, including Task 68 closure guidance,
-retain exact accepted bytes. The producer and Relay Skill do not adopt SI.
+retain exact accepted bytes. Task 69 did not adopt SI for the producer or Relay
+Skill. Task 107 now explicitly adopts the complete accepted materialized
+[Small Improvements protocol](../vibevm/vibedeps/org.jresearch.ai.development-governance/10.0.0/vibevm/vibespecs/protocols/small-improvements.md)
+for this producer through root AGENTS: suitable source-changing Task preparation,
+the first source-changing Step after analysis, or a relevant CR discovers open
+`small-improvement` Issues and proposes relevant bounded inclusion to the owner.
+Analysis-only work skips the SI scan unless another accepted local rule requires
+it. Receiving Task/CR authority must explicitly accept inclusion before execution;
+labels/search results neither expand scope nor dispatch or close Issues. Preserve
+provenance, receiving Task/PR links and SI-008 pending-work dispositions. Relay
+Skill and other consumers do not acquire SI adoption from this producer change.
+See the [Task 107 qualification](task-107/step-2/README.md).
 [Step 3 reconciliation](task-69/step-3/README.md) records the bounded merge,
 version transition and native qualification; Step 2 evidence remains historical.
 
