@@ -12,6 +12,12 @@ and protected actions. Those mechanisms implement the shared Step semantics
 below; they do not silently redefine them.
 This protocol works manually; it grants no execution, review, merge, release,
 installation, consumer-adoption or closure permission.
+Before routing a result or controlling continuation, resolve its ownership against
+the acting project's accepted binding under [RA-007](requirement-authority.md#RA-007).
+A bare foreign Outcome/PR link is evidence or discussion, not an automatic review,
+CR or continuation trigger; hand foreign control to the receiving project. Local
+results retain the existing handoff and authorized execution routes.
+
 An Issue alone does not adopt this workflow. Standalone/manual work outside an
 adopted Task Handoff binding needs no synthetic Step numbering or Outcome protocol;
 use its actual project authority, result evidence and review requirements.

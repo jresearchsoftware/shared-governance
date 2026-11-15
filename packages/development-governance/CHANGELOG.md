@@ -1,5 +1,16 @@
 # Development Governance changelog
 
+## 10.0.0
+
+MAJOR: [RA-007](vibevm/vibespecs/protocols/requirement-authority.md#RA-007)
+sets a project-context boundary for conversations, preserving external proposals
+and explicitly declared multi-repository scopes while restricting foreign lifecycle
+control even on request. Task Handoff and Context Loading route result ownership
+and default query scope to that owner. The ChatGPT bootstrap applies the boundary
+before actions. This mandatory narrowing changes supported operator behavior against
+9.0.0; consumers independently review and adopt the new version. Existing local
+authority, review identity and already authorized local work remain intact.
+
 ## 9.0.0
 
 MAJOR: Task Handoff now requires an explicit discoverable disposition for a
