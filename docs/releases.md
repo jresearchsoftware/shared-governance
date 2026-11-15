@@ -18,6 +18,17 @@ assessments. Other consumers retain their own adoption and local policy.
 
 ## Contribution and integration
 
+Task 101 prepares **9.0.0 MAJOR** against accepted 8.0.0. Confirmed material
+defects left after workarounds, deferral or completion now require a discoverable
+disposition and accepted fixes delivered elsewhere require reconciliation against
+remaining criteria. Adopters may reuse existing records and evidence, or use an
+authorized record or explicit owner risk disposition. This changes mandatory
+operator work without an extra approval stage; operational evidence and inherited
+defect impact are clarified alongside it. See the package changelog and
+[coverage](authoring.md#semantic-completeness). Source acceptance, publication and
+consumer adoption remain separate.
+
+
 Task 91 prepares **7.0.1 PATCH** against accepted 7.0.0. TH-010/013/026 make
 explicit that post-result handoffs preserve the effective Task objective and
 that clearing an obstacle alone is not completion. This preserves existing

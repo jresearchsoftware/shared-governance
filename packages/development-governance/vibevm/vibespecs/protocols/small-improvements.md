@@ -108,7 +108,11 @@ links or automatic closing keywords cannot bypass it.
 
 Keep the source Issue open and traceable until actual accepted integration is
 evidenced, then reconcile it through authorized closure with the receiving PR
-and integrated revision. Scheduling or transfer alone does not close it as fixed.
+and integrated revision. Scheduling or transfer alone does not close it as fixed. When a correction lands
+elsewhere, link the accepted result and reconcile the source Issue’s remaining
+criteria and any distinct required installed outcome. Reuse sufficient acceptance
+evidence without duplicating implementation or fabricating retrospective review;
+[TH-018](task-handoff.md#TH-018) applies where Task Handoff is adopted.
 Retain the discovery label while work remains pending, including while scheduled,
 unless separately accepted local tracker rules require a different label lifecycle;
 that binding must preserve discovery of unfinished work through explicit links.

@@ -392,6 +392,24 @@ next action and missing evidence; inaccessible evidence is a gap, not proof of
 warning absence. A no-change, analytical or non-repository result needs no empty
 commit, fabricated SHA or artificial PR. Use the existing Task/result records.
 
+For a confirmed material defect left after a workaround, deferral or Task completion,
+retain an explicit discoverable disposition: a suitable existing record, an
+authorized new tracking record, or an explicit owner disposition of residual risk.
+A workaround does not itself fix the underlying defect. Use existing Issue, PR or
+Outcome links; routine delegated engineering and already-authorized deferrals need
+no new per-finding owner approval. Unconfirmed hypotheses and optional improvements
+do not thereby require tickets or become completion gates. The optional
+[Small Improvements](small-improvements.md) topic applies only where separately
+adopted; this rule does not adopt its labels or discovery process.
+
+When a fix is delivered through another Task or PR, connect its accepted result to
+the earlier record and reconcile remaining criteria before claiming completion.
+Scheduling, implementation claims or transfer alone are not accepted integration.
+Preserve distinct acceptance boundaries, such as source correction and an explicitly
+required installed result. Reuse sufficient existing acceptance evidence; do not
+invent a new implementation PR or a retrospective review. Apply the owning
+project’s authorized disposition and closure rules; no automatic closure follows.
+
 <a id="TH-019"></a>
 **TH-019 — Independent result assessment under project rules.**
 
