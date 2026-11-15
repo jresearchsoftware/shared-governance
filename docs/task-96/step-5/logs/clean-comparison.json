@@ -1,0 +1,255 @@
+{
+  "accepted": {
+    "revision": "0b72349f3ab0b2d88e836a6ba3d4fc675a87f75a",
+    "clean_before_and_after": true,
+    "boot_entries": [
+      "vibevm/vibespecs/boot/00-authoring.md",
+      "vibevm/vibedeps/org.jresearch.ai.development-governance/7.0.1/vibevm/vibespecs/boot/development-governance.md",
+      "vibevm/vibedeps/org.jresearch.ai.codex-relay/5.0.0/vibevm/vibespecs/boot/codex-relay.md"
+    ],
+    "native_check": {
+      "ok": true,
+      "command": "check",
+      "project": "<task-checkout>/.codex-sandbox/tmp/task96-checks/accepted",
+      "summary": {
+        "error": 0,
+        "warning": 15,
+        "info": 0
+      },
+      "findings": [
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.codex-relay/3.0.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.codex-relay/3.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.7.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/2.7.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/3.0.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/3.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/4.0.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/4.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/5.0.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/5.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.1",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.1` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.1",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.1` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.2",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.2` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.3",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.3` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/6.0.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/6.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/7.0.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/7.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        }
+      ]
+    },
+    "instructions": {
+      "schema": 4,
+      "effective_content": "NO_OP",
+      "instructions": "NO_OP",
+      "sources": "DISABLED",
+      "diffs": {},
+      "live_settings_verified": false,
+      "application": "unchanged Instructions require no new application; any prior live-settings verification gap remains unresolved; generation NO_OP does not discharge an earlier changed-text reconciliation obligation"
+    }
+  },
+  "candidate": {
+    "revision": "8ea1c42f0c28ed716b715a170b962474e86d2c48",
+    "clean_before_and_after": true,
+    "boot_entries": [
+      "vibevm/vibespecs/boot/00-authoring.md",
+      "vibevm/vibedeps/org.jresearch.ai.development-governance/7.0.1/vibevm/vibespecs/boot/development-governance.md",
+      "vibevm/vibedeps/org.jresearch.ai.codex-relay/5.0.0/vibevm/vibespecs/boot/codex-relay.md",
+      "vibevm/vibedeps/org.jresearch.ai.landscape-model-guidance/1.0.3/vibevm/vibespecs/boot/landscape-model-guidance.md",
+      "vibevm/vibedeps/org.jresearch.ai.landscape-subagents/1.0.2/vibevm/vibespecs/boot/landscape-subagents.md"
+    ],
+    "native_check": {
+      "ok": true,
+      "command": "check",
+      "project": "<task-checkout>/.codex-sandbox/tmp/task96-checks/candidate",
+      "summary": {
+        "error": 0,
+        "warning": 15,
+        "info": 0
+      },
+      "findings": [
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.codex-relay/3.0.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.codex-relay/3.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/2.5.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/2.6.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/2.7.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/2.7.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/3.0.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/3.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/4.0.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/4.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/5.0.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/5.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.1",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/5.1.1` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.1",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.1` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.2",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.2` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.3",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/5.2.3` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/6.0.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/6.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        },
+        {
+          "check": "lockfile_files",
+          "severity": "warning",
+          "path": "vibevm/vibedeps/org.jresearch.ai.development-governance/7.0.0",
+          "message": "`vibevm/vibedeps/org.jresearch.ai.development-governance/7.0.0` is a vibedeps/ slot no lockfile entry claims (orphan) \u2014 `vibe install` prunes these"
+        }
+      ]
+    },
+    "instructions": {
+      "schema": 4,
+      "effective_content": "NO_OP",
+      "instructions": "NO_OP",
+      "sources": "DISABLED",
+      "diffs": {},
+      "live_settings_verified": false,
+      "application": "unchanged Instructions require no new application; any prior live-settings verification gap remains unresolved; generation NO_OP does not discharge an earlier changed-text reconciliation obligation"
+    }
+  },
+  "unchanged_boundaries": [
+    "packages/development-governance",
+    "vibevm/vibepacks",
+    "vibevm/vibedeps/org.jresearch.ai.development-governance",
+    "vibevm/vibedeps/org.jresearch.ai.codex-relay",
+    ".agents/skills/codex-relay",
+    "chatgpt"
+  ],
+  "instructions_bytes_identical": true,
+  "instructions_sha256": "499a9c3116f58e3ec560f4ee2977e33dcaeb90dcc66132811c686e74f7060c0a",
+  "live_settings_verified": false
+}

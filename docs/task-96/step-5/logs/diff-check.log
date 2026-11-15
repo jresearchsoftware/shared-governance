@@ -1,0 +1,4 @@
+Command: ["git", "diff", "--check", "0b72349f3ab0b2d88e836a6ba3d4fc675a87f75a", "HEAD"]
+Candidate: 8ea1c42f0c28ed716b715a170b962474e86d2c48
+
+Exit: 0

@@ -62,5 +62,5 @@ live Settings or discharge any earlier unresolved mismatch. If a future change
 affects the complete effective text, follow the existing full-replacement and
 live-readback procedure after acceptance/integration.
 
-See [Task 96 qualification](task-96/step-1/README.md) for exact public identities,
-scenario analysis and evidence limits.
+See [current Task 96 qualification](task-96/step-5/README.md) for accepted-main
+integration, exact public identities, scenario analysis and evidence limits.

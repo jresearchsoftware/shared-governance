@@ -1,0 +1,47 @@
+[
+  {
+    "name": "qualify",
+    "exit": 0,
+    "seconds": 1.04
+  },
+  {
+    "name": "self-adoption",
+    "exit": 0,
+    "seconds": 10.93
+  },
+  {
+    "name": "distribution",
+    "exit": 0,
+    "seconds": 19.55
+  },
+  {
+    "name": "release-native",
+    "exit": 0,
+    "seconds": 16.96
+  },
+  {
+    "name": "chatgpt-tests",
+    "exit": 0,
+    "seconds": 4.35
+  },
+  {
+    "name": "publication",
+    "exit": 0,
+    "seconds": 6.31
+  },
+  {
+    "name": "publication-dispatch",
+    "exit": 0,
+    "seconds": 0.18
+  },
+  {
+    "name": "release-boundary",
+    "exit": 0,
+    "seconds": 0.15
+  },
+  {
+    "name": "diff-check",
+    "exit": 0,
+    "seconds": 0.01
+  }
+]

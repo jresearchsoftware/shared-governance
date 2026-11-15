@@ -1,0 +1,5 @@
+Command: ["python3", "scripts/qualify.py", "--export-ref", "HEAD"]
+Revision: 8ea1c42f0c28ed716b715a170b962474e86d2c48
+{"qualification": "PASS", "tracked_files": 1572, "local_links": 4162, "secret_scan": "bounded markers PASS", "active_protocol": "PASS", "native_projection_source": "8ea1c42f0c28ed716b715a170b962474e86d2c48", "native_skill": "codex-relay 5.0.0", "flow_export": "PASS"}
+
+Exit: 0

@@ -1,0 +1,29 @@
+Command: ["<task-checkout>/.codex-sandbox/cache/vibe-1.0.11", "--offline", "--json", "validate"]
+Revision: 8ea1c42f0c28ed716b715a170b962474e86d2c48
+{
+  "chain": [
+    "validate"
+  ],
+  "command": "lifecycle:plan",
+  "contributions": [],
+  "notices": [],
+  "requested": "validate"
+}
+{
+  "chain": [
+    "validate"
+  ],
+  "command": "lifecycle",
+  "contributions": [],
+  "notices": [],
+  "ok": true,
+  "requested": "validate",
+  "steps": [
+    {
+      "phase": "validate",
+      "status": "ok"
+    }
+  ]
+}
+
+Exit: 0
