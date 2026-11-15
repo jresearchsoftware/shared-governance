@@ -4,8 +4,9 @@ This producer consumes its own guidance through ordinary pinned VibeVM 1.0.11
 `flow:` resolution, a versioned in-tree registry and dynamic slot routing.
 The stable authoring root remains `packages/development-governance`; generated
 registry source, slots, lock, root/member indexes and agent routes are committed
-with authored changes in the same reviewed PR. Five conditional topic adoptions
-include full Independent Review for relevant independent assessments; producer
+with authored changes in the same reviewed PR. Six conditional topic adoptions
+include full Independent Review for relevant independent assessments and Small
+Improvements for suitable source-changing Task/Step/CR preparation; producer
 self-adoption is also explicitly adopted here.
 Other consumers retain their own policies and adoption decisions.
 

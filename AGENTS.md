@@ -36,7 +36,7 @@ read without installation, downloads or bootstrap. Source acceptance and public
 publication are distinct. See [self-adoption](docs/self-adoption.md) for the
 supported manual binding, generation, qualification limits and Git recovery.
 
-This producer explicitly adopts these five topics through the accepted native
+This producer explicitly adopts these six topics through the accepted native
 boot/slot routes, preserving their conditional applicability:
 
 - Read `proportional-controls.md` for proposed security, validation or operator
@@ -51,11 +51,24 @@ boot/slot routes, preserving their conditional applicability:
 - Read the full `independent-review.md` for relevant independent review
   activities. Its methodology is mandatory for this producer's independent
   assessments; unrelated tasks skip it. Task Handoff retains lifecycle ownership.
+- Read the full [small-improvements.md](vibevm/vibedeps/org.jresearch.ai.development-governance/10.0.0/vibevm/vibespecs/protocols/small-improvements.md)
+  from the accepted materialized slot for deferred small source corrections and
+  when preparing a suitable source-changing
+  Task, its first source-changing Step after analysis, or a relevant CR. Inspect
+  open Issues with the exact `small-improvement` label in this repository and
+  notify the owner with relevant eligible candidate IDs and proposed bounded
+  inclusion. Analysis-only work skips this scan unless another accepted local
+  rule requires it. Never inject candidates automatically: the receiving Task/CR
+  authority must explicitly accept inclusion before implementation. Preserve
+  source-Issue provenance, receiving Task/PR links and pending discoverability;
+  follow the full protocol's deferral, partial-delivery and cancellation
+  dispositions, including evidence-backed duplicate/superseded/no-longer-needed
+  outcomes. Do not close pending work as fixed before evidenced accepted integration.
 
 For relevant Codex Relay product workflows, the native boot routes to the pinned
 5.0.0 Skill; its projected copy is [.agents/skills/codex-relay/SKILL.md](.agents/skills/codex-relay/SKILL.md).
 Its shared protocol references use this consumer's single locked Development
-Governance 7.0.1 slot. Preserve the topic applicability above and the
+Governance 10.0.0 slot. Preserve the topic applicability above and the
 [manual client binding](docs/manual-task-handoff.md); Manual Codex remains supported.
 Skill installation grants no automatic execution or operational authority.
 See [native Relay integration](docs/relay-skill.md) for maintenance and rollback.
