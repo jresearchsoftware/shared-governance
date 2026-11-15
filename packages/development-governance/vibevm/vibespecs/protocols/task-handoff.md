@@ -98,7 +98,10 @@ Identify the Task, current work unit/Step and meaningful purpose explicitly.
 A Step is one authorized architect/owner-to-executor work iteration:
 hand off a bounded Task objective, investigate/implement, test and correct as
 needed, then return a terminal execution result for assessment (an Outcome,
-BLOCKED or another explicitly recognized terminal handoff).
+BLOCKED or another explicitly recognized terminal handoff). Execution status,
+the substantive finding, acceptance of the bounded deliverable and completion
+of the whole Task are separate judgments. A completed investigation may report
+negative or inconclusive findings and remaining Task work without claiming a fix.
 
 For ordinary agreed work, an owner instruction such as "start Task N" or an
 intentional handoff of its actionable Issue to a manual executor is sufficient
@@ -141,6 +144,8 @@ Step is not a PR, commit, conversation, transport attempt, test pass or formal
 lifecycle phase. There is no fixed Step count or productivity measure, and a
 terminal Step does not establish Task completion. Projects own authorization
 and identity mechanisms, not an incompatible silent interpretation of this rule.
+Do not reclassify immutable Outcomes or reopen or replay their admitted executions
+when clarifying these semantics.
 
 <a id="TH-009"></a>
 **TH-009 — Task navigation and title limits.**
@@ -181,6 +186,27 @@ boundary; retaining the Task objective neither overrides that boundary nor
 authorizes replay of a terminal execution. Apply [RA-006](requirement-authority.md#RA-006)
 to unsupported restrictions and [TH-013](#TH-013) to continued execution.
 
+For an owner problem report, establish material facts and recommend a concrete
+disposition and next action; perform useful actions already authorized. Identify
+any actual owner choice or permission needed and recommend a path. A report alone
+does not authorize arbitrary implementation, publication or deployment; respect
+explicit discussion-only or collection-only scope.
+
+Interpret a compound owner instruction as a whole: an instruction to publish an
+already-discussed CR and continue includes continuation within existing scope and
+the supported route. A publish-only instruction does not authorize execution.
+After publication and applicable checks, verify the requested next boundary using
+the product's native evidence: distinguish submission from actual admission/start,
+a complete ready manual handoff, and terminal failure. A green routing workflow or
+a launch label alone need not prove start. Reconcile uncertain effects before
+another mutation; correct clear in-scope caller input or orchestration mistakes
+under the existing instruction, using a new admission only if the native route
+requires it. Preserve history and avoid duplicate launches, replay of terminal
+work or fabricated Steps. Report a real capability or authority boundary with
+the stopped action, evidence and next necessary disposition. Retain applicable
+negative-finding preview/publication authority, cross-project, deployment,
+independent acceptance and changed-scope boundaries.
+
 Add a Decision only for substantive changes that require one under current
 authority, not merely to repeat an explicit routine start instruction.
 
@@ -214,11 +240,31 @@ approval stages for every local fix. After removing an obstacle, continue the
 remaining authorized Task work toward the agreed outcome or applicable
 review/handoff boundary, using the effective objective under [TH-010](#TH-010).
 Stopping at the local fix needs support from current owner scope, accepted process
-or a genuine execution/authority boundary. Stop when scope/permission or prior external
-mutation is uncertain, a material policy choice needs its owner, a protected
-boundary is inaccessible, or repetition yields no new evidence. Preserve useful
-results and disclose unreconciled work. A preferred new workflow or material
-obligation needs the owning project's decision before implementation.
+or a genuine execution/authority boundary. Stop the affected action immediately
+when scope/permission or prior external mutation is uncertain, a material policy
+choice needs its owner, a protected boundary is inaccessible, or repetition yields
+no new evidence. Continue other meaningful, independent, authorized work within the
+effective goal where available; do not invent busywork, unrelated improvements,
+unsafe access or repeated futile attempts. Preserve useful results and disclose
+unreconciled work. A preferred new workflow or material obligation needs the owning
+project's decision before implementation.
+
+Terminal `BLOCKED` describes an established obstruction to completing the current
+execution: identify the condition, its effect on an actual required action or
+deliverable, and a meaningful next action or authority boundary. An explicitly
+established execution boundary under the project's supported status contract may
+also require that disposition. Denied access to known existing essential evidence,
+missing execution authority, a safety/trust barrier, unreconciled external mutation
+or an explicitly required operation that cannot be performed can justify it. An
+ordinary defect, incorrect input or revisable assumption alone does not establish
+inability to continue. Exhausted evidence, a defensible not-found finding or
+unmet whole-Task completion alone is not an obstruction. When all currently
+authorized investigative/deliverable work is fulfilled, use the existing successful
+reporting path with warnings/limitations as applicable, honestly stating unknowns
+and unfinished Task obligations; do not relabel an unperformed mandatory action or
+unpreserved required deliverable as successful research. If a product mapping cannot
+represent this distinction, report the specific gap for separately authorized
+product-owner follow-up; shared guidance does not change that runtime.
 
 ## Canonical Outcome publication target
 
@@ -279,7 +325,9 @@ active, incomplete, blocked or unconfirmed execution handoff. Ready for review
 means that the executor successfully completed, durably published and verified
 the handoff of that identifiable result for independent review. It does not mean
 reviewer APPROVE, passing CI, mergeability, integration readiness, merge authority,
-Task completion or package adoption. A base conflict or red CI alone does not
+Task completion or package adoption. A completed bounded result can be Ready
+while whole-Task work remains; uncertainty disclosed as a finding does not alone
+make its handoff incomplete. A base conflict or red CI alone does not
 require drafting a successfully handed-off result; required checks, review and
 merge remain separate gates.
 
@@ -338,7 +386,8 @@ Publish an attributable result through the project's authorized path, verify the
 published target, and bind claims and evidence to the identifiable artifact or
 immutable result under review. Report accomplished and blocked work, applicable
 checks, remaining work, observations versus unverified claims, and material
-limitations. For known material warnings, state source, impact, disposition,
+limitations. Distinguish executed work, substantive findings, unfinished Task
+obligations and any actual obstruction under [TH-013](#TH-013). For known material warnings, state source, impact, disposition,
 next action and missing evidence; inaccessible evidence is a gap, not proof of
 warning absence. A no-change, analytical or non-repository result needs no empty
 commit, fabricated SHA or artificial PR. Use the existing Task/result records.
@@ -346,9 +395,14 @@ commit, fabricated SHA or artificial PR. Use the existing Task/result records.
 <a id="TH-019"></a>
 **TH-019 — Independent result assessment under project rules.**
 
-Require independent assessment of the identified result under the owning
-project's review rules, sufficiency criteria and appropriate evaluator/result
-identity. Tests and implementation helpers supply evidence, not independent
+Require independent assessment of the identified bounded result on its merits under
+the owning project's review rules, sufficiency criteria and appropriate evaluator/result
+identity. Separately state outstanding whole-Task acceptance/completion conditions.
+A closure evidence gap alone is not a defect in a correctly delivered diagnostic
+patch or grounds to invent REQUEST_CHANGES against it. A missing required Step
+deliverable or evidence needed for a requested positive assertion can prevent
+approval; unknown is not fixed. Identify each blocking finding's binding obligation
+and the precise acceptance boundary affected. Tests and implementation helpers supply evidence, not independent
 acceptance. Record who or what assessed which result. Merely opening another
 chat or checking one's own work does not establish independence.
 
@@ -455,7 +509,8 @@ Acceptance, integration, publication/installation, further execution and Task
 closure are distinct. Continue only when current authority permits the next
 action and applicable checks, acceptance and protected boundaries are satisfied.
 Already authorized actions need no ceremonial reconfirmation; new scope needs
-its owner. A completed or accepted Step does not prove the whole Task complete;
+its owner. Verify the requested continuation under [TH-010](#TH-010), rather than
+treating an intermediate publication or command submission as its completion. A completed or accepted Step does not prove the whole Task complete;
 a cleared blocker does not establish Task completion, and accepted source does
 not prove deployment or release. Apply [RA-006](requirement-authority.md#RA-006) before admitting continuation;
 reconcile apparent self-expansion through existing Decisions. Reassess concrete

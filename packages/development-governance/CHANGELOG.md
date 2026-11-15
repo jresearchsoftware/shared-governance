@@ -1,5 +1,17 @@
 # Development Governance changelog
 
+## 8.0.0
+
+MAJOR: clarifies bounded Step findings, real execution obstructions, result
+acceptance and whole-Task completion in Task Handoff and Independent Review.
+Orchestrator follow-through now requires a concrete disposition and verification
+of an authorized requested continuation; role-scoped restrictions and practical
+procedure application are clarified in Requirement Authority. These refinements
+can change mandatory orchestrator behavior, so the whole-package classification
+is MAJOR. They add no status, approval, checklist, automation or consumer runtime
+change. Existing protected boundaries, terminal history and Task 91 continuation
+semantics remain. See the [bounded examples](vibevm/vibespecs/guides/onboarding-examples.md#11-bounded-results-orchestration-and-real-boundaries).
+
 ## 7.0.1
 
 PATCH: clarifies the existing stable-charter and in-scope persistence meaning at

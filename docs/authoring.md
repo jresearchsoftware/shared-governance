@@ -83,6 +83,13 @@ assessments; other consumers own their separate topic choices and migration.
 
 ## Semantic completeness
 
+Task 99 proposes 8.0.0 against accepted 7.0.1. The bounded
+[coverage and walks](task-99/step-1/README.md) explain the status, review,
+continuation, orchestrator and role-scoped procedural clarifications and their
+preserved boundaries. Orchestrator follow-through changes mandatory behavior, so
+the whole-package classification is MAJOR; no new gate or runtime is introduced.
+
+
 Task 91's [continuation coverage and scenarios](task-91/step-1/README.md)
 clarify TH-010/013/026 in 7.0.1 PATCH against accepted 7.0.0. The next obstacle
 refines actions without replacing the effective charter, completion criteria or

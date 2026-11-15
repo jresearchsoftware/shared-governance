@@ -78,6 +78,14 @@ new permissions or changed completion criteria still require a substantive
 Decision. Retain terminal identities; this is no automatic resume instruction.
 See the [portable continuation examples](../packages/development-governance/vibevm/vibespecs/guides/onboarding-examples.md#10-continuation-preserves-the-task-objective).
 
+The candidate clarifies that a bounded investigation completed with a supported
+negative finding can hand off with limitations while Task work remains. An actual
+obstruction identifies the required action affected and next boundary; a completed
+PR may follow the normal Ready route even when the Task stays open. Independent
+review assesses the bounded result separately from closure. Native status mapping
+and protected Writer/Reviewer operations remain product-owned; candidate guidance
+does not rewrite earlier Outcomes or qualify Relay automation.
+
 Use the supported client title tool, then read back the persisted
 `Task N — Step S — <purpose>` title. If unavailable, disclose that limit and retain
 the Task/Step/purpose and Issue link as a visible navigation aid. A prompt proves
