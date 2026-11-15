@@ -1,0 +1,18 @@
+[
+  {
+    "name": "landscape-model-guidance",
+    "version": "1.0.3",
+    "tag_object": "8409e60d819a1553dc4dff89ba55799c8e0e451b",
+    "commit": "48432f00802f5aad106f3e1a9264e17c1edc354c",
+    "files": 7,
+    "receipt_digest": "cd55c682497ee9724063c04d776e8ed9243129aa29de5c12b5d607980c8918ca"
+  },
+  {
+    "name": "landscape-subagents",
+    "version": "1.0.2",
+    "tag_object": "c52414e83d25878c2f2cb90693c9328729286cd3",
+    "commit": "042e92884278d748502157945301dbc3f3c8318c",
+    "files": 12,
+    "receipt_digest": "01fd1e83a3e8b0458a872393a1fe70218e20b0ff4650a43721ec1bf74132ffb2"
+  }
+]

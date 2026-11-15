@@ -1,0 +1,11 @@
+{
+  "ok": true,
+  "command": "check",
+  "project": "/var/lib/codex-relay/slots/pool-2/work/repositories/jresearchsoftware/shared-governance/run-42595428620/.codex-sandbox/tmp/task96/staging",
+  "summary": {
+    "error": 0,
+    "warning": 0,
+    "info": 0
+  },
+  "findings": []
+}

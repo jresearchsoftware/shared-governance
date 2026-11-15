@@ -364,6 +364,11 @@ def verify_producer(revision, directory=ROOT):
                 [{"path": PACKAGE + "/vibevm/vibespecs/boot/development-governance.md", "kind": "static"}])
     if relay:
         expected[0].append({"path": integration.SLOT + "/vibevm/vibespecs/boot/codex-relay.md", "kind": "static"})
+        for coordinate, (landscape_version, _, _) in integration.LANDSCAPE.items():
+            if coordinate in requirement:
+                name = coordinate.split("/")[1]
+                expected[0].append({"path": "vibevm/vibedeps/org.jresearch.ai." + name + "/" +
+                    landscape_version + "/vibevm/vibespecs/boot/" + name + ".md", "kind": "static"})
     for root, routes in zip(roots, expected):
         index = root / BOOT_INDEX
         if index.is_symlink() or not index.is_file():

@@ -98,6 +98,41 @@ class NativeAdoptionTests(unittest.TestCase):
         shutil.rmtree(self.slot)
         self.reject()
 
+    def test_landscape_integrity_and_recovery(self):
+        """A successful native install cannot hide corrupt or missing passive advice."""
+        base = self.work / "vibevm/vibedeps"
+        for name, version in (("landscape-model-guidance", "1.0.3"), ("landscape-subagents", "1.0.2")):
+            slot = base / ("org.jresearch.ai." + name) / version
+            if not slot.exists():
+                self.skipTest("historical producer has no Landscape integration")
+            for relative in ("DISTRIBUTION.json", ".vibe-slot.toml", "vibe.toml",
+                             "vibevm/vibespecs/boot/" + name + ".md"):
+                with self.subTest(package=name, file=relative):
+                    target = slot / relative
+                    original = target.read_bytes()
+                    target.write_bytes(original + b"\nDrift\n")
+                    self.reject()
+                    target.unlink()
+                    self.reject()
+                    target.write_bytes(original)
+                    EXPORTER.verify_producer(self.revision, self.work)
+
+    def test_landscape_pin_and_boot_drift_rejected(self):
+        manifest = self.work / "vibe.toml"
+        original = manifest.read_text()
+        if "landscape-model-guidance" not in original:
+            self.skipTest("historical producer has no Landscape integration")
+        for before, after in (("=1.0.3", "^1.0.3"),
+                              ("48432f00802f5aad106f3e1a9264e17c1edc354c", "0" * 40),
+                              ("=1.0.2", "=1.0.1")):
+            with self.subTest(before=before):
+                manifest.write_text(original.replace(before, after))
+                self.reject()
+        manifest.write_text(original)
+        index = self.work / EXPORTER.BOOT_INDEX
+        index.write_text(index.read_text().replace("landscape-subagents/1.0.2/", "landscape-subagents/1.0.1/"))
+        self.reject()
+
     def test_forged_slot_metadata_rejected(self):
         (self.slot / ".vibe-slot.toml").write_text('schema=1\nsource_hash="sha256:forged"\n')
         self.reject()

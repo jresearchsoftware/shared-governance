@@ -1,0 +1,77 @@
+{
+  "observed_published_head": "ac560c11d8bc1420d4f2a3fa57db0255953f0246",
+  "scope": "published starting frontier only; local integrated candidate is not yet published",
+  "sources": {
+    "checks": {
+      "availability": "available",
+      "total_count": 1,
+      "items": [
+        {
+          "id": 132633763941,
+          "name": "route",
+          "status": "completed",
+          "conclusion": "skipped",
+          "head_sha": "ac560c11d8bc1420d4f2a3fa57db0255953f0246",
+          "html_url": "https://github.com/jresearchsoftware/shared-governance/actions/runs/43655751201/job/132633763941",
+          "output": {
+            "title": null,
+            "summary": null,
+            "annotations_count": 0
+          },
+          "annotations": []
+        }
+      ]
+    },
+    "suites": {
+      "availability": "available",
+      "total_count": 4,
+      "items": [
+        {
+          "id": 117988608628,
+          "status": "queued",
+          "conclusion": null,
+          "head_sha": "ac560c11d8bc1420d4f2a3fa57db0255953f0246"
+        },
+        {
+          "id": 117988608903,
+          "status": "queued",
+          "conclusion": null,
+          "head_sha": "ac560c11d8bc1420d4f2a3fa57db0255953f0246"
+        },
+        {
+          "id": 117988609207,
+          "status": "queued",
+          "conclusion": null,
+          "head_sha": "ac560c11d8bc1420d4f2a3fa57db0255953f0246"
+        },
+        {
+          "id": 118199596101,
+          "status": "completed",
+          "conclusion": "skipped",
+          "head_sha": "ac560c11d8bc1420d4f2a3fa57db0255953f0246"
+        }
+      ]
+    },
+    "status": {
+      "availability": "available",
+      "total_count": 0,
+      "items": []
+    },
+    "actions": {
+      "availability": "available",
+      "total_count": 1,
+      "items": [
+        {
+          "id": 43655751201,
+          "name": "Auto remediation \u00b7 PR #97 \u00b7 Task 96 \u00b7 Step 4 \u00b7 Resolve PR #97 integration readiness\u2026",
+          "status": "completed",
+          "conclusion": "skipped",
+          "head_sha": "ac560c11d8bc1420d4f2a3fa57db0255953f0246",
+          "html_url": "https://github.com/jresearchsoftware/shared-governance/actions/runs/43655751201"
+        }
+      ]
+    }
+  },
+  "unavailable_final_candidate_evidence": "Exact-final-head GitHub CI and post-publication mergeability require Writer publication; no queued/absent check is counted as passing.",
+  "excluded_surface": "UI-only service/pre-execution banners are not supported by these APIs."
+}

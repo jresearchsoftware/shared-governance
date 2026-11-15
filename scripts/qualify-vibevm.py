@@ -46,12 +46,17 @@ def main():
         env["VIBE_SETTINGS"] = str(fixture_root / "settings")
         env["VIBEVM_USER_CONFIG"] = str(fixture_root / "settings/config.toml")
         commands = []
-        selected = {preparation.slot(p["version"]) for p in
-                    tomllib.loads((workspace / "vibe.lock").read_text())["package"]
-                    if p["name"] == "development-governance"}
-        retained = {p.relative_to(workspace).as_posix() for p in
-                    (workspace / "vibevm/vibedeps/org.jresearch.ai.development-governance").iterdir()
-                    if p.is_dir()} - selected
+        locked = tomllib.loads((workspace / "vibe.lock").read_text())["package"]
+        selected = {"vibevm/vibedeps/" + p["group"] + "." + p["name"] + "/" + p["version"]
+                    for p in locked}
+        # Only actual top-level slot receipts identify retained packages; nested
+        # publisher closure slots do not belong to this workspace's lock.
+        retained = {p.parent.relative_to(workspace).as_posix() for p in
+                    (workspace / "vibevm/vibedeps").glob("*/*/.vibe-slot.toml")} - selected
+        relay = [p for p in locked if (p["group"], p["name"]) == ("org.jresearch.ai", "codex-relay")]
+        if len(relay) != 1:
+            raise RuntimeError("expected one enclosing locked Relay dependency")
+        relay_skill = workspace / "vibevm/vibedeps/org.jresearch.ai.codex-relay" / relay[0]["version"] / "skill"
 
         def run(*arguments):
             result = subprocess.run([str(vibe), *arguments], cwd=workspace, env=env,
@@ -98,8 +103,7 @@ def main():
         agents_before = (workspace / "AGENTS.md").read_bytes()
         listing = json.loads(run("--offline", "--json", "skill", "list", "--path", str(member)))
         # Member listing sees the enclosing workspace's separately installed Relay Skill.
-        if any(s.get("name") != "codex-relay" or s.get("source") != str(workspace /
-               "vibevm/vibedeps/org.jresearch.ai.codex-relay/3.0.0/skill")
+        if any(s.get("name") != "codex-relay" or s.get("source") != str(relay_skill)
                for s in listing.get("skills", [])):
             raise RuntimeError("unexpected Skill outside the enclosing Relay dependency")
         if (workspace / "AGENTS.md").read_bytes() != agents_before:

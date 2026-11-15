@@ -1,0 +1,19 @@
+{
+  "issue_body_sha256": "5887be9d13fe814c58358b33c466ca0a8a51b8c6f8712c6d049017e478fe81ef",
+  "decisions": {
+    "6856728839": "418cb02a925f318a0382a4ede343a3b51f737719ad86282726a95c4e6507129c",
+    "6866786370": "1f96a165b5f5042501542c18ff0d85fa5d7bb61e024b3d97aac02f29e527580d",
+    "6886207421": "7b8cc780a119422ed618135ae2df3d783b38d86a0ca1b6168d821835b24f7369"
+  },
+  "accepted_main": "0b72349f3ab0b2d88e836a6ba3d4fc675a87f75a",
+  "historical_task_base": "7c83caaf9157d4cecac145477177203871205128",
+  "published_starting_head": "ac560c11d8bc1420d4f2a3fa57db0255953f0246",
+  "local_merge": "8ea1c42f0c28ed716b715a170b962474e86d2c48",
+  "merge_parents": [
+    "ac560c11d8bc1420d4f2a3fa57db0255953f0246",
+    "0b72349f3ab0b2d88e836a6ba3d4fc675a87f75a"
+  ],
+  "same_tree_before_and_after_merge": "f3c84621df8078d5e1f7e5142f3aef60ad6ed117",
+  "accepted_upstream_verified_by": "current public main and merged PR 93; exact owner-identified accepted source, not an arbitrary branch",
+  "transport": "anonymous public Git/REST reads; local object import only"
+}

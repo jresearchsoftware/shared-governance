@@ -1,0 +1,14 @@
+Command: ["python3", "scripts/qualify-toolchain.py", "--vibe", "<task-checkout>/.codex-sandbox/cache/vibe-1.0.11", "--output", "<task-checkout>/.codex-sandbox/tmp/task96-checks/logs/toolchain.json"]
+Candidate: 8ea1c42f0c28ed716b715a170b962474e86d2c48
+mixed cold resolution: exit 0
+native Skill listing: exit 0
+Skill projection dry run: exit 0
+Skill projection: exit 0
+mixed graph check: exit 0
+force reinstall source mismatch: exit 1
+retained-slot reinstall: exit 0
+rollback baseline: exit 0
+late failed install rollback: exit 1
+Mixed graph, frozen payload, native projection, refusal, rollback and Git recovery: PASS
+
+Exit: 0

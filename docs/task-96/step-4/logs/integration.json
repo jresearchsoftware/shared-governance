@@ -1,0 +1,52 @@
+{
+  "starting_head": "b455af2f0d223246828e83a7a389f9c82d301f03",
+  "accepted_main": "0b72349f3ab0b2d88e836a6ba3d4fc675a87f75a",
+  "merge_base": "7c83caaf9157d4cecac145477177203871205128",
+  "task_parent_counts": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "conflicts": [
+    {
+      "header": [
+        "changed in both",
+        "  base   100644 01e6d68f2df698c33507a7883c7df2951ec68951 scripts/relay-skill.py",
+        "  our    100644 d93b58bcb76692fc6e4706c51fba1257de11cf01 scripts/relay-skill.py",
+        "  their  100644 f8009b23e4a04fb92f16751ffe7e7dab887e24cd scripts/relay-skill.py"
+      ],
+      "marker_count": 1
+    },
+    {
+      "header": [
+        "changed in both",
+        "  base   100644 2ad21fdc8601dbba4eabfee0c61d1a50113a8919 vibe.lock",
+        "  our    100644 978a7aeea456500cb523828def0463f92b11fd7b vibe.lock",
+        "  their  100644 ad74f46fd7b55c6da9c76b0efe21d3bb5b981e46 vibe.lock"
+      ],
+      "marker_count": 2
+    },
+    {
+      "header": [
+        "changed in both",
+        "  base   100644 142edbe7d46b56e60608650f729c4c2153dad02b vibe.toml",
+        "  our    100644 ab32d3b4612da67ba50495e39ccdf45b1aa0409b vibe.toml",
+        "  their  100644 d70d59f94d2f5d28faa5e3b8c213f989cf64a55e vibe.toml"
+      ],
+      "marker_count": 1
+    },
+    {
+      "header": [
+        "changed in both",
+        "  base   100644 b7a034094a8073bf0bba03b2eef4c391b8c0d110 vibevm/vibespecs/boot/INDEX.md",
+        "  our    100644 327a4faeccab97c381ffe48b9468d2b51ebe0f40 vibevm/vibespecs/boot/INDEX.md",
+        "  their  100644 c44c320a90cbcfe921cd306e81347d1c27beb0a8 vibevm/vibespecs/boot/INDEX.md"
+      ],
+      "marker_count": 1
+    }
+  ]
+}
