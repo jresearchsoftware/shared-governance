@@ -83,6 +83,13 @@ assessments; other consumers own their separate topic choices and migration.
 
 ## Semantic completeness
 
+Task 98 proposes 10.0.0 MAJOR against accepted 9.0.0. Its
+[coverage and scenario walks](task-98/step-1/README.md) describe the owner-requested
+project-context restriction, permitted contributions, client routing, compatibility
+choice and local adoption limits. Independent acceptance, release and changed live
+Instructions reconciliation remain separate.
+
+
 Task 101 proposes 9.0.0 against independently accepted 8.0.0 at
 `1ce9db1c9b714f157ef4e006e685cd00b768d1fe`; 7.0.1 is its historical design
 baseline. IR-007/009/010/014/016 connect scoped proof, operational boundaries,

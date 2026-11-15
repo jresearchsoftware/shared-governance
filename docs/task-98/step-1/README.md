@@ -18,3 +18,15 @@ RA-007 owns identity, scope, permitted proposals, prohibited effects and handoff
 | Another consumer with its own declared scope | Apply the same boundary without relying on Shared-specific residual rules; its own adoption and local implementer policy remain controlling. |
 
 RA-006 retains its provenance and no-invented-obligation rule: the charter explicitly authorizes this constraint. Independent-review identity and the full adopted method remain unchanged; external contribution does not grant review authority. Proportional controls use the existing binding and handoff, without registry, ledger, connector, per-action approval or service. No consumer is automatically migrated. The live ChatGPT settings surface is not available here; generated instructions are desired text and require the charter's post-acceptance manual application and verification if effective text changes. These walks are reasoned source scenarios, not evidence of a live model or automation run.
+
+## Local qualification
+
+The pinned VibeVM 1.0.11 musl digest was verified and a disposable mixed-source
+native install selected 10.0.0 with unchanged Relay and Landscape dependencies.
+Exact-commit export/source/slot/lock qualification passed. Distribution (52),
+ChatGPT projection (29), and self-adoption (19) tests passed; self-adoption ran
+in an owned disposable copy because Git's source ownership protection prevents
+cloning the governed checkout directly. Release tests passed with six optional
+native integration cases skipped. The generated complete Instructions fit the
+bound 8,000-character budget, but candidate generation is not acceptance or
+live application. Root-only exact-head CI is pending trusted publication.
