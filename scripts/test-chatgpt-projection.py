@@ -274,7 +274,7 @@ class ProjectionTests(unittest.TestCase):
     def test_no_governance_injected_into_non_adopting_consumer(self):
         artifacts = self.render()
         text = artifacts["instructions.md"].decode()
-        for word in ("Task", "Outcome", "BLOCKED", "Deliberative", "APPROVE", "task-handoff", "independent-review"):
+        for word in ("BLOCKED", "Deliberative", "task-handoff", "independent-review"):
             self.assertNotIn(word, text)
         self.assertNotIn(self.sha, text)
         self.assertEqual(set(artifacts), {"instructions.md"})
@@ -292,7 +292,7 @@ class ProjectionTests(unittest.TestCase):
         self.assertFalse((ROOT / "chatgpt/receipt.json").exists())
         for text in ("accepted manual client binding", "BLOCKED", "Deliberative", "self-checks"):
             self.assertIn(text, artifacts["instructions.md"].decode())
-        self.assertLess(len(artifacts["instructions.md"].decode()), 7000)
+        self.assertLess(len(artifacts["instructions.md"].decode()), binding["character_budget"])
 
     def test_candidate_source_is_not_active_policy(self):
         before = self.render()

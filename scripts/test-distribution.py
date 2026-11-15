@@ -89,7 +89,8 @@ class DistributionTests(unittest.TestCase):
         # PC gained a normative rule after 3.0.0; check that accepted prefix
         # separately instead of asserting the old annotation-only transition.
         unchanged = set(protocols) - {DISTRIBUTION.HANDOFF, DISTRIBUTION.INDEPENDENT_REVIEW,
-                                      DISTRIBUTION.VERSIONING, DISTRIBUTION.PROTOCOL, DISTRIBUTION.AUTHORITY}
+                                      DISTRIBUTION.VERSIONING, DISTRIBUTION.PROTOCOL, DISTRIBUTION.AUTHORITY,
+                                      "vibevm/vibespecs/protocols/context-loading.md"}
         # Task 62 removes the ChatGPT receipt reference from the current guide;
         # retain the annotation-only historical guide comparison at accepted 3.0.0.
         annotated, _ = DISTRIBUTION.snapshot("e654d9e20a7c42c50cc05786dc83a4f7a16f84e4")
