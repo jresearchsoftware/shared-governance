@@ -30,7 +30,10 @@ Do not invent a PR or SHA for a non-repository artifact. Refresh current canonic
 requirements, authorized Decisions and applicable change requests. Independently
 reconcile the result with the full goals, constraints and acceptance criteria,
 including material omissions; the candidate's manifest or summary cannot decide
-which requirements or source areas exist.
+which requirements or source areas exist. Assess the actual bounded Step artifact
+and its applicable criteria on their merits; separately identify the full Task
+goal and any outstanding Task completion conditions. A bounded Step does not
+replace or waive that goal.
 
 <a id="IR-004"></a>
 **IR-004 — Primary evidence and operational surface.**
@@ -139,7 +142,8 @@ or reviewed baseline and classify their provenance:
 
 For each blocking finding, explicitly identify the accepted Task requirement,
 existing supported contract or already binding protected invariant that is
-violated, its authoritative source, and concrete evidence of the violation.
+violated, its authoritative source, the precise Step-result or whole-Task
+acceptance boundary affected, and concrete evidence of the violation.
 Severity or a security label supplies no missing obligation. Keep the finding's
 origin separate from its authority: a newly discovered failure may violate an
 old obligation, while an imagined stronger guarantee may have no such binding.
@@ -194,6 +198,10 @@ protection. An evidence-based inability to justify acceptance may retain the
 project's pending/hold disposition under [IR-018](#IR-018), but must name the
 required evidence instead of asserting an unproved defect. Baseline debt is not
 automatically a blocker, and optional protection is not mandatory remediation.
+A gap solely in whole-Task closure evidence is not automatically a defect in a
+correct bounded diagnostic result, or grounds to invent REQUEST_CHANGES against
+it. A missing mandatory Step deliverable or proof required for its positive
+assertion remains an actionable gap at that result boundary.
 
 A credible material new risk outside existing obligations warrants explicit
 owner discussion: explain severity, evidence and uncertainty, affected user
@@ -264,7 +272,11 @@ inconclusive or blocking disposition, with the next useful action. Distinguish
 an access/assessment gap from an established defect; do not manufacture findings
 or a Change Request merely to delay merge. Justified nonblocking gaps or exceptions
 need explicit rationale under applicable authority; required evidence cannot be
-silently waived. Absence of discovered defects alone does not justify PASS.
+silently waived. Assess the claim actually requested: an adequately supported
+negative or inconclusive finding may be accepted as such, but unknown cannot be
+promoted to fixed or an unproven positive outcome approved. State remaining Task
+obligations separately and preserve project review and integration gates.
+Absence of discovered defects alone does not justify PASS.
 
 <a id="IR-019"></a>
 **IR-019 — Lifecycle-compatible acceptance.**

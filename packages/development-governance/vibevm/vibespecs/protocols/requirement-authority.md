@@ -76,6 +76,27 @@ package versioning/publication and effective in-scope diagnostics, must not be
 excluded merely to keep work nominally small or documentation-only. Choosing safe
 implementation means within delegated scope is an engineering decision.
 
+Process helps people work reliably; apply a procedure when its trigger and
+assumptions hold, identifying the invariant it protects and the least burdensome
+route that preserves it. Reassess an internal convention or agent-authored choice
+within existing authority if it frustrates the clear goal without protecting that
+invariant. A guard comparing an existing remote branch/PR head does not require a
+new authorized branch to exist before creating it. A description of a current
+Draft PR is not by itself an enduring hold on its ordinary Ready transition.
+Assess cumulative recovery cost, including repeated terminal handoffs and owner
+intervention, under [PC-008](proportional-controls.md#PC-008) and
+[PC-010](proportional-controls.md#PC-010); retain actual binding protections.
+
+Avoid unnecessary negative restrictions. When a limitation is necessary, identify
+its governed actor and action or surface, target, applicability and duration where
+relevant. For example, a restriction on a Writer's self-approval or self-merge does
+not restrict an independent Reviewer from authorized assessment and approval, or
+remove the owner's merge authority. Publication or review of an AI-authored
+restriction does not itself make it an owner mandate under RA-002. A real protected
+boundary stops the affected action, while other independent authorized work may
+continue; use the existing owner mechanism for a real conflict or material choice.
+
+
 Before publishing a proposed new restriction as authority, discuss its rationale
 and consequences with the owner if it materially narrows the requested result or
 available means. This does not require renewed approval for ordinary operations

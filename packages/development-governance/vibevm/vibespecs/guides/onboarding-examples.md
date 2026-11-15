@@ -338,3 +338,29 @@ also cannot authorize a new feature, protected operation or policy. Such materia
 changes use the existing owner Decision mechanism. Conversely, no new Decision
 or repeated approval is needed solely to preserve and execute already-authorized
 remaining work. Optional consumer adoption or later use adds no completion gate.
+
+## 11. Bounded results, orchestration and real boundaries
+
+Iris has adopted Task Handoff and Independent Review; Oak uses the same shared
+rules with its own manual binding. These illustrative walks establish no live
+execution, review, product compatibility or permission. Both retain the original
+charter and applicable later Decisions, including explicit supersession.
+
+| Situation | Disposition |
+| --- | --- |
+| Iris inspects available original-run stores, establishes that the terminal record was cleaned or never retained, documents what remains unknown and completes all otherwise authorized investigation, patch and qualification. | Report the negative finding through the existing successful-with-limitations path. The Step does not prove the original cause or remedy; state remaining Task work. The absence alone is not BLOCKED. |
+| The essential record is known to exist but the required reader is denied access, and no meaningful independent authorized work remains. | Report BLOCKED with the denied access, required action affected and the next authority or access boundary. Do not try unsafe access or repeat futile attempts. |
+| A diagnostic correction passes source checks and has a verified exact-head PR; original consumer recovery remains unverified. | After the successful durable Outcome, follow the supported Ready handoff. Independent review assesses the patch and disclosed limits; the Task remains open for its real obligations. Ready is neither approval nor Task completion. |
+| A mandatory authorized operation cannot be performed or its required deliverable cannot safely be preserved. | Preserve available progress and report the actual obstruction and affected obligation. Do not call it successful research because some investigation was completed. |
+| The bounded report correctly says the cause is unknown and meets its criteria. A separate case omits a mandatory Step deliverable or claims a fix without required proof. | Assess the first on its merits and separately name open Task criteria; do not invent a patch defect from the closure gap. The second needs the appropriate negative or pending verdict tied to its binding obligation and affected boundary; never approve the unproven claim. |
+| A later owner-authorized Step follows a terminal result. | Preserve the earlier Outcome and identity, reconstruct the unchanged full goal plus applicable Decisions, and continue remaining authorized work without replaying the prior attempt or treating uncertainty as permission for protected operations. |
+| A new authorized branch has a clean admitted base but no remote branch yet. Another PR is described as currently Draft. | The existing-branch remote-head guard does not apply before new branch creation. Current Draft state alone is not a lasting hold: use the supported verified Ready handoff when its conditions are met. |
+| A revisable input mistake, ordinary failed test or agent assumption prevents one attempt, while useful correction remains authorized. | Correct and test in the current execution. A real inaccessible credential boundary stops only that affected operation; finish independent authorized work without acquiring credentials or inventing busywork. |
+| A procedure adds a repeat handoff that protects no additional invariant. | Reuse sufficient evidence and omit the redundant handoff within authority. A Writer-only self-approval restriction still allows an independent Reviewer to perform authorized review, and does not remove the owner's merge authority. |
+| Oak receives a problem report with authority to correct a known in-scope input. | Establish material facts, correct and verify the input, and state the disposition and next action. If authority is absent, recommend a specific path and identify the actual choice or permission needed. An explicitly discussion-only report receives analysis and recommendation, not implementation. |
+| The owner says “publish this CR” versus “publish this CR and continue” within the existing Task. | For the first, verify authorized publication and stop at that requested boundary. For the second, verify publication and applicable checks, then carry out the supported continuation without a ceremonial question. Preserve required preview and publication permission. |
+| A supported automatic dispatch is requested; its routing workflow is green. | Inspect native evidence of actual admission/start, not merely the workflow or label. A deterministic input rejection with known effects can be corrected within authority and resubmitted through the native route; reconcile ambiguous effects first to avoid duplicate launches. |
+| The requested continuation uses a manual executor, or a real capability/authority boundary prevents dispatch. | Return the complete startable manual handoff when that is the requested result. Otherwise report the exact stopped action, supporting evidence and next necessary disposition; do not fabricate a Step or expand permission. |
+
+These walks add no status, checklist, repeated approval, dispatch prerequisite,
+background monitor or runtime implementation. Other consumers adopt independently.
