@@ -1,5 +1,17 @@
 # Development Governance changelog
 
+## 9.0.0
+
+MAJOR: Task Handoff now requires an explicit discoverable disposition for a
+confirmed material defect left after a workaround, deferral or Task completion,
+and reconciliation when a fix is accepted elsewhere. Independent Review aligns
+operational claims with the evidence and separates defect origin from impact on a
+required outcome. Adopters may need to link an existing record, create an authorized
+record or obtain an explicit owner risk disposition; existing records and sufficient
+acceptance evidence may be reused. This tightens mandatory workflow behavior without
+a new registry, blanket approval, live-service test or automatic closure. Small
+Improvements remains separately adopted. See the [examples](vibevm/vibespecs/guides/onboarding-examples.md#12-operational-evidence-and-deferred-defects).
+
 ## 8.0.0
 
 MAJOR: clarifies bounded Step findings, real execution obstructions, result

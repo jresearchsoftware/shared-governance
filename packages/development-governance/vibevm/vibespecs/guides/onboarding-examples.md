@@ -364,3 +364,18 @@ charter and applicable later Decisions, including explicit supersession.
 
 These walks add no status, checklist, repeated approval, dispatch prerequisite,
 background monitor or runtime implementation. Other consumers adopt independently.
+
+
+## 12. Operational evidence and deferred defects
+
+These examples apply the separately adopted topics and existing project authority;
+they do not require a particular test architecture, tracker form or new approval.
+
+| Situation | Proportionate result |
+| --- | --- |
+| A test replaces an internal preflight with PASS. | It supports the scoped caller test, not a claim that the omitted product preflight works. Obtain or reuse appropriate evidence for the required operation, or disclose the gap. |
+| An isolated installation/recovery qualification exercises the real installer, transport and helper while modeling an external service. Separate checks cover relevant retries and ordering. | State the exercised components, modeled service and limitations; combine the sufficient evidence for the stated claim. No live service, production mutation or single full-system test follows. |
+| An inherited defect is unrelated to the required result; another inherited reader defect undermines its required installation path. | Leave unrelated debt outside the correction. Do not call the reader defect a new regression without evidence; assess a fix, demonstrated usable workaround or accepted adjustment of the remaining result/risk. |
+| A confirmed regression remains after a one-off workaround and is deferred. | Link a suitable existing Issue, an authorized new record or an explicit owner disposition of residual risk. The workaround does not establish a fix; normal delegated deferral needs no extra approval. |
+| A later independently accepted PR fixes the defect tracked in an earlier Issue. That Issue also requires an installed result. | Connect the accepted result and reuse its sufficient evidence. Reconcile the installed criterion before claiming that entire Issue complete; do not repeat implementation or invent past review. Closure follows the owning project's authority. |
+| A hypothesis is unconfirmed or a reviewer suggests an optional improvement. | Report the evidence or proposal accurately; neither alone mandates a ticket or completion gate. Separate local rules and an explicitly adopted Small Improvements topic still apply. |

@@ -83,6 +83,19 @@ assessments; other consumers own their separate topic choices and migration.
 
 ## Semantic completeness
 
+Task 101 proposes 9.0.0 against independently accepted 8.0.0 at
+`1ce9db1c9b714f157ef4e006e685cd00b768d1fe`; 7.0.1 is its historical design
+baseline. IR-007/009/010/014/016 connect scoped proof, operational boundaries,
+origin and current impact; TH-018 preserves Task 99's result distinctions while
+requiring a discoverable disposition and later reconciliation of confirmed material
+defects. SI-008 aligns only its separately adopted workflow. The package examples
+cover substitutes, modeled services, inherited defects, workarounds, later fixes
+and unsupported hypotheses. Other protocol semantics, topic adoption, protected
+authority and frozen releases remain intact. The explicit disposition changes
+mandatory operator work and is MAJOR; existing records and proof reduce its cost.
+No new approval, test architecture, registry or automatic closure is introduced.
+
+
 Task 99 proposes 8.0.0 against accepted 7.0.1. The bounded
 [coverage and walks](task-99/step-1/README.md) explain the status, review,
 continuation, orchestrator and role-scoped procedural clarifications and their
