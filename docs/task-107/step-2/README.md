@@ -55,12 +55,33 @@ These are manual routing/authority walks, not fresh model or runtime proof.
 
 ## Qualification and handoff limits
 
-Run the existing source/export, release, distribution and self-adoption checks,
-plus whitespace checks, against the committed candidate. The source qualifier
+The existing source/export, release, distribution and self-adoption checks
+passed, together with whitespace checks. The source qualifier
 checks local documentation links, passive payload consistency, native boot,
 lock/slot/source integrity and bounded credential markers. An explicit Git
 comparison also verifies the adopted SI bytes against the frozen accepted slot
 and confirms all eight rule anchors and the compact boot route.
+
+| Check | Result |
+| --- | --- |
+| `python3 scripts/qualify.py --export-ref HEAD` | PASS: 1,740 tracked files, local links, bounded credential markers, exact export and native producer source/boot/slot integrity. |
+| `python3 scripts/test-self-adoption.py` | 19 passed, including complete SI protocol/guide transport and drift rejection. |
+| `python3 scripts/test-distribution.py` | 52 passed. |
+| `python3 scripts/test-release.py` | 20 passed; 6 optional native resolver/publisher integrations skipped, not passed. |
+| Frozen-slot/route and protected-path comparison | PASS: accepted slot equals authored SI bytes; SI-001–008 present; native boot and root link resolve; package, dependencies, Skill, ChatGPT files and Task 69 history unchanged. |
+| `git diff --check` and staged whitespace check | PASS. |
+
+Initial direct runs encountered environment constraints: the launcher's TMPDIR
+is inside the authoring checkout, which the exporter deliberately rejects as a
+distribution destination, and clone-based self-adoption tests reported dubious
+ownership for the original checkout. No permission or global Git configuration
+change was made. Source/export, self-adoption and distribution qualification then
+passed in a disposable, locally owned bundle clone inside this execution's
+sandbox, with temporary output in a sibling directory outside that fixture's
+authoring root. All fixture state remained within the admitted workspace. Release
+checks passed directly. These are unprivileged local checks, not installed-runtime
+proof. The disposable fixture was removed after qualification; pre-existing
+untracked `.codex-sandbox/` runtime state is preserved, outside the candidate.
 
 ChatGPT Instructions, their generation inputs and complete effective text are
 unchanged; this local AGENTS adoption needs no new TH-029 application. The

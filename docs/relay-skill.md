@@ -12,8 +12,8 @@ authorizes this consumer update in PR 93. The reviewed candidate selects public
 Relay Skill 5.0.0 at immutable distribution commit
 `5fc55231ffc2fee2d7dd4c399e85ef1d3b091bd9` (`v5.0.0`), with package content hash
 `sha256:d78711a85f07e3d09eb95d9660e1c0ca4fc4efc0dece0dadfb4f2265340c0973`.
-The root keeps the exact producer-owned Shared Governance 10.0.0 requirement and
-unchanged authored payload. The public package's nested Shared closure is inert;
+After later accepted package updates, the current root selects the exact
+producer-owned Shared Governance 10.0.0 requirement and its authored payload. The public package's nested Shared closure is inert;
 active protocol references use the unique root-selected Shared 10.0.0 slot.
 
 The hash-checked pinned Linux musl VibeVM 1.0.11 resolves the mixed graph in

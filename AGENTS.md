@@ -53,8 +53,8 @@ boot/slot routes, preserving their conditional applicability:
   assessments; unrelated tasks skip it. Task Handoff retains lifecycle ownership.
 - Read the full [small-improvements.md](vibevm/vibedeps/org.jresearch.ai.development-governance/10.0.0/vibevm/vibespecs/protocols/small-improvements.md)
   from the accepted materialized slot for deferred small source corrections and
-  when preparing a suitable source-changing
-  Task, its first source-changing Step after analysis, or a relevant CR. Inspect
+  when preparing a suitable source-changing Task, its first source-changing Step
+  after analysis, or a relevant CR. Inspect
   open Issues with the exact `small-improvement` label in this repository and
   notify the owner with relevant eligible candidate IDs and proposed bounded
   inclusion. Analysis-only work skips this scan unless another accepted local
