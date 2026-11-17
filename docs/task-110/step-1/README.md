@@ -122,7 +122,7 @@ integration, exact-head review and normal frozen-source checks.
 The operator cost shifts from repeated selection/amendment to complete bounded
 discovery, eligibility/cumulative-risk assessment, combined validation and clear
 disposition. It adds no per-commit scan, recurring audit, bot, ledger, controller,
-approval stage or automatic execution. Queue size and correction coupling can
+approval stage or autonomous queue-triggered execution launch. Queue size and correction coupling can
 increase review effort; no latency, cost or model-reliability measurement is
 claimed. Existing safety and admission boundaries still limit eligibility.
 
@@ -142,3 +142,55 @@ review verdict, merge, release, closure or foreign adoption. Publication success
 must identify the accepted source and actual package version before it can
 satisfy any publication condition. Consumer upgrade, topic adoption, local
 deduplication and any product runtime changes remain separately owned.
+
+
+## Executed local qualification
+
+The implementation and generated payload at the tested candidate passed:
+
+- `python3 scripts/qualify.py --export-ref HEAD`: source, protocol anchors/links,
+  complete exact-commit export, selected native slot/lock/boot, unchanged Relay
+  projection and bounded credential-marker scan.
+- `test-distribution.py`: 52 tests; `test-self-adoption.py`: 19 tests;
+  `test-chatgpt-projection.py`: 29 tests, all passed.
+- `test-release.py`: 26 tests, including 6 optional native integration tests
+  skipped; `test-publication.py`: 12 tests, including 1 optional native test
+  skipped; `test-publication-dispatch.py`: 7 tests. All executed tests passed.
+- `package-release.py --base <frozen-baseline> --check-remote-tag`: 10.0.0 to
+  11.0.0, one MAJOR step; no existing 11.0.0 public tag observed at check time.
+- `check-publication.py` against the candidate and frozen baseline:
+  `CANDIDATE_VALID`, using unchanged publisher code and the committed MIT
+  redistribution/export binding. This is source readiness, not acceptance,
+  push CI eligibility or actual publication.
+- Hash-checked pinned VibeVM 1.0.11 performed native mixed-graph installation in
+  contained disposable staging, selecting Shared 11.0.0 and retaining Relay
+  5.0.0 / Landscape model guidance 1.0.3 / subagents 1.0.2. Native Skill install
+  reported unchanged; exact projected Skill/receipt bytes match. Only selected
+  new outputs were transferred; historical slots were preserved.
+- `qualify-vibevm.py --vibe <pinned-binary>`: six native validation/check/Skill
+  listing commands passed. Its 19 expected orphan-slot warnings identify retained
+  frozen history, not active selection. There were no errors or other findings.
+- Direct baseline comparison: all other nine protocol files and the complete
+  ChatGPT tool payload are byte-identical. Whitespace checks passed.
+- Candidate ChatGPT `update`: complete effective Instructions `NO_OP`, Sources
+  disabled, generated Instructions unchanged. No live application occurred or
+  is newly required by this unchanged text. Earlier live-verification gaps remain.
+
+The first in-place check attempts encountered existing environment constraints:
+TMPDIR was inside the authoring checkout (the exporter intentionally rejects that
+as a distribution destination), and local fixture clones hit Git's ownership
+check. No product code or host configuration was changed to bypass either.
+A local Git bundle supplied an exact committed verification checkout, with its
+sibling temporary directory still contained under the admitted workspace. The
+affected checks then passed there. Native staging used a verified ordinary-file
+Git archive and isolated settings; no outside workspace state or credentials
+were imported. The initial exporter invocation using symbolic `HEAD` was also
+corrected to its required full SHA before successful generation.
+
+These checks ran on local candidate source and generated state. Required native
+exact-head CI and any protected installed-runtime proof remain for the trusted
+publication/review path. No root/sudo operation, GitHub write, consumer upgrade,
+Workflow/credential change, live Settings write or independent acceptance was
+performed. The [Relay handoff draft](relay-adoption-handoff.md) is prepared for
+canonical incoming proposal publication only after exact accepted publication
+is verified; it does not dispatch or control foreign work.
