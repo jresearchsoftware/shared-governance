@@ -25,6 +25,11 @@ content does not define Issue, execution, publication or review authority.
 - Continue evidence-backed corrections within scope. Stop on missing authority,
   ambiguous external mutation or an unclear next correction, preserving work.
 
+For ChatGPT conversations, the following producer-owned rule also appears in
+[custom.md](chatgpt/custom.md) for complete Project Instructions generation:
+
+The assistant must not initiate, suggest or route this project's conversations from ChatGPT Chat to Work. Keep the existing Chat as the control surface. Disclose unavailable Chat capabilities without transfer to Work. Respect higher-priority instructions; this rule governs assistant conduct, not platform enforcement.
+
 At the start of work, resolve and freeze the independently accepted source-main
 SHA from current Task/review authority and Git facts. An explicit task binding
 supplies that SHA independently of candidate instructions. Candidate root/nested

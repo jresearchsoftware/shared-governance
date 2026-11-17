@@ -11,6 +11,15 @@ canonical desired state is [chatgpt/instructions.md](../chatgpt/instructions.md)
 with [custom.md](../chatgpt/custom.md) and [binding.json](../chatgpt/binding.json).
 The generated source is not proof of installed ChatGPT settings.
 
+The producer owns its Chat control-surface rule in root [AGENTS.md](../AGENTS.md).
+The same normative paragraph in `custom.md` is its client delivery text, inserted
+verbatim into `instructions.md` by the shared projector. It forbids the assistant
+from initiating, suggesting or routing Chat to Work and requires disclosure of
+unavailable Chat operations without transfer, subject to higher-priority
+instructions. It claims no platform enforcement and is not injected into other
+consumers through the shared base/tool. [Task 112 Step 2](task-112/step-2/README.md)
+records consistency tests and the required later owner application/readback.
+
 The package interface documents check/update, exact owner-export comparison,
 optional selected Sources snapshots, content-based stale detection, update, no-op,
 unsupported formats and authority limits. The producer convenience entry

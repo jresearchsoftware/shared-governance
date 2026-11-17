@@ -28,7 +28,11 @@ of Proportional Controls/Task Handoff. See [placement, coverage and qualificatio
 Recompute the version against accepted main at integration. Independent exact-head
 acceptance, owner integration and exact accepted publication remain required;
 DocReview L12 reconciliation needs separately authorized consumer adoption.
-This candidate changes no effective Project Instructions text or live settings.
+Step 2 also implements producer-local #106 in AGENTS and ChatGPT custom/generated
+Instructions. That policy changes no exported package bytes or other consumer rules,
+so the package remains 12.1.0 MINOR. The effective Instructions text changes and
+requires TH-029 owner application/readback after acceptance/integration; no live
+settings change or platform enforcement is claimed. See [Step 2 evidence](task-112/step-2/README.md).
 
 Task 113 prepares **12.0.0 MAJOR** against accepted 11.0.0 at
 `f8d77b16ab9e92b31ae9a9390acabd9be9e962a7`. The owner-authorized #105 correction
