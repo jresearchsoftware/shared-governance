@@ -129,6 +129,43 @@ class ProjectionTests(unittest.TestCase):
             receipt += f'[[file]]\npath = "{path}"\nsha256 = "{projection.digest(text.encode())}"\n'
         self.write(prefix + ".vibe-slot.toml", receipt)
 
+    def selection_snapshot(self, relay_version="5.0.0", shared_version="10.0.0"):
+        """Commit an offline consumer lock with two declared, one selected Skill."""
+        relay = f"vibevm/vibedeps/fixture.relay/{relay_version}/"
+        shared = f"vibevm/vibedeps/fixture.shared/{shared_version}/"
+        self.receipted_files(relay, {
+            "vibe.toml": ('[package]\ngroup="fixture"\nname="relay"\n'
+                          f'version="{relay_version}"\nkind="flow"\n'
+                          '[[skill]]\nname="codex-relay"\npath="skill"\n'
+                          '[[skill]]\nname="unselected-helper"\npath="other"\n'),
+            "skill/SKILL.md": f"# Relay {relay_version}\nUse the consumer shared slot.\n",
+            "other/SKILL.md": "# Unselected helper\nNever implicitly selected.\n",
+            "unregistered/SKILL.md": "# Receipt-listed but undeclared Skill.\n",
+        })
+        self.receipted_files(shared, {
+            "vibe.toml": ('[package]\ngroup="fixture"\nname="shared"\n'
+                          f'version="{shared_version}"\nkind="flow"\n'),
+            "protocols/task-handoff.md": f"# Shared handoff {shared_version}\n",
+        })
+        self.write(shared + "protocols/unlisted.md", "Committed but outside this slot receipt.\n")
+        self.lock([("relay", relay_version), ("shared", shared_version)])
+        self.commit()
+        return {"accepted_sha": self.sha, "authority_anchor": self.anchor,
+                "skills": [{"name": "codex-relay", "entry": relay + "skill/SKILL.md",
+                            "shared": [shared + "protocols/task-handoff.md"]}]}
+
+    def receipted_files(self, prefix, files):
+        receipt = 'schema = 1\nsource_hash = "sha256:fixture"\n'
+        for path, text in files.items():
+            self.write(prefix + path, text)
+            receipt += f'[[file]]\npath = "{path}"\nsha256 = "{projection.digest(text.encode())}"\n'
+        self.write(prefix + ".vibe-slot.toml", receipt)
+
+    def select(self, selection):
+        self.binding["schema"] = 3
+        self.binding["skill_selection"] = selection
+        self.save_binding()
+
     def lock(self, packages):
         text = '[meta]\nschema_version = 7\n'
         for name, version in packages:
@@ -529,6 +566,167 @@ class ProjectionTests(unittest.TestCase):
             with self.subTest(flag=flag):
                 self.assertEqual(self.cli("update", extra=(flag,)).returncode, 2)
         self.assertEqual(self.tree(), before)
+
+    def test_declared_native_skills_do_not_change_schema_two_output(self):
+        before = self.render()
+        self.selection_snapshot()
+        self.assertEqual(self.render(), before)
+        self.assertNotIn(b"codex-relay", before["instructions.md"])
+
+    def test_selected_skill_is_explicit_committed_and_independent_of_maintenance_head(self):
+        selected = self.selection_snapshot()
+        self.select(selected)
+        self.maintain(True)
+        before = self.tree()
+        instructions = before["instructions.md"].decode()
+        skill = selected["skills"][0]
+        for path in (skill["entry"], *skill["shared"]):
+            self.assertIn(f"https://github.com/fixture/project/blob/{selected['accepted_sha']}/{path}",
+                          instructions)
+        for identity in ("codex-relay", "fixture/relay@5.0.0", "fixture/shared@10.0.0",
+                         "sha256:fixture", selected["authority_anchor"]):
+            self.assertIn(identity, instructions)
+        self.assertNotIn("unselected-helper", instructions)
+        self.assertNotIn("other/SKILL.md", instructions)
+        for meaning in ("common installed transport Skill", "never replace", "another Project",
+                        "missing, unavailable, stale or ambiguous", "accepted-source JIT",
+                        "continue unrelated work", "No upload, installation or settings permission",
+                        "client readback", "read-only trial", "without silently repinning"):
+            self.assertIn(meaning, instructions)
+        # Committing generated settings never requires repinning the selection
+        # to their containing commit, avoiding circular SHA churn.
+        self.commit()
+        self.assertNotEqual(self.sha, selected["accepted_sha"])
+        self.write("unrelated.md", "Unrelated accepted maintenance source.\n")
+        self.commit()
+        self.write(skill["entry"], "Dirty candidate must never replace committed selection.\n")
+        self.write(skill["shared"][0], "Dirty shared candidate.\n")
+        generated = self.config / "instructions.md"
+        os.utime(generated, ns=(1_000_000_000, 1_000_000_000))
+        status, stale = self.maintain()
+        self.assertFalse(stale)
+        self.assertEqual(status["effective_content"], "NO_OP")
+        self.maintain(True)
+        self.assertEqual(self.tree(), before)
+        self.assertEqual(generated.stat().st_mtime_ns, 1_000_000_000)
+
+    def test_explicit_selected_upgrade_and_rollback(self):
+        old = self.selection_snapshot()
+        self.select(old)
+        self.maintain(True)
+        original = (self.config / "instructions.md").read_bytes()
+        upgraded = self.selection_snapshot("6.0.0", "11.0.0")
+        # Consumer lock advancement alone cannot silently change selection.
+        self.assertEqual(self.render()["instructions.md"], original)
+        self.select(upgraded)
+        status, stale = self.maintain()
+        self.assertTrue(stale)
+        self.assertEqual(status["instructions"], "CHANGED")
+        self.maintain(True)
+        changed = (self.config / "instructions.md").read_bytes()
+        self.assertNotEqual(changed, original)
+        self.assertIn(upgraded["accepted_sha"].encode(), changed)
+        self.assertNotIn(old["accepted_sha"].encode(), changed)
+        self.select(old)
+        self.maintain(True)
+        self.assertEqual((self.config / "instructions.md").read_bytes(), original)
+
+    def test_two_projects_keep_consumer_skill_and_shared_bindings_separate(self):
+        first = self.selection_snapshot()
+        self.select(first)
+        first_text = self.render()["instructions.md"].decode()
+        first_repo, first_config, first_binding = self.repo, self.config, self.binding
+        second_repo = self.root / "second-consumer"
+        shutil.copytree(first_repo, second_repo)
+        try:
+            self.repo, self.config = second_repo, second_repo / "chatgpt"
+            self.binding = json.loads(json.dumps(first_binding))
+            self.binding["repository"] = "fixture/other-project"
+            self.anchor = "https://github.com/fixture/other-project/issues/8"
+            self.write("AGENTS.md", "# Independently owned second project\n")
+            second = self.selection_snapshot("7.0.0", "12.0.0")
+            self.select(second)
+            second_text = self.render()["instructions.md"].decode()
+        finally:
+            self.repo, self.config, self.binding = first_repo, first_config, first_binding
+        self.assertNotEqual(first["accepted_sha"], second["accepted_sha"])
+        for text, own, other, repository in (
+                (first_text, first, second, "fixture/project"),
+                (second_text, second, first, "fixture/other-project")):
+            self.assertIn(f"https://github.com/{repository}/blob/{own['accepted_sha']}/", text)
+            for path in (own["skills"][0]["entry"], *own["skills"][0]["shared"]):
+                self.assertIn(path, text)
+            self.assertNotIn(other["accepted_sha"], text)
+            self.assertNotIn(other["skills"][0]["entry"], text)
+            self.assertNotIn(other["skills"][0]["shared"][0], text)
+
+    def test_invalid_skill_selections_refuse_check_and_update_without_partial_writes(self):
+        selection = self.selection_snapshot()
+        self.select(selection)
+        self.maintain(True)
+        original = json.loads(json.dumps(self.binding))
+        skill = selection["skills"][0]
+        cases = {
+            "missing selection": lambda b: b.pop("skill_selection"),
+            "selection wrong type": lambda b: b.update(skill_selection=[]),
+            "selection extra field": lambda b: b["skill_selection"].update(implicit=True),
+            "missing accepted commit": lambda b: b["skill_selection"].pop("accepted_sha"),
+            "symbolic accepted commit": lambda b: b["skill_selection"].update(accepted_sha="HEAD"),
+            "unavailable accepted commit": lambda b: b["skill_selection"].update(accepted_sha="0" * 40),
+            "foreign authority": lambda b: b["skill_selection"].update(
+                authority_anchor="https://github.com/fixture/foreign/issues/1"),
+            "native absent": lambda b: b.update(native="absent"),
+            "no skills": lambda b: b["skill_selection"].update(skills=[]),
+            "duplicate names": lambda b: b["skill_selection"]["skills"].append(dict(skill)),
+            "name mismatch": lambda b: b["skill_selection"]["skills"][0].update(name="wrong"),
+            "entry not skill": lambda b: b["skill_selection"]["skills"][0].update(
+                entry=skill["entry"].replace("skill/SKILL.md", "vibe.toml")),
+            "undeclared entry": lambda b: b["skill_selection"]["skills"][0].update(
+                entry=skill["entry"].replace("skill/SKILL.md", "unregistered/SKILL.md")),
+            "skill extra field": lambda b: b["skill_selection"]["skills"][0].update(automatic=True),
+            "entry traversal": lambda b: b["skill_selection"]["skills"][0].update(entry="../SKILL.md"),
+            "shared missing": lambda b: b["skill_selection"]["skills"][0].pop("shared"),
+            "shared empty": lambda b: b["skill_selection"]["skills"][0].update(shared=[]),
+            "shared duplicate": lambda b: b["skill_selection"]["skills"][0].update(
+                shared=skill["shared"] * 2),
+            "shared outside slot": lambda b: b["skill_selection"]["skills"][0].update(shared=["AGENTS.md"]),
+            "shared unlocked": lambda b: b["skill_selection"]["skills"][0].update(
+                shared=["vibevm/vibedeps/fixture.alpha/1.0.0/protocols/first.md"]),
+            "shared unlisted": lambda b: b["skill_selection"]["skills"][0].update(
+                shared=[skill["shared"][0].replace("task-handoff", "unlisted")]),
+        }
+        for label, alter in cases.items():
+            with self.subTest(case=label):
+                self.binding = json.loads(json.dumps(original))
+                alter(self.binding)
+                self.save_binding()
+                self.write("chatgpt/custom.md", "Pending custom change must not be partly published.\n")
+                before = self.tree()
+                for action in ("check", "update"):
+                    result = self.cli(action)
+                    self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+                    self.assertIn("Projection refused", result.stderr)
+                    self.assertEqual(self.tree(), before)
+
+    def test_selected_snapshot_requires_its_own_valid_lock_and_receipts(self):
+        old = self.selection_snapshot()
+        self.select(old)
+        self.maintain(True)
+        self.write(old["skills"][0]["entry"], "Committed corruption outside native receipt.\n")
+        self.commit()
+        corrupt = self.sha
+        # Each independently supplied snapshot has its own validation duties.
+        # Older selected content remains usable despite newer candidate damage.
+        self.sha = old["accepted_sha"]
+        self.assertEqual(self.maintain()[0]["effective_content"], "NO_OP")
+        self.binding["skill_selection"]["accepted_sha"] = corrupt
+        self.save_binding()
+        before = self.tree()
+        for action in ("check", "update"):
+            result = self.cli(action)
+            self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+            self.assertIn("native receipt", result.stderr)
+            self.assertEqual(self.tree(), before)
 
     def test_prior_history_and_protocols_preserved(self):
         baseline = json.loads((ROOT / "scripts/fixtures/chatgpt-preserved-sources.json").read_text())

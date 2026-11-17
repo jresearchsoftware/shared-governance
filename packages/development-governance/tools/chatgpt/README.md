@@ -46,7 +46,7 @@ Markdown and ordinary Git review. Disabling cache removes only `sources.md` and
 Unchanged bytes are not rewritten. No ownership registry or clean-worktree gate
 is involved; no recursive cleanup is performed.
 
-Binding schema 2 has exactly these fields:
+Binding schema 2 remains supported unchanged and has exactly these fields:
 
 | Field | Meaning |
 | --- | --- |
@@ -156,3 +156,171 @@ upload, enumeration, sync or cache requirement exists. Missing caches do not
 block canonical GitHub reads. Without required live evidence, qualify analysis
 and stop dependent actions. Static text/CLI tests prove no ChatGPT compliance,
 freshness, role enforcement, Source access or live-settings application.
+
+
+## Optional named Skill selection (binding schema 3)
+
+Opt in only under the consumer's own accepted authority. Schema 3 retains every
+schema-2 field and adds exactly one `skill_selection` object. Existing schema-2
+bindings and generated Instructions are unchanged. This selects **source routes**,
+not an installed ChatGPT Skill version. One shared transport Skill can be used
+across Projects while each Project keeps its own accepted consumer snapshot and
+root lock. Project-only native Skill version installation is unverified.
+
+For example, add the following object and change `schema` to `3` in an otherwise
+complete binding. This real source example identifies the Task 100 research
+baseline; it is not an instruction to adopt it in another consumer:
+
+```json
+"skill_selection": {
+  "accepted_sha": "1aabc1b1131d6d73285f84d8dc8a8dd3725135a4",
+  "authority_anchor": "https://github.com/jresearchsoftware/shared-governance/issues/100#issuecomment-6940639935",
+  "skills": [{
+    "name": "codex-relay",
+    "entry": "vibevm/vibedeps/org.jresearch.ai.codex-relay/5.0.0/skill/SKILL.md",
+    "shared": ["vibevm/vibedeps/org.jresearch.ai.development-governance/10.0.0/vibevm/vibespecs/boot/development-governance.md"]
+  }]
+}
+```
+
+Use the existing `check`/`update` commands. `--accepted-sha` still validates the
+maintenance effort's independently established source; `skill_selection.accepted_sha`
+is the separate, deliberately frozen consumer snapshot for the named sources.
+Both live in the supplied Git object store; neither is inferred from current HEAD,
+main, a generated file or a Plugin's version. Independently verify repository
+provenance and acceptance for both. The tool checks consistency, not authority.
+The selected snapshot must contain AGENTS, native INDEX/schema-7 lock and intact
+slot receipts. Each entry/shared route must be receipt-listed in a locked slot;
+the Skill name/entry must match that package's native `[[skill]]` declaration.
+`shared` identifies the explicitly selected shared entry routes, not duplicate
+policy or a new adoption list. Read their applicable complete protocols normally.
+This uses VibeVM's existing selection; it does not interpret requirements, resolve
+closure, install files or automatically select every declared Skill.
+
+The output identifies the consumer SHA, exact Skill/shared links and locked
+package versions/content hashes. Follow lock source refs and package provenance
+for upstream identities; local registry paths are transport metadata. The
+project's source acceptance/adoption remains independently owned. Selection is
+stable when maintenance HEAD advances: no containing-commit self-pin or recurring
+SHA-only update is needed. On an accepted product/shared upgrade, deliberately
+change this selection to the accepted consumer snapshot and matching routes,
+regenerate and review the complete diff. Rollback restores the previously
+accepted binding/custom/output through ordinary Git, preserving any stronger
+current authority and unresolved live application gap. Retain old Git objects.
+Unchanged inputs do not rewrite files or require reinstalling a common Skill.
+
+A changed opt-in block counts as effective Instructions text under the existing
+TH-029 application procedure above. If it exceeds the owner's budget, revise
+reviewable custom text/routing within authority; never clip or raise the 8000
+ceiling. No automatic opt-in or reduction of existing custom rules occurs.
+Separate binding directories can serve separate Projects, including Projects
+using different snapshots of one repository. The owner must reconcile each
+complete desired text with that specific live Project; a repository name alone
+does not authenticate which ChatGPT Project is active.
+
+## Native discovery and owner-controlled distribution
+
+Keep four states separate: accepted Git `SKILL.md` reading; VibeVM's native Codex
+`.agents/skills` projection; a Skill actually installed/discoverable in ChatGPT;
+and Project Instructions/optional Sources. None proves another. Missing, stale,
+unavailable or ambiguous native registration leaves accepted-Git/JIT reading
+usable. Disclose the discovery limitation and continue unrelated work; stop only
+operations lacking their required evidence, authority or capability. Do not turn
+installation into a mandatory per-chat preflight or poll each message.
+
+The simplest current path is this project-side binding plus JIT fallback. A
+**separately accepted product-owned transport export** can add optional native
+discovery later. It should only route to the acting Project's explicit selection,
+without embedded product/shared policy overriding that selection, dependency
+resolution, guessed local disk paths or a default project. Shared Governance
+supplies no Relay product Skill or Plugin in this package. Relay owns that export,
+its identity, license, compatibility, review and release; consumers own adoption.
+A wrapper around an incompatible payload does not make it portable.
+
+Documented alternatives, checked 2026-11-17; availability is not live proof:
+
+| Path | Scope, owner setup and permissions | Pinning, maintenance and cost |
+| --- | --- | --- |
+| Native Skill upload/shared Skill | Eligible workspace user uses the Skills page, subject to role controls and scanning; wider than a Project. Review access and installation scope first. | Keep accepted artifact/hash and attributable client identity. Exact archive/update/rollback behavior needs target-UI qualification. Lowest optional distribution overhead. |
+| Manual Skill-only Plugin / Plugin Creator | A Plugin can carry Skills without an app. Owner separately authorizes private creation/upload and installation in the intended personal/workspace scope. It is a distinct product object. | Root `plugin.json` plus `skills/<name>/SKILL.md` and resources; product publisher owns versioned wrapper and payload. More packaging work; no new service required. |
+| GitHub workspace marketplace | Workspace admin imports a catalog with GitHub read authorization; workspace policy controls availability. This is not Project-local registration. | Select an accepted immutable commit for deliberate promotion; a moving branch can sync future entries. Catalog/sync administration adds ongoing cost. |
+| VibeVM / standalone source | Consumer chooses reviewed package/lock and materialization; Codex projection remains local to Codex. | Trusted export input, not a ChatGPT installer. Native consumer-root routes need a qualified portable delivery; standalone bundled closure may differ. |
+| Platform API / local-folder client | Platform credentials and local client configuration belong to their separate owners. | No verified bridge to cloud Project installation. Do not create an API key, disk-path bridge or sync service for this bootstrap. |
+| No native registration | Owner maintains Project Instructions and optional Sources through the established procedure. | Exact accepted Git/locked JIT remains functional; no new install credentials or native version maintenance. |
+
+### Manual owner trial and readback
+
+This procedure is for a later explicitly authorized trial, not permission to run
+it. Check the intended account/workspace and client surface, allowed upload/use/
+share/install roles, existing same-name Skills/Plugins, and actual access scope.
+Preserve unknown installed objects and live Instructions. Obtain explicit consent
+for scope beyond one Project; common ownership does not prove account-wide or
+cross-workspace availability.
+
+1. Select the accepted **transport** artifact from its product owner. Record its
+   source commit/version, complete file list, provenance, archive hash, publisher
+   and intended access separately from each Project's Relay/shared selections.
+   Do not upload the native Codex projection as if its filesystem routes worked
+   in ChatGPT. Native Skill archive requirements must be confirmed in the target
+   uploader; a generic ZIP candidate alone is not importer qualification.
+2. If native upload is exposed, open Plugins → Skills → Create → Upload from your
+   computer, or install the explicitly selected shared Skill. Review scan results
+   and any Needs Review/Blocked disposition under workspace policy. Read back its
+   actual name, owner, access and Installed state. This is a workspace Skill flow,
+   not a project-only version selector. [Native Skill controls and upload](https://help.openai.com/en/articles/20001066-skills-in-chatgpt).
+3. Alternatively, if a reviewed Skill-only Plugin is chosen, use the supported
+   Plugin ZIP upload flow (workspace admin: Admin console → Plugins → Add → Upload
+   plugin), inspect its included Skills/apps, then complete installation where
+   prompted. No app is needed for instruction-only packaging; GitHub access still
+   needs its existing supported connection. Manual uploads expose Upload new
+   version to eligible editors; source-managed Plugins update from their source.
+   Do not create a second object to bypass policy. [Plugin operations](https://help.openai.com/en/articles/20001256-plugins-in-chatgpt).
+4. After accepted source integration, apply each Project's complete Instructions
+   under TH-029, preserving unknown rules, and obtain attributable live text
+   confirmation. In fresh chats in two opted-in Projects with different accepted
+   locks, select the same installed Skill/Plugin through the client's actual
+   selector when offered. Ask it to identify the acting Project, consumer commit,
+   selected Relay/shared entries and fetch a relevant complete read-only reference.
+   Inspect actual retrieval/tool evidence and exact paths; no lifecycle mutation
+   is needed. Then repeat without native selection to exercise JIT fallback.
+5. Keep attributable UI/owner readback, transport identity and any available
+   downloaded-file comparison with the trial evidence, date and target Projects.
+   Record what each client really exposes; an absent selector/version/file readback
+   is an explicit evidence gap. Model self-report, source hashes, an Installed row
+   alone or generation success cannot establish project isolation or actual use.
+   Do not claim existing-chat refresh from a fresh-chat test. [Plugin session guidance](https://learn.chatgpt.com/docs/plugins).
+
+For update/removal, use only controls offered to the authorized owner on that
+surface. Compare unchanged payloads before uploading; generation NO_OP is not
+live readback and does not justify a new native release. Preserve the known-good
+archive and previous Project selections. A retrieved historical release is not
+a restored installation; lower-version replacement, duplicate handling, native
+Skill uninstall/rollback and installed byte identity remain unqualified until
+observed. If replacement/removal cannot be safely qualified, retain or disable
+only the owner's identified object through supported controls, disclose the gap
+and use accepted-source fallback. Never delete unrelated Skills or rewrite a
+frozen release. Recheck the two-Project read-only behavior after a transport update;
+changing one Project's product selection should not require a transport update.
+
+For a deliberately chosen GitHub marketplace, the admin imports the repository
+and root path at an accepted commit, reviews per-entry results and workspace
+availability. The catalog belongs at `.agents/plugins/marketplace.json`; a local
+entry points to a Plugin directory, while cross-repository entries support exact
+SHAs. Sync now and daily synchronization are documented; invalid updates retain
+the last working copy. Removing a catalog entry can leave a workspace copy;
+deleting the marketplace deletes its imported Plugins. Inspect the actual result,
+not just a green sync summary. A pinned catalog commit must be deliberately
+promoted; do not assume a one-click rollback or project-level versions. [GitHub import lifecycle](https://learn.chatgpt.com/docs/enterprise/plugin-management).
+
+A portable Plugin uses root `plugin.json` with the Agent Plugins manifest schema,
+name and owner-selected release metadata, plus complete `skills/` contents;
+`.codex-plugin/plugin.json` is a documented compatibility layout. No MCP server,
+app, hook, marketplace or public submission is necessary just to package a Skill.
+Public directory publication is another explicit publisher-owned operation.
+[Portable packaging](https://developers.openai.com/plugins/build/plugins).
+[Workspace versus filesystem Skill ownership](https://learn.chatgpt.com/docs/enterprise/skills).
+[Separate Platform Skills API](https://developers.openai.com/api/docs/guides/tools-skills).
+
+This source change tests local selection/generation only. It establishes no
+ChatGPT eligibility, importer acceptance, native activation, refresh, rollback,
+installed bytes, runtime policy compliance or live settings synchronization.

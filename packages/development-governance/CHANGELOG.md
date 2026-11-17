@@ -1,5 +1,16 @@
 # Development Governance changelog
 
+## 10.1.0
+
+MINOR: adds optional ChatGPT binding schema 3 for explicitly named native Skill
+source routes at a separately frozen consumer Git snapshot. Output identifies
+selected Skill/shared lock versions and hashes without installing or claiming
+ChatGPT activation. Existing schema-2 inputs/output, protocols, adoption and
+fallback remain unchanged. An owner-controlled native trial and two-Project
+readback guide separates common transport identity from per-Project governance.
+Consumers opt in separately; changed effective text retains TH-029 reconciliation.
+Relay-owned transport content/export and live application remain external.
+
 ## 10.0.0
 
 MAJOR: [RA-007](vibevm/vibespecs/protocols/requirement-authority.md#RA-007)
