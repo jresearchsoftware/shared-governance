@@ -8,9 +8,13 @@ In an accepted checkout the committed native routes are ready for file reading.
 The root explicitly adopts six conditional topics plus producer self-adoption,
 including the full Independent Review protocol for relevant independent review;
 the compact package boot preserves their applicability. Small Improvements
-is explicitly adopted for suitable source-changing Task/Step/CR preparation,
-with owner notification and explicitly authorized inclusion; analysis-only work
-skips its scan unless another accepted local rule requires it. No startup execution,
+is explicitly adopted as standing same-repository delegation at suitable authorized
+source-changing Task/Step/CR or newly commencing PR opportunities. Automatically
+include all reasonably implementable bounded eligible candidates, regardless of
+topic, in the same combined change without per-candidate permission or advance
+notification. Preserve owner exclusions, admitted scopes and protected boundaries.
+Analysis-only work skips its scan unless another accepted local rule requires it;
+internal commits need no repeated scan and already approved PRs are undisturbed. No startup execution,
 installation or publication is required. Candidate source supplies no active policy.
 The reusable package grants no execution or publication authority.
 Tool experiments use the pinned VibeVM version and disposable local fixtures.

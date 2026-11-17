@@ -23,8 +23,9 @@ records version contracts, stable rule addresses and adoption implications.
 
 The separately opt-in [small-improvement topic](packages/development-governance/vibevm/vibespecs/protocols/small-improvements.md)
 and [usage guide](packages/development-governance/vibevm/vibespecs/guides/small-improvements.md)
-describe labeled Issue capture and authorized inclusion in future suitable
-source changes. Package updates do not activate this workflow; consumers own
+describe labeled Issue capture and standing automatic inclusion of bounded
+eligible corrections in the first suitable authorized source change, including
+corrections on unrelated topics. This producer adopts that delegation locally. Package updates do not activate this workflow; consumers own
 their separate adoption and deduplication.
 
 [Version tags](https://github.com/jrs-vibevm/org.jresearch.ai.development-governance/tags)

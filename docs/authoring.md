@@ -83,6 +83,14 @@ assessments; other consumers own their separate topic choices and migration.
 
 ## Semantic completeness
 
+Task 110 proposes **11.0.0 MAJOR** against independently accepted 10.0.0 at
+`1aabc1b1131d6d73285f84d8dc8a8dd3725135a4`. Explicit SI adoption now supplies
+standing opportunistic inclusion authority, replacing per-candidate opt-in and
+thematic matching with bounded same-repository eligibility. Its
+[coverage and scenarios](task-110/step-1/README.md) identify preserved protections,
+changed obligations, exclusions and qualification limits. This Step remains bound
+to accepted 10.0.0; #105 and #106 are not retrospectively included.
+
 Task 98 proposes 10.0.0 MAJOR against accepted 9.0.0. Its
 [coverage and scenario walks](task-98/step-1/README.md) describe the owner-requested
 project-context restriction, permitted contributions, client routing, compatibility
@@ -148,17 +156,25 @@ Task 69 adds 5.2.0 after accepted 5.1.0: a separately adopted
 [small-improvement topic](../packages/development-governance/vibevm/vibespecs/protocols/small-improvements.md)
 and usage guide. Existing nine protocols, including Task 68 closure guidance,
 retain exact accepted bytes. Task 69 did not adopt SI for the producer or Relay
-Skill. Task 107 now explicitly adopts the complete accepted materialized
-[Small Improvements protocol](../vibevm/vibedeps/org.jresearch.ai.development-governance/10.0.0/vibevm/vibespecs/protocols/small-improvements.md)
-for this producer through root AGENTS: suitable source-changing Task preparation,
-the first source-changing Step after analysis, or a relevant CR discovers open
-`small-improvement` Issues and proposes relevant bounded inclusion to the owner.
-Analysis-only work skips the SI scan unless another accepted local rule requires
-it. Receiving Task/CR authority must explicitly accept inclusion before execution;
-labels/search results neither expand scope nor dispatch or close Issues. Preserve
-provenance, receiving Task/PR links and SI-008 pending-work dispositions. Relay
-Skill and other consumers do not acquire SI adoption from this producer change.
-See the [Task 107 qualification](task-107/step-2/README.md).
+Skill. Task 107 adopted SI for this producer under the then-accepted per-candidate
+opt-in design; its [qualification](task-107/step-2/README.md) remains historical.
+Task 110 deliberately replaces that producer binding with standing delegation
+under the candidate 11.0.0 [Small Improvements protocol](../vibevm/vibedeps/org.jresearch.ai.development-governance/11.0.0/vibevm/vibespecs/protocols/small-improvements.md).
+At the first suitable authorized source-changing Task, first source-changing
+Step after analysis, relevant CR or newly commencing source-changing PR,
+scan open exact-label `small-improvement` Issues and automatically include all
+reasonably implementable bounded eligible corrections in the same change.
+Different topic or non-necessity to the main Task is no reason to exclude them;
+no per-candidate permission, scope amendment or advance notification is needed.
+Preserve owner exclusions, admitted scopes, protected actions and review clarity.
+Analysis-only work skips the scan unless another accepted local rule requires it;
+internal commits need no repeated remote scan and approved PRs are not disturbed
+merely to inject minor work. Preserve provenance, PR/Outcome source-Issue links,
+combined validation/independent exact-head review and SI-008 pending dispositions.
+Concrete deferrals remain labeled, open and discoverable. Source acceptance,
+publication, tracker disposition and consumer adoption remain separate; Relay's
+Skill and other consumers acquire no SI adoption from this producer change.
+See [Task 110 coverage and scenarios](task-110/step-1/README.md).
 [Step 3 reconciliation](task-69/step-3/README.md) records the bounded merge,
 version transition and native qualification; Step 2 evidence remains historical.
 

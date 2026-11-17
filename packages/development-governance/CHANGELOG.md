@@ -1,5 +1,28 @@
 # Development Governance changelog
 
+## 11.0.0
+
+MAJOR: SI-001–SI-008 replace per-candidate opt-in with standing opportunistic
+implementation delegation for projects that explicitly adopt Small Improvements.
+At the first suitable authorized source-changing Task/Step/CR or newly commencing
+PR opportunity, automatically include all reasonably implementable bounded safe
+same-repository candidates, even on unrelated topics. No separate Task, Step, PR,
+scope amendment, per-candidate permission or advance notification is required.
+This changes the binding execution/scope contract and mandatory inclusion work;
+it is not an editorial repair or a compatible optional addition.
+
+Preserve express owner exclusions/revocations, already-admitted scopes, protected
+and native trust boundaries, analysis-only exemption, proportionate scan timing,
+already approved PRs, combined validation and independent exact-head review.
+Concrete exceptions retain pending/partial/cancelled discovery and accepted
+integration/authorized tracker disposition. The guide and compact route follow
+this contract. RA-006 and Task Handoff retain authority and lifecycle ownership;
+the other nine protocols and ChatGPT tools retain their bytes and meaning.
+
+Producer-local adoption does not migrate other consumers or rewrite earlier
+admissions. Existing consumers require their own reviewed adoption and binding;
+package availability, source acceptance and publication are distinct.
+
 ## 10.0.0
 
 MAJOR: [RA-007](vibevm/vibespecs/protocols/requirement-authority.md#RA-007)
