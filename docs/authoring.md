@@ -5,7 +5,7 @@ The root virtual workspace has one stable member,
 a routine bump changes that value without moving the authoring tree. Frozen
 `0.1.0` remains at its historical path as retained source, outside membership.
 Historical exports discover the path from the selected commit's workspace.
-The current flow contains ten conditional protocols and optional manually invoked
+The current flow contains eleven conditional protocols and optional manually invoked
 ChatGPT maintenance files, with no boot hooks, native Skills, capability declarations
 or dependencies. Proportional-controls preserves its accepted
 baseline and adds the scoped Task 19 existing-proof and friction corrections;
@@ -82,6 +82,18 @@ Root AGENTS explicitly adopts full Independent Review for this producer's releva
 assessments; other consumers own their separate topic choices and migration.
 
 ## Semantic completeness
+
+Task 112 proposes **12.1.0 MINOR** against independently accepted 12.0.0 at
+`e7b3769cf06755c305f832fda8fc8e73edfe147f`. The new explicitly adopted Human
+Command Interaction topic owns generic human shell/admin action and copyback
+semantics; it does not extend PC-001 applicability or import governed Task/Step
+machinery. [Coverage and behavioral qualification](task-112/step-1/README.md)
+map the owner requirements, Bash/PowerShell runtime checks, staged protected
+workflow and consumer follow-up. All ten previous protocols and client tools
+retain their bytes and meaning. The producer's six topic adoptions remain;
+availability of the new topic does not adopt it here or for other consumers.
+Source acceptance, exact accepted publication and consumer adoption remain
+separate. Candidate instructions never govern this effort.
 
 Task 113 proposes **12.0.0 MAJOR** against independently accepted 11.0.0 at
 `f8d77b16ab9e92b31ae9a9390acabd9be9e962a7`. #105 adds an owner-authorized

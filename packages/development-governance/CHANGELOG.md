@@ -1,5 +1,22 @@
 # Development Governance changelog
 
+## 12.1.0
+
+MINOR: adds the separately adopted [Human Command Interaction topic](vibevm/vibespecs/protocols/human-command-interaction.md#HC-001)
+and [Bash/PowerShell examples](vibevm/vibespecs/guides/human-command-interaction.md).
+HC-002 owns one requested human action and one coherent return result, allowing
+many safe commands in one script/block while stopping at interpretation, choice,
+permission or safety boundaries. HC-003 owns shell-appropriate copyback,
+meaningful failures and exit/result status. It adds no fixed command count,
+operator tool, gate, state ledger or artificial Task/Step.
+
+This availability does not adopt the topic for existing consumers or change their
+mandatory behavior. PC-001/006/010, Task Handoff and all ten existing protocol
+semantics remain unchanged. Local canonical rules and stronger protections stay
+binding until separately reviewed consumer adoption reconciles duplicates.
+The dependency-free passive package includes both new files and the conditional
+boot route; Bash/PowerShell are example environments, not package prerequisites.
+
 ## 12.0.0
 
 MAJOR: [GH-014](vibevm/vibespecs/protocols/github-repository-governance.md#GH-014)

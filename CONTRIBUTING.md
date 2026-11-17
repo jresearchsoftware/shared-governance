@@ -19,6 +19,12 @@ python3 scripts/test-release.py
 python3 scripts/test-self-adoption.py
 ```
 
+For Human Command Interaction examples, run
+`python3 scripts/test-human-command-interaction.py`. It executes the actual guide
+blocks in local fixtures; use `--pwsh /path/to/pwsh` for PowerShell runtime proof
+when it is not on PATH. Without PowerShell, those checks report skips rather than
+claiming validation. This adds no PowerShell prerequisite for reading the package.
+
 The qualifier checks tracked bytes, local links, manifests, package passivity
 and protocol/export consistency, including committed native producer state.
 Stage intended new files before running it; commit the candidate before comparing

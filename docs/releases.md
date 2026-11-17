@@ -18,6 +18,22 @@ assessments. Other consumers retain their own adoption and local policy.
 
 ## Contribution and integration
 
+Task 112 prepares **12.1.0 MINOR** against accepted 12.0.0 at
+`e7b3769cf06755c305f832fda8fc8e73edfe147f`. Human Command Interaction is a new
+separately adopted topic, with bounded Bash/PowerShell examples and a conditional
+boot route. It adds no mandatory work for existing topic adopters and leaves all
+previous protocol contracts and adoption sets intact. This is compatible
+availability under PV-002–004, not a universal interaction gate or an expansion
+of Proportional Controls/Task Handoff. See [placement, coverage and qualification](task-112/step-1/README.md).
+Recompute the version against accepted main at integration. Independent exact-head
+acceptance, owner integration and exact accepted publication remain required;
+DocReview L12 reconciliation needs separately authorized consumer adoption.
+Step 2 also implements producer-local #106 in AGENTS and ChatGPT custom/generated
+Instructions. That policy changes no exported package bytes or other consumer rules,
+so the package remains 12.1.0 MINOR. The effective Instructions text changes and
+requires TH-029 owner application/readback after acceptance/integration; no live
+settings change or platform enforcement is claimed. See [Step 2 evidence](task-112/step-2/README.md).
+
 Task 113 prepares **12.0.0 MAJOR** against accepted 11.0.0 at
 `f8d77b16ab9e92b31ae9a9390acabd9be9e962a7`. The owner-authorized #105 correction
 requires explicit per-setting Yes/No owner choices at relevant optional GitHub

@@ -511,7 +511,8 @@ class DistributionTests(unittest.TestCase):
                                        "vibe.toml").read_text())["package"]["version"]
         self.assertEqual(receipt["version"], source_version)
         self.assertGreaterEqual(tuple(map(int, source_version.split("."))), (2, 5, 0))
-        expected = 10 if tuple(map(int, source_version.split("."))) >= (5, 2, 0) else 9
+        version = tuple(map(int, source_version.split(".")))
+        expected = 11 if version >= (12, 1, 0) else 10 if version >= (5, 2, 0) else 9
         self.assertEqual(sum(name.startswith("vibevm/vibespecs/protocols/") for name in files), expected)
         self.assertEqual(files[DISTRIBUTION.CONTEXT_LOADING],
                          (REPOSITORY / DISTRIBUTION.PACKAGE / DISTRIBUTION.CONTEXT_LOADING).read_bytes())
@@ -520,6 +521,28 @@ class DistributionTests(unittest.TestCase):
         metadata = tomllib.loads(files["vibe.toml"].decode())
         self.assertIs(metadata["package"]["frozen"], True)
         self.assertEqual(set(metadata), {"package", "boot_snippet"})
+
+    def test_human_command_addition_preserves_baseline_and_requires_complete_export(self):
+        files = self.current_export()
+        baseline, _ = DISTRIBUTION.snapshot("e7b3769cf06755c305f832fda8fc8e73edfe147f")
+        for name, content in baseline.items():
+            if name.startswith(("vibevm/vibespecs/protocols/", "tools/")) or name == "LICENSE":
+                with self.subTest(preserved=name):
+                    self.assertEqual(files[name], content)
+        for name in (DISTRIBUTION.HUMAN_COMMAND_INTERACTION, DISTRIBUTION.HUMAN_COMMAND_GUIDE):
+            for data in (None, b"", b"\xff", b"[Escape](../../../../README.md)\n"):
+                with self.subTest(path=name, corruption=data):
+                    changed = dict(files)
+                    if data is None:
+                        del changed[name]
+                    else:
+                        changed[name] = data
+                    with self.assertRaises(ValueError):
+                        DISTRIBUTION.validate_payload(changed, files["LICENSE"])
+        changed = dict(files)
+        changed["vibe.toml"] = changed["vibe.toml"].replace(b'"12.1.0"', b'"12.0.0"')
+        with self.assertRaises(ValueError):
+            DISTRIBUTION.validate_payload(changed, files["LICENSE"])
 
     def test_small_improvement_addition_preserves_existing_protocols_and_requires_complete_export(self):
         files = self.current_export()
@@ -654,6 +677,8 @@ class DistributionTests(unittest.TestCase):
                            DISTRIBUTION.ENGINEERING_METHODS}
         if tuple(map(int, receipt["version"].split("."))) >= (5, 2, 0):
             expected_guides.add(DISTRIBUTION.SMALL_IMPROVEMENTS_GUIDE)
+        if tuple(map(int, receipt["version"].split("."))) >= (12, 1, 0):
+            expected_guides.add(DISTRIBUTION.HUMAN_COMMAND_GUIDE)
         self.assertEqual({name for name in files if name.startswith("vibevm/vibespecs/guides/")},
                          expected_guides)
         destination = self.directory / "engineering-methods-export"

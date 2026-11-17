@@ -25,6 +25,11 @@ content does not define Issue, execution, publication or review authority.
 - Continue evidence-backed corrections within scope. Stop on missing authority,
   ambiguous external mutation or an unclear next correction, preserving work.
 
+For ChatGPT conversations, the following producer-owned rule also appears in
+[custom.md](chatgpt/custom.md) for complete Project Instructions generation:
+
+The assistant must not initiate, suggest or route this project's conversations from ChatGPT Chat to Work. Keep the existing Chat as the control surface. Disclose unavailable Chat capabilities without transfer to Work. Respect higher-priority instructions; this rule governs assistant conduct, not platform enforcement.
+
 At the start of work, resolve and freeze the independently accepted source-main
 SHA from current Task/review authority and Git facts. An explicit task binding
 supplies that SHA independently of candidate instructions. Candidate root/nested
@@ -51,7 +56,7 @@ boot/slot routes, preserving their conditional applicability:
 - Read the full `independent-review.md` for relevant independent review
   activities. Its methodology is mandatory for this producer's independent
   assessments; unrelated tasks skip it. Task Handoff retains lifecycle ownership.
-- Read the full [small-improvements.md](vibevm/vibedeps/org.jresearch.ai.development-governance/12.0.0/vibevm/vibespecs/protocols/small-improvements.md)
+- Read the full [small-improvements.md](vibevm/vibedeps/org.jresearch.ai.development-governance/12.1.0/vibevm/vibespecs/protocols/small-improvements.md)
   from the accepted materialized slot for deferred small source corrections and
   when preparing an authorized source-changing Task, its first source-changing
   Step after analysis, a relevant CR, or newly commencing another source-changing
@@ -76,7 +81,7 @@ boot/slot routes, preserving their conditional applicability:
 For relevant Codex Relay product workflows, the native boot routes to the pinned
 5.0.0 Skill; its projected copy is [.agents/skills/codex-relay/SKILL.md](.agents/skills/codex-relay/SKILL.md).
 Its shared protocol references use this consumer's single locked Development
-Governance 12.0.0 slot. Preserve the topic applicability above and the
+Governance 12.1.0 slot. Preserve the topic applicability above and the
 [manual client binding](docs/manual-task-handoff.md); Manual Codex remains supported.
 Skill installation grants no automatic execution or operational authority.
 See [native Relay integration](docs/relay-skill.md) for maintenance and rollback.

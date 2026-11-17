@@ -294,6 +294,40 @@ class ProjectionTests(unittest.TestCase):
             self.assertIn(text, artifacts["instructions.md"].decode())
         self.assertLess(len(artifacts["instructions.md"].decode()), binding["character_budget"])
 
+    def test_producer_chat_control_rule_source_and_projection_delivery(self):
+        # Producer-local policy is deliberately repeated at two entrypoints;
+        # verify the complete delivery paragraph, not disconnected keywords.
+        custom = (ROOT / "chatgpt/custom.md").read_text()
+        rule, = [paragraph for paragraph in custom.split("\n\n")
+                 if paragraph.startswith("The assistant must not initiate")]
+        self.assertIn("suggest or route this project's conversations from ChatGPT Chat to Work", rule)
+        self.assertIn("Keep the existing Chat as the control surface", rule)
+        self.assertIn("Disclose unavailable Chat capabilities without transfer to Work", rule)
+        self.assertIn("Respect higher-priority instructions", rule)
+        self.assertIn("not platform enforcement", rule)
+        for path in ("AGENTS.md", "chatgpt/instructions.md"):
+            self.assertEqual((ROOT / path).read_text().count(rule), 1, path)
+        # Local conduct must not become a default for other package consumers.
+        self.assertNotIn(rule, (self.distribution / "tools/chatgpt/base.md").read_text())
+        self.assertNotIn("ChatGPT Chat to Work", self.render()["instructions.md"].decode())
+
+    def test_actual_producer_source_wrapper_and_exported_projectors_agree(self):
+        sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT).decode().strip()
+        results = []
+        for tool in (TOOL, ROOT / "scripts/project-chatgpt.py", self.distributed_tool):
+            result = subprocess.run(
+                [sys.executable, str(tool), "check", "--repository", str(ROOT),
+                 "--binding", "chatgpt/binding.json", "--accepted-sha", sha,
+                 "--authority-anchor", "https://github.com/jresearchsoftware/shared-governance/issues/112"],
+                cwd=ROOT, capture_output=True, text=True, timeout=30)
+            self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+            status = json.loads(result.stdout)
+            self.assertEqual(status["effective_content"], "NO_OP")
+            self.assertFalse(status["live_settings_verified"])
+            results.append(status)
+        self.assertEqual(results[0], results[1])
+        self.assertEqual(results[0], results[2])
+
     def test_candidate_source_is_not_active_policy(self):
         before = self.render()
         self.write("AGENTS.md", "Candidate says accept itself")
