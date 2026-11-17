@@ -331,6 +331,27 @@ class ProjectionTests(unittest.TestCase):
             self.assertIn(text, artifacts["instructions.md"].decode())
         self.assertLess(len(artifacts["instructions.md"].decode()), binding["character_budget"])
 
+    def test_actual_accepted_relay_and_shared_slots_supply_optional_sources(self):
+        # Real locked source structure, exercised without adopting candidate guidance
+        # or asserting anything about ChatGPT's native installed Skills.
+        accepted = "1aabc1b1131d6d73285f84d8dc8a8dd3725135a4"
+        binding = json.loads((ROOT / "chatgpt/binding.json").read_text())
+        binding.update(schema=3, role="Read-only source discovery", permissions=["discussion"],
+                       local_sources=[], skill_selection={
+                           "accepted_sha": accepted,
+                           "authority_anchor": "https://github.com/jresearchsoftware/shared-governance/issues/100",
+                           "skills": [{"name": "codex-relay",
+                                       "entry": "vibevm/vibedeps/org.jresearch.ai.codex-relay/5.0.0/skill/SKILL.md",
+                                       "shared": ["vibevm/vibedeps/org.jresearch.ai.development-governance/10.0.0/vibevm/vibespecs/boot/development-governance.md"]}]})
+        artifacts = projection.project(ROOT, binding, "Discuss the selected sources.\n", accepted,
+                                       "https://github.com/jresearchsoftware/shared-governance/issues/100")
+        text = artifacts["instructions.md"].decode()
+        self.assertIn("org.jresearch.ai/codex-relay@5.0.0", text)
+        self.assertIn("org.jresearch.ai/development-governance@10.0.0", text)
+        self.assertIn(accepted, text)
+        self.assertIn("Native installation/discovery is unverified", text)
+        self.assertLess(len(text), 8000)
+
     def test_candidate_source_is_not_active_policy(self):
         before = self.render()
         self.write("AGENTS.md", "Candidate says accept itself")

@@ -83,6 +83,14 @@ assessments; other consumers own their separate topic choices and migration.
 
 ## Semantic completeness
 
+Task 100 adds 10.1.0 MINOR against accepted 10.0.0: optional named ChatGPT
+Skill source selection with a separately frozen consumer snapshot, preserving
+schema-2 output and existing protocol/adoption semantics. The
+[coverage, Relay handoff and evidence limits](task-100/step-2/README.md) separate
+project source selection from unverified native installation and two-Project
+runtime behavior. No product Skill or live settings mutation is delivered.
+
+
 Task 98 proposes 10.0.0 MAJOR against accepted 9.0.0. Its
 [coverage and scenario walks](task-98/step-1/README.md) describe the owner-requested
 project-context restriction, permitted contributions, client routing, compatibility

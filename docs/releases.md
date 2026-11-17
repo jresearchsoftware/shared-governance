@@ -18,6 +18,15 @@ assessments. Other consumers retain their own adoption and local policy.
 
 ## Contribution and integration
 
+Task 100 prepares **10.1.0 MINOR** against accepted 10.0.0. Optional ChatGPT
+binding schema 3 adds exact selected Skill/shared routes without changing
+schema-2 output, protocols, topic adoption or existing mandatory operator work.
+Only deliberate opt-in changes effective Instructions and invokes existing
+TH-029 reconciliation. Product transport release and native installation remain
+with their owners; [coverage and limits](task-100/step-2/README.md) bind the claim.
+Recompute the category/version against then-current accepted main before integration.
+
+
 Task 101 prepares **9.0.0 MAJOR** against accepted 8.0.0. Confirmed material
 defects left after workarounds, deferral or completion now require a discoverable
 disposition and accepted fixes delivered elsewhere require reconciliation against
