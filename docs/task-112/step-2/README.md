@@ -76,7 +76,32 @@ projection delivery, not actual ChatGPT adherence, UI prevention or installed
 settings. No originating-client research, live setting mutation or external
 operation is performed.
 
-Local validation results are recorded below after execution.
+Local checks passed:
+
+| Check | Result and scope |
+| --- | --- |
+| `test-chatgpt-projection.py` | 31 tests; includes root/custom/generated consistency, no injection into other consumers, and actual source/wrapper/exact-export CLI equality. |
+| `test-human-command-interaction.py --pwsh <contained-7.4.6>` | Nine tests pass on Linux with Bash and PowerShell 7.4.6; meaningful failures, partial output, scope, single reports and protected diagnostic fixtures. No real service mutation or Windows runtime proof. |
+| `test-distribution.py` | 53 tests pass. |
+| `test-self-adoption.py` | 20 tests pass; committed native source/slot/lock/routes remain consistent. |
+| `test-release.py` | 26 tests, six explicitly skipped optional one-time native resolver/publisher integration cases. No publisher invoked. |
+| `qualify.py --export-ref HEAD` | Exact-commit export, passive payload, local links, native projection and bounded credential-marker scan pass; the scan is not proof of absence of every secret. |
+| `package-release.py --source-ref HEAD --base e7b3769cf06755c305f832fda8fc8e73edfe147f` | PASS: sequential 12.0.0 → 12.1.0 MINOR; no remote tag availability claim. |
+| Projector `update`, then `check`, with frozen accepted SHA | CHANGED, then NO_OP; Sources DISABLED and live verification false. The new effective-text application obligation remains outstanding. |
+| `git diff --check` and admitted-frontier comparison | PASS; all package, registry, slot, lock, root manifest and Skill bytes unchanged from Step 1. |
+
+Export fixtures require destinations outside their inspected checkout. Validation
+therefore uses a Git-bundle verification checkout with a sibling `TMPDIR`, both
+contained under this execution's ignored `.vibe/verification/`. No global Git
+trust configuration or source permissions were changed. The contained PowerShell
+archive matches the Step 1 qualified official SHA-256; its paths were checked for
+containment before extraction. The extraction helper initially requested a
+`tarfile` argument unavailable in this Python 3.11 build; bounded native extraction
+resolved that local setup error and all nine behavior tests then passed.
+
+A read-only implementation helper checked instruction ownership, delivery paths
+and compression coverage; its precision suggestions were integrated. This is
+contributor evidence, not independent exact-head governance acceptance.
 
 ## Remaining trusted boundaries
 
