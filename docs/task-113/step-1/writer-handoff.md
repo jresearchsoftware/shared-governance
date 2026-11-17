@@ -26,8 +26,8 @@ Proposed English PR description:
 > not established. No Project-level enforcement control is established. Source
 > instructions cannot override platform routing. The owner must retain and
 > investigate the absolute requirement or explicitly select the narrower fallback;
-> review/report acceptance does not imply that choice. Desired and live Project
-> Instructions are unchanged/unmodified.
+> review/report acceptance does not imply that choice. Desired Project Instructions
+> text is unchanged; live settings were neither modified nor verified.
 >
 > Source/export, standard candidate suites, native mixed-graph 11-to-12 generation,
 > pinned VibeVM validation/materialization, whole-package transition, publication
