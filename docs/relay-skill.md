@@ -13,8 +13,8 @@ Relay Skill 5.0.0 at immutable distribution commit
 `5fc55231ffc2fee2d7dd4c399e85ef1d3b091bd9` (`v5.0.0`), with package content hash
 `sha256:d78711a85f07e3d09eb95d9660e1c0ca4fc4efc0dece0dadfb4f2265340c0973`.
 After later accepted package updates, the current root selects the exact
-producer-owned Shared Governance 10.0.0 requirement and its authored payload. The public package's nested Shared closure is inert;
-active protocol references use the unique root-selected Shared 10.0.0 slot.
+producer-owned Shared Governance 11.0.0 requirement and its authored payload. The public package's nested Shared closure is inert;
+active protocol references use the unique root-selected Shared 11.0.0 slot.
 
 The hash-checked pinned Linux musl VibeVM 1.0.11 resolves the mixed graph in
 disposable staging with isolated registry settings. Its supported native Skill
@@ -55,7 +55,8 @@ All nine triggered Relay protocol references resolve inside the same 7.0.0 slot.
 The producer's current six project-wide topic adoptions and separate conditional
 self-adoption are owned by root AGENTS. Relay's additional topics apply only to
 relevant Relay product work. Manual Codex retains the [local Task binding](manual-task-handoff.md).
-Task 107 explicitly adopts SI for this producer through root AGENTS. The Relay
+Task 107 adopted SI for this producer; Task 110 proposes its standing-delegation
+binding through root AGENTS for future work after acceptance. The Relay
 Skill does not adopt SI; producer adoption does not activate it for Relay product
 guidance or other consumers. The earlier graph update itself adopted no topic.
 

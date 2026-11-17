@@ -6,7 +6,8 @@ The stable authoring root remains `packages/development-governance`; generated
 registry source, slots, lock, root/member indexes and agent routes are committed
 with authored changes in the same reviewed PR. Six conditional topic adoptions
 include full Independent Review for relevant independent assessments and Small
-Improvements for suitable source-changing Task/Step/CR preparation; producer
+Improvements as standing same-repository delegation at suitable authorized
+source-changing Task/Step/CR or newly commencing PR opportunities; producer
 self-adoption is also explicitly adopted here.
 Other consumers retain their own policies and adoption decisions.
 

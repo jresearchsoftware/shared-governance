@@ -18,6 +18,18 @@ assessments. Other consumers retain their own adoption and local policy.
 
 ## Contribution and integration
 
+Task 110 prepares **11.0.0 MAJOR** against accepted 10.0.0. SI adoption changes
+from proposing each candidate for explicit receiving-scope approval to standing
+authorization and expected automatic inclusion of all reasonably implementable
+bounded eligible corrections at the first suitable source change. Different topics
+are eligible; concrete safety/authority/qualification limits still apply. This
+changes binding execution/scope authority and mandatory operator work under
+PV-002–004. Earlier Task 69/107 authority and admitted work remain historical.
+See [coverage and scenarios](task-110/step-1/README.md). Public package dependency
+closure stays empty; root Relay 5.0.0 and Landscape 1.0.3/1.0.2 remain frozen.
+Independent exact-head acceptance, owner integration, exact accepted publication
+and any genuinely changed effective Instructions reconciliation remain separate.
+
 Task 101 prepares **9.0.0 MAJOR** against accepted 8.0.0. Confirmed material
 defects left after workarounds, deferral or completion now require a discoverable
 disposition and accepted fixes delivered elsewhere require reconciliation against

@@ -52,7 +52,7 @@ approval/wait stage or topic adoption; see the 3.0.0 → 4.0.0 changelog entry.
 | [Independent review — IR](vibevm/vibespecs/protocols/independent-review.md) | Explicitly adopted assessment methodology, evidence, complete affected behavior, findings and rereview. |
 | [Contract and decision maintenance — CD](vibevm/vibespecs/protocols/contract-and-decision-maintenance.md) | Explicitly adopted material contract changes, durable decisions and same-change human guidance. |
 | [Context loading — CL](vibevm/vibespecs/protocols/context-loading.md) | Explicitly adopted decision-relevant startup, triggered complete detail and targeted mutable refresh. |
-| [Small improvements — SI](vibevm/vibespecs/protocols/small-improvements.md) | Separately adopted owning-repository Issue capture, labeled discovery and authorized inclusion in a future suitable source change. |
+| [Small improvements — SI](vibevm/vibespecs/protocols/small-improvements.md) | Separately adopted owning-repository Issue capture, labeled discovery and standing automatic inclusion at the first suitable authorized source change. |
 
 Installing/updating the package and following a cross-topic reference do not
 adopt a topic. Each consumer owns accepted human instructions, local authority,
@@ -63,13 +63,18 @@ Task Handoff requires independent assessment under project rules; consumers
 select Independent Review separately for its shared methodology. That method
 adds no universal owner-wait or publication permission rule.
 
-Version 5.2.0 adds the separately opt-in SI topic and its
+Small Improvements is a separately adopted topic with a
 [usage/migration guide](vibevm/vibespecs/guides/small-improvements.md).
-Adopters use the exact `small-improvement` label, notify the owner with candidate
-IDs while preparing suitable source-changing work, and obtain receiving scope
-authority before combined implementation/review. Unfinished Issues remain open
-and traceable. Existing topic adopters acquire no additional scan or workflow;
-CD/TH/RA keep their semantic ownership. This compatible addition is MINOR.
+In 11.0.0, explicit project adoption supplies standing authorization to include
+all reasonably implementable bounded eligible exact-label `small-improvement`
+Issues at the first suitable authorized source-changing opportunity, including
+unrelated topics. No per-candidate permission or advance notification is needed.
+Keep express owner exclusions, admitted scopes, protected actions, normal combined
+validation and independent exact-head review. Unfinished Issues remain labeled,
+open and traceable; selection does not authorize status changes or closure.
+This is a MAJOR change from the former per-candidate opt-in contract. Existing
+consumers need their own accepted adoption; installation/update alone does not
+activate the topic or override local canonical rules. CD/TH/RA retain their owners.
 
 For adopted Task Handoff, [TH-028](vibevm/vibespecs/protocols/task-handoff.md#TH-028)
 adds executor-owned Draft/Ready handoff for applicable implementation PRs: Draft
