@@ -1,5 +1,10 @@
 # Task 113 Step 1: Chat-to-Work control evidence
 
+Historical Step 1 report. The owner subsequently selected Option A and rejected
+B. See [Step 2 verification](../step-2/chat-work-verification.md) for the current
+Decision, evidence limits and continuation request; the A/B request below is
+retained as history, not a pending choice.
+
 Evidence checked on **2026-11-17 UTC**. Related to [Task #113](https://github.com/jresearchsoftware/shared-governance/issues/113) and [source Issue #106](https://github.com/jresearchsoftware/shared-governance/issues/106). This is a bounded research result and proposed owner decision, not an implementation, independent acceptance, live-settings readback or authorization to transfer a conversation.
 
 The independently accepted source baseline remains `f8d77b16ab9e92b31ae9a9390acabd9be9e962a7`. Accepted root AGENTS/native boot, Requirement Authority, Proportional Controls, Task Handoff (including TH-029), the manual binding and authoring/contribution guidance were read from that commit. The installed `openai-docs` skill directed inspection of current official product guides and the changelog. No candidate instruction was treated as accepted authority.

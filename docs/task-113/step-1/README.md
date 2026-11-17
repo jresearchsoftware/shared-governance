@@ -1,5 +1,9 @@
 # Task 113 — Step 1 — Resolve remaining Small Improvements #105 and #106
 
+Historical Step 1 result. The owner subsequently selected Option A for #106;
+the [Step 2 result](../step-2/README.md) records current verification and handoff.
+Pending A/B requests below describe the earlier boundary, not current authority.
+
 ## Authority and result boundary
 
 [Task 113](https://github.com/jresearchsoftware/shared-governance/issues/113)

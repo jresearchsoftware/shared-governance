@@ -1,5 +1,10 @@
 # Task 113 Step 1 — Writer and owner handoff
 
+Historical Step 1 draft, retained with its original proposed publication path.
+The actual Step 1 Outcome remains where it was published. Option A is now
+selected and B rejected; use the [Step 2 handoff](../step-2/README.md) for the
+current existing-PR continuation, without relocating or replaying that Outcome.
+
 Proposed PR title: **Require explicit optional GitHub setting choices in 12.0.0**
 
 Proposed English PR description:
