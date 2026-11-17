@@ -51,7 +51,7 @@ boot/slot routes, preserving their conditional applicability:
 - Read the full `independent-review.md` for relevant independent review
   activities. Its methodology is mandatory for this producer's independent
   assessments; unrelated tasks skip it. Task Handoff retains lifecycle ownership.
-- Read the full [small-improvements.md](vibevm/vibedeps/org.jresearch.ai.development-governance/10.0.0/vibevm/vibespecs/protocols/small-improvements.md)
+- Read the full [small-improvements.md](vibevm/vibedeps/org.jresearch.ai.development-governance/10.1.0/vibevm/vibespecs/protocols/small-improvements.md)
   from the accepted materialized slot for deferred small source corrections and
   when preparing a suitable source-changing Task, its first source-changing Step
   after analysis, or a relevant CR. Inspect

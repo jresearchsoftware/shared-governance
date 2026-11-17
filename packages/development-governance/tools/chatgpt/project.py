@@ -129,7 +129,10 @@ def ordinary(root, path):
 def validate_binding(binding):
     fields = {"schema", "repository", "navigation_ref", "mode", "role", "permissions",
               "native", "local_sources", "character_budget", "cache_selection", "cache_enabled"}
-    require(set(binding) == fields and binding["schema"] == 2, "Unsupported binding schema/fields")
+    schema = binding.get("schema")
+    require(type(schema) is int and schema in (2, 3), "Unsupported binding schema/fields")
+    require(set(binding) == fields | ({"skill_selection"} if schema == 3 else set()),
+            "Unsupported binding schema/fields")
     require(re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", binding["repository"]),
             "Invalid repository identity")
     require(re.fullmatch(r"[A-Za-z0-9_.-]+", binding["navigation_ref"]), "Invalid navigation ref")
@@ -149,6 +152,98 @@ def validate_binding(binding):
         for path in binding[field]:
             safe_path(path)
     require(not binding["cache_enabled"] or binding["cache_selection"], "Cache needs explicit selection")
+    if schema == 3:
+        require(binding["native"] == "materialized", "Skill selection needs materialized native sources")
+        selection = binding["skill_selection"]
+        require(isinstance(selection, dict)
+                and set(selection) == {"accepted_sha", "authority_anchor", "skills"},
+                "Invalid Skill selection fields")
+        require(isinstance(selection["accepted_sha"], str)
+                and re.fullmatch(r"[0-9a-f]{40}", selection["accepted_sha"]),
+                "Skill selection needs an exact accepted SHA")
+        require(isinstance(selection["authority_anchor"], str)
+                and selection["authority_anchor"].startswith(
+                    "https://github.com/" + binding["repository"] + "/"),
+                "Skill selection authority must belong to the bound project")
+        skills = selection["skills"]
+        require(isinstance(skills, list) and skills, "Select named Skills explicitly")
+        names = set()
+        for skill in skills:
+            require(isinstance(skill, dict) and set(skill) == {"name", "entry", "shared"},
+                    "Invalid named Skill fields")
+            name = skill["name"]
+            require(isinstance(name, str) and re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", name)
+                    and name not in names, "Invalid or duplicate Skill name")
+            names.add(name)
+            safe_path(skill["entry"])
+            require(skill["entry"].endswith("/SKILL.md"), "Select a Skill entry file")
+            shared = skill["shared"]
+            require(isinstance(shared, list) and shared and all(isinstance(p, str) for p in shared)
+                    and len(shared) == len(set(shared)), "Select unique shared source routes")
+            for path in shared:
+                safe_path(path)
+
+
+def skill_selection_text(source_repository, binding):
+    """Identify explicitly selected committed routes; never install or resolve a Skill."""
+    if binding["schema"] == 2:
+        return ""
+    selection = binding["skill_selection"]
+    source = Snapshot(source_repository, selection["accepted_sha"])
+    source.read("AGENTS.md")
+    native_inventory(source)
+    lock = tomllib.loads(source.read("vibe.lock").decode())
+    slots = {}
+    for package in lock.get("package", []):
+        prefix = ("vibevm/vibedeps/" + package["group"] + "." + package["name"]
+                  + "/" + package["version"] + "/")
+        receipt = tomllib.loads(source.read(prefix + ".vibe-slot.toml").decode())
+        slots[prefix] = (package, {prefix + item["path"] for item in receipt.get("file", [])})
+
+    base = f'https://github.com/{binding["repository"]}/blob/{source.revision}/'
+
+    def route(path):
+        found = [(prefix, package) for prefix, (package, files) in slots.items() if path in files]
+        require(len(found) == 1, "Skill/shared route must be declared by one selected native slot: " + path)
+        prefix, package = found[0]
+        identity = package["group"] + "/" + package["name"] + "@" + package["version"]
+        return prefix, f'[{identity}]({base}{path}) ({package["content_hash"]})'
+
+    parts = ["\n\n## Optional named Skill sources\n\n",
+             f'Project selection: [{source.revision}]({base}vibe.lock); '
+             f'[owner acceptance evidence]({selection["authority_anchor"]}). '
+             f'Read [selected AGENTS]({base}AGENTS.md) and its applicable routes at this revision. '
+             'This is a consumer source pin, not a ChatGPT installation or project-scoped installed version.\n']
+    for skill in selection["skills"]:
+        prefix, entry = route(skill["entry"])
+        route(prefix + "vibe.toml")
+        manifest = tomllib.loads(source.read(prefix + "vibe.toml").decode())
+        package = slots[prefix][0]
+        require(all(manifest.get("package", {}).get(key) == package[key]
+                    for key in ("group", "name", "version")),
+                "Skill manifest differs from its selected lock identity")
+        declarations = manifest.get("skill", [])
+        require(sum(item.get("name") == skill["name"]
+                    and prefix + safe_path(item["path"]) + "/SKILL.md" == skill["entry"]
+                    for item in declarations) == 1,
+                "Skill name/entry must match its native package declaration")
+        parts.append(f'\n- `{skill["name"]}`: {entry}. Shared routes: '
+                     + "; ".join(route(path)[1] for path in skill["shared"]) + ".\n")
+    parts.append(
+        '\nRead the complete selected Skill and relevant shared detail just in time via accepted Git; '
+        'resolve relative references inside this consumer snapshot and its root lock. '
+        'A common installed transport Skill may discover these routes, never replace them with its '
+        'bundled policy, another Project, publisher lock or moving latest. It must not resolve dependencies. '
+        'Git SKILL.md reading, VibeVM Codex projection, ChatGPT native installation and Project '
+        'Instructions/Sources are separate states. Native installation/discovery is unverified here. '
+        'If missing, unavailable, stale or ambiguous, disclose that and use these accepted-source JIT '
+        'routes; continue unrelated work. Withhold only actions missing necessary authority/evidence '
+        'or capability. No upload, installation or settings permission is granted. '
+        'Verify an actual installation/use only through attributable client readback and a bounded '
+        'read-only trial in the intended Project; a link, ZIP, generated text or model claim alone '
+        'proves no activation. Refresh deliberately on accepted selection changes, not each message. '
+        'If this selection conflicts with current authority, reconcile it without silently repinning.\n')
+    return "".join(parts)
 
 
 def project(source_repository, binding, custom, accepted_sha, authority_anchor):
@@ -178,6 +273,7 @@ def project(source_repository, binding, custom, accepted_sha, authority_anchor):
              f'Capabilities, only where separately authorized: {", ".join(binding["permissions"])}.\n'
              'Additional local/product entry paths (read at the independently frozen accepted revision): '
              + (", ".join('`' + path + '`' for path in binding["local_sources"]) or "AGENTS discovery") + ".")
+    block += skill_selection_text(source_repository, binding)
     require(custom.strip(), "Custom Markdown must not be empty")
     text = MARKER + template.replace("{{BINDING}}", block).replace("{{CUSTOM}}", custom.rstrip())
     require("{{" not in text and "}}" not in text, "Unresolved template markers")
