@@ -13,6 +13,7 @@ The admitted starting head and independently accepted source baseline are
 protocols are frozen there for this effort. Candidate instructions and generated
 12.1.0 files are proposals. The supplied launch is Task 112, Step 1; no Step
 history was reconstructed and no external execution or publication was launched.
+Live PR #114 readback confirmed merged status and that exact merge commit.
 
 The bounded semantic baseline is the admitted owner charter's five intended
 behaviors and scope/completion requirements, plus accepted PC-001/006/010,
@@ -116,7 +117,36 @@ execution and actual service/admin behavior are unavailable here and are not
 claimed. The native-executable adaptation fixture proves explicit status handling
 on Linux, not every PowerShell version's standard-error behavior.
 
-Final package/native/regression check results are recorded below after execution.
+Checks completed locally:
+
+| Check | Result and limits |
+| --- | --- |
+| `test-human-command-interaction.py --pwsh <contained-7.4.6-executable>` | PASS: 9 tests; Bash 5.2.15 and PowerShell 7.4.6 on Linux. Extracts the actual guide blocks; native partial output and nonzero exit retained; no real service operations. |
+| `qualify.py --export-ref HEAD` | PASS: exact-commit 24-file public export, source/registry/slot/lock/boot consistency, local links and bounded credential-marker scan. This scan cannot prove absence of all secrets. |
+| `test-distribution.py` | PASS: 53 tests. Includes new HC missing/empty/invalid/escaping export rejection, old-version reuse rejection and complete preservation of the ten previous protocols/tools. Two old inventory assertions initially failed at 10 protocols/four guides; updated to eleven/five, then rerun successfully. |
+| `test-release.py` | PASS: 26 tests, including 6 explicit skips for optional one-time native publisher/resolver integration; no public publisher was invoked. |
+| `test-self-adoption.py` | PASS: 20 tests, including HC source/export/slot equality and missing-file rejection. |
+| `test-chatgpt-projection.py` | PASS: 29 tests; existing producer output remains consistent. |
+| Pinned VibeVM 1.0.11 mixed-graph generation | PASS in contained staging. Only Shared selection advances to 12.1.0; Relay/Landscape versions, sources and hashes stay unchanged. Retained historical slots are transferred intact rather than accepting the materializer's pruning. |
+| `qualify-vibevm.py --vibe <pinned-binary> --materialize` | PASS: seven native commands including disposable dependency installation. No native errors; 21 known retained-slot orphan warnings describe historical slots intentionally outside the selected lock, not active duplicate dependencies. |
+| `package-release.py --source-ref HEAD --base e7b3769cf06755c305f832fda8fc8e73edfe147f` | PASS: exact sequential 12.0.0 → 12.1.0 MINOR. Public tag availability/reservation is not claimed; Writer/integration rechecks current main and publication state. |
+| ChatGPT projector `check` at the accepted baseline | NO_OP effective Instructions; Sources DISABLED; live verification false. Candidate content comparison also remains NO_OP; no text or live-setting change claimed. |
+| Baseline byte comparison and `git diff --check` | PASS: all ten prior protocols, client tools, frozen slots/registry sources, `.agents` projection and ChatGPT source files preserved. Only new candidate-version source/slot and intended local documentation/tooling/routes change. |
+
+The package exporter requires its disposable destination outside the source
+checkout being inspected. Checks therefore used a contained Git-bundle verification
+checkout with a sibling temporary directory; both stay within this execution's
+workspace. Direct clone encountered Git's ownership check; bundle import avoided
+changing global trust configuration. Native files were generated in staging, then
+selected bytes copied back. Existing file timestamps could not be copied because
+of ownership; content-only transfer preserved existing permissions, and full
+canonical validation passed afterward. No permission widening or privilege
+escalation occurred. The initial distribution attempt's temporary-directory
+variable resolved below its verification cwd and fell back to the system temporary
+directory; its disposable fixtures cleaned up normally. The successful rerun used
+the explicit contained absolute TMPDIR. No host service, credential or external
+state was involved.
+
 Independent exact-head review, owner integration and successful publication of
 the exact accepted version remain trusted continuation work. DocReview's local
 L12 wording belongs to a separate, independently reviewed consumer adoption after
