@@ -597,7 +597,8 @@ class ProjectionTests(unittest.TestCase):
     def test_selected_skill_is_explicit_committed_and_independent_of_maintenance_head(self):
         selected = self.selection_snapshot()
         self.select(selected)
-        self.maintain(True)
+        result = self.cli("update")
+        self.assertEqual(result.returncode, 0, result.stderr)
         before = self.tree()
         instructions = before["instructions.md"].decode()
         skill = selected["skills"][0]
@@ -680,6 +681,27 @@ class ProjectionTests(unittest.TestCase):
             self.assertNotIn(other["accepted_sha"], text)
             self.assertNotIn(other["skills"][0]["entry"], text)
             self.assertNotIn(other["skills"][0]["shared"][0], text)
+
+    def test_two_projects_of_one_repository_keep_separate_selection_directories(self):
+        first = self.selection_snapshot()
+        self.select(first)
+        self.maintain(True)
+        first_output = self.tree()
+        second = self.selection_snapshot("6.0.0", "11.0.0")
+        second_directory = self.repo / "other-project"
+        second_directory.mkdir()
+        other_binding = json.loads(json.dumps(self.binding))
+        other_binding["skill_selection"] = second
+        other_path = second_directory / "binding.json"
+        other_path.write_text(json.dumps(other_binding))
+        (second_directory / "custom.md").write_text("Discuss the second Project's selected sources.\n")
+        result = self.cli("update", extra=("--binding", "other-project/binding.json"))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        other_output = (second_directory / "instructions.md").read_text()
+        self.assertIn(second["accepted_sha"], other_output)
+        self.assertNotIn(first["accepted_sha"], other_output)
+        self.assertEqual(self.tree(), first_output)
+        self.assertEqual(self.cli().returncode, 0)
 
     def test_invalid_skill_selections_refuse_check_and_update_without_partial_writes(self):
         selection = self.selection_snapshot()

@@ -150,8 +150,43 @@ Issues; this Task adds no discretionary Work handoff or client routing control.
 
 ## Local validation
 
-Validation results are recorded below after exact-candidate qualification. Source,
-export and fixture checks prove selection mechanics, not model compliance or UI
-activation. The pre-existing untracked `.codex-sandbox/` is launcher-owned; task
-fixtures/downloads stay in its isolated Task 100 subdirectory and are removed
-when no longer needed. No GitHub credentials or mutation are used for handoff.
+Checks completed locally against the committed package candidate and contained
+clean Git clone:
+
+| Check | Result |
+| --- | --- |
+| `scripts/qualify.py --export-ref HEAD` | PASS: exact passive export/native projection, local links and bounded credential markers. |
+| `scripts/test-chatgpt-projection.py` | 37 PASS, including eight added source-selection tests: different repositories and separate Project directories for one repository, real accepted Relay/shared slots, exported CLI, explicit selection, unchanged schema 2, no implicit Skill, dirty-source isolation, no-op mtime, upgrade/rollback and invalid selected state without partial writes. |
+| `scripts/test-distribution.py` | 52 PASS. |
+| `scripts/test-self-adoption.py` | 19 PASS. |
+| `scripts/test-release.py` | 20 PASS; six optional one-time native publisher/resolver cases skipped by the ordinary suite. |
+| `scripts/test-publication.py` | 11 PASS; one optional native publisher case skipped. |
+| `scripts/test-publication-dispatch.py` | 7 PASS. |
+| `scripts/package-release.py` against the frozen baseline | PASS: 10.0.0 → 10.1.0 MINOR. |
+| Producer `project-chatgpt.py check` against the frozen accepted baseline | PASS: Instructions NO_OP, Sources DISABLED, live settings unverified. |
+| `git diff --check` | PASS. |
+
+Pinned VibeVM 1.0.11 was downloaded into the contained task fixture, matched the
+recorded SHA-256, and generated 10.1.0 source/slot/lock/routes in isolated staging.
+Its native install returned success; Relay 5.0.0 and both Landscape pins stayed
+unchanged. Only known current generation outputs were transferred; historical
+slots stayed intact. This is local materialization evidence, not ChatGPT activation
+or a root/sudo installed-service proof. Native exact-head CI remains separate.
+
+The launcher's temporary directory lies inside the authoring checkout, while the
+existing exporter intentionally requires a destination outside its authoring root.
+An isolated clean clone from a local Git bundle let unchanged tests use a sibling
+temporary directory entirely inside this execution's contained workspace. The
+initial direct export test refusal exercised that existing path boundary; no source
+or host-permission relaxation was needed. A credential-free isolated local clone
+attempt also hit Git ownership checking; archive/bundle staging avoided reliance
+on that clone path without changing ownership or global Git configuration.
+
+Source/export/fixture checks prove selection mechanics, not model compliance or UI
+activation. Protocols, base and producer desired Instructions are unchanged against
+the accepted baseline. Existing unknown live settings gaps remain unresolved.
+The pre-existing untracked `.codex-sandbox/` is launcher-owned; only this effort's
+identified isolated fixtures/downloads are removed after checks. No GitHub
+credentials or mutation are used for handoff. Useful changes are committed on the
+admitted Task branch for trusted Writer; publication and independent acceptance
+remain separate.
