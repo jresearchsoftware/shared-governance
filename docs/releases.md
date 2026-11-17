@@ -18,6 +18,22 @@ assessments. Other consumers retain their own adoption and local policy.
 
 ## Contribution and integration
 
+Task 113 prepares **12.0.0 MAJOR** against accepted 11.0.0 at
+`f8d77b16ab9e92b31ae9a9390acabd9be9e962a7`. The owner-authorized #105 correction
+requires explicit per-setting Yes/No owner choices at relevant optional GitHub
+onboarding/bootstrap settings, even when observed values already match a
+recommendation. That new mandatory operator work determines the whole-package
+classification under PV-002–004. GH-014 is the normative owner; onboarding
+examples and routes follow it. For #106, the owner selected absolute non-transfer
+(Option A) and rejected the narrower fallback. The [Step 2 verification](task-113/step-2/README.md)
+retains that requirement with a specific originating-client evidence request;
+no effective platform control is proved. See also [source coverage and qualification](task-113/step-1/README.md).
+Frozen artifacts and producer-only Relay/Landscape dependencies stay unchanged.
+Independent exact-head acceptance, owner integration, exact accepted publication,
+and any actually changed effective Instructions reconciliation remain separate.
+The Task and source Issues use non-closing references until their own criteria
+are verified through the trusted owner path.
+
 Task 110 prepares **11.0.0 MAJOR** against accepted 10.0.0. SI adoption changes
 from proposing each candidate for explicit receiving-scope approval to standing
 authorization and expected automatic inclusion of all reasonably implementable

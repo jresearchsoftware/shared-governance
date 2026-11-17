@@ -90,13 +90,20 @@ class DistributionTests(unittest.TestCase):
         # separately instead of asserting the old annotation-only transition.
         unchanged = set(protocols) - {DISTRIBUTION.HANDOFF, DISTRIBUTION.INDEPENDENT_REVIEW,
                                       DISTRIBUTION.VERSIONING, DISTRIBUTION.PROTOCOL, DISTRIBUTION.AUTHORITY,
-                                      "vibevm/vibespecs/protocols/context-loading.md"}
+                                      "vibevm/vibespecs/protocols/context-loading.md",
+                                      DISTRIBUTION.REPOSITORY_GOVERNANCE}
         # Task 62 removes the ChatGPT receipt reference from the current guide;
         # retain the annotation-only historical guide comparison at accepted 3.0.0.
         annotated, _ = DISTRIBUTION.snapshot("e654d9e20a7c42c50cc05786dc83a4f7a16f84e4")
         stripped = re.sub(rb'\n<a id="[A-Z]+-[0-9]{3}"></a>\n\*\*[^\n]+\*\*\n\n', b"\n",
                           annotated[DISTRIBUTION.ONBOARDING])
         self.assertEqual(stripped, historical[DISTRIBUTION.ONBOARDING])
+        # Task 113 intentionally extends GH with mandatory optional-setting
+        # choices. Preserve this historical annotation-only assertion at its
+        # accepted annotated revision instead of freezing current GH forever.
+        stripped_gh = re.sub(rb'\n<a id="[A-Z]+-[0-9]{3}"></a>\n\*\*[^\n]+\*\*\n\n', b"\n",
+                             annotated[DISTRIBUTION.REPOSITORY_GOVERNANCE])
+        self.assertEqual(stripped_gh, historical[DISTRIBUTION.REPOSITORY_GOVERNANCE])
         unchanged.add(DISTRIBUTION.ENGINEERING_METHODS)
         for name in unchanged:
             with self.subTest(meaning=name):

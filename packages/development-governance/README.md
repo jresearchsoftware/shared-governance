@@ -12,6 +12,18 @@ the package payload. This README is the current overview; actual acceptance and
 publication evidence remains in source Issues/PRs, workflows and distribution
 tags. Frozen historical versions retain their original bytes.
 
+Version 12.0.0 adds the mandatory optional-setting owner decision step in
+[GH-014](vibevm/vibespecs/protocols/github-repository-governance.md#GH-014).
+New/existing-repository onboarding surfaces observed values, recommendations and
+operational impact and asks explicit Yes/No questions, including whether to allow
+merge commits and automatically delete merged PR head branches. Record owner
+answers in the existing Task/Decision chronology before resolution/application;
+preconfigured values supply no decision and unanswered choices stay unresolved
+without blocking unrelated work. Both Yes and No are valid. Configuration remains
+optional and separately authorized, preserving supported workflow exceptions.
+This is MAJOR against 11.0.0 because it adds mandatory operator work; see the
+[worked choices](vibevm/vibespecs/guides/onboarding-examples.md) and changelog.
+
 Version 7.0.0 changes the existing [TH-026 closure clause](vibevm/vibespecs/protocols/task-handoff.md#TH-026):
 `close-authorized` closes on merge of the designated completing PR; `keep-open`
 uses a non-closing reference and closes after its stated condition is verified.

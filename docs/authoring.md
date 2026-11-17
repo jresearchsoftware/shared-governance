@@ -83,6 +83,18 @@ assessments; other consumers own their separate topic choices and migration.
 
 ## Semantic completeness
 
+Task 113 proposes **12.0.0 MAJOR** against independently accepted 11.0.0 at
+`f8d77b16ab9e92b31ae9a9390acabd9be9e962a7`. #105 adds an owner-authorized
+mandatory optional-setting decision step with one normative GitHub protocol owner,
+consistent onboarding routes/examples and preserved opt-in configuration and
+workflow exceptions. For #106 the owner selected Option A, retaining absolute
+non-transfer and rejecting the narrower fallback. [Step 2 verification](task-113/step-2/README.md)
+records the remaining configuration/behavior evidence request without claiming
+enforcement or changing live Project Instructions. The [bounded coverage and qualification](task-113/step-1/README.md)
+separate source/scenario/native proof, protected review/publication and remaining
+owner/live-client boundaries. This Step stays governed by frozen accepted 11.0.0;
+candidate 12.0.0 source and materialization cannot accept themselves.
+
 Task 110 proposes **11.0.0 MAJOR** against independently accepted 10.0.0 at
 `1aabc1b1131d6d73285f84d8dc8a8dd3725135a4`. Explicit SI adoption now supplies
 standing opportunistic inclusion authority, replacing per-candidate opt-in and

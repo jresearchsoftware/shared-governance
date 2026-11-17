@@ -1,5 +1,32 @@
 # Development Governance changelog
 
+## 12.0.0
+
+MAJOR: [GH-014](vibevm/vibespecs/protocols/github-repository-governance.md#GH-014)
+adds an explicit owner Yes/No decision step for relevant optional GitHub settings
+at new/existing-repository onboarding or bootstrap. Show actual observed values,
+recommendations and operational impact; ask at least about allowing merge commits
+and deleting merged PR head branches. Record each attributable answer in the
+existing Task/Decision chronology before resolving or applying it. Current values
+are observations, not owner choices. An explicit No is valid; an unavailable
+answer remains unresolved while unrelated onboarding continues.
+
+This adds mandatory operator work against 11.0.0, even when current settings
+already match the recommendation; it is not a PATCH or an additive MINOR change.
+GH owns the rule; onboarding routes and worked examples apply it without a
+second normative owner. Optional configuration remains opt-in, with PR, direct-main,
+publication, retained-branch and host/access exceptions preserved. Existing
+settings-change authority/readback and least-friction application remain intact;
+no universal profile, new service, automatic settings write or second authorization
+for an already permitted action is introduced.
+
+Consumers deliberately review/adopt the changed workflow under their own authority.
+Package installation does not adopt GitHub governance or change existing local
+policy. The other nine protocols, topic routing, public inventory, license,
+ChatGPT tools and frozen versions retain their bytes and meaning. No Chat-to-Work
+control or fallback is introduced by this version; client access controls and
+consumer settings remain separately owned.
+
 ## 11.0.0
 
 MAJOR: SI-001–SI-008 replace per-candidate opt-in with standing opportunistic
