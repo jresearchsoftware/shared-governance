@@ -94,6 +94,16 @@ project to Shared Governance,” read the [onboarding procedure](../guides/onboa
 Skip that detail in ordinary sessions and on package install/update alone.
 This operator aid adopts no topic and grants no configuration-change authority.
 
+When guiding a human through shell or administrative work and requesting a
+return result, read [human command interaction](../protocols/human-command-interaction.md)
+only when the owning project explicitly adopts that topic. It covers ordinary
+diagnostics/setup as well as governed work: one self-contained human action and
+one coherent report, batching safe commands while stopping at interpretation,
+choice, permission or safety boundaries. Its [Bash and PowerShell examples](../guides/human-command-interaction.md)
+illustrate copyback and failures. Installation/update, Task Handoff adoption and
+this route do not activate it or serialize autonomous agent tool calls.
+Existing local authority and stronger boundaries remain; unrelated work skips it.
+
 When external engineering or reasoning methods would materially help the current
 work, you may consult the [optional FPF guide](../guides/engineering-methods.md).
 Skip it when existing methods/evidence suffice; startup or install/update alone

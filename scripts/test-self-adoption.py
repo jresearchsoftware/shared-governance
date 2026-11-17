@@ -71,6 +71,19 @@ class NativeAdoptionTests(unittest.TestCase):
                 target.write_bytes(original)
         EXPORTER.verify_producer(self.revision, self.work)
 
+    def test_human_command_topic_and_examples_survive_export_and_native_route(self):
+        files, _ = EXPORTER.snapshot(self.revision)
+        for name in (EXPORTER.HUMAN_COMMAND_INTERACTION, EXPORTER.HUMAN_COMMAND_GUIDE):
+            with self.subTest(path=name):
+                target = self.slot / name
+                original = target.read_bytes()
+                self.assertEqual(original, files[name])
+                self.assertEqual(original, (self.work / EXPORTER.PACKAGE / name).read_bytes())
+                target.unlink()
+                self.reject()
+                target.write_bytes(original)
+        EXPORTER.verify_producer(self.revision, self.work)
+
     def test_manual_readiness_rule_is_accessible_through_native_and_local_routes(self):
         authored = self.work / EXPORTER.PACKAGE / EXPORTER.HANDOFF
         installed = (self.slot / EXPORTER.HANDOFF).read_bytes()

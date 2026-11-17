@@ -1,7 +1,7 @@
 # Development Governance
 
 `org.jresearch.ai/development-governance` is one passive MIT-licensed VibeVM
-flow. One manifest version covers its conditional boot, ten protocols, optional
+flow. One manifest version covers its conditional boot, eleven protocols, optional
 operator guides and manually invoked [ChatGPT maintenance assets](tools/chatgpt/README.md).
 It has no hooks, executable capabilities, dependencies or native Codex Skills.
 Ordinary reading requires no Python, VibeVM command or external service.
@@ -11,6 +11,13 @@ obligations and migration, including the 2.7.0 → 3.0.0 transition. It is part 
 the package payload. This README is the current overview; actual acceptance and
 publication evidence remains in source Issues/PRs, workflows and distribution
 tags. Frozen historical versions retain their original bytes.
+
+Version 12.1.0 adds explicitly adopted [Human Command Interaction](vibevm/vibespecs/protocols/human-command-interaction.md):
+one requested human action and one coherent return result, safe command batching,
+and real interpretation/permission boundaries. [Bash and PowerShell examples](vibevm/vibespecs/guides/human-command-interaction.md)
+show copyback, failures and a staged service diagnostic. This is a compatible
+MINOR addition against 12.0.0: existing adopters' mandatory behavior is unchanged;
+availability is separate from adoption. It adds no fixed command count or tool.
 
 Version 12.0.0 adds the mandatory optional-setting owner decision step in
 [GH-014](vibevm/vibespecs/protocols/github-repository-governance.md#GH-014).
@@ -65,6 +72,7 @@ approval/wait stage or topic adoption; see the 3.0.0 → 4.0.0 changelog entry.
 | [Contract and decision maintenance — CD](vibevm/vibespecs/protocols/contract-and-decision-maintenance.md) | Explicitly adopted material contract changes, durable decisions and same-change human guidance. |
 | [Context loading — CL](vibevm/vibespecs/protocols/context-loading.md) | Explicitly adopted decision-relevant startup, triggered complete detail and targeted mutable refresh. |
 | [Small improvements — SI](vibevm/vibespecs/protocols/small-improvements.md) | Separately adopted owning-repository Issue capture, labeled discovery and standing automatic inclusion at the first suitable authorized source change. |
+| [Human command interaction — HC](vibevm/vibespecs/protocols/human-command-interaction.md) | Explicitly adopted human shell/admin action and report pattern, including ordinary diagnostics/setup outside governed Tasks. |
 
 Installing/updating the package and following a cross-topic reference do not
 adopt a topic. Each consumer owns accepted human instructions, local authority,
