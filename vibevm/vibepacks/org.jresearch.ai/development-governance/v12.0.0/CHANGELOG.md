@@ -24,8 +24,8 @@ Consumers deliberately review/adopt the changed workflow under their own authori
 Package installation does not adopt GitHub governance or change existing local
 policy. The other nine protocols, topic routing, public inventory, license,
 ChatGPT tools and frozen versions retain their bytes and meaning. No Chat-to-Work
-control or fallback is adopted by this release; platform feasibility and the
-owner's unresolved choice remain producer Task evidence.
+control or fallback is introduced by this version; client access controls and
+consumer settings remain separately owned.
 
 ## 11.0.0
 

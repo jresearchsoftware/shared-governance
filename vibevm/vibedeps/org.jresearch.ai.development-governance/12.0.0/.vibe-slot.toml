@@ -1,10 +1,10 @@
 schema = 1
-source_hash = "sha256:5cf66574d9b8f7849888b8d4a605ddcf47392070346902c6ec066b6c5b187ed0"
+source_hash = "sha256:70ab8660c0f8b04daa00dd297c268b5d471b602f9a94a40220947a3216b25cec"
 spec_format = "mixed"
 
 [[file]]
 path = "CHANGELOG.md"
-sha256 = "d3481585032ec6c3b28e0607854e0278dc7449564e3b9827877807d0be0a20bb"
+sha256 = "4af11755d77597669ad7233b097e885729314ce745a5b888fcfd633148890a0c"
 
 [[file]]
 path = "LICENSE"

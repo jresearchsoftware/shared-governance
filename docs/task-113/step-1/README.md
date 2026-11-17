@@ -115,14 +115,13 @@ is not a local implementation failure. Actual publication remains unverified.
 
 ## Executed local qualification
 
-The source/package and materialized candidate passed the following checks before
-this evidence-only handoff update. Later changes in this commit concern the
-producer report/handoff only, with the tested package and projection bytes unchanged.
+The source/package and materialized candidate passed the following local checks.
+The final candidate was rechecked after a release-note wording correction that
+keeps current Task status in producer records rather than in frozen public text.
 
-- `qualify.py --export-ref HEAD`: PASS, 1,836 tracked files, 5,767 local links,
+- `qualify.py --export-ref HEAD`: PASS, 1,837 tracked files, 5,768 local links,
   bounded credential-marker scan, canonical protocol/native Skill and exact-commit
-  export. Counts precede this handoff file; final exact-head recheck is required
-  and is reported by the Outcome.
+  export, including the final handoff file.
 - Standard candidate suites: distribution **52**, release **26** (6 optional
   native integrations skipped), self-adoption **19**, ChatGPT projection **29**,
   publication **12** (1 optional native publisher test skipped), publication
@@ -137,6 +136,9 @@ producer report/handoff only, with the tested package and projection bytes uncha
   Landscape 1.0.3/1.0.2 were retained. Existing projected Relay Skill/receipt
   bytes matched exactly; only selected new slot/lock/index outputs were transferred.
   Historical outputs pruned in the disposable fixture were retained in this checkout.
+  The final release-note wording was regenerated through fresh native resolution
+  of only the unaccepted candidate, discarding its disposable old lock/slot in
+  staging; accepted versions were never rewritten.
 - `qualify-vibevm.py --vibe <pinned-binary> --materialize`: PASS, **7** native
   commands including a disposable dependency install. Root native checks reported
   **20 expected orphan-slot warnings**, all retained frozen history; no errors or
