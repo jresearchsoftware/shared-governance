@@ -5,11 +5,19 @@ description: Author and carry out Codex Relay governed Tasks, handoffs, Change R
 
 # Codex Relay
 
-This Skill supplies Relay product guidance version **5.0.0** as a source
+This Skill supplies Relay product guidance version **10.0.0** as a source
 candidate; the version alone is not a release or acceptance claim. Its accompanying
 provenance identifies the product source, delivery form and shared protocol source. Guidance
 availability does not prove an installed service, workflow or connected App is
 compatible, qualified or enabled. Normal use reads these local files offline.
+
+Resolve the acting project from the client's accepted binding before routing
+results or controlling a lifecycle. Shared RA-007 preserves cross-project reads
+and incoming contribution proposals, while foreign Task admission, review,
+closure, release and deployment belong to that project's own context. A link or
+explicit foreign-control request does not switch projects; provide a compact
+handoff with the canonical Issue/PR and relevant evidence. Explicitly accepted
+multi-repository scope remains valid.
 
 For Task work, use the live canonical authority and admitted handoff through
 the Relay binding below. Shared Context Loading owns minimal startup and JIT
@@ -43,13 +51,17 @@ the assembled [shared protocol source](references/shared-protocols.md) when trig
 - `requirement-authority.md`: requirement provenance and binding authority.
 - `package-versioning.md`: versioned Relay guidance/release/dependency maintenance.
 - `self-adoption.md`: a producer's own Skill, AGENTS and boot candidates.
-- `github-repository-governance.md`: workflow/protection decisions.
+- `github-repository-governance.md`: workflow/protection decisions, including
+  GH-014 when optional repository settings are being decided.
+- `human-command-interaction.md`: one next human action and coherent copyback
+  for supported Relay command and administration interactions.
 
 Read a relevant topic in full, including exceptions. The selected shared
 protocols are the portable owners, not editable Relay copies. The workflow binds
 them to Relay's current v4 product and retained old-attempt compatibility.
-This Skill does not impose Relay development policy on unrelated consumer work
-or change a consumer's explicit project-wide topic adoption/settings.
+Small Improvements is Relay development policy with its own adoption boundary.
+The product topics apply to Relay interactions and leave project-wide consumer
+adoption and settings to the owning project.
 
 Apply shared meaning through the Relay bindings in these references. Live
 canonical authority governs the admitted work; this Skill grants no execution,
@@ -59,7 +71,7 @@ responsibilities. Never turn a copied assessment into a native approval.
 
 Preserve consumer-owned AGENTS.md, Skills, overlays, profile, checks, language,
 client preferences and authorized integration policy. Relay's own development
-defaults and optional developer hooks are not universal consumer requirements.
+defaults are not universal consumer requirements.
 Installing this Skill does not change ChatGPT Project Instructions or install,
 upgrade, deploy or activate Relay services. Select explicit guidance versions
 and use the installation reference for reviewable updates and rollback.

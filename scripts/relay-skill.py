@@ -7,13 +7,13 @@ import tomllib
 
 RELAY = "flow:org.jresearch.ai/codex-relay"
 SHARED = "flow:org.jresearch.ai/development-governance"
-PINS = {
-    RELAY: ("5.0.0", "5fc55231ffc2fee2d7dd4c399e85ef1d3b091bd9",
-            "sha256:d78711a85f07e3d09eb95d9660e1c0ca4fc4efc0dece0dadfb4f2265340c0973"),
-    SHARED: ("5.0.0", "30a23f467c30c41fec918204cbbf2ecfffd7bef5",
-             "sha256:e686314f26c82f32f55958a242481d792e9fcd0d755a6eebf933431f3e0875d9"),
-}
-SLOT = "vibevm/vibedeps/org.jresearch.ai.codex-relay/5.0.0"
+RELAY_VERSION = "10.0.0"
+RELAY_PIN = (RELAY_VERSION, "5cc8d97d6c88eb77c15d640c1e022974036d5037",
+             "sha256:feb84ec2551c558e15230f20e5ed471335139c0201a854b4a5d16f6fc6346bdf")
+RELAY_SOURCE = "c2fed9a7edb1b9f9d6694b746f4be943669cb270"
+RELAY_DISTRIBUTION_HASH = "3451635330cd96379e5009314e5f39f46840138e8a24d4a0c1799de611549c5b"
+SHARED_REQUIREMENT = ">=12.1.0"
+SLOT = f"vibevm/vibedeps/org.jresearch.ai.codex-relay/{RELAY_VERSION}"
 LANDSCAPE = {
     "flow:org.jresearch.ai/landscape-model-guidance": (
         "1.0.3", "48432f00802f5aad106f3e1a9264e17c1edc354c",
@@ -47,14 +47,12 @@ def check(root, authored, vibe_hash):
     root = Path(root)
     manifest = tomllib.loads((root / "vibe.toml").read_text(encoding="utf-8"))
     requirements = manifest["requires"]["packages"]
-    # Retain qualification of historical producer checkouts without Landscape.
-    pins = dict(PINS)
-    if set(requirements) & set(LANDSCAPE):
-        pins.update(LANDSCAPE)
-    require(set(requirements) == set(pins), "unexpected root graph")
     shared_version = tomllib.loads(authored["vibe.toml"].decode())["package"]["version"]
-    local_shared = requirements[SHARED] == dict(version="=" + shared_version, link="dynamic")
-    root_dependencies = sorted(SHARED + "@=" + shared_version if local_shared and key == SHARED
+    pins = {RELAY: RELAY_PIN, SHARED: (shared_version, None, vibe_hash(authored)), **LANDSCAPE}
+    require(set(requirements) == set(pins), "unexpected root graph")
+    require(requirements[SHARED] == dict(version="=" + shared_version, link="dynamic"),
+            "exact producer Shared root")
+    root_dependencies = sorted(SHARED + "@=" + shared_version if key == SHARED
                                else key for key in pins)
     lock = tomllib.loads((root / "vibe.lock").read_text(encoding="utf-8"))
     require(lock["meta"]["schema_version"] == 7 and
@@ -64,10 +62,8 @@ def check(root, authored, vibe_hash):
     payloads = {}
     for coordinate, (version, revision, content_hash) in pins.items():
         group, name = coordinate.removeprefix("flow:").split("/")
-        producer_source = coordinate == SHARED and local_shared
-        if producer_source:
-            version, content_hash = shared_version, vibe_hash(authored)
-        else:
+        producer_source = coordinate == SHARED
+        if not producer_source:
             url = "https://github.com/jrs-vibevm/" + group + "." + name + ".git"
             require(requirements[coordinate] == dict(version="=" + version, link="dynamic",
                     git=url, rev=revision, auth="none"), "immutable source requirement " + name)
@@ -83,6 +79,9 @@ def check(root, authored, vibe_hash):
             expected = dict(kind="flow", version=version, source_kind="git", source_url=url,
                             source_ref=revision, content_hash=content_hash)
         require(all(selected[0].get(k) == v for k, v in expected.items()), "locked source " + name)
+        if coordinate == RELAY:
+            require(selected[0].get("dependencies") == [SHARED.removeprefix("flow:") + "@=" + shared_version],
+                    "Relay dependency must bind to the root-selected Shared slot")
         directory = root / "vibevm/vibedeps" / (group + "." + name) / version
         files = read_files(directory)
         marker = tomllib.loads(files.pop(".vibe-slot.toml").decode())
@@ -100,9 +99,13 @@ def check(root, authored, vibe_hash):
             require(distribution["sha256"] == hashes(payload), "distribution inventory " + name)
             require(distribution["payload_sha256"] == hashlib.sha256(json.dumps(hashes(payload),
                     sort_keys=True, separators=(",", ":")).encode()).hexdigest(), "distribution digest " + name)
+            require(distribution["package"] == group + "/" + name and distribution["version"] == version,
+                    "distribution identity " + name)
+            if coordinate == RELAY:
+                require(distribution["source_revision"] == RELAY_SOURCE
+                        and distribution["payload_sha256"] == RELAY_DISTRIBUTION_HASH,
+                        "pinned Relay distribution identity")
             if coordinate in LANDSCAPE:
-                require(distribution["package"] == group + "/" + name and distribution["version"] == version,
-                        "distribution identity " + name)
                 package = tomllib.loads(files["vibe.toml"].decode())
                 require(set(package) == {"package", "boot_snippet"} and
                         package["package"]["frozen"] is True and
@@ -113,16 +116,24 @@ def check(root, authored, vibe_hash):
     shared = payloads["development-governance"]
     require(shared == authored, "Shared payload differs from authored governance")
     relay = payloads["codex-relay"]
+    relay_manifest = tomllib.loads(relay["vibe.toml"].decode())
+    require(relay_manifest["requires"]["packages"] == {SHARED.removeprefix("flow:"): SHARED_REQUIREMENT},
+            "Relay's declared Shared requirement")
     skill = {k.removeprefix("skill/"): v for k, v in relay.items() if k.startswith("skill/")}
     require(read_files(root / ".agents/skills/codex-relay") == skill, "projected Skill bytes")
     provenance = json.loads(skill["PROVENANCE.json"])
-    require(provenance["version"] == "5.0.0" and provenance["protocol_source"] == "consumer-vibe-lock"
-            and provenance["delivery_form"] == "vpm" and provenance["shared_requirement"] == ">=2.5.0",
+    require(provenance["version"] == RELAY_VERSION and provenance["protocol_source"] == "consumer-vibe-lock"
+            and provenance["delivery_form"] == "vpm" and provenance["shared_requirement"] == SHARED_REQUIREMENT,
             "native Skill provenance")
+    protocols = [line.removeprefix("- `").removesuffix("`")
+                 for line in skill["references/shared-protocols.md"].decode().splitlines()
+                 if line.startswith("- `vibevm/vibespecs/protocols/")]
+    require(len(protocols) == len(set(protocols)) == 10 and all(path in shared for path in protocols),
+            "Relay protocols must all resolve in the root-selected Shared slot")
     require(provenance["files"] == hashes({k: v for k, v in skill.items() if k != "PROVENANCE.json"}),
             "Skill provenance inventory")
     receipt = tomllib.loads((root / ".agents/skills/.codex-relay.vibe-skill-receipt.toml").read_text())
     require(receipt == dict(schema=1, skill="codex-relay",
             file=[dict(path=k, sha256=v) for k, v in hashes(skill).items()]), "native projection receipt")
     require(not (root / ".codex/skills/codex-relay").exists(), "competing legacy Skill")
-    return {"version": "5.0.0", "shared_version": shared_version, "files": len(skill)}
+    return {"version": RELAY_VERSION, "shared_version": shared_version, "files": len(skill)}

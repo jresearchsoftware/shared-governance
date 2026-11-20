@@ -6,6 +6,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import tempfile
+import tomllib
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -210,18 +211,27 @@ class NativeAdoptionTests(unittest.TestCase):
         skill.write_bytes(original + b"\nDrift\n")
         self.reject()
         skill.write_bytes(original)
-        closure = self.work / "vibevm/vibedeps/org.jresearch.ai.codex-relay/5.0.0/vibe.lock"
+        lock = tomllib.loads((self.work / "vibe.lock").read_text())
+        relay = next(entry for entry in lock["package"]
+                     if (entry["group"], entry["name"]) == ("org.jresearch.ai", "codex-relay"))
+        closure = self.work / "vibevm/vibedeps/org.jresearch.ai.codex-relay" / relay["version"] / "vibe.lock"
         closure.write_bytes(closure.read_bytes() + b"\n# changed evidence\n")
         self.reject()
 
-    def test_relay_source_revision_and_projection_receipt_rejected(self):
+    def test_relay_source_revision_root_dependency_and_projection_receipt_drift_rejected(self):
         path = self.work / ".agents/skills/.codex-relay.vibe-skill-receipt.toml"
         if not path.exists():
             self.skipTest("historical producer has no native Relay integration")
         lock = self.work / "vibe.lock"
         original = lock.read_text()
-        lock.write_text(original.replace("5fc55231ffc2fee2d7dd4c399e85ef1d3b091bd9", "0" * 40))
+        relay = next(entry for entry in tomllib.loads(original)["package"]
+                     if (entry["group"], entry["name"]) == ("org.jresearch.ai", "codex-relay"))
+        lock.write_text(original.replace(relay["source_ref"], "0" * 40))
         self.reject()
+        edge = relay["dependencies"][0]
+        lock.write_text(original.replace(f'dependencies = ["{edge}"]', 'dependencies = []'))
+        with self.assertRaisesRegex(ValueError, "Relay dependency must bind to the root-selected Shared slot"):
+            EXPORTER.verify_producer(self.revision, self.work)
         lock.write_text(original)
         path.write_text(path.read_text().replace('skill = "codex-relay"', 'skill = "other"'))
         self.reject()
