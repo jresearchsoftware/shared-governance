@@ -44,6 +44,15 @@ ambiguous external mutation or protected effect. Reconcile those facts before
 dependent work, retain original-attempt recovery protections and never replay
 an admitted execution because automation is unavailable.
 
+Assess ChatGPT's orchestration capabilities separately from those of the assigned
+Codex environment. A missing connected App does not prove that an authorized
+shell or SSH execution path is unavailable. Use the owning project's accepted
+execution and shell routing ([Relay development](https://github.com/jresearchsoftware/codex-relay/blob/main/CONTRIBUTING.md#execution-environment-and-shell-routing))
+and existing capability evidence; do not add a parallel routing guide or probe.
+An actually missing or unauthorized required path blocks the affected operation.
+An execution transport cannot replace a required native Reviewer/Writer tool,
+grant credentials or expand protected authority.
+
 For an explicitly authorized standalone source PR, current native independent
 `APPROVE` can lead to the already-authorized exact-head squash through the
 existing owner continuation channel without another confirmation or a fabricated
@@ -57,14 +66,43 @@ Source acceptance, installation, deployment and release are separate facts and
 permissions. A route choice adds no operational or credential authority, and
 source support does not qualify installed Reviewer or GitHub connector permissions.
 
+## Human command interaction
+
+When the supported route needs a person to run a shell or administrative
+action, apply HC-001–003 through the shared protocol source. Give one
+self-contained next action and identify the one coherent result to return.
+Use the actual shell and batch related deterministic commands only inside the
+same authorized, safe action. Keep meaningful errors and overall status in the
+copyback. In PowerShell, gather and format the streams explicitly where needed
+and preserve native process failure. In Bash, group the report and propagate
+the relevant failure status. Stop before any intermediate result requires
+human judgment, a choice, new permission or a safety reassessment. Existing
+authority, shell routing and protected operation contracts still apply. Use
+the complete admitted Codex prompt for a manual launch and ask for its
+admitted result through the supported result path.
+
+## GitHub onboarding and settings decisions
+
+Use the complete GitHub repository governance protocol when onboarding or
+bootstrapping a repository on GitHub or deciding relevant settings. Under
+GH-014, show the observed value with date and scope, or unknown, and explain
+the recommendation and effect for the project's actual paths. Ask for an
+explicit Yes or No per relevant optional setting, including allowing merge
+commits and deleting merged PR heads. Record or link the attributable choice
+in the existing Task/Decision chronology. Reuse an unchanged authorized
+choice, and keep unanswered choices unresolved while unrelated authorized
+work continues. Apply only with existing settings authority and verify the
+actual value afterward. Ordinary Task execution and Skill updates alone do
+not trigger settings choices.
+
 ## Authority, actors and capabilities
 
 The canonical Task is Issue #N. For current schema v4, the Issue has exactly one
 standalone `Authority model: github-native-v1` line and remains the stable
 charter. It states problem, goal, scope, protected boundaries and one initial
 `Issue closure policy: keep-open` or `Issue closure policy: close-authorized`.
-Missing, malformed or conflicting closure metadata means `keep-open` with a
-visible warning. Next to that field state concrete human-readable completion
+Missing, malformed or conflicting closure metadata prevents automatic closure
+with a visible warning; it does not establish an owner-selected hold. Next to that field state concrete human-readable completion
 and closure conditions, separating development, independent acceptance, merge,
 any required authorized Apply/deployment and original-operation proof, and
 unresolved owner choices. Use the closure binding below; no additional field
@@ -133,6 +171,10 @@ same-attempt replay/recovery retains its Step. The label supplies numbering,
 never execution or admission authority. Writer projects the position only after
 durable admission and verifies the native result.
 
+Task Handoff's complete "Step as an authorized execution cycle" section owns
+these numbering and replay invariants; this manual binds the native admission
+and projection behavior.
+
 Profile resolution is applicable CR overrides, trusted Decisions, consumer
 defaults, then supported system defaults. Resolve once at admission; no silent
 model/effort substitution. Requested values are not measured backend telemetry;
@@ -144,10 +186,27 @@ pointers and full copyable prompt. A new manual execution after BLOCKED uses a
 fresh manual thread where the route requires it. Thread navigation is not Step
 authority. Consumer client instructions govern rename tools/readback; report
 their actual result without inventing a new Step or blocking on naming alone.
-The handoff retains `MANUAL_CODEX_HANDOFF_READY`; only its prompt fence may be
-folded by default, after actual GitHub expand/copy usability is qualified.
-Otherwise leave it open. Actions run names can show bounded Task/PR/route
-information but do not preallocate Step.
+After an owner-launched `codex-ready-manual` command, keep monitoring its original
+routing run and canonical target until trusted Writer publishes
+`MANUAL_CODEX_HANDOFF_READY` with the full copyable prompt and admitted identity
+and snapshot, or a verified terminal error establishes why that original routing
+attempt stopped. A successful label operation or scheduled/pending routing does
+not establish a terminal result or a ready manual handoff. If the original event
+or handoff publication is ambiguous, reconcile it by reading back the original
+ready event, routing run and trusted Writer publication on the canonical target;
+do not issue a duplicate ready command to resolve that ambiguity. Return the
+complete, unmodified Writer prompt, or the concrete terminal diagnostic. If
+the client cannot keep waiting, report only the observed label, event, run
+and Writer state together with that client boundary; do not report success
+without Writer publication evidence. An inferred Step or pending run is not
+a terminal handoff. Reconcile any ambiguity through the original ready
+event and run.
+The handoff retains `MANUAL_CODEX_HANDOFF_READY`. Copy the full prompt from the
+open text fence. The collapsed Manual Outcome binding carries the canonical
+JSON for later submission through `submit_manual_outcome`. Preserve both blocks
+verbatim when transporting them. Older comments keep their original presentation.
+Actions run names can show bounded Task/PR/route information but do not
+preallocate Step.
 
 ### Manual result PR Step labels
 
@@ -216,10 +275,42 @@ CD's material operator-change and durable-decision rules to canonical native
 Task/Decision authority; candidate code or guidance cannot amend that authority.
 
 Permission for every action must remain within admitted and current protected
-boundaries. A later Decision may allow truthful reporting of the original work
-without proving newly added requirements were performed or granting a revoked
-operation. Consumer-specific TEST/PROD, deployment, credentials and recovery
-authority must be explicit; the Skill creates none.
+boundaries. Later trusted Decisions may add or clarify boundary prose and
+validation requirements during automatic execution without automatically
+stopping the admitted automatic source work or safe Writer collection/publication.
+Writer preserves
+the original admission, attributes the current Decision set and changed fields,
+and exposes the drift for independent exact-head review. Added requirements are
+not evidence that the executor performed them. Codex follows available current
+guidance within its admitted permissions; Relay adds no live steering or polling.
+
+Task boundaries and acceptance requirements describe the work and the result
+that independent review must assess; they are not ordinary execution controls.
+For manual Codex, the owner gives stop or control instructions directly in the
+active Codex session. For automatic work, use native GitHub Actions cancellation
+of the active execution run, through its supported cancellation path. Cancellation
+must still establish child containment and reconcile uncertain effects; a cancelled
+run label alone is not proof that execution stopped. Quiescing admissions only
+prevents new work and does not cancel an active execution. Relay adds no new stop
+command, live steering service or Decision polling.
+
+An existing structured `continuation.hold` remains a safety guard wherever the
+current effect checks apply; it is not the ordinary owner stop/control route.
+Removal of admitted structured scope also stops active effects. Changed exact
+starting pins, native identity/source tampering,
+conflicting CRs, uncertain publication and protected operations retain their
+stops. Bounded collection of the contained attempt may still preserve source
+for truthful reporting after a hold; it does not authorize a push or another
+execution. New boundary wording alone no longer supplies the earlier implicit
+stop for automatic source progress. Already-admitted manual handoffs retain
+their conservative predispatch checks for added boundary prose and validation
+requirements. Manual result reporting still preserves the original admission
+and records valid later Decision drift. A fresh manual admission resolves
+current trusted Decisions normally. Human executors must still stop on a concrete unsafe boundary,
+and independent review assesses the delivered result against current authority.
+No Decision expands an already admitted permission or profile automatically.
+Consumer-specific TEST/PROD, deployment, credentials and recovery authority must
+be explicit; the Skill creates none.
 
 ## Isolated disposable TEST qualification
 
@@ -277,8 +368,8 @@ fresh independent review. Draft/Ready denotes execution handoff, not acceptance,
 passing CI or merge permission.
 
 If schema-v4 remediation safely publishes head B and reports terminal `BLOCKED`,
-retain the CR and its original reviewed head A. A trusted Task-scoped Decision
-after the canonical Writer Outcome resolves the blocker; a fresh owner ready
+retain the CR and its original reviewed head A. When effective authority is unchanged and the prior result is contained and
+reconciled, no repetitive technical-continuation Decision is required. A fresh owner ready
 command on the same PR may then admit the next Step at Writer-proven B.
 Writer verifies protected automatic publication or manual submission, authentic
 native Writer Outcome, exact Task/PR/CR, branch/base/attempt lineage and current
@@ -352,9 +443,10 @@ protected Writer retains admitted execution and publication recovery.
 After `PUBLICATION_UNCERTAIN`, reconcile the original identical Reviewer
 operation through supported replay/readback, preserving its exact intended
 body and operation identity. Do not post another review or treat an uncertain
-response as approval. Reviewer `execution_supported: false` means that the
-Reviewer itself performs no merge; it does not prevent authorized owner use of
-the GitHub connector.
+response as approval. Use the Reviewer continuation authorization and hold
+with the live exact-head and authority checks below. The Reviewer reports
+`merge_performed` and `issue_closure_performed` as false. Authorized owner
+orchestration uses the GitHub connector and verifies its actual effects.
 
 For an implementation PR, independent acceptance uses native exact-head
 `APPROVE`; genuine remediation findings use `REQUEST_CHANGES`. Another Task
@@ -418,17 +510,22 @@ without another ceremonial merge prompt:
    allowed only where current exact-head checks and readiness remain safe.
    Preserve an explicit exact-base requirement: the connector's atomic head
    comparison does not supply an atomic base comparison.
-2. Verify closure restrictions. Under the current migrated-Task compatibility
-   binding, use `Related to #N`, establish that the PR does not implicitly close
-   the Task, and supply a neutral squash title/body. Removing the old helper
-   does not implement Task #194 or authorize Issue closure.
+2. Verify the effective closure policy and actual completion boundary. Writer
+   creates neutral `Related to #N` references. Only when merge will genuinely
+   complete the whole Task, effective `close-authorized` permits it and no hold,
+   next work or protected obligation remains, designate that completing PR through
+   the authorized connector with `Closes #N` or its supported native closing link.
+   Read back the same PR, exact head, default-branch base and native closing link.
+   Intermediate PRs and `keep-open` results retain non-closing references. A missing
+   designation/readback capability stops that affected closure action.
 3. Use the connector's `merge_pull_request` with `merge_method: "squash"`, the
    canonical repository/PR and `expected_head_sha` equal to the full approved
-   SHA. Supply explicit neutral `commit_title`/`commit_message` where required
-   by the closure binding. Do not omit the head guard or replace squash with
+   SHA. Supply explicit neutral `commit_title`/`commit_message`; the verified PR
+   linkage controls closure. Do not omit the head guard or replace squash with
    another merge method or unattended auto-merge.
 4. Read back the same PR and merge commit; verify merged state, approved head,
-   destination and squash SHA before dependent work. A lost or uncertain merge
+   destination and squash SHA, plus the Task closure state where designated, before
+   dependent work. A lost or uncertain merge
    response requires authoritative GitHub reconciliation of that original
    effect. Never blindly repeat it, switch verdict or launch/close while its
    effect is unknown. Report a missing permission or readback capability as the
@@ -461,35 +558,48 @@ holds after verified integration under the supported closure contract.
 Task Handoff's "Stable charter and chronological authority" and "Authorized continuation and completion"
 sections own completion and continuation semantics; Relay implements them
 through its closure-policy field, native Task Decisions and owner continuation.
-For an owner-authorized finite Task, choose `close-authorized` at charter
-creation when closure is already authorized upon meeting its stated conditions,
-including a later expressly authorized Apply. Keep the Issue open through
-development, independent acceptance and merge until all required deployment
-and verification conditions pass; a finite required Apply is a completion gate,
-not itself a reason to request closure permission again.
+`close-authorized` means closure on successful default-branch merge of the
+one designated genuinely completing PR. All Task work must be complete apart
+from that integration, including required acceptance, checks and protected
+conditions. Other result PRs use non-closing references. Closing an unmerged or
+abandoned PR does not close the Task; acceptance or a terminal Step alone does
+not establish whole-Task completion.
 
-Use `keep-open` when concrete additional work, an explicit hold or an unresolved
-owner choice remains outside the authorized completion path. Name that condition
-and its needed disposition. Reassess effective policy at new authorized
-Steps/Decisions and meaningful completion transitions. After first admission,
-change Task-wide closure conditions or authorization only through a trusted
-Task-scoped v4 Decision; a CR cannot change them. Do not publish redundant
-per-Step Decisions when nothing changed. If required deployment is deferred,
-combined or cancelled by the owner, reconcile conditions and closure authority
-through that Decision without claiming the original Apply occurred.
+`keep-open` means no closure on merge and later closure once its adjacent
+human-readable condition is verified. State the actual obligation and sufficient
+evidence beside the single field in the charter or applicable trusted Decision.
+A required publication or owner-run Apply after merge uses this policy: source
+acceptance does not prove publication of the exact accepted revision/version,
+nor a successful Apply to the intended revision/target with warning disposition.
+After that preauthorized condition, acceptance/integration and every actual
+obligation are verified and no protected hold remains, the supported trusted
+owner continuation closes the Issue and records verification in its chronology.
+No new owner-choice prompt, policy-change Decision or conversion to
+`close-authorized` is needed merely to release a satisfied condition.
 
-Closure requires effective `close-authorized`, trusted completion evidence,
-independent exact-result acceptance, no remaining work/hold and satisfied
-protected boundaries. The owner continuation can then close without another
-permission request. If no work remains but `keep-open` persists, surface the
-mismatch for canonical owner disposition. For retained v3/legacy work preserve
-the original charter and successor-Request rules in [compatibility](compatibility.md).
+Change actual scope, conditions or authority only through the existing trusted
+Task-scoped Decision mechanism. CRs, executors and reviewers cannot waive them.
+Preserve explicit earlier holds and old admitted charter/Request, Step, Outcome
+and recovery terms through [compatibility](compatibility.md); new guidance does
+not silently reinterpret or replay them. The bounded qualified legacy fallback
+remains separately version-specific, not permission to apply old timing to new work.
 
-Genuine no-PR acceptance remains typed independent Task Approval bound to its
-exact Writer Outcome and immutable result. It does not authorize merging an
-artifact PR. A known next phase or remaining qualification keeps the Task open.
-Already-authorized conditional closure needs no repeated Decision, but still
-requires current completion/acceptance and no remaining work or hold.
+Missing, invalid or conflicting metadata prevents unsafe automatic closure.
+Reconcile genuinely missing intent through existing owner authority; a fail-safe
+refusal is not an owner-selected perpetual hold or permission to invent one.
+No-PR results retain independent typed Task Approval bound to their exact Writer
+Outcome and immutable result, then the supported owner completion path; fabricate
+neither a PR nor a merge. A known next phase or remaining qualification keeps the
+Task open. Report missing trusted capability or evidence at the affected action.
+
+For a confirmed material defect left after a workaround, deferral or completion,
+keep a discoverable disposition in an existing Issue/PR/Outcome, an authorized
+tracking record or explicit owner risk disposition. A workaround is not a fix.
+When another Task/PR delivers the correction, link its accepted result and
+reconcile remaining source/installed-result criteria before claiming completion.
+Reuse adequate acceptance evidence; add no retrospective review or automatic
+closure. Unconfirmed hypotheses and optional improvements acquire no ticket or
+completion duty from this rule.
 
 ## Consumer policy boundary
 
@@ -548,3 +658,38 @@ dual active privileged dispatcher. Source acceptance and TEST proof authorize no
 live PROD Apply. The source repository's
 [installation contract](https://github.com/jresearchsoftware/codex-relay/blob/main/docs/git-managed-installation.md)
 provides the detailed strategy, readback and cutover procedure.
+
+
+## Engineering methods and meaningful results
+
+On a qualified installation implementing the Task 57 autonomy contract, an
+executor chooses ordinary local tools and task-owned Git methods inside the
+admitted goal. Preserve published history and others' work. Original authorship
+is retained as data; trusted Writer authenticates publication and scans all
+introduced reachable objects, including intermediate deleted content. A verified
+descendant movement of main is ordinary integration context; the task's own
+remote head, repository, branch and authority bindings still require exact checks.
+
+Technical continuation under unchanged authority needs a fresh authenticated
+owner launch, a new admitted Step and reconciled prior effects, without a Decision
+that merely repeats the existing scope. Real holds, material authority changes
+and unknown execution/publication effects retain their supported reconciliation.
+A completed remediation may rebut or establish an already satisfied finding with
+an exact-head no-change result, without a cosmetic commit. Independent review
+decides acceptance. A stopped/Draft result may receive substantive findings or a
+genuine change request; approval still requires a complete Ready candidate.
+
+Candidate and worktree observations are separate. Writer can preserve a safely
+collected committed candidate while reporting incomplete residue inspection;
+this does not claim the checkout clean or discard local work. A completed
+contained result can retain a cleanup warning and an unavailable resource.
+Reviewers and owners must disposition those warnings before the next action.
+Diagnostic launch capacity is reclaimed only after contained execution, durable
+evidence and safe cleanup; semantic failure alone does not retain a launch slot.
+
+Automatic workers have repository-local execution and task dependency tools,
+without GitHub credentials or publication authority. Admitted manual executors
+use their actual authorized terminal and connected tools and submit one bound
+result to Writer. Standalone/manual work follows its explicit owner authority
+and does not fabricate native admission. Requested profiles and instructions are
+not proof of actual runtime settings, tool access or installed activation.

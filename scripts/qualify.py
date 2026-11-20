@@ -103,10 +103,11 @@ def check(export_ref=None):
     else:
         revision = preparation.git("rev-parse", "HEAD").decode().strip()
         receipt = preparation.verify_producer(revision)
+    relay = workspace["requires"]["packages"].get("flow:org.jresearch.ai/codex-relay")
     return {"qualification": "PASS", "tracked_files": len(tracked), "local_links": links,
             "secret_scan": "bounded markers PASS", "active_protocol": "PASS",
             "native_projection_source": receipt["source_revision"],
-            "native_skill": "codex-relay 5.0.0" if "flow:org.jresearch.ai/codex-relay" in workspace["requires"]["packages"] else "absent",
+            "native_skill": "codex-relay " + relay["version"].removeprefix("=") if relay else "absent",
             "flow_export": "PASS" if export_ref else "not requested"}
 
 

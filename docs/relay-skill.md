@@ -5,32 +5,74 @@ selects the native VibeVM path. This change remains proposed until independently
 accepted. The separate [standalone PR 64](https://github.com/jresearchsoftware/shared-governance/pull/64)
 stays Draft and unchanged; its later disposition is owner-controlled.
 
-## Current 5.0.0 integration
+## Current 10.0.0 integration
+
+[Task 118](https://github.com/jresearchsoftware/shared-governance/issues/118)
+selects the published Relay Skill 10.0.0. The annotated `v10.0.0` tag object
+`1620b91a9c90685933e7f568cec9964e4e98e39a` points to immutable distribution
+commit [`5cc8d97d6c88eb77c15d640c1e022974036d5037`](https://github.com/jrs-vibevm/org.jresearch.ai.codex-relay/tree/5cc8d97d6c88eb77c15d640c1e022974036d5037).
+The receipt binds Relay source `c2fed9a7edb1b9f9d6694b746f4be943669cb270` to the
+payload SHA-256 `3451635330cd96379e5009314e5f39f46840138e8a24d4a0c1799de611549c5b`.
+The native lock and slot bind the complete distribution, including its receipt,
+with content hash `sha256:feb84ec2551c558e15230f20e5ed471335139c0201a854b4a5d16f6fc6346bdf`.
+
+The Relay manifest requires Development Governance `>=12.1.0`. The consumer
+keeps its exact producer-owned 12.1.0 requirement and authored bytes. The
+Relay dependency edge in the root lock resolves to that same unique slot.
+All ten paths in the [Skill's shared protocol route](../.agents/skills/codex-relay/references/shared-protocols.md)
+resolve there, including Human Command Interaction. The nested public 12.1.0
+lock and slot remain frozen publisher evidence. The root INDEX activates only
+the consumer-selected governance boot and the Relay Skill boot alongside the
+existing authoring and Landscape routes. The independent [manual client
+binding](manual-task-handoff.md) and project-wide topic adoption remain in force.
+
+Compared with 5.0.0, the product guidance uses RA-007 for project-scoped
+authority, GH-014 for relevant optional GitHub settings decisions, and
+HC-001–003 for human command interactions. It describes native closing linkage
+for genuinely completing `close-authorized` PRs, verified later closure for
+`keep-open`, and distinct stop controls for manual and automatic execution
+while retaining structured safety holds and original admitted bindings.
+Manual handoffs carry an open prompt and the canonical Manual Outcome binding.
+Reviewer continuation uses the connected tool's authorization and effect fields
+after removal of `post_review_continuation.execution_supported`. The bundled v4
+authority contract raises `max_native_records` from 500 to 10,000. Use the exact
+bundled contracts with the connected tool's compatible advertised schema and
+retain original schemas for admitted old attempts. See the upstream
+[compatibility assessment](https://github.com/jresearchsoftware/codex-relay/blob/c2fed9a7edb1b9f9d6694b746f4be943669cb270/docs/relay-skill-compatibility.md#task-273-shared-1000-through-1210).
+
+Package qualification covers native graph resolution, immutable bytes and
+the project Skill projection. Installed Relay, connected App and runner
+compatibility require their own evidence. The consumer workflow reconciliation
+preceded this update. [PR 117](https://github.com/jresearchsoftware/shared-governance/pull/117)
+
+This update leaves the complete generated ChatGPT Project
+Instructions unchanged and adds no live application duty. Earlier live
+readback evidence gaps remain.
+
+## Historical 5.0.0 integration
 
 [Deployment Task 8](https://github.com/jresearchsoftware/codex-relay-deployment/issues/8)
-authorizes this consumer update in PR 93. The reviewed candidate selects public
+authorized the consumer update in PR 93. That candidate selected public
 Relay Skill 5.0.0 at immutable distribution commit
 `5fc55231ffc2fee2d7dd4c399e85ef1d3b091bd9` (`v5.0.0`), with package content hash
 `sha256:d78711a85f07e3d09eb95d9660e1c0ca4fc4efc0dece0dadfb4f2265340c0973`.
-After later accepted package updates, the current root selects the exact
-producer-owned Shared Governance 11.0.0 requirement and its authored payload. The public package's nested Shared closure is inert;
-active protocol references use the unique root-selected Shared 11.0.0 slot.
+At the 11.0.0 adoption the root selected the exact producer-owned Shared
+Governance 11.0.0 requirement and its authored payload. The public package's nested
+Shared closure was inert. The active protocol references used the unique
+root-selected Shared 11.0.0 slot.
 
 The hash-checked pinned Linux musl VibeVM 1.0.11 resolves the mixed graph in
 disposable staging with isolated registry settings. Its supported native Skill
 install updates the complete Codex projection and receipt. Transfer selected
 outputs together and preserve historical slots pruned only inside staging.
-The generated root INDEX selects Relay 5.0.0; root topic adoption, human overlays,
-Manual Codex and independent acceptance remain unchanged. The integration checker
-pins the new immutable release while continuing to reject payload, receipt,
-root-source and nested-closure drift. The earlier sections below retain the
-historical 3.0.0 integration and Task 84 compatibility evidence; they do not select
-an active root or override this update. Source/Skill integrity checks do not
-qualify an installed runtime or authorize PROD effects.
+The generated root INDEX selected Relay 5.0.0. The update preserved root topic
+adoption, human overlays, Manual Codex and independent acceptance. The integration
+checker pinned that immutable release and rejected payload, receipt, root-source
+and nested-closure drift. Qualification covered Skill source and package integrity.
 
-## Identity and routing
+## Historical 3.0.0 identity and routing
 
-The root manifest retains the public immutable Git root for Relay 3.0.0 at
+The root manifest selected the public immutable Git root for Relay 3.0.0 at
 `325c96371783e2d628bfa9903b3244468c688fe6`. Development Governance 7.0.0 is
 selected from this producer's exact authored in-tree registry through its normal
 [self-adoption](self-adoption.md) procedure; it is not a claim that 7.0.0 has
@@ -51,7 +93,7 @@ triggered references. The [project Skill](../.agents/skills/codex-relay/SKILL.md
 is an exact native projection with its native receipt; ordinary use needs no
 installation or network. Its `references/shared-protocols.md` selects the unique
 Shared package from the consumer root lock and verifies that slot's identity.
-All nine triggered Relay protocol references resolve inside the same 7.0.0 slot.
+All nine triggered Relay protocol references resolved inside the same 7.0.0 slot.
 The producer's current six project-wide topic adoptions and separate conditional
 self-adoption are owned by root AGENTS. Relay's additional topics apply only to
 relevant Relay product work. Manual Codex retains the [local Task binding](manual-task-handoff.md).

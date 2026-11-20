@@ -11,10 +11,10 @@ version = "=12.1.0"
 link = "dynamic"
 
 [requires.packages."flow:org.jresearch.ai/codex-relay"]
-version = "=5.0.0"
+version = "=10.0.0"
 link = "dynamic"
 git = "https://github.com/jrs-vibevm/org.jresearch.ai.codex-relay.git"
-rev = "5fc55231ffc2fee2d7dd4c399e85ef1d3b091bd9"
+rev = "5cc8d97d6c88eb77c15d640c1e022974036d5037"
 auth = "none"
 
 [requires.packages."flow:org.jresearch.ai/landscape-model-guidance"]
