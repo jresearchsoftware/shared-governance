@@ -18,6 +18,23 @@ assessments. Other consumers retain their own adoption and local policy.
 
 ## Contribution and integration
 
+[Task 120](https://github.com/jresearchsoftware/shared-governance/issues/120)
+and delegated [Small Improvement #121](https://github.com/jresearchsoftware/shared-governance/issues/121)
+prepare **12.2.0 MINOR** against accepted 12.1.0.
+RA-007 gives an explicit first response for a foreign standalone link with no
+stated or established purpose. Accepted RA-007 already limits external
+inspection to the owner's request. The clarification preserves requested
+reads and contributions, evidence for authorized local work, declared
+multi-repository scope and the receiving-project lifecycle handoff. PV-004
+recommends an advisory forecast in the existing planning discussion and
+accounts for differences within the existing independent assessment. Neither
+change adds mandatory operator work or narrows a previously supported path.
+The candidate category matches the provisional forecast.
+See [coverage and scenarios](task-120/step-1/README.md). Recompute the actual
+classification and version against accepted main at integration. The complete
+desired ChatGPT Project Instructions change and require owner-controlled
+TH-029 live reconciliation after acceptance and integration.
+
 Task 112 prepares **12.1.0 MINOR** against accepted 12.0.0 at
 `e7b3769cf06755c305f832fda8fc8e73edfe147f`. Human Command Interaction is a new
 separately adopted topic, with bounded Bash/PowerShell examples and a conditional

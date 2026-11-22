@@ -523,7 +523,10 @@ class DistributionTests(unittest.TestCase):
         self.assertEqual(set(metadata), {"package", "boot_snippet"})
 
     def test_human_command_addition_preserves_baseline_and_requires_complete_export(self):
-        files = self.current_export()
+        # Compare the two accepted releases. Later versions can edit these protocols.
+        DISTRIBUTION.ROOT = REPOSITORY
+        files, _ = DISTRIBUTION.snapshot("e4b5b738ae0918014dd06b5616fe37a5dcb93290")
+        files.pop(DISTRIBUTION.RECEIPT)
         baseline, _ = DISTRIBUTION.snapshot("e7b3769cf06755c305f832fda8fc8e73edfe147f")
         for name, content in baseline.items():
             if name.startswith(("vibevm/vibespecs/protocols/", "tools/")) or name == "LICENSE":

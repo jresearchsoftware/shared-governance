@@ -16,9 +16,11 @@ payload SHA-256 `3451635330cd96379e5009314e5f39f46840138e8a24d4a0c1799de611549c5
 The native lock and slot bind the complete distribution, including its receipt,
 with content hash `sha256:feb84ec2551c558e15230f20e5ed471335139c0201a854b4a5d16f6fc6346bdf`.
 
-The Relay manifest requires Development Governance `>=12.1.0`. The consumer
-keeps its exact producer-owned 12.1.0 requirement and authored bytes. The
-Relay dependency edge in the root lock resolves to that same unique slot.
+The Relay manifest requires Development Governance `>=12.1.0`. Task 118 kept
+the producer's exact 12.1.0 selection. Task 120 advances the producer's
+Development Governance selection to 12.2.0 within the existing Relay range.
+The Relay dependency edge in the root lock resolves to the producer's unique
+selected slot.
 All ten paths in the [Skill's shared protocol route](../.agents/skills/codex-relay/references/shared-protocols.md)
 resolve there, including Human Command Interaction. The nested public 12.1.0
 lock and slot remain frozen publisher evidence. The root INDEX activates only
@@ -45,7 +47,7 @@ the project Skill projection. Installed Relay, connected App and runner
 compatibility require their own evidence. The consumer workflow reconciliation
 preceded this update. [PR 117](https://github.com/jresearchsoftware/shared-governance/pull/117)
 
-This update leaves the complete generated ChatGPT Project
+The Task 118 update left the complete generated ChatGPT Project
 Instructions unchanged and adds no live application duty. Earlier live
 readback evidence gaps remain.
 

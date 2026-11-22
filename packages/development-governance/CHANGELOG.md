@@ -1,5 +1,23 @@
 # Development Governance changelog
 
+## 12.2.0
+
+MINOR. [RA-007](vibevm/vibespecs/protocols/requirement-authority.md#RA-007)
+defines the first response to a standalone, unqualified project link in a bound
+ChatGPT conversation. Resolve ownership with minimal lookup, and for a foreign
+link without cross-project intent, warn and stop before substantive inspection.
+TH-001 and the ChatGPT bootstrap follow that routing. The rule preserves
+requested external reads and contributions, relevant local dependencies,
+declared multi-repository scope and the receiving-project handoff for foreign
+lifecycle control.
+
+[PV-004](vibevm/vibespecs/protocols/package-versioning.md#PV-004) adds an advisory
+package-impact forecast in existing owner planning discussion and explains how
+to account for differences in the existing independent assessment. These
+additions preserve supported workflows and require no new operator action,
+launch approval, Task field or release gate. Consumers own their adoption
+and live settings.
+
 ## 12.1.0
 
 MINOR: adds the separately adopted [Human Command Interaction topic](vibevm/vibespecs/protocols/human-command-interaction.md#HC-001)
