@@ -56,7 +56,7 @@ boot/slot routes, preserving their conditional applicability:
 - Read the full `independent-review.md` for relevant independent review
   activities. Its methodology is mandatory for this producer's independent
   assessments; unrelated tasks skip it. Task Handoff retains lifecycle ownership.
-- Read the full [small-improvements.md](vibevm/vibedeps/org.jresearch.ai.development-governance/12.3.0/vibevm/vibespecs/protocols/small-improvements.md)
+- Read the full [small-improvements.md](vibevm/vibedeps/org.jresearch.ai.development-governance/12.4.0/vibevm/vibespecs/protocols/small-improvements.md)
   from the accepted materialized slot for deferred small source corrections and
   when preparing an authorized source-changing Task, its first source-changing
   Step after analysis, a relevant CR, or newly commencing another source-changing
@@ -81,7 +81,7 @@ boot/slot routes, preserving their conditional applicability:
 For relevant Codex Relay product workflows, the native boot routes to the pinned
 10.0.0 Skill; its projected copy is [.agents/skills/codex-relay/SKILL.md](.agents/skills/codex-relay/SKILL.md).
 Its shared protocol references use this consumer's single locked Development
-Governance 12.3.0 slot. Preserve the topic applicability above and the
+Governance 12.4.0 slot. Preserve the topic applicability above and the
 [manual client binding](docs/manual-task-handoff.md); Manual Codex remains supported.
 Skill installation grants no automatic execution or operational authority.
 See [native Relay integration](docs/relay-skill.md) for maintenance and rollback.
@@ -119,6 +119,31 @@ automatic update policy does not govern them.
 Read [CONTRIBUTING.md](CONTRIBUTING.md) for validation and
 [docs/authoring.md](docs/authoring.md) for the pinned VibeVM experiment. Avoid
 package publication, registry setup or consumer migration under bootstrap scope.
+
+For this producer's newly authored or materially reformulated Tasks, apply
+relevant First Principles Framework (FPF) methods before publishing the
+actionable charter. Start with the owner goal and exact Task. Challenge the
+framing, source of constraints, simplest sufficient alternative and material
+consequences. Check relevance even for routine Tasks. If no method changes a
+straightforward outcome, a brief explanation suffices. In independent review,
+use relevant methods when the result involves a material solution,
+architecture or control choice. Independently test agent-proposed designs,
+control placement, transfers of work or risk and alternative explanations against
+the effective Task and actual result. For mechanical changes without a
+consequential design choice, ordinary review suffices. Route new evidence that
+defeats a material premise through the existing owner/Decision mechanism.
+
+Use the FPF reader or upstream source, preferring the latest verified available
+edition at the time of the work. Read complete selected patterns with their
+applicability and limits. When a method materially informs the result, cite the
+pattern and edition or source revision in the existing Issue/Task discussion or
+review record. If access is unavailable, use adequate previously qualified
+material where possible. Disclose material limitations or unresolved design
+questions and continue unrelated authorized work. FPF informs analysis under
+accepted project authority. It creates no binding requirements, technical gates,
+verdicts or lifecycle authority, and requires no additional record, polling,
+external service or automatic reopening of accepted decisions. The package's
+external-method guide remains optional for consumers.
 
 For shared extraction, adaptation or adoption, preserve the complete accepted
 reusable semantics, including applicability, exceptions, routing and operator

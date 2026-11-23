@@ -66,6 +66,15 @@ in-contract defects/protected obligations, discretionary scope proposals and
 routine implementation/testing choices within delegated scope. The last category
 needs no separate permission; proposals remain optional until accepted.
 
+When authoring a Task or selecting its solution, start from the owner's intended
+result. Test material assumptions about the problem, its practical frequency
+and impact, and inherited limits. Where they could change the choice, consider
+another plausible framing and whether the existing design or a smaller change
+would suffice. An agent-authored charter can record a design proposal but its
+wording alone supplies neither authority nor evidence that the design is needed.
+Use [PC-009](proportional-controls.md#PC-009) for applicable controls and workflow
+changes, preserving accepted contracts and protected invariants under RA-003.
+
 Apply the same provenance rule to negative constraints in Tasks, Change Requests,
 Decisions and execution prompts. No-release, no-publication, no-host-inspection,
 diagnosis-only, no-recovery, no-in-scope-fixes, prohibited tools and extra holds

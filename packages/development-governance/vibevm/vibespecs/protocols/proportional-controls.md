@@ -95,6 +95,17 @@ or bounded recovery when that preserves the invariant with lower operator cost.
 <a id="PC-009"></a>
 **PC-009 — Control and workflow assessment.**
 
+When framing a Task or selecting a control within this protocol's scope, start
+from the owner goal and actual supported path. Test consequential assumptions
+about the problem, including its frequency and severity, and any inherited limits.
+Use [RA-006](requirement-authority.md#RA-006) to distinguish binding outcomes
+and constraints from proposed means. If a different framing or approach could
+change the decision, compare the existing path without the change, the smallest
+adequate correction and the proposed design on the same basis. Weigh material
+state, gates, recovery, maintenance and user friction, including work or risk
+shifted to other components. A visible, rare, low-impact and recoverable failure
+may warrant clear reporting and simple recovery under [PC-007](#PC-007).
+
 Independent review of a change that affects controls or operator workflow must
 also exercise the simplest owner-facing black-box path required by canonical
 authority. Review for unnecessary state, gates, authority coupling, prerequisites
