@@ -1,9 +1,9 @@
 [meta]
 generated_by = "vibe 1.0.11"
-generated_at = "2026-11-23T12:32:07Z"
+generated_at = "2026-11-23T13:02:31Z"
 schema_version = 7
 root_dependencies = [
-    "flow:org.jresearch.ai/development-governance@=12.3.0",
+    "flow:org.jresearch.ai/development-governance@=12.4.0",
     "flow:org.jresearch.ai/codex-relay",
     "flow:org.jresearch.ai/landscape-model-guidance",
     "flow:org.jresearch.ai/landscape-subagents",
@@ -13,9 +13,9 @@ root_dependencies = [
 kind = "flow"
 name = "development-governance"
 group = "org.jresearch.ai"
-version = "12.3.0"
-source_url = "file:///var/lib/codex-relay/dispatch-work/repositories/jresearchsoftware/shared-governance/run-45174346699/.codex-sandbox/tmp/task-124/staging-final/vibevm/vibepacks/org.jresearch.ai/development-governance/v12.3.0"
-content_hash = "sha256:bcc87a641c21a79b5a2973eff01b2c1ff3ae5644c10e77e26bf2f2a36c9676ea"
+version = "12.4.0"
+source_url = "file:///var/lib/codex-relay/slots/pool-5/work/repositories/jresearchsoftware/shared-governance/run-45179250307/.codex-sandbox/tmp/task-122/materialization/vibevm/vibepacks/org.jresearch.ai/development-governance/v12.4.0"
+content_hash = "sha256:9ef779a9b5153871f0979ae597d7ccf204f4bc04001b41017122d4ef21eff065"
 files_written = []
 admitted_by = "root-edge"
 source_kind = "registry"
@@ -29,7 +29,7 @@ source_url = "https://github.com/jrs-vibevm/org.jresearch.ai.codex-relay.git"
 source_ref = "5cc8d97d6c88eb77c15d640c1e022974036d5037"
 content_hash = "sha256:feb84ec2551c558e15230f20e5ed471335139c0201a854b4a5d16f6fc6346bdf"
 files_written = []
-dependencies = ["org.jresearch.ai/development-governance@=12.3.0"]
+dependencies = ["org.jresearch.ai/development-governance@=12.4.0"]
 admitted_by = "root-edge"
 source_kind = "git"
 

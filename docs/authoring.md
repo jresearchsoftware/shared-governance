@@ -83,6 +83,59 @@ assessments; other consumers own their separate topic choices and migration.
 
 ## Semantic completeness
 
+### Solution judgment in Task 122
+
+[Task #122](https://github.com/jresearchsoftware/shared-governance/issues/122)
+and [Small Improvement #129](https://github.com/jresearchsoftware/shared-governance/issues/129)
+share one candidate and one independent assessment. The baseline is Task #124's
+accepted source `60a4c5e1878d0286b064936772da646b886b5fad` and its 12.3.0 slot.
+The open exact-label scan found #129 as the sole candidate. It fits the same
+change because it is a bounded producer-local policy with source-verifiable
+routing and an existing live Instructions application path. Include both Issue
+links in the receiving PR and Outcome.
+
+RA-006 applies its existing provenance distinction to design premises during
+Task authoring. PC-009 applies proportionality to control selection, building
+on PC-002, PC-005, PC-007 and PC-011. IR-009 applies the same solution-fit
+question to the actual result and IR-016 follows material adjacent assumptions
+when an owner points out a gap. PC-014 still owns cross-system guarantee
+placement. PC-013 and IR-012–IR-015 still govern authority and finding
+disposition. Task Handoff retains the existing lifecycle and review strategy.
+
+The implementation used PSDA.1 to distinguish loss of decision-bearing evidence
+from overflow of a presentation budget, PSDA.8 to compare consequences on the same
+supported path, SYSE.6 to identify when evidence reopens a design choice, and
+SYSE.28 to follow the property to the action relying on it. The consulted
+FPF Library snapshot `20261123T124618Z-b33c92e64e822d2c` matched upstream
+`13716cb1da9d55798ed2241d5e80611e6b3d7723` at the 2026-11-23 check. These
+methods inform the walks below. The project's existing authority governs
+constraints and verdicts.
+[PSDA.1 and PSDA.8](https://github.com/ailev/FPF/blob/13716cb1da9d55798ed2241d5e80611e6b3d7723/DPFs/DECISION-DESIGN-PRINCIPLES-FRAMEWORK.md)
+[SYSE.6 and SYSE.28](https://github.com/ailev/FPF/blob/13716cb1da9d55798ed2241d5e80611e6b3d7723/DPFs/Engineering%20DPF%20Suite/SYSTEMS-ENGINEERING-PRINCIPLES-FRAMEWORK.md)
+
+These source-based walks illustrate the expected decisions:
+
+| Case | Decision |
+| --- | --- |
+| A draft charter proposes a separate hash-verified report for occasional Outcome truncation. | Identify the actual outcome and the provenance of the internal cap and proposed architecture. If current truncation hides material evidence, leaving it unchanged is inadequate. Compare a bigger bounded in-place Outcome with a truthful overflow warning against the second artifact's publication, integrity and replay burden. The added mechanism needs evidence of a material need the simpler path cannot satisfy. Preserve any binding requirement to retain a separately requested artifact. |
+| The owner challenges an earlier approval of that design. | Independently trace schema character limits, encoded/rendered byte limits, and the reader's page-size and traversal bounds to see whether the Reviewer actually receives material evidence. Report any gap in the earlier verdict and disposition based on the effective authority. Keep necessary exact-result, authorization, secret-handling and replay checks. A hypothetical stronger assurance stays optional under PC-013 and IR-012–IR-015. |
+| A verified handoff receipt can refer to different bytes from the ones consumed. | Keep a justified receiving check at reliance under PC-014 when the earlier guarantee cannot cover the actual bytes. Simple recovery is suitable for a rare, visible, low-impact presentation failure only when protected obligations still hold. |
+| This producer drafts a material architecture Task or reviews a result involving a consequential control. | Apply relevant verified FPF methods to framing and alternatives at authoring, or to solution fit and affected paths at independent review. Put material reasoning in the existing record. Unavailable access calls for adequate qualified material or disclosure of a material limitation. |
+| This producer drafts a routine correction or reviews its mechanical result. | Make a brief relevance assessment before publishing the charter. Ordinary review suffices for a mechanical result. A consumer using the distributed EM-001–EM-004 guide still has an optional resource. |
+
+The overflow walks are synthetic. Relay's original incident supplies context
+and its owner chose the smaller solution for that project.
+[Relay owner Decision](https://github.com/jresearchsoftware/codex-relay/issues/269#issuecomment-7061897331)
+
+The complete generated [ChatGPT Project Instructions](../chatgpt/instructions.md)
+now route to accepted local FPF guidance. TH-029 requires owner application and
+live readback when the accepted text differs or is unconfirmed, after integration
+and before Task completion. Source qualification supplies no live Settings
+evidence. The exported optional-method guide, client tools and topic adoption
+routes retain their existing contract.
+
+### Earlier package changes
+
 Task 112 proposes **12.1.0 MINOR** against independently accepted 12.0.0 at
 `e7b3769cf06755c305f832fda8fc8e73edfe147f`. The new explicitly adopted Human
 Command Interaction topic owns generic human shell/admin action and copyback

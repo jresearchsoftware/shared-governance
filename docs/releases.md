@@ -18,6 +18,16 @@ assessments. Other consumers retain their own adoption and local policy.
 
 ## Contribution and integration
 
+[Task #122](https://github.com/jresearchsoftware/shared-governance/issues/122)
+prepares **12.4.0 MINOR** against accepted 12.3.0. The change matches the
+provisional forecast under PV-002–004. The new guidance makes solution fit
+explicit within existing authoring and assessment, preserving applicability,
+protected boundaries and supported workflows. It requires no separate operator
+step, artifact or gate. The local FPF use under [#129](https://github.com/jresearchsoftware/shared-governance/issues/129)
+adds producer-only duties outside the exported package. See the
+[source comparison and walks](authoring.md#solution-judgment-in-task-122).
+Reconcile version and classification against accepted main at integration.
+
 [Task 124](https://github.com/jresearchsoftware/shared-governance/issues/124)
 prepares **12.3.0 MINOR** against accepted 12.2.0. The candidate matches the
 provisional MINOR forecast. PC-014 adds explicit system responsibility guidance

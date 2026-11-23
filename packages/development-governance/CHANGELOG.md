@@ -1,5 +1,14 @@
 # Development Governance changelog
 
+## 12.4.0
+
+MINOR. [PC-009](vibevm/vibespecs/protocols/proportional-controls.md#PC-009),
+RA-006 and IR-009 clarify how to challenge material design premises and compare
+sufficient alternatives in existing authoring and review. IR-016 clarifies
+how to follow adjacent assumptions and coupled paths when the owner identifies
+an unsupported premise. Existing obligation, evidence and optional-change
+distinctions apply. The guidance adds no operator action or approval gate.
+
 ## 12.3.0
 
 MINOR. [PC-014](vibevm/vibespecs/protocols/proportional-controls.md#PC-014)

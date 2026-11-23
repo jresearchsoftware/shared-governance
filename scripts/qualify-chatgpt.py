@@ -92,7 +92,13 @@ def main():
         assert first["effective_content"] == "CHANGED" and same["effective_content"] == "NO_OP"
         original_custom = custom.read_bytes()
         generated = custom.parent / "instructions.md"
-        assert not any(w in generated.read_text() for w in ("Task", "Outcome", "BLOCKED", "Deliberative"))
+        custom_block = (
+            "## Project custom instructions\n\n"
+            + original_custom.decode("utf-8").strip()
+            + "\n\n## Client surfaces"
+        )
+        assert custom_block in generated.read_text()
+        assert "local FPF rule" not in generated.read_text()
         # Synthetic upgrade uses the normal materializer, never a copied consumer generator.
         major, minor, patch = map(int, version.split("."))
         next_version = f"{major}.{minor}.{patch + 1}"
@@ -117,7 +123,10 @@ def main():
         assert changed["instructions"] == "CHANGED" and changed["sources"] == "CHANGED"
         assert project("check", upgraded_slot)["effective_content"] == "NO_OP"
         assert custom.read_bytes() == original_custom
-        assert "Synthetic compatible" in generated.read_text()
+        upgraded_text = generated.read_text()
+        assert custom_block in upgraded_text
+        assert "local FPF rule" not in upgraded_text
+        assert "Synthetic compatible" in upgraded_text
         print(json.dumps({"native_chatgpt_lifecycle": "PASS", "source_ref": args.source_ref,
                           "version": version, "synthetic_upgrade": next_version,
                           "install_ok": install["ok"], "update_ok": update["ok"],
