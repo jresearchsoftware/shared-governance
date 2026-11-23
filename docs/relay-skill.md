@@ -43,6 +43,15 @@ bundled contracts with the connected tool's compatible advertised schema and
 retain original schemas for admitted old attempts. See the upstream
 [compatibility assessment](https://github.com/jresearchsoftware/codex-relay/blob/c2fed9a7edb1b9f9d6694b746f4be943669cb270/docs/relay-skill-compatibility.md#task-273-shared-1000-through-1210).
 
+Shared 12.5.0 accepts two additional closure-policy spellings. This producer's
+pinned Relay 10.0.0 Skill, its authority schemas and the current Relay readers
+still require the existing spellings for native Task authoring. Use the
+[local binding](manual-task-handoff.md#completion-and-closure-disposition).
+Relay's separate [proposal #294](https://github.com/jresearchsoftware/codex-relay/issues/294)
+concerns product support. Any later Shared spelling preference here depends
+on the accepted local Skill, Shared version, effective authoring guidance
+and applicable runtime together.
+
 Package qualification covers native graph resolution, immutable bytes and
 the project Skill projection. Installed Relay, connected App and runner
 compatibility require their own evidence. The consumer workflow reconciliation

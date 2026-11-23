@@ -1,5 +1,16 @@
 # Development Governance changelog
 
+## 12.5.0
+
+MINOR. [TH-026](vibevm/vibespecs/protocols/task-handoff.md#TH-026) accepts
+`close-on-final-result` alongside `close-authorized` and `close-on-condition`
+alongside `keep-open` in the existing single closure-policy field. Each pair
+has identical semantics. Supported legacy authoring and retained authority,
+whole-Task completion on the designated merge or authorized no-PR path, and
+verified condition-based continuation are preserved. The guidance clarifies
+ordinary authorized Issue disposition and allows each compatible consumer to
+choose its authoring preference without adding operator work or a gate.
+
 ## 12.4.2
 
 PATCH. [GH-005 and GH-011](vibevm/vibespecs/protocols/github-repository-governance.md#GH-011)
