@@ -1,5 +1,14 @@
 # Development Governance changelog
 
+## 12.4.2
+
+PATCH. [GH-005 and GH-011](vibevm/vibespecs/protocols/github-repository-governance.md#GH-011)
+clarify which checks govern merge or acceptance and how to identify intentionally
+enabled optional checks and unsolicited App suites. [IR-007 and IR-008](vibevm/vibespecs/protocols/independent-review.md#IR-007)
+clarify how to assess completed failures in existing exact-result review.
+Existing validation obligations, native enforcement, review identity and
+event-directed evidence reuse apply without an additional gate or operator step.
+
 ## 12.4.1
 
 PATCH. The [onboarding guide](vibevm/vibespecs/guides/onboarding.md#how-owners-and-assistants-discuss-results)
