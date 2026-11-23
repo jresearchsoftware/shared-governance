@@ -107,6 +107,9 @@ restriction: reconcile conflicting historical authority through the project's
 existing trusted Decision mechanism under RA-005.
 
 Bound required proof to the deliverable and accountable component.
+When Task authoring or acceptance assigns a cross-system precondition or
+verification, apply [PC-014](proportional-controls.md#PC-014) to locate
+the obligation at its owning boundary.
 An unrelated tool's cold installation, downstream
 application or consumer configuration is mandatory only within accepted scope or
 when demonstrably necessary to establish the producer's promised contract. Invalid

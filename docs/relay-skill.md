@@ -18,7 +18,8 @@ with content hash `sha256:feb84ec2551c558e15230f20e5ed471335139c0201a854b4a5d16f
 
 The Relay manifest requires Development Governance `>=12.1.0`. Task 118 kept
 the producer's exact 12.1.0 selection. Task 120 advances the producer's
-Development Governance selection to 12.2.0 within the existing Relay range.
+Development Governance selection to 12.2.0. Task 124 advances the selection
+to 12.3.0 within the existing Relay range.
 The Relay dependency edge in the root lock resolves to the producer's unique
 selected slot.
 All ten paths in the [Skill's shared protocol route](../.agents/skills/codex-relay/references/shared-protocols.md)

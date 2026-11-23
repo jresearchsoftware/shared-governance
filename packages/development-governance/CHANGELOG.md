@@ -1,5 +1,14 @@
 # Development Governance changelog
 
+## 12.3.0
+
+MINOR. [PC-014](vibevm/vibespecs/protocols/proportional-controls.md#PC-014)
+places each cross-system guarantee at its owning boundary. It covers interface
+validation, observed results and justified exceptions. RA-006 and IR-009 route
+Task authoring and independent assessment to the same criterion. Existing
+protected obligations, supported workflows and adoption boundaries still apply.
+The change adds no mandatory operator action or lifecycle gate.
+
 ## 12.2.0
 
 MINOR. [RA-007](vibevm/vibespecs/protocols/requirement-authority.md#RA-007)
