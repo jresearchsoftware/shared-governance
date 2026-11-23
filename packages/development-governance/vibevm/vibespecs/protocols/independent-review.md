@@ -88,6 +88,14 @@ result/review evidence. Isolated TEST and modeled external services remain valid
 this does not require live services, production mutation, a monolithic end-to-end
 test or repetition solely for reviewer independence.
 
+Trace required validation to accepted project or Task authority and required
+merge checks to effective host policy. A generic continuation condition about
+unresolved or required checks does not identify a specific blocker. Use the
+applicable requirements and primary results for the exact candidate to identify
+any unmet condition. Preserve concrete native refusals and the binding's
+authority and identity rules. For GitHub evidence, see
+[GH-011](github-repository-governance.md#GH-011).
+
 <a id="IR-008"></a>
 **IR-008 — Primary warning surfaces.**
 
@@ -98,6 +106,17 @@ warning retain source, impact, scope, disposition, next action and evidence gaps
 Unavailable required evidence is a gap, not absence of warnings. Unsupported
 UI-only or pre-execution banners need no new acquisition workaround; that access
 limit alone is not a defect, but a known material warning still needs disposition.
+
+Inspect actual failures from deliberately project-enabled optional checks.
+Use the primary error or annotations, scope, trustworthiness and affected
+behavior to decide whether the failure demonstrates a material in-scope defect
+or leaves required proof missing. Explain a material nonblocking result when
+the evidence shows an irrelevant, flaky or environmental failure. An optional
+check that never ran or is still pending supplies no failed result and creates
+no wait by itself. An unsolicited external suite's status creates no validation
+obligation. Assess credible diagnostic evidence of an in-scope defect
+regardless of its source. State unresolved origin or policy visibility as an
+evidence gap with its concrete impact.
 
 <a id="IR-009"></a>
 **IR-009 — Authorized behavior and control impact.**
