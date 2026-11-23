@@ -1,10 +1,10 @@
 # Landscape guidance in the producer workspace
 
 The root workspace deliberately consumes the public frozen
-`org.jresearch.ai/landscape-model-guidance@1.0.3` and
-`org.jresearch.ai/landscape-subagents@1.0.2` flows. Root AGENTS supplies their
+`org.jresearch.ai/landscape-model-guidance@1.1.0` and
+`org.jresearch.ai/landscape-subagents@1.1.0` flows. Root AGENTS supplies their
 project-local applicability and precedence. VibeVM's generated INDEX routes to
-both compact boots, which conditionally route to complete policy. Native 1.0.11
+both compact boots, which conditionally route to complete policy. Native 1.0.12
 emits static INDEX entries even for dynamic linkage; detail remains conditional.
 Ordinary accepted-checkout reading requires no install, network or runtime launch.
 
@@ -12,8 +12,9 @@ For relevant **new** general model/effort recommendations, use the full installe
 model-selection protocol and its dated evidence when needed. Recommendations
 are advice under owner/task choices and actual client permissions, not an
 allowlist, access entitlement or automatic profile selection. Keep an admitted
-Codex/Relay profile fixed. A newly unavailable profile uses its existing authority
-and recovery path, not silent substitution or moving Landscape main.
+Codex/Relay profile fixed. The 1.1.0 guidance starts ordinary and complex new
+work at GPT-6.2 Sol/medium and reserves higher effort for a specific need.
+A newly unavailable admitted profile uses its existing authority and recovery path.
 
 The root explicitly adopts the complete subagent flow for substantial work with
 Subagents On and task/runtime permission. Useful proactive delegation, including
@@ -27,14 +28,14 @@ Helpers do not provide the producer's independent acceptance. ChatGPT's existing
 orchestration/review role does not gain executor permissions from either flow.
 
 These dependencies belong to the **producer root**. The public Development
-Governance authoring member, export inventory, version 7.0.1 and empty dependency
-closure are unchanged. Relay 5.0.0 and its single consumer-selected Shared
-Governance slot remain unchanged. No other consumer adopts these flows here.
+Governance authoring member exports version 12.5.0 with an empty dependency
+closure. Relay Skill 10.0.0 uses the single root-selected Development Governance
+12.5.0 slot. These Landscape pins apply only to this workspace.
 
 ## Deliberate maintenance and recovery
 
 Use the accepted [self-adoption workflow](self-adoption.md), with pinned VibeVM
-1.0.11 and disposable staging/isolated settings. Verify a chosen public tag's
+and disposable staging with isolated settings. Verify a chosen public tag's
 peeled commit, frozen manifest identity and distribution inventory before setting
 an exact version and full Git revision in the root manifest. Tags document the
 selection; immutable revisions and native content hashes bind acquired bytes.
@@ -62,5 +63,5 @@ live Settings or discharge any earlier unresolved mismatch. If a future change
 affects the complete effective text, follow the existing full-replacement and
 live-readback procedure after acceptance/integration.
 
-See [current Task 96 qualification](task-96/step-5/README.md) for accepted-main
-integration, exact public identities, scenario analysis and evidence limits.
+See [Task 139 qualification](task-139/step-1/README.md) for the current update and
+[Task 96 qualification](task-96/step-5/README.md) for the original integration.

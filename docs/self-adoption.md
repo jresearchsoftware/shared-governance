@@ -1,6 +1,6 @@
 # Native producer self-adoption
 
-This producer consumes its own guidance through ordinary pinned VibeVM 1.0.11
+This producer consumes its own guidance through ordinary pinned VibeVM 1.0.12
 `flow:` resolution, a versioned in-tree registry and dynamic slot routing.
 The stable authoring root remains `packages/development-governance`; generated
 registry source, slots, lock, root/member indexes and agent routes are committed
@@ -74,14 +74,19 @@ reading of committed files does not. Preserve the original lock before fresh
 resolution and retain historical slots pruned by the tool when transferring
 selected outputs back. Do not edit generated source identities or global settings.
 
-VibeVM 1.0.11 keeps Git clone requests on their original host. No compatibility
-remap is needed; [Task 89](task-89/step-1/README.md) verifies cold acquisition
-without the temporary Task 87 identity row.
+VibeVM keeps Git clone requests on their original host. Use the public origins
+directly in isolated staging. [Task 139](task-139/step-1/README.md) records the
+cold acquisition under 1.0.12.
 
 Use the pinned executable, set the root's exact requirement to the authored
-version, and review/commit generated files in this same PR. Generation preserves
-text outside root agent blocks. Member AGENTS/CLAUDE/GEMINI and index are producer
-routing, excluded from the passive public export and checked separately.
+version, and review/commit generated files in this same PR. Ordinary install
+holds a locked version even after its exact requirement changes. Preserve the
+original lock in Git and use fresh staging resolution for a deliberate version
+change. Generation moves the root router to the front and preserves authored
+text outside its markers.
+The [project boot scope](../AGENTS.md#project-boot-scope) preserves project-only
+reading across root entrypoints. Member AGENTS/CLAUDE/GEMINI and index are
+producer routing, excluded from the passive public export and checked separately.
 Only the current generated version is needed; retain frozen historical source.
 
 `--producer-source` reuses the exact Git exporter, with no resolver or selector.
@@ -127,11 +132,14 @@ For missing/corrupt committed outputs prefer ordinary Git restore from the
 frozen accepted commit. For deliberate native recovery use `vibe reinstall
 --force --offline <workspace>` to re-materialize pinned content, then rerun the
 canonical comparison. Plain `vibe reinstall` rebuilds boot from retained slots.
-Both paths were tested; reinstall has no `--registry` flag. In-tree local
-resolution needs no global registry configuration change. Do not hand-edit lock
-URLs, bypass integrity or repair host permissions.
+Both paths were tested. Reinstall has no `--registry` flag. In-tree local
+resolution needs no global registry configuration change. With a complete lock
+and cached bytes, `vibe install --offline` recovered a missing file-Git slot in
+the disposable probe. A source-free reinstall can rebuild boot while reporting
+stale AI-native specification authority. A normal install refreshes that state
+when needed. Do not hand-edit lock URLs, bypass integrity or repair host permissions.
 
-On 1.0.11, forced reinstall refuses refetched source bytes that differ from the
+Forced reinstall refuses refetched source bytes that differ from the
 lock with `lock_hash_mismatch`, before copying them into slots. Restore the
 reviewed source/projection with Git and retry; do not use update to bless an
 accidental edit to a frozen version. Native runs may create two ignored
