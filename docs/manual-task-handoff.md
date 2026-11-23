@@ -231,13 +231,19 @@ further execution and closure remain distinct.
 
 ### Completion and closure disposition
 
-Use accepted TH-026/RA-006 and the Task's chronological authority. Keep one
-`Issue closure policy: close-authorized` or `Issue closure policy: keep-open`
-line; describe any condition in ordinary adjacent text. No second field is needed.
-This 7.0.0 binding is proposed until accepted and does not retroactively change
-already-admitted work or earlier explicit holds.
+Use accepted TH-026/RA-006 and the Task's chronological authority. Write one
+`Issue closure policy` line with one value and describe any condition in ordinary
+adjacent prose. Shared accepts `close-on-final-result` and `close-authorized`
+with equal meaning, and likewise `close-on-condition` and `keep-open`.
+For new Tasks in this producer's current Relay-backed authoring path, write
+`Issue closure policy: close-authorized` or `Issue closure policy: keep-open`.
+The pinned Relay Skill and qualified native authority readers use those values.
+Adopt a new authoring preference separately when this project's accepted Shared
+slot, Skill, effective guidance and applicable Relay runtime support it together.
+Relay Apply alone supplies no such adoption. Preserve earlier charters, admitted
+work, effective Decisions and explicit holds under their historical bindings.
 
-For `close-authorized`, only the designated genuinely completing PR uses
+In the final-result mode, only the designated genuinely completing PR uses
 `Closes #N` or GitHub's supported native closing link. Verify that actual Task
 work has reached its accepted completion boundary and that merge will finish it;
 preserve independent exact-head acceptance, required checks and protected merge
@@ -245,7 +251,7 @@ authority. GitHub closes the Issue on that PR's default-branch merge, not when
 an unmerged PR is abandoned/closed. Intermediate PRs use `Related to #N`.
 No-PR results use the existing authorized completion path without a fabricated PR.
 
-For `keep-open`, use `Related to #N` and state the remaining condition and
+In the condition-based mode, use `Related to #N` and state the remaining condition and
 sufficient evidence. The owner-facing continuation verifies it and closes through
 the supported trusted mechanism when all Task work/holds are resolved. Record
 the evidence in the chronology; do not require another owner-choice prompt or a
@@ -263,11 +269,18 @@ through current Task authority. Do not invent an owner-selected hold or obtain a
 second decision where existing permission is clear. Unrelated PRs and optional
 later usage add no completion obligation.
 
+For ordinary owner-authorized disposition, use the supported Issue closure and
+status-reason path. Completed/fixed requires actual completion and applicable
+acceptance. For duplicate/superseded, cancellation or not planned, record the
+actual reason and available replacement link without claiming successful
+completion or condition verification. Preserve outstanding protected or admitted
+work and the existing Decision path for actual changes to authority.
+
 For Relay-bound work, preserve the actual admitted v4 identity, Writer provenance,
-native exact-head review and protected owner continuation. The pinned Relay 3.0.0
-mechanism still requires `closesTask=false`, neutral squash text, separate closure
-and effective `close-authorized`; this source change does not implement the new
-runtime behavior. Use only the explicitly qualified, owner-bounded
+native exact-head review and protected owner continuation. Where the qualified
+historical Relay 3.0.0 mechanism applies, it requires `closesTask=false`,
+neutral squash text, separate closure and effective `close-authorized`.
+Use only the explicitly qualified, owner-bounded
 [Relay transition](releases.md#task-84-closure-transition) when relying on that
 legacy mechanism with the new Shared contract. Its technical trusted Decision
 path must not become a new discretionary permission prompt. Task 84's owner

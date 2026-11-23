@@ -18,6 +18,16 @@ assessments. Other consumers retain their own adoption and local policy.
 
 ## Contribution and integration
 
+[Task #136](https://github.com/jresearchsoftware/shared-governance/issues/136)
+prepares **12.5.0 MINOR** against accepted 12.4.2 under PV-002–004.
+Both spellings of each closure mode are valid. The change preserves existing
+authoring, protected completion and historical authority without mandatory
+operator work or a new gate. Align the version with accepted main at integration.
+[Small Improvement #135](https://github.com/jresearchsoftware/shared-governance/issues/135)
+adds local FPF discussion guidance outside the package. The changed effective
+Project Instructions require TH-029 manual application/readback after integration.
+See the [coverage and handoff](task-136/step-1/README.md).
+
 [Task #122](https://github.com/jresearchsoftware/shared-governance/issues/122)
 prepares **12.4.0 MINOR** against accepted 12.3.0. The change matches the
 provisional forecast under PV-002–004. The new guidance makes solution fit
@@ -130,13 +140,14 @@ permission friction. Neither Task 74's PATCH exception nor the Relay-only
 transition below changes that classification. See [Task 84 coverage](task-84/step-1/README.md)
 and the [Step 2 window reconciliation](task-84/step-2/README.md).
 
-For a producer Task whose deliverable includes publication, select `keep-open`
-and describe successful publication of the exact accepted version/revision next
-to the one closure field. Source acceptance/merge, package publication and later
+For a producer Task whose deliverable includes publication, select the
+condition-based mode (`keep-open` in the current producer Relay authoring
+binding) and describe successful publication of the exact accepted
+version/revision next to the one closure field. Source acceptance/merge, package publication and later
 consumer adoption are distinct. The source PR uses a non-closing reference.
 After all actual Task conditions are verified, already-authorized trusted closure
 needs no new discretionary owner choice. If final merge itself completes a Task,
-`close-authorized` uses the designated final PR's native closing link. Historical
+the final-result mode uses the designated final PR's native closing link. Historical
 Tasks retain their admitted authority and then-supported mechanism.
 
 Task 65 prepares **6.0.0 MAJOR** against accepted 5.2.3. Package Versioning's

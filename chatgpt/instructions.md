@@ -26,13 +26,13 @@ The assistant must not initiate, suggest or route this project's conversations f
 
 Follow accepted manual client binding/Task Handoff: chronology, Decisions, publication, acceptance, continuation. An in-scope bare Outcome link is a handoff unless framed for discussion: reconcile current authority/exact result before deriving the next permitted action. Route completed reviewable results to independent assessment. Reconcile historical/partial and active BLOCKED results with cause-specific evidence and authorized correction or exact missing decision/capability. No terminal replay or duplicate publication.
 
-Follow accepted AGENTS.md's local FPF rule for Task authoring and material solution reviews.
+Apply accepted AGENTS.md's FPF rules in substantive owner advice, Task authoring and material solution review. For advice, give the material effect, pattern ID and verified edition, or say when no method helps. Skip routine replies.
 
 For relevant independent review, read full accepted materialized independent-review.md under root adoption. Assess complete affected behavior, primary source/diff/CI and warnings: correctness, architecture, maintainability, risks, test realism. Trace coupled paths; aggregate material findings; distinguish contractual defects, evidence gaps, optional improvements. Prior reviews/Outcomes/green summaries cannot replace assessment; contributor checks are self-checks. Deliberative proposals cannot approve until owner discussion/Decision permits acceptance. No other topics are adopted here.
 
 Before GitHub publication of negative independent review, Change Request, REQUEST_CHANGES or CHANGES REQUIRED, show all findings here, discuss with the owner, then STOP for explicit owner authorization to publish. Preview/silence/general review authority is insufficient. Each actionable finding needs severity, supported origin (or undetermined with comparison gap), exact result/comparison, evidence, qualified impact, remediation/closure evidence. Preserve classification on publication. This excludes executor Outcomes, neutral Task Decisions and authorized qualified positive Direct approval.
 
-Perform owner-authorized lifecycle actions only when accepted guidance, current authority, independent assessment and checks permit. Permissions/stronger identities stay with their owners. Live Instructions/Sources are unread/unverified; preserve unknown live rules. Owner applies/reads back replacements.
+Perform owner-authorized lifecycle actions only when accepted guidance, current authority, independent assessment and checks permit. Preserve stronger identity and permission boundaries.
 
 ## Client surfaces
 

@@ -56,7 +56,7 @@ boot/slot routes, preserving their conditional applicability:
 - Read the full `independent-review.md` for relevant independent review
   activities. Its methodology is mandatory for this producer's independent
   assessments; unrelated tasks skip it. Task Handoff retains lifecycle ownership.
-- Read the full [small-improvements.md](vibevm/vibedeps/org.jresearch.ai.development-governance/12.4.2/vibevm/vibespecs/protocols/small-improvements.md)
+- Read the full [small-improvements.md](vibevm/vibedeps/org.jresearch.ai.development-governance/12.5.0/vibevm/vibespecs/protocols/small-improvements.md)
   from the accepted materialized slot for deferred small source corrections and
   when preparing an authorized source-changing Task, its first source-changing
   Step after analysis, a relevant CR, or newly commencing another source-changing
@@ -81,7 +81,7 @@ boot/slot routes, preserving their conditional applicability:
 For relevant Codex Relay product workflows, the native boot routes to the pinned
 10.0.0 Skill; its projected copy is [.agents/skills/codex-relay/SKILL.md](.agents/skills/codex-relay/SKILL.md).
 Its shared protocol references use this consumer's single locked Development
-Governance 12.4.2 slot. Preserve the topic applicability above and the
+Governance 12.5.0 slot. Preserve the topic applicability above and the
 [manual client binding](docs/manual-task-handoff.md); Manual Codex remains supported.
 Skill installation grants no automatic execution or operational authority.
 See [native Relay integration](docs/relay-skill.md) for maintenance and rollback.
@@ -132,6 +132,14 @@ control placement, transfers of work or risk and alternative explanations agains
 the effective Task and actual result. For mechanical changes without a
 consequential design choice, ordinary review suffices. Route new evidence that
 defeats a material premise through the existing owner/Decision mechanism.
+
+In substantive owner-facing ChatGPT analysis, assess FPF applicability for
+choices about requirements, constraints, workflows, architecture, trade-offs
+or material continuation. When a method materially changes the conclusion,
+give its pattern ID, verified edition or revision and briefly explain its effect.
+If no method adds value, acknowledge that briefly when presenting the
+recommendation. Routine factual answers, greetings and mechanical updates skip
+this discussion practice. It adds no gate or service dependency.
 
 Use the FPF reader or upstream source, preferring the latest verified available
 edition at the time of the work. Read complete selected patterns with their
