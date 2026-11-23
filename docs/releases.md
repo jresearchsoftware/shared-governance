@@ -18,6 +18,16 @@ assessments. Other consumers retain their own adoption and local policy.
 
 ## Contribution and integration
 
+[Task 124](https://github.com/jresearchsoftware/shared-governance/issues/124)
+prepares **12.3.0 MINOR** against accepted 12.2.0. The candidate matches the
+provisional MINOR forecast. PC-014 adds explicit system responsibility guidance
+to the existing control assessment. RA-006 and IR-009 route to it in existing
+authoring and review. Accepted caller and provider obligations, stronger local
+contracts and protected checks remain binding. The change adds no operator
+action, workflow gate or mandatory rollout. See the
+[source comparison and acceptance examples](task-124/step-1/README.md).
+Reconcile the classification and version against accepted main at integration.
+
 [Task 120](https://github.com/jresearchsoftware/shared-governance/issues/120)
 and delegated [Small Improvement #121](https://github.com/jresearchsoftware/shared-governance/issues/121)
 prepare **12.2.0 MINOR** against accepted 12.1.0.

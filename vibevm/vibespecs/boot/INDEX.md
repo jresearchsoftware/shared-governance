@@ -16,7 +16,7 @@ path = "vibevm/vibespecs/boot/00-authoring.md"
 kind = "static"
 
 [[entry]]
-path = "vibevm/vibedeps/org.jresearch.ai.development-governance/12.2.0/vibevm/vibespecs/boot/development-governance.md"
+path = "vibevm/vibedeps/org.jresearch.ai.development-governance/12.3.0/vibevm/vibespecs/boot/development-governance.md"
 kind = "static"
 
 [[entry]]

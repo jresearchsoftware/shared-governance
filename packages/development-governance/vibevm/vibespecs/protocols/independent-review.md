@@ -109,7 +109,8 @@ preference cannot retroactively authorize a changed contract. An unauthorized
 material delta requires the owning project's decision before acceptance.
 For controls and operator-work changes, apply adopted
 [proportional-controls](proportional-controls.md), including the simplest
-authorized black-box path and unnecessary friction. Do not prescribe a protected
+authorized black-box path, unnecessary friction, and control placement under
+[PC-014](proportional-controls.md#PC-014). Do not prescribe a protected
 live action outside authority merely to obtain review evidence. Assess the operation
 actually required by effective Task authority, including relevant coupled paths
 and realistic event ordering and retry semantics when they affect the claim.

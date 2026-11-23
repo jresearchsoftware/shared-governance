@@ -186,3 +186,44 @@ True vulnerabilities/regressions violating existing obligations, missing evidenc
 baseline debt and optional new protection retain distinct dispositions. This rule
 adds no universal per-PR reapproval, reviewer, checklist, service, ledger or wait;
 applicable local/specialist rules and stronger safety obligations remain in force.
+
+## System responsibility
+
+<a id="PC-014"></a>
+**PC-014 — Put each guarantee at its owning boundary.**
+
+When authoring a Task, implementing it or reviewing its result, trace each
+proposed blocking precondition or extra verification to the accepted contract
+and the component responsible for the guarantee. This includes readbacks,
+health probes, history checks, repeated validation and downstream delivery
+assertions. Assign one owning layer per guarantee, including for components in
+the same repository. Use clear interface contracts with typed inputs and results
+where supported, and ordinary tests at the owning layer. Common ownership,
+shared repositories and dependencies alone assign no responsibility. Remove or
+relocate speculative or duplicated controls within existing authority.
+
+Validate the required shape and values of the inputs the component sends or
+accepts, its authority for protected actions, and the correctness and identity
+of the outputs it promises. Invoke the provider's supported interface and rely
+on its established guarantees for execution, delivery, state transitions and
+policy enforcement. Do not mirror the provider's policy or use its internals
+or speculative preflight to predict whether valid work will succeed. A workflow
+producer validates the workflow it generates. The distribution system owns
+propagation to consumers under its delivery contract.
+
+Handle the actual response or failure, including refusals, errors and timeouts.
+Report the operation, the observed effect and its known cause. Distinguish
+request acceptance from completed execution or delivery, and disclose partial
+or unknown effects. Reconcile or retry only as the operation's contract permits,
+especially when replay could duplicate an effect.
+
+An additional cross-system control needs a specific unmet obligation in the
+caller's accepted contract, a demonstrated missing provider guarantee needed
+for the work, or an authority, security or trust boundary the caller cannot
+delegate. Establish the applicable guarantee and any configuration it depends
+on before relying on it. Explain the concrete risk and cheapest sufficient
+alternative under PC-002–005. Preserve explicit owner constraints, source and
+result identity, credential isolation, authorization for privileged effects,
+independent acceptance and externally enforced policy. Use this reasoning
+within existing authoring, implementation and review, with no extra checklist,
+gate, ledger, watcher or recurring verification process.
