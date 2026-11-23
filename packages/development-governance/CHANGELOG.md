@@ -1,5 +1,11 @@
 # Development Governance changelog
 
+## 12.4.1
+
+PATCH. The [onboarding guide](vibevm/vibespecs/guides/onboarding.md#how-owners-and-assistants-discuss-results)
+describes how owners and assistants already discuss results and choose what to do
+next. Existing project bindings govern authority and lifecycle actions.
+
 ## 12.4.0
 
 MINOR. [PC-009](vibevm/vibespecs/protocols/proportional-controls.md#PC-009),
