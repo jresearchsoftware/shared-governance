@@ -18,15 +18,15 @@ rev = "5cc8d97d6c88eb77c15d640c1e022974036d5037"
 auth = "none"
 
 [requires.packages."flow:org.jresearch.ai/landscape-model-guidance"]
-version = "=1.0.3"
+version = "=1.1.0"
 link = "dynamic"
 git = "https://github.com/jrs-vibevm/org.jresearch.ai.landscape-model-guidance.git"
-rev = "48432f00802f5aad106f3e1a9264e17c1edc354c"
+rev = "a810317f87fb4378be19edb04506444553f60148"
 auth = "none"
 
 [requires.packages."flow:org.jresearch.ai/landscape-subagents"]
-version = "=1.0.2"
+version = "=1.1.0"
 link = "dynamic"
 git = "https://github.com/jrs-vibevm/org.jresearch.ai.landscape-subagents.git"
-rev = "042e92884278d748502157945301dbc3f3c8318c"
+rev = "b3e9da5a10af2b258699e7d1667dc925d247ae8d"
 auth = "none"

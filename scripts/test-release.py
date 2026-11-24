@@ -429,6 +429,10 @@ class NativeDependencyTests(unittest.TestCase):
         self.consumer.mkdir()
         self.env = {**os.environ, "VIBE_SETTINGS": str(self.root / "settings"),
                     "VIBEVM_USER_CONFIG": str(self.root / "settings/config.toml")}
+        settings = self.root / "settings"
+        settings.mkdir()
+        (settings / "registry.toml").write_text(
+            f'[[registry]]\nname="fixture"\nurl="{self.registry.as_uri()}"\nauth="none"\n')
 
     def package(self, name, version, dependencies=None, frozen=True):
         target = self.registry / "org.fixture" / name / ("v" + version)
@@ -447,10 +451,9 @@ class NativeDependencyTests(unittest.TestCase):
             '[requires.packages]\n' + ''.join(
                 f'"org.fixture/{key}"="{value}"\n' for key, value in requirements.items()))
 
-    def run_vibe(self, success=True):
-        args = [str(VIBE), "--offline", "--json", "install", "--path", str(self.consumer),
-                "--registry", str(self.registry), "--assume-yes"]
-        args.append("--no-default-registry")
+    def run_vibe(self, *command, success=True):
+        args = [str(VIBE), "--offline", "--json", *(command or ("install", "--no-default-registry")),
+                "--path", str(self.consumer), "--assume-yes"]
         result = subprocess.run(args, env=self.env, capture_output=True, text=True)
         self.assertEqual(result.returncode == 0, success, result.stdout + result.stderr)
         return result
@@ -479,11 +482,12 @@ class NativeDependencyTests(unittest.TestCase):
         self.package("shared", "1.0.1")
         # Publishing available versions does not edit the consumer's lock.
         self.assertEqual((self.consumer / "vibe.lock").read_bytes(), before)
-        # Explicitly request the new transitive version and re-resolve the local
-        # registry fixture. Project install supports --registry; update's flag
-        # is for global apps. Direct-Git vibe update is covered by distribution.
+        # Install holds the locked version, even after an exact requirement change.
         self.project({"left": "=1.0.0", "shared": "=1.0.1"})
-        self.run_vibe()
+        held = self.run_vibe(success=False)
+        self.assertIn("held lock fixes `org.fixture/shared` at 1.0.0", held.stderr)
+        self.assertEqual((self.consumer / "vibe.lock").read_bytes(), before)
+        self.run_vibe("update", "org.fixture/shared")
         self.assertEqual(self.closure()["shared"], "1.0.1")
 
     def test_included_snapshot_is_detected_but_unused_package_is_not_in_closure(self):

@@ -146,7 +146,7 @@ def main():
         manifest = by_revision / "vibe.toml"
         manifest.write_text(manifest.read_text().replace('tag = "v' + version + '"', 'rev = "' + revision + '"'))
         failure = run(by_revision, "install", "--no-default-registry", "--assume-yes", success=False)
-        require("git archive" in failure.stderr and "no such ref" in failure.stderr,
+        require("git upload-archive" in failure.stderr and "no such ref: " + revision in failure.stderr,
                 "file Git revision failure differs from the known transport restriction")
 
         unavailable = fixture / "unavailable.git"
@@ -154,22 +154,18 @@ def main():
         try:
             run(first, "reinstall", "--offline")
             preparation.verify_consumer(args.source_ref, first)
-            failure = run(second, "install", "--offline", "--no-default-registry", "--assume-yes",
-                          success=False, settings=cold_settings)
-            require("remote repository `vibe.toml` not found" in failure.stderr,
-                    "offline install failure differs from the remote-manifest limitation")
+            run(second, "install", "--offline", "--no-default-registry", "--assume-yes", settings=cold_settings)
+            preparation.verify_consumer(args.source_ref, second)
             run(second, "clean", "--offline", settings=cold_settings)
             failure = run(second, "reinstall", "--offline", success=False, settings=cold_settings)
             require("tree is incomplete" in failure.stderr and "slot missing" in failure.stderr,
                     "offline reinstall failure differs from the missing-slot limitation")
-            failure = run(second, "reinstall", "--offline", "--force", success=False, settings=cold_settings)
-            require("remote repository `vibe.toml` not found" in failure.stderr,
-                    "forced offline reinstall failure differs from the remote-manifest limitation")
+            run(second, "install", "--offline", "--no-default-registry", "--assume-yes", settings=cold_settings)
+            preparation.verify_consumer(args.source_ref, second)
         finally:
             unavailable.rename(remote)
 
-        # Deliberately drift a disposable tag. This is an upstream failure probe,
-        # never a permitted change to an actual public package/version.
+        # Deliberately drift only the disposable tag; exercise held and fresh resolution.
         readme = distribution / "README.md"
         original_readme = readme.read_bytes()
         readme.write_bytes(original_readme + b"\nDisposable tag-drift probe.\n")
@@ -182,23 +178,13 @@ def main():
         run(distribution, "registry", "publish", str(distribution), "--repo-url", remote.as_uri())
         require(git(remote, "rev-parse", "v" + version + "^{commit}") != revision, "tag drift was not exercised")
         run(first, "install", "--no-default-registry", "--assume-yes")
-        drift_lock = tomllib.loads((first / "vibe.lock").read_text())["package"][0]
-        require(drift_lock["content_hash"] != expected_hash, "expected upstream lock drift was not observed")
-        preparation.verify(args.source_ref, first / slot, installed=True)  # Slot still has old bytes.
-        try:
-            preparation.verify_consumer(args.source_ref, first)
-        except ValueError:
-            pass
-        else:
-            raise ValueError("canonical consumer verifier accepted lock/slot split")
-        diagnosed = run(first, "check", success=False)
-        # A failed check emits its report followed by a JSON error envelope.
-        findings, _ = json.JSONDecoder().raw_decode(diagnosed.stdout.lstrip())
-        require(any(f["check"] == "lock_slot_hash" and f["severity"] == "error"
-                    and f.get("field") == "package[0].content_hash" for f in findings["findings"]),
-                "native check did not diagnose the lock/slot split")
+        held = tomllib.loads((first / "vibe.lock").read_text())["package"]
+        require(held == lock["package"], "ordinary install replaced a held package after tag drift")
+        preparation.verify_consumer(args.source_ref, first)
         drifted = consumer("drifted-consumer")
         run(drifted, "install", "--no-default-registry", "--assume-yes", settings=fixture / "drift-settings")
+        drift_lock = tomllib.loads((drifted / "vibe.lock").read_text())["package"][0]
+        require(drift_lock["content_hash"] != expected_hash, "fresh acquisition missed the disposable tag drift")
         try:
             preparation.verify(args.source_ref, drifted / slot, installed=True)
         except ValueError:
@@ -213,7 +199,13 @@ def main():
         run(distribution, "registry", "publish", str(distribution), "--repo-url", remote.as_uri())
         manifest = first / "vibe.toml"
         manifest.write_text(manifest.read_text().replace('=' + version, '=' + next_version).replace('v' + version, 'v' + next_version))
-        run(first, "update", "--all", "--assume-yes")
+        lock_before_update = (first / "vibe.lock").read_bytes()
+        held_update = run(first, "update", "--all", "--assume-yes", success=False)
+        require("LOCKED-SOURCE-LAW" in held_update.stderr and
+                (first / "vibe.lock").read_bytes() == lock_before_update,
+                "plain update did not preserve the held Git source")
+        (first / "vibe.lock").rename(fixture / "held-consumer.lock")
+        run(first, "install", "--no-default-registry", "--assume-yes")
         upgraded = first / preparation.slot(next_version)
         require(upgraded.is_dir() and not (first / slot).exists(), "synthetic update/pruning failed")
         require(tomllib.loads((upgraded / "vibe.toml").read_text())["package"]["version"] == next_version,
@@ -235,9 +227,9 @@ def main():
                           "commands": len(commands), "native_skills": "none declared/projected",
                           "protocol_source": "exact canonical source commit; independent acceptance is separate",
                           "local_publish_and_idempotence": "PASS", "independent_cold_consumer": "PASS",
-                          "tag_drift": "lock/slot split reproduced; native check and canonical verifier reject",
-                          "offline": "existing slots and complete Git rollback PASS; cache-only recovery FAIL",
-                          "update": "synthetic version-only declaration change PASS",
+                          "tag_drift": "held install preserves package; canonical verifier rejects fresh drift",
+                          "offline": "retained slots, cached install recovery and complete Git rollback PASS",
+                          "update": "held Git source refusal, fresh exact-tag resolution and rollback PASS",
                           "boot_index": "static package entry despite authored dynamic link",
                           "scope": "disposable local Git transport; remote publication not qualified"}))
 

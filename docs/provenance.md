@@ -82,9 +82,14 @@ versioned package references and qualification records remain historical facts.
 Task 89 updates the producer toolchain to `v1.0.11`, source
 `5e470926ad0f34d61e37d387ce4b7c153356a804`,
 [release 432408525](https://github.com/vibevm/vibevm/releases/tag/v1.0.11).
-The [current pin](../toolchain/vibevm.json) records verified release asset identities;
+The [historical pin](https://github.com/jresearchsoftware/shared-governance/blob/f51fd0ab22ff61fab48bd1e5af96918d77af1ec6/toolchain/vibevm.json)
+records verified release asset identities. Its
 [qualification](task-89/step-1/README.md) proves cold mixed-graph Git acquisition
 without the temporary Task 87 remap, with unchanged selected package identities.
+
+Task 139 updates the [current producer pin](../toolchain/vibevm.json) to
+`v1.0.12`. [Qualification](task-139/step-1/README.md) records its mutable release
+asset verification, mixed-graph resolution and paired Landscape update.
 
 Future publication repositories/tags, consumer adoption, registry credentials,
 private governance and broader extraction require their own later authority.

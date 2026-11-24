@@ -115,7 +115,8 @@ class NativeAdoptionTests(unittest.TestCase):
     def test_landscape_integrity_and_recovery(self):
         """A successful native install cannot hide corrupt or missing passive advice."""
         base = self.work / "vibevm/vibedeps"
-        for name, version in (("landscape-model-guidance", "1.0.3"), ("landscape-subagents", "1.0.2")):
+        for name in ("landscape-model-guidance", "landscape-subagents"):
+            version = "1.1.0"
             slot = base / ("org.jresearch.ai." + name) / version
             if not slot.exists():
                 self.skipTest("historical producer has no Landscape integration")
@@ -136,15 +137,22 @@ class NativeAdoptionTests(unittest.TestCase):
         original = manifest.read_text()
         if "landscape-model-guidance" not in original:
             self.skipTest("historical producer has no Landscape integration")
-        for before, after in (("=1.0.3", "^1.0.3"),
-                              ("48432f00802f5aad106f3e1a9264e17c1edc354c", "0" * 40),
-                              ("=1.0.2", "=1.0.1")):
-            with self.subTest(before=before):
-                manifest.write_text(original.replace(before, after))
-                self.reject()
+        for name in ("landscape-model-guidance", "landscape-subagents"):
+            coordinate = "flow:org.jresearch.ai/" + name
+            requirement = tomllib.loads(original)["requires"]["packages"][coordinate]
+            header = '[requires.packages."' + coordinate + '"]\n'
+            for before, after in (('version = "=1.1.0"', 'version = "^1.1.0"'),
+                                  (requirement["rev"], "0" * 40)):
+                prefix, _, remainder = original.partition(header)
+                section, boundary, suffix = remainder.partition("\n[")
+                candidate = prefix + header + section.replace(before, after) + boundary + suffix
+                with self.subTest(package=name, field=before):
+                    self.assertNotEqual(candidate, original)
+                    manifest.write_text(candidate)
+                    self.reject()
         manifest.write_text(original)
         index = self.work / EXPORTER.BOOT_INDEX
-        index.write_text(index.read_text().replace("landscape-subagents/1.0.2/", "landscape-subagents/1.0.1/"))
+        index.write_text(index.read_text().replace("landscape-subagents/1.1.0/", "landscape-subagents/1.0.2/"))
         self.reject()
 
     def test_forged_slot_metadata_rejected(self):
@@ -228,6 +236,9 @@ class NativeAdoptionTests(unittest.TestCase):
                      if (entry["group"], entry["name"]) == ("org.jresearch.ai", "codex-relay"))
         lock.write_text(original.replace(relay["source_ref"], "0" * 40))
         self.reject()
+        lock.write_text(original.replace('resolved_commit = "' + relay["resolved_commit"] + '"',
+                                         'resolved_commit = "' + "0" * 40 + '"'))
+        self.reject()
         edge = relay["dependencies"][0]
         lock.write_text(original.replace(f'dependencies = ["{edge}"]', 'dependencies = []'))
         with self.assertRaisesRegex(ValueError, "Relay dependency must bind to the root-selected Shared slot"):
@@ -240,6 +251,11 @@ class NativeAdoptionTests(unittest.TestCase):
         root = self.work / "AGENTS.md"
         root.write_text(root.read_text() + "\nPublic local overlay preserved.\n")
         EXPORTER.verify_producer(self.revision, self.work)
+        claude = self.work / "CLAUDE.md"
+        original = claude.read_text()
+        claude.write_text(original.replace("Use the project boot lane only.", ""))
+        self.reject()
+        claude.write_text(original)
         member = self.work / EXPORTER.PACKAGE / "AGENTS.md"
         member.write_text(member.read_text() + "\nUnexpected member activation.\n")
         self.reject()

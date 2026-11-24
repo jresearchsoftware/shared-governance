@@ -123,7 +123,7 @@ unchanged. A real separately admitted Task must verify automatic execution.
 
 ## Maintenance and rollback
 
-Use the hash-checked Linux musl VibeVM 1.0.11 in [the toolchain pin](../toolchain/vibevm.json)
+Use the hash-checked Linux musl VibeVM in [the toolchain pin](../toolchain/vibevm.json)
 and the [published installation contract](../.agents/skills/codex-relay/references/installation.md).
 Generate in a disposable native filesystem and review all outputs together:
 
@@ -133,6 +133,12 @@ vibe --offline --json skill list
 vibe --offline --json skill install --skill codex-relay --agent codex --scope project --dry-run
 vibe --offline --json skill install --skill codex-relay --agent codex --scope project --yes
 ```
+
+VibeVM 1.0.12 verifies and migrates the committed portable Skill receipt to
+workspace-local `.vibe/package-skills.toml` during projection. The local
+receipt embeds the absolute target path. Transfer the reviewed Skill bytes and
+retain the portable receipt in Git so a fresh checkout can repeat the migration.
+Keep the workspace receipt in ignored local state.
 
 For initial transition, start fresh resolution in staging: preserve the old lock
 and slots outside that disposable checkout before install. The first install
@@ -152,19 +158,19 @@ public root available through its existing native cache or normal authorized
 public acquisition; do not rewrite its payload or nested closure. Transfer only
 the selected generated outputs and preserve historical slots.
 
-For this mixed graph, VibeVM 1.0.11's `--registry` flag selects a local-only
+For this mixed graph, VibeVM's `--registry` flag selects a local-only
 resolver that omits manifest Git sources. Instead set `VIBE_SETTINGS` to an
 isolated authoring directory with a `registry.toml` containing one `[[registry]]`
 whose `name` is a local alias, `url` is `file:///absolute/staging/source/vibevm/vibepacks`
 and `auth` is `none`. Run the install command above without `--registry` and
 without `--offline` for public Git acquisition. This uses the native mixed
-resolver without changing user registry configuration. The original lock may
-be retained when intentionally changing Shared's exact version; preserve
-historical slots pruned in disposable staging when transferring selected output.
+resolver without changing user registry configuration. Ordinary 1.0.12 install
+holds locked versions. For a deliberate pin change, keep the original lock in
+Git and resolve fresh in staging, or explicitly update the selected package.
+Preserve historical slots pruned in staging when transferring selected output.
 
-VibeVM 1.0.11 repairs the Git clone host regression. No staging `VIBE_REMAP`
-is needed; [Task 89 qualification](task-89/step-1/README.md) records an unmodified
-cold clone from the existing GitHub origin with unchanged selected identities.
+[Task 139 qualification](task-139/step-1/README.md) records unmodified cold
+clones from the public GitHub origins with the pinned tool.
 
 The offline qualifier checks both source forms: public packages retain their
 immutable revision, content hash and distribution receipt; producer Shared

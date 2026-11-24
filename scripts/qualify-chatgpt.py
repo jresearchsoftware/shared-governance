@@ -113,8 +113,10 @@ def main():
              "--repo-url", remote.as_uri()], upgraded_source)
         manifest.write_text(manifest.read_text().replace("=" + version, "=" + next_version)
                             .replace('tag="v' + version + '"', 'tag="v' + next_version + '"'))
-        update = native([str(args.vibe), "--json", "update", "--path", str(consumer), "--all",
-                         "--assume-yes"])
+        # Preserve the held direct-Git lock outside the fixture's active project.
+        (consumer / "vibe.lock").rename(fixture / "held-consumer.lock")
+        update = native([str(args.vibe), "--json", "install", "--path", str(consumer),
+                         "--no-default-registry", "--assume-yes"])
         upgraded_slot = consumer / preparation.slot(next_version)
         assert upgraded_slot.is_dir() and not slot.exists()
         run(["git", "add", "."], consumer)
@@ -130,7 +132,7 @@ def main():
         print(json.dumps({"native_chatgpt_lifecycle": "PASS", "source_ref": args.source_ref,
                           "version": version, "synthetic_upgrade": next_version,
                           "install_ok": install["ok"], "update_ok": update["ok"],
-                          "invocation": "same tool from native versioned slot before/after VibeVM update",
+                          "invocation": "same tool from native versioned slot before/after fresh tag resolution",
                           "custom_preserved": True, "non_adopting_negative": "PASS",
                           "cache_export": "PASS; no upload", "scope": "disposable synthetic consumer only"}))
 

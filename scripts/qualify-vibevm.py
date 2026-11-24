@@ -17,9 +17,9 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--vibe", required=True, type=Path, help="downloaded pinned Linux x86_64 v1.0.11 binary")
+    parser.add_argument("--vibe", required=True, type=Path, help="downloaded pinned Linux x86_64 binary")
     parser.add_argument("--materialize", action="store_true", help="also probe local dependency installation (alpha behavior)")
-    parser.add_argument("--path-source", action="store_true", help="reproduce the known v1.0.11 path-only dependency limitation")
+    parser.add_argument("--path-source", action="store_true", help="probe a path-only dependency instead of the supported registry fixture")
     args = parser.parse_args()
     vibe = args.vibe.resolve()
     pin = json.loads((ROOT / "toolchain/vibevm.json").read_text(encoding="utf-8"))
@@ -57,6 +57,8 @@ def main():
         if len(relay) != 1:
             raise RuntimeError("expected one enclosing locked Relay dependency")
         relay_skill = workspace / "vibevm/vibedeps/org.jresearch.ai.codex-relay" / relay[0]["version"] / "skill"
+        member_relative = tomllib.loads((workspace / "vibe.toml").read_text(encoding="utf-8"))["workspace"]["members"][0]
+        member_routes = {member_relative + "/" + name for name in ("AGENTS.md", "CLAUDE.md", "GEMINI.md")}
 
         def run(*arguments):
             result = subprocess.run([str(vibe), *arguments], cwd=workspace, env=env,
@@ -72,9 +74,10 @@ def main():
             if "check" in arguments:
                 report = json.loads(result.stdout)
                 unexpected = [f for f in report["findings"] if not (
-                    arguments[-1] == str(workspace) and f["check"] == "lockfile_files"
-                    and f["severity"] == "warning" and f.get("path") in retained
-                    and "orphan" in f["message"])]
+                    arguments[-1] == str(workspace) and f["severity"] == "warning" and (
+                        f["check"] == "lockfile_files" and f.get("path") in retained and "orphan" in f["message"]
+                        or f["check"] == "redirect_block" and f.get("path") in member_routes
+                    ))]
                 if report["summary"]["error"] or unexpected:
                     raise RuntimeError("VibeVM check reported findings")
             return result.stdout
@@ -82,7 +85,6 @@ def main():
         run("--version")
         run("--offline", "--json", "validate", "--path", str(workspace), "--no-default-registry")
         run("--json", "check", "--path", str(workspace))
-        member_relative = tomllib.loads((workspace / "vibe.toml").read_text(encoding="utf-8"))["workspace"]["members"][0]
         member = workspace / member_relative
         if "skill" in tomllib.loads((member / "vibe.toml").read_text(encoding="utf-8")):
             raise RuntimeError("flow must declare no native Skills")

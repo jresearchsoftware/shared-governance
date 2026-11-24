@@ -58,9 +58,22 @@ model). To begin a session, read these files in order:
 Boot is pure file-reading — there is nothing to execute.
 </vibevm>'''
 
+# The pinned VibeVM 1.0.12 mixed-root router. The member still uses BOOT_BLOCK.
+ROOT_BOOT_SHA256 = "0f74c7f5f67ab294d4d039b5138383035248a1df9de0fb228de64b4e89483319"
+
+
+def matches_project_router(blocks, name):
+    """Recognize the pinned no-static-lane router, parameterized by project ID."""
+    if len(blocks) != 1 or not isinstance(name, str) or not name:
+        return False
+    router = blocks[0]
+    for prefix in ("# Session boot — project ", "    vibe:lane-begin ", "    vibe:lane-end "):
+        router = router.replace(prefix + name, prefix + "shared-governance", 1)
+    return hashlib.sha256(router.encode()).hexdigest() == ROOT_BOOT_SHA256
+
 
 def vibe_hash(files):
-    """Legacy tree recipe verified with 1.0.7/1.0.10/1.0.11 for this bounded UTF-8 file set."""
+    """Native tree recipe verified through VibeVM 1.0.12 for this bounded UTF-8 file set."""
     digest = hashlib.sha256()
     for name in sorted(files, key=lambda name: Path(name).parts):
         digest.update(name.encode() + b"\0" + files[name] + b"\0")
@@ -387,7 +400,13 @@ def verify_producer(revision, directory=ROOT):
             if route.is_symlink() or not route.is_file():
                 raise ValueError("producer agent route is missing: " + name)
             text = route.read_text(encoding="utf-8")
-            if re.findall(r"<vibevm>.*?</vibevm>", text, flags=re.S) != [BOOT_BLOCK]:
+            blocks = re.findall(r"<vibevm>.*?</vibevm>", text, flags=re.S)
+            if root == directory and relay:
+                if not matches_project_router(blocks, manifest["project"]["name"]):
+                    raise ValueError("producer generated root route differs: " + name)
+                if "Use the project boot lane only." not in text.replace(blocks[0], "", 1):
+                    raise ValueError("producer project boot scope is missing: " + name)
+            elif blocks != [BOOT_BLOCK]:
                 raise ValueError("producer generated agent route differs: " + name)
             if root != directory and text.strip() != BOOT_BLOCK:
                 raise ValueError("package member route contains an unexpected local overlay")
@@ -453,7 +472,11 @@ def verify_consumer(revision, directory):
     if selected != [{"path": package_boot, "kind": "static"}]:
         raise ValueError("consumer boot index has no unique canonical package route")
     blocks = re.findall(r"<vibevm>.*?</vibevm>", agents.read_text(encoding="utf-8"), flags=re.S)
-    if blocks != [BOOT_BLOCK]:
+    if meta.get("generated_by") == "vibe 1.0.12":
+        route_matches = matches_project_router(blocks, manifest.get("project", {}).get("name"))
+    else:
+        route_matches = blocks == [BOOT_BLOCK]
+    if not route_matches:
         raise ValueError("consumer AGENTS does not route through the generated boot index")
     return receipt
 

@@ -378,7 +378,7 @@ path, version and generated payload hashes. These hashes are tool output, not
 a recurring manual reviewer exercise. Historical native-Skill exports remain
 available through `vendor-skill.py`; current flow commits declare none.
 
-For a changed integration, use the pinned Linux x86_64 musl VibeVM 1.0.11 binary
+For a changed integration, use the pinned Linux x86_64 musl VibeVM binary
 in a disposable native filesystem. Its SHA-256 is recorded in
 [toolchain/vibevm.json](../toolchain/vibevm.json):
 
@@ -392,20 +392,19 @@ python3 scripts/qualify-toolchain.py --vibe /absolute/path/to/vibe --output /tmp
 The authoring probe checks stable workspace/member loading and isolated registry
 installation. Distribution's integration probe covers cold/repeat install,
 lock/slot/route integrity, a deliberate disposable mutable-tag incident, offline
-retained-slot behavior, synthetic patch update and complete Git rollback.
+retained-slot and cached-install recovery, a synthetic patch pin change and
+complete Git rollback.
 Release integration covers the guarded native publisher, competing writers,
 transitive frozen closure, diamond conflict and intentional lock update.
 The toolchain probe covers the real producer mixed graph, immutable historical
 slots, native Relay Skill projection, pinned-byte refusal, late install failure
 and Git restoration. Cold acquisition records the actual Git clone and origin in
-an empty isolated home without a compatibility remap; see [Task 89](task-89/step-1/README.md).
+an empty isolated home without a compatibility remap. See
+[Task 139](task-139/step-1/README.md).
 No real consumer is migrated. These are focused integration/incident probes,
 not mandatory per-release requalification of package-manager file transport.
 
-Pinned VibeVM emits a static INDEX entry despite authored dynamic linkage;
-the installed compact boot performs conditional protocol routing. It also has
-known path-only `empty world / ORDER-LAW`, GNU `GLIBC_2.39` and cache-only offline
-recovery limitations. No general platform restriction or model cost claim is
-inferred. Task 10's [model evidence](task-10/step-1/README.md) is historical;
-this task's consumer applicability scenarios establish routing contract and CLI
-behavior without claiming fresh model execution.
+Pinned VibeVM emits a static INDEX entry despite authored dynamic linkage.
+The installed compact boot performs conditional protocol routing. Use the
+local registry path above for qualification. The separate path-only probe
+diagnoses that dependency form.

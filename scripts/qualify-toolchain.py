@@ -74,6 +74,10 @@ def main():
         git(base, "clone", "-q", "--no-hardlinks", str(ROOT), str(work))
         original_lock = tomllib.loads((work / "vibe.lock").read_text())
         original_tree = tree(work)
+        bootstrap = ".agents/skills/.codex-relay.vibe-skill-receipt.toml"
+        skill_path = work / ".agents/skills/codex-relay"
+        skill_inventory = tomllib.loads((work / bootstrap).read_text())["file"]
+        preparation.verify_producer(revision, work)
         (settings / "registry.toml").write_text('[[registry]]\nname="producer-source"\nurl="'
                                                + (work / "vibevm/vibepacks").as_uri() + '"\nauth="none"\n')
         # Deliberate fresh resolution, retaining the original lock in the clone's Git.
@@ -87,23 +91,28 @@ def main():
         run("mixed cold resolution", work, "install", "--no-default-registry", "--no-prefer-local", "--assume-yes")
         commands = [event["argv"] for line in trace.read_text().splitlines()
                     if (event := json.loads(line)).get("event") == "start"]
-        origin = "https://github.com/jrs-vibevm/org.jresearch.ai.codex-relay.git"
-        clones = [argv for argv in commands if "clone" in argv and origin in argv]
-        require(clones, "no cold Relay Git clone observed")
+        expected_origins = {p["source_url"] for p in original_lock["package"] if p["source_kind"] == "git"}
+        clones = [argv for argv in commands if "clone" in argv and expected_origins.intersection(argv)]
         require(not any("raw.githubusercontent.com" in arg for argv in commands for arg in argv),
                 "Git acquisition was rewritten to a raw-file host")
         origins = [git(Path(argv[-1]), "config", "--get", "remote.origin.url") for argv in clones]
-        require(all(url == origin for url in origins), "Relay cache origin changed")
+        require(set(origins) == expected_origins, "expected all frozen Git origins in cold acquisition")
         report["cold_acquisition"] = dict(isolated_empty_home=True, compatibility_remap=False,
                                           clone_commands=clones, actual_origins=origins)
         lock = tomllib.loads((work / "vibe.lock").read_text())
-        selected = lambda data: {(p["group"], p["name"]): (p["version"], p["content_hash"])
-                                 for p in data["package"]}
-        require(selected(lock) == selected(original_lock), "selected package identities changed")
+        # The native registry path and generation time are specific to each clone.
+        lock["meta"]["generated_at"] = original_lock["meta"]["generated_at"]
+        for actual, committed in zip(lock["package"], original_lock["package"]):
+            if actual["source_kind"] == committed["source_kind"] == "registry":
+                actual["source_url"] = committed["source_url"]
+        require(lock == original_lock, "cold native lock differs from committed graph")
         require(lock["meta"]["generated_by"] == "vibe " + pin["version"], "wrong materializer version")
         report["selected"] = [dict(group=p["group"], name=p["name"], version=p["version"],
                                    content_hash=p["content_hash"], source_kind=p["source_kind"],
                                    source_ref=p.get("source_ref")) for p in lock["package"]]
+        selected_tree = tree(work)
+        run("mixed repeat resolution", work, "install", "--no-default-registry", "--no-prefer-local", "--assume-yes")
+        require(tree(work) == selected_tree, "repeat install changed materialized files")
         # Preserve only historical slots pruned by native install, without replacing selected output.
         selected_paths = {"vibevm/vibedeps/" + p["group"] + "." + p["name"] + "/" + p["version"]
                           for p in lock["package"]}
@@ -117,6 +126,24 @@ def main():
             "--agent", "codex", "--scope", "project", "--dry-run")
         run("Skill projection", work, "skill", "install", "--offline", "--skill", "codex-relay",
             "--agent", "codex", "--scope", "project", "--yes")
+        require(not (work / bootstrap).exists(), "portable Skill receipt was not migrated")
+        local_state = work / ".vibe/package-skills.toml"
+        state = tomllib.loads(local_state.read_text())
+        expected_inventory = [{**entry, "sha256": "sha256:" + entry["sha256"]} for entry in skill_inventory]
+        require(state["schema"] == 4 and len(state["binding"]) == 1 and
+                state["binding"][0]["provider"] == "org.jresearch.ai/codex-relay" and
+                state["binding"][0]["skill"] == "codex-relay" and
+                state["binding"][0]["target"] == [dict(agents=["codex"], path=str(skill_path),
+                                                       file=expected_inventory)],
+                "migrated Skill binding differs from the portable inventory")
+        state_before = local_state.read_bytes()
+        repeated = json.loads(run("repeat Skill projection", work, "skill", "install", "--offline",
+                                  "--skill", "codex-relay", "--agent", "codex", "--scope", "project",
+                                  "--yes").stdout)
+        require([r["status"] for r in repeated["results"]] == ["unchanged"] and
+                local_state.read_bytes() == state_before, "repeat Skill projection changed native state")
+        # Keep only the portable receipt in the Git-delivered projection.
+        git(work, "restore", "--source=" + revision, "--", bootstrap)
         preparation.verify_producer(revision, work)
         report["generated_diff"] = git(work, "diff", "--stat")
         # No frozen payload or effective Instructions text may change.
@@ -128,12 +155,15 @@ def main():
                     or path == "chatgpt/instructions.md" or any(path.startswith(h + "/") for h in historical)):
                 require(generated_tree.get(path) == digest, "immutable or effective content changed: " + path)
         check = json.loads(run("mixed graph check", work, "check").stdout)
-        require(check["summary"]["error"] == 0 and all(f["check"] == "lockfile_files"
-                and f["severity"] == "warning" and f["path"] in historical
-                and "orphan" in f["message"] for f in check["findings"]),
-                "unexpected native check findings")
+        member_routes = {preparation.PACKAGE + "/" + name for name in ("AGENTS.md", "CLAUDE.md", "GEMINI.md")}
+        warnings = check["findings"]
+        require(check["summary"]["error"] == 0 and all(f["severity"] == "warning" and (
+                    f["check"] == "lockfile_files" and f["path"] in historical and "orphan" in f["message"]
+                    or f["check"] == "redirect_block" and f["path"] in member_routes
+                ) for f in warnings), "unexpected native check findings")
         report["historical_slots_retained"] = len(historical)
-        report["historical_warnings"] = check["summary"]["warning"]
+        report["historical_warnings"] = sum(f["check"] == "lockfile_files" for f in warnings)
+        report["member_redirect_warnings"] = [f["path"] for f in warnings if f["check"] == "redirect_block"]
         # Change source bytes only in this disposable registry. Forced reinstall must refuse them.
         shared = [p for p in lock["package"]
                   if (p["group"], p["name"]) == ("org.jresearch.ai", "development-governance")]
@@ -158,6 +188,7 @@ def main():
                         if restored_tree.get(p) != original_tree.get(p)]))
         preparation.verify_producer(revision, work)
         run("retained-slot reinstall", work, "reinstall", "--offline", "--assume-yes", str(work))
+        git(work, "restore", "--source=" + revision, "--", bootstrap)
         preparation.verify_producer(revision, work)
 
         # Reproduce upstream B-206's late static-compilation failure, after materialization starts.

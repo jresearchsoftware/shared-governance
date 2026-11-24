@@ -331,7 +331,7 @@ or publication authority. `GH_TOKEN` is for read-only source CI, never distribut
 `stage` repeats the source plan and uses `--vibe /path/to/pinned/vibe` plus
 `--directory /tmp/disposable-stage`. An existing `vVERSION` tag skips before native
 invocation; pending recovery additionally verifies its exact frozen export. Otherwise clone the distribution into disposable bare staging, recheck
-the tag, and publish exact exported bytes there using the pinned VibeVM 1.0.11 musl
+the tag, and publish exact exported bytes there using the pinned VibeVM musl
 binary. Native subprocesses receive isolated settings and no API/publication token,
 askpass or global Git credentials. `finalize --report ...` alone receives the shared
 publication token for API verification/creation and ephemeral Git askpass.

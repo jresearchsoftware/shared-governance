@@ -16,11 +16,11 @@ SHARED_REQUIREMENT = ">=12.1.0"
 SLOT = f"vibevm/vibedeps/org.jresearch.ai.codex-relay/{RELAY_VERSION}"
 LANDSCAPE = {
     "flow:org.jresearch.ai/landscape-model-guidance": (
-        "1.0.3", "48432f00802f5aad106f3e1a9264e17c1edc354c",
-        "sha256:a64d829c0e50ac228d9bc39608db7e081e87c13d69e9cfeafc46720ec022f7f6"),
+        "1.1.0", "a810317f87fb4378be19edb04506444553f60148",
+        "sha256:f7245df4142fe6d9651f1050edc493dfe0b7078e0075211e7190440ff04cbd5d"),
     "flow:org.jresearch.ai/landscape-subagents": (
-        "1.0.2", "042e92884278d748502157945301dbc3f3c8318c",
-        "sha256:58a76e39b4861f8205726930d89d4f16c320704cb21b146ce4c47c3d2b959e56"),
+        "1.1.0", "b3e9da5a10af2b258699e7d1667dc925d247ae8d",
+        "sha256:4ea4a61964e63d2fc91a6aa2ae486e6edc8231823266f6feefb83de6b615f1ae"),
 }
 
 
@@ -52,8 +52,7 @@ def check(root, authored, vibe_hash):
     require(set(requirements) == set(pins), "unexpected root graph")
     require(requirements[SHARED] == dict(version="=" + shared_version, link="dynamic"),
             "exact producer Shared root")
-    root_dependencies = sorted(SHARED + "@=" + shared_version if key == SHARED
-                               else key for key in pins)
+    root_dependencies = sorted(key + "@=" + version for key, (version, _, _) in pins.items())
     lock = tomllib.loads((root / "vibe.lock").read_text(encoding="utf-8"))
     require(lock["meta"]["schema_version"] == 7 and
             sorted(lock["meta"]["root_dependencies"]) == root_dependencies, "lock root identity")
@@ -74,10 +73,11 @@ def check(root, authored, vibe_hash):
             source_url = selected[0].get("source_url", "")
             require(source_url.startswith("file://") and source_url.endswith(
                     "/vibevm/vibepacks/org.jresearch.ai/development-governance/v" + version)
-                    and "source_ref" not in selected[0], "local producer source identity")
+                    and not {"source_ref", "resolved_commit"} & selected[0].keys(),
+                    "local producer source identity")
         else:
             expected = dict(kind="flow", version=version, source_kind="git", source_url=url,
-                            source_ref=revision, content_hash=content_hash)
+                            source_ref=revision, resolved_commit=revision, content_hash=content_hash)
         require(all(selected[0].get(k) == v for k, v in expected.items()), "locked source " + name)
         if coordinate == RELAY:
             require(selected[0].get("dependencies") == [SHARED.removeprefix("flow:") + "@=" + shared_version],
